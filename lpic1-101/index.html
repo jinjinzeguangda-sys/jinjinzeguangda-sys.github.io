@@ -926,5 +926,16 @@ renderQuestion();
 <script>
 if('serviceWorker' in navigator){addEventListener('load',function(){
   navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+// Enter で「次の問題 →／結果へ →」を押す。
+// 入力欄・IME変換中・ダイアログが開いている時は効かせない
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter'||e.isComposing||e.shiftKey||e.ctrlKey||e.metaKey||e.altKey) return;
+  var t=e.target;
+  if(t&&(t.tagName==='TEXTAREA'||t.tagName==='INPUT'||t.isContentEditable)) return;
+  if(document.querySelector('[role="dialog"]:not([hidden])')) return;
+  var btn=document.querySelector('#after .actions .btn.primary');
+  if(!btn||btn.offsetParent===null) return;
+  e.preventDefault(); btn.click();
+});
 </script>
 </body></html>
