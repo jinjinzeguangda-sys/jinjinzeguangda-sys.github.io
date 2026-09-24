@@ -2,222 +2,34 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="演習アプリ">
-<meta name="theme-color" content="#136b5b">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icon-192.png">
+<meta http-equiv="refresh" content="0; url=./hub/">
 <title>演習アプリ</title>
-<style>
-  :root{
-    --bg:#eef1f2; --card:#ffffff; --ink:#131a1e; --sub:#5d6d75; --line:#dae1e4;
-    --accent:#136b5b; --accent-soft:#e2efec; --shadow:0 1px 2px rgba(16,32,38,.07);
-    --c-cert:#8a5a1f; --c-lang:#136b5b; --c-des:#2a5a92; --c-infra:#6a3d8f; --c-biz:#95502f;
-  }
-  @media (prefers-color-scheme:dark){
-    :root:not([data-theme="light"]){
-      --bg:#0d1316; --card:#161f24; --ink:#e6edf1; --sub:#8fa2ab; --line:#25323a;
-      --accent:#4cc0a5; --accent-soft:#12312b; --shadow:none;
-      --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4;
-      --c-infra:#b489e0; --c-biz:#e0916b;
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#0d1316; --card:#161f24; --ink:#e6edf1; --sub:#8fa2ab; --line:#25323a;
-    --accent:#4cc0a5; --accent-soft:#12312b; --shadow:none;
-    --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4; --c-infra:#b489e0; --c-biz:#e0916b;
-  }
-
-  *{box-sizing:border-box}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",-apple-system,system-ui,sans-serif;
-    line-height:1.6; -webkit-font-smoothing:antialiased; -webkit-text-size-adjust:100%;
-    padding:0 0 calc(40px + env(safe-area-inset-bottom));
-  }
-  .wrap{max-width:1400px;margin:0 auto;padding:0 12px}
-
-  header{padding:max(20px,env(safe-area-inset-top)) 0 10px}
-  /* ホーム画面から起動したときは時計の下に潜らせない */
-  @media (display-mode:standalone){
-    header{padding-top:calc(14px + env(safe-area-inset-top))}
-  }
-  h1{font-size:24px;font-weight:800;letter-spacing:.01em;margin:0 0 4px;text-wrap:balance}
-  .lede{color:var(--sub);font-size:13.5px;margin:0;font-variant-numeric:tabular-nums}
-
-  .searchbar{
-    position:sticky; top:0; z-index:10; padding:10px 0 12px;
-    background:linear-gradient(var(--bg) 76%, transparent);
-  }
-  #q{
-    width:100%; padding:12px 14px; font-size:16px; color:var(--ink);
-    background:var(--card); border:1px solid var(--line); border-radius:10px;
-    font-family:inherit; box-shadow:var(--shadow);
-  }
-  #q:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:transparent}
-  #q::placeholder{color:var(--sub)}
-
-  section{margin:20px 0 0}
-  .sechead{
-    display:flex; align-items:baseline; gap:10px;
-    padding:0 2px 8px; border-bottom:1px solid var(--line); margin-bottom:12px;
-  }
-  h2{font-size:15px;font-weight:700;margin:0;letter-spacing:.04em}
-  .count{font-size:12px;color:var(--sub);font-variant-numeric:tabular-nums}
-
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px}
-  a.app{
-    display:flex; align-items:center; gap:11px; text-decoration:none; color:inherit;
-    background:var(--card); border:1px solid var(--line); border-left:3px solid var(--hue);
-    border-radius:9px; padding:12px 13px; box-shadow:var(--shadow);
-    transition:transform .12s ease, border-color .12s ease;
-  }
-  a.app:hover{transform:translateY(-1px);border-color:var(--hue)}
-  a.app:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .ico{font-size:19px;line-height:1;flex:none;width:24px;text-align:center}
-  .meta{display:block;min-width:0;flex:1}
-  .name{display:block;font-size:14.5px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
-  .qn{display:block;font-size:11.5px;color:var(--sub);font-variant-numeric:tabular-nums;margin-top:1px}
-  /* このサイト内に置いてあるアプリ（＝アプリの中で開く）の印 */
-  .here{display:inline-block;margin-left:6px;padding:1px 5px;border-radius:4px;
-    background:var(--accent-soft);color:var(--accent);font-size:10px;font-weight:700;
-    vertical-align:1px;letter-spacing:.03em}
-
-  .empty{display:none;padding:26px 4px;color:var(--sub);font-size:14px}
-  footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);
-    color:var(--sub);font-size:12px}
-  footer b{color:var(--ink);font-weight:600}
-  @media (prefers-reduced-motion:reduce){a.app{transition:none}a.app:hover{transform:none}}
-</style>
+<!-- ★ここに manifest を置かないこと。scope が "/" になり、配下の37アプリが
+     すべてこのアプリの中に入って「単体でインストール」できなくなる（2026-09-24 実測）。
+     入口の本体は /hub/ に在る。 -->
+<style>html{color-scheme:light dark}body{font:16px/1.7 system-ui;margin:0;
+  display:grid;place-items:center;min-height:100vh}a{color:inherit}</style>
 </head>
 <body>
-
-<div class="wrap">
-  <header>
-    <h1>演習アプリ</h1>
-    <p class="lede">37アプリ・1,315問／自作の問題集をまとめた入口</p>
-  </header>
-
-  <div class="searchbar">
-    <input id="q" type="search" placeholder="アプリ名で絞り込む（例：Java、Linux、簿記）"
-           autocomplete="off" aria-label="アプリ名で絞り込む">
-  </div>
-
-  <section data-cat data-hue="--c-cert">
-    <div class="sechead"><h2>資格対策</h2><span class="count"></span></div>
-    <div class="grid">
-      <a class="app" href="./java-silver/"><span class="ico">☕</span><span class="meta"><span class="name">Java Silver<span class="here">このアプリ内</span></span><span class="qn">80問</span></span></a>
-      <a class="app" href="./java-silver-final2/"><span class="ico">☕</span><span class="meta"><span class="name">Java Silver 総仕上げ問題②</span><span class="qn">77問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./java-bronze/"><span class="ico">☕</span><span class="meta"><span class="name">Java Bronze</span><span class="qn">60問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./java-bronze-drill/"><span class="ico">☕</span><span class="meta"><span class="name">Java Bronze 練習問題</span><span class="qn">60問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./lpic1-101/"><span class="ico">🐧</span><span class="meta"><span class="name">LPIC Level1（101試験）</span><span class="qn">57問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./lpic1-102/"><span class="ico">🐧</span><span class="meta"><span class="name">LPIC Level1（102試験）</span><span class="qn">51問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./boki2/"><span class="ico">🧮</span><span class="meta"><span class="name">日商簿記2級</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./boki3/"><span class="ico">🧮</span><span class="meta"><span class="name">日商簿記3級（選択式）</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./spi/"><span class="ico">📝</span><span class="meta"><span class="name">SPI・一般常識</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-    </div>
-  </section>
-
-  <section data-cat data-hue="--c-lang">
-    <div class="sechead"><h2>言語・フレームワーク</h2><span class="count"></span></div>
-    <div class="grid">
-      <a class="app" href="./java-silver-advanced/"><span class="ico">☕</span><span class="meta"><span class="name">Java Silver応用</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./java-silver-original/"><span class="ico">☕</span><span class="meta"><span class="name">Java Silver原作</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./modern-java/"><span class="ico">☕</span><span class="meta"><span class="name">モダンJava</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./spring-boot/"><span class="ico">🍃</span><span class="meta"><span class="name">Spring Boot基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./python/"><span class="ico">🐍</span><span class="meta"><span class="name">Python基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./javascript/"><span class="ico">📜</span><span class="meta"><span class="name">JavaScript基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./typescript/"><span class="ico">🔷</span><span class="meta"><span class="name">TypeScript基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./html-css/"><span class="ico">🎨</span><span class="meta"><span class="name">HTML・CSS基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-    </div>
-  </section>
-
-  <section data-cat data-hue="--c-des">
-    <div class="sechead"><h2>設計・データ</h2><span class="count"></span></div>
-    <div class="grid">
-      <a class="app" href="./oop/"><span class="ico">🧩</span><span class="meta"><span class="name">オブジェクト指向設計</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./algorithm/"><span class="ico">🔢</span><span class="meta"><span class="name">アルゴリズム基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./db-design/"><span class="ico">🗂️</span><span class="meta"><span class="name">データベース設計</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./sql/"><span class="ico">🗄️</span><span class="meta"><span class="name">SQL基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./rest-api/"><span class="ico">🔌</span><span class="meta"><span class="name">REST API設計</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./regex/"><span class="ico">🔍</span><span class="meta"><span class="name">正規表現</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-    </div>
-  </section>
-
-  <section data-cat data-hue="--c-infra">
-    <div class="sechead"><h2>インフラ・運用</h2><span class="count"></span></div>
-    <div class="grid">
-      <a class="app" href="./linux/"><span class="ico">🐧</span><span class="meta"><span class="name">Linuxコマンド</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./shell/"><span class="ico">💻</span><span class="meta"><span class="name">シェルスクリプト</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./docker/"><span class="ico">🐳</span><span class="meta"><span class="name">Docker基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./kubernetes/"><span class="ico">☸️</span><span class="meta"><span class="name">Kubernetes基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./cloud-aws/"><span class="ico">☁️</span><span class="meta"><span class="name">クラウド基礎（AWS中心）</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./git/"><span class="ico">🌿</span><span class="meta"><span class="name">Gitコマンド応用</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./cicd/"><span class="ico">🔄</span><span class="meta"><span class="name">CI/CD基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./network/"><span class="ico">🌐</span><span class="meta"><span class="name">ネットワーク応用</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./security/"><span class="ico">🔐</span><span class="meta"><span class="name">セキュリティ基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./http-web/"><span class="ico">🌍</span><span class="meta"><span class="name">HTTP・Web基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-    </div>
-  </section>
-
-  <section data-cat data-hue="--c-biz">
-    <div class="sechead"><h2>仕事の基礎</h2><span class="count"></span></div>
-    <div class="grid">
-      <a class="app" href="./testing/"><span class="ico">🧪</span><span class="meta"><span class="name">テスト基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./project-management/"><span class="ico">📋</span><span class="meta"><span class="name">プロジェクト管理基礎</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./excel/"><span class="ico">📊</span><span class="meta"><span class="name">Excel関数</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-      <a class="app" href="./business-writing/"><span class="ico">✉️</span><span class="meta"><span class="name">ビジネス文書・敬語</span><span class="qn">30問</span><span class="here">このアプリ内</span></span></a>
-    </div>
-  </section>
-
-  <p class="empty" id="empty">該当するアプリがありません。</p>
-
-  <footer>
-    <b>このアプリ内</b>の印が付いたものは、このアプリの中でそのまま開きます（全画面・オフライン可）。
-    印の無いものは claude.ai で開くので、ブラウザに切り替わります。<br>
-    各アプリには<b>問題選択画面</b>があります（画面左下のボタン）。番号でジャンプでき、
-    未解答・正解・不正解・見直しが色分けされます。解答状況は端末に保存されるので、
-    途中でやめても続きから再開できます。
-  </footer>
-</div>
-
+<p>入口ページへ移動します … <a href="./hub/">開かない場合はこちら</a></p>
 <script>
-  // カテゴリごとの色をカードへ渡す
-  document.querySelectorAll('section[data-cat]').forEach(function (sec) {
-    var hue = 'var(' + sec.dataset.hue + ')';
-    sec.querySelectorAll('a.app').forEach(function (a) { a.style.setProperty('--hue', hue); });
-    sec.querySelector('.count').textContent = sec.querySelectorAll('a.app').length + 'アプリ';
-  });
-
-  // 37個あるので、名前での絞り込みを付ける
-  var q = document.getElementById('q');
-  var empty = document.getElementById('empty');
-  q.addEventListener('input', function () {
-    var t = q.value.trim().toLowerCase();
-    var shown = 0;
-    document.querySelectorAll('section[data-cat]').forEach(function (sec) {
-      var hit = 0;
-      sec.querySelectorAll('a.app').forEach(function (a) {
-        var ok = !t || a.querySelector('.name').textContent.toLowerCase().indexOf(t) !== -1;
-        a.style.display = ok ? '' : 'none';
-        if (ok) hit++;
-      });
-      sec.style.display = hit ? '' : 'none';
-      shown += hit;
+// 旧 scope "/" の Service Worker を後始末する（残すと古い入口が配られ続ける）
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function(rs){
+    rs.forEach(function(r){
+      if (new URL(r.scope).pathname === '/') r.unregister();
     });
-    empty.style.display = shown ? 'none' : 'block';
-  });
-
-  // オフラインで開けるようにする
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('./sw.js').catch(function () {});
-    });
-  }
+  }).catch(function(){});
+}
+if ('caches' in window) {
+  caches.keys().then(function(ks){
+    ks.filter(function(k){ return k.indexOf('apps-index-') === 0; })
+      .forEach(function(k){ caches.delete(k); });
+  }).catch(function(){});
+}
+location.replace('./hub/');
 </script>
 </body>
 </html>
