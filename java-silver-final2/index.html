@@ -1,0 +1,1494 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><!-- pwa-standalone (jinji) -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Java Silver ">
+<meta name="theme-color" content="#F7F5F1">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<style>
+@media (display-mode:standalone){body{padding-top:env(safe-area-inset-top)}}
+</style>
+</head><body>
+<meta charset="utf-8">
+<!--
+  Java Silver 総仕上げ問題② 演習アプリ
+  ⚠️ 市販問題集からの逐語書き起こしを含みます。個人学習用のみ。配布・販売はできません。
+  出典突合：解説ページ P554〜P599（問1〜80／収録は問66〜68を除く77問）
+-->
+
+
+
+
+
+<meta name="format-detection" content="telephone=no">
+
+<style>
+  /* iPhoneのノッチ・ホームインジケータを避ける（既存レイアウトは変更しない） */
+  body{
+    padding-left:max(0px,env(safe-area-inset-left));
+    padding-right:max(0px,env(safe-area-inset-right));
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+    -webkit-text-size-adjust:100%;
+  }
+  /* ホーム画面から開いた時に文字選択でズレるのを防ぐ（入力欄は除く） */
+  @media (display-mode:standalone){
+    body{-webkit-touch-callout:none}
+    input,textarea{-webkit-user-select:text}
+  }
+</style>
+
+<title>Java Silver 総仕上げ問題② 演習コンソール</title>
+<style>
+  :root{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+    --radius:14px; --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+      --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+      --accent:#E4A24A; --accent-soft:#3A2F1E;
+      --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+      --code-bg:#0F1318; --code-ink:#CDD3C6;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+    --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+    --accent:#E4A24A; --accent-soft:#3A2F1E;
+    --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+    --code-bg:#0F1318; --code-ink:#CDD3C6;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;margin:0}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 22px 64px}
+  .qcols{display:grid;grid-template-columns:var(--gtc,minmax(0,1fr) minmax(0,1fr));gap:24px;align-items:start;margin-top:6px}
+  .qcols.nocode{grid-template-columns:minmax(0,720px);justify-content:center}
+  .qcol-l,.qcol-r{min-width:0}
+  .qcol-l .qcode{margin:0}
+  .qcol-l{position:sticky;top:92px}
+  @media (max-width:900px){.wrap{max-width:660px}.qcols{grid-template-columns:1fr;gap:16px}.qcol-l{position:static}}
+  .topbar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);padding:14px 0 12px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand h1{font-size:16px;margin:0;font-weight:650;letter-spacing:.01em}
+  .brand .tag{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;
+    letter-spacing:.14em;font-weight:600}
+  .meta{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .progress{flex:1;height:7px;background:var(--border);border-radius:99px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;
+    transition:width .35s ease}
+  .score{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap}
+  .score b{color:var(--ink)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 20px}
+  .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .cat{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);font-weight:650}
+  .src{font-size:11px;color:var(--faint)}
+  .qnum{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .prompt{font-size:16.5px;font-weight:600;margin:2px 0 14px;text-wrap:balance}
+  pre.code{background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:15.5px;
+    line-height:1.65;padding:14px 15px;border-radius:10px;border:1px solid var(--border);
+    overflow-x:auto;margin:0 0 18px;white-space:pre;tab-size:2}
+
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;cursor:pointer;
+    background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;
+    padding:13px 14px;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.5;
+    transition:border-color .15s,background .15s,transform .05s}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt:active:not(:disabled){transform:translateY(1px)}
+  .opt:disabled{cursor:default}
+  .opt .key{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--muted);
+    border:1.5px solid var(--border);border-radius:7px;min-width:26px;height:26px;display:flex;
+    align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;transition:.15s}
+  .opt .txt{flex:1;padding-top:1px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .opt .mark{font-size:18px;line-height:1.3;flex:0 0 auto;opacity:0}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.correct .key{border-color:var(--ok);background:var(--ok);color:#fff}
+  .opt.correct .mark{opacity:1;color:var(--ok)}
+  .opt.wrong{border-color:var(--ng);background:var(--ng-soft)}
+  .opt.wrong .key{border-color:var(--ng);background:var(--ng);color:#fff}
+  .opt.wrong .mark{opacity:1;color:var(--ng)}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .key{border-color:var(--accent);background:var(--accent);color:#fff}
+  .multi-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;
+    color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:1px 6px;
+    vertical-align:2px;white-space:nowrap}
+
+  .verdict{display:flex;align-items:center;gap:8px;margin:16px 0 4px;font-weight:700;font-size:15px}
+  .verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
+  .exp{background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:8px;padding:13px 15px;font-size:14px;color:var(--ink);margin-top:6px}
+  .exp code{font-family:var(--mono);font-size:12.5px;background:var(--code-bg);padding:1px 5px;
+    border-radius:4px;color:var(--code-ink)}
+  .exp b{color:var(--ink)}
+  .reveal{animation:rise .28s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.reveal{animation:none}.progress>i{transition:none}}
+
+  /* 図解（コード注釈） */
+  .figure{margin-top:14px}
+  .fig-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin-bottom:6px;font-weight:650}
+  .figbox{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:8px 0;
+    overflow-x:auto;font-family:var(--mono);font-size:15.5px;line-height:1.3}
+  .figline{display:flex;gap:10px;padding:0 12px;white-space:pre;min-width:max-content}
+  .figline .fno{color:var(--faint);min-width:1.5em;text-align:right;flex:0 0 auto;user-select:none}
+  .figline .fcode{color:var(--code-ink)}
+  .figline.err{background:var(--ng-soft);box-shadow:inset 3px 0 0 var(--ng)}
+  .figline.info{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+  .figline.ok{background:var(--ok-soft);box-shadow:inset 3px 0 0 var(--ok)}
+  .figline.mute{box-shadow:inset 3px 0 0 var(--border)}
+  .figline.mute .fcode{color:var(--faint)}
+  /* 連結線つき注釈：該当行から L字の線＋矢印で枝分かれ */
+  .annorow{position:relative;padding:3px 12px 9px 42px;min-width:max-content}
+  .annorow::before{content:"";position:absolute;left:5px;top:-4px;width:17px;height:16px;
+    border-left:2px solid currentColor;border-bottom:2px solid currentColor;border-bottom-left-radius:8px;opacity:.9}
+  .annorow::after{content:"";position:absolute;left:20px;top:7px;width:0;height:0;
+    border:5px solid transparent;border-left:7px solid currentColor;opacity:.9}
+  .annorow.err{color:var(--ng)}
+  .annorow.info{color:var(--accent)}
+  .annorow.ok{color:var(--ok)}
+  .annorow.mute{color:var(--faint)}
+  .annorow .anno{font-family:var(--sans);font-size:12.5px;line-height:1.5;white-space:normal;max-width:46ch;display:block}
+  .annorow.ok .anno{font-weight:600}
+  .figout{margin-top:9px;font-family:var(--mono);font-size:12.5px;color:var(--ink);font-weight:700}
+  .figbox.qcode{margin:0 0 16px;font-size:15.5px}
+  .qfigout{margin:8px 2px 16px}
+  /* 変数トレース表（クリックで開閉） */
+  .trace{margin-top:14px}
+  .trace details{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .trace summary{cursor:pointer;list-style:none;padding:9px 13px;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650;
+    background:var(--surface-2);display:flex;align-items:center;gap:8px;user-select:none}
+  .trace summary::-webkit-details-marker{display:none}
+  .trace summary::before{content:"▸";color:var(--accent)}
+  .trace details[open] summary::before{content:"▾"}
+  .trace summary:hover{color:var(--ink)}
+  .trace summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .tscroll{overflow-x:auto;border-top:1px solid var(--border)}
+  .trace table{border-collapse:collapse;width:100%;font-size:12.5px}
+  .trace th,.trace td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+    padding:6px 10px;text-align:left;white-space:normal;vertical-align:top;overflow-wrap:anywhere}
+  .trace th{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;
+    color:var(--muted);background:var(--surface-2);white-space:nowrap}
+  .trace td{font-family:var(--mono);color:var(--code-ink);font-variant-numeric:tabular-nums}
+  .trace td.st{font-family:var(--sans);color:var(--ink)}
+  .trace tr.hot td{background:var(--ng-soft)}
+  .trace .nul{color:var(--faint)}
+  .trace tbody tr:last-child td{border-bottom:none}
+  .trace th:last-child,.trace td:last-child{border-right:none}
+
+  .actions{display:flex;gap:10px;margin-top:18px}
+  .btn{font-family:inherit;font-size:14.5px;font-weight:600;border-radius:10px;padding:11px 18px;
+    cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--ink);
+    transition:.15s;flex:0 0 auto}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.ghost{color:var(--muted)}
+
+  /* results */
+  .res-head{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .ring{--p:0;width:104px;height:104px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--border) 0);
+    display:grid;place-items:center;position:relative}
+  .ring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface)}
+  .ring .num{position:relative;z-index:1;text-align:center}
+  .ring .num b{font-size:26px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .ring .num span{display:block;font-size:11px;color:var(--muted)}
+  .res-sum h2{margin:0 0 4px;font-size:18px}
+  .res-sum p{margin:0;color:var(--muted);font-size:13.5px}
+  .sec-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin:22px 0 10px;font-weight:650}
+  .bars{display:flex;flex-direction:column;gap:11px}
+  .bar-row .bar-top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px}
+  .bar-row .bar-top .n{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+  .bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+  .bar-track>i{display:block;height:100%;border-radius:99px}
+  .weak-badge{font-size:10.5px;font-family:var(--mono);color:var(--ng);border:1px solid var(--ng);
+    border-radius:5px;padding:0 5px;margin-left:7px;vertical-align:1px}
+  .advice{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+    margin-top:10px}
+  .advice .a-cat{font-weight:650;font-size:14px;margin-bottom:3px;display:flex;align-items:center}
+  .advice .a-txt{font-size:13.5px;color:var(--muted)}
+  .advice+.advice{margin-top:8px}
+  .empty{color:var(--muted);font-size:13.5px;padding:6px 0}
+  .footer{margin-top:26px;text-align:center;color:var(--faint);font-size:11.5px;line-height:1.7}
+  .footer .warn{color:var(--muted)}
+  a.link{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a.link:hover{border-color:var(--accent)}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <h1>Java Silver 総仕上げ問題② 演習コンソール</h1>
+      <span class="tag">1Z0-815 / 第13章</span>
+    </div>
+    <div class="meta">
+      <div class="progress"><i id="pbar"></i></div>
+      <div class="score" id="score">0 / 0</div>
+    </div>
+  </div>
+  <div id="stage"></div>
+  <div class="footer">
+    成績はこの端末のブラウザ内にのみ保存されます（localStorage）。<br>
+    <span class="warn">⚠️ 市販問題集の逐語書き起こしです。<b>個人学習用のみ・配布/販売不可</b>。収録は<b>問1〜65 と 問69〜80 の計77問</b>（すべて解説ページで正解を突合済み）。<b>問66〜68は書籍544-545ページが動画に写っていないため未収録</b>です（正解自体は判明しているので、撮り直しがあれば追加できます）。</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ▼▼▼ ここから下だけを科目ごとに差し替える（エンジン部は触らない） ▼▼▼
+   scratchpad/演習アプリ_作成手順.md も参照
+   ============================================================ */
+
+// localStorage 保存キー：科目ごとに必ず変える
+const KEY='javaSilver2V1';
+
+const BOOK_QUESTIONS = [
+  {id:"b1",
+   cat:"例外処理",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムの空欄に入るコードとして、正しいものを選びなさい。",
+   code:"import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        try {\n            test(0);\n        ［空欄］\n    }\n    private static void test(int num) throws IOException,\n                IndexOutOfBoundsException {\n        if (num < 10) {\n            throw new FileNotFoundException();\n        } else {\n            throw new IndexOutOfBoundsException();\n        }\n    }\n}",
+   options:["catch (FileNotFoundException e) { } / catch (IndexOutOfBoundsException e) { }", "catch (IndexOutOfBoundsException e) { } / catch (FileNotFoundException e) { }", "catch (FileNotFoundException | IOException e) { }", "catch (IOException e) { }", "catch (FileNotFoundException | IndexOutOfBoundsException e) { }"],
+   answer:3,
+   exp:"検査例外と非検査例外の違いの問題。FileNotFoundExceptionはIOExceptionのサブクラスなので、IOExceptionをキャッチするだけでコンパイルできる。throwsで宣言しているIndexOutOfBoundsExceptionはRuntimeExceptionのサブクラス（非検査例外）なのでキャッチしなくてもよい。なおFileNotFoundExceptionの参照をスローしている一方、throwsではスーパークラスのIOExceptionをスローすると宣言しているため、FileNotFoundException型では例外をキャッチできない。（解説P554）"},
+  {id:"b3",
+   cat:"型変換",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムのコンパイルエラーを修正する方法として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        int a = 10;\n        float b = 10.0f;\n        double c = 20;\n        a = b;\n        b = a;\n        c = b;\n        c = a;\n    }\n}",
+   options:["6行目を「a = (int) b;」に置き換える", "7行目を「b = (float) a;」に置き換える", "8行目を「c = (double) b;」に置き換える", "9行目を「c = (double) a;」に置き換える"],
+   answer:0,
+   exp:"型変換には、キャスト式が不要な暗黙の型変換と、キャスト式が必要な明示的な型変換がある。暗黙の型変換はデータの欠損がないことが条件。6行目はfloat型のbをint型のaへ代入しており、小数点数を表せずデータの欠損が発生するためコンパイルエラーになる。キャストでデータ欠損を無視してよいとコンパイラに伝える必要がある。（解説P555）"},
+  {id:"b5",
+   cat:"変数のスコープ",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    private String value;\n    public void setValue(String value) {\n        value = \"Hello, \" + value;\n    }\n    public String toString() {\n        return value;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Sample s = new Sample();\n        s.setValue(\"Java\");\n        System.out.println(s.toString());\n    }\n}",
+   options:["「Hello, Java」と表示される", "「Hello, null」と表示される", "「null」と表示される", "実行時に例外がスローされる"],
+   answer:2,
+   exp:"同名のフィールドとローカル変数がある場合、thisを使ってフィールドであることを明示しない限りローカル変数が優先される。setValueは引数のローカル変数valueに再代入しているだけなので、フィールドvalueはデフォルト値のnullのまま。（解説P556）"},
+  {id:"b6",
+   cat:"アクセス修飾子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムを確認し、Bクラスの空欄への記述に関する説明として、正しいものを選びなさい。",
+   code:"package ex06.a;\n\npublic class A {\n    String a = \"A\";\n    protected String b = \"B\";\n    public String c = \"C\";\n}\n\npackage ex06.b;\n\nimport ex06.a.A;\n\npublic class B extends A {\n    public void test() {\n        ［空欄］\n    }\n}",
+   options:["「new B().b;」と「new B().c;」の両方でコンパイルエラーが発生する", "「new B().b;」のみでコンパイルエラーが発生する", "「new B().a;」のみでコンパイルエラーが発生する", "「new B().a;」と「new B().b;」の両方でコンパイルエラーが発生する"],
+   answer:2,
+   exp:"継承関係にあるとき、サブクラスからアクセスできるスーパークラスのメンバはpublicかprotected。アクセス修飾子なし（デフォルト）は継承関係の有無にかかわらず同じパッケージからしかアクセスできない。AとBは異なるパッケージなので、修飾子なしのフィールドaだけがエラーになる。（解説P556）"},
+  {id:"b7",
+   cat:"型変換",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        short a = 97;\n        int b = 98;\n        System.out.print((char) a + \" \");\n        System.out.print((char) b);\n    }\n}",
+   options:["「a b」と表示される", "「a」と表示されたあとに例外が発生する", "コンパイルエラーが発生する", "ClassCastExceptionがスローされる"],
+   answer:0,
+   exp:"数値型は文字番号として文字に変換できる。97は'a'、98は'b'。数値型変数をキャスト式なしでchar型に代入することはできないが、設問はキャスト式を書いているので問題ない。short・int・charはプリミティブ型なのでClassCastExceptionは発生しない。（解説P557）"},
+  {id:"b8",
+   cat:"継承",
+   src:"総仕上げ問題②",
+   prompt:"BクラスからAクラスのtestメソッドを呼び出すために、Bクラスの空欄に入るコードとして正しいものを選びなさい。",
+   code:"public class A {\n    public void test() {\n        // do something\n    }\n}\n\npublic class B extends A {\n    public void test() {\n        ［空欄］\n    }\n}",
+   options:["this.test();", "public.test();", "new.test();", "super.test();"],
+   answer:3,
+   exp:"スーパークラスのメソッドをサブクラスから呼び出すにはsuperを使う。thisを使うとB自身のtestを呼ぶ再帰呼び出しになりStackOverflowErrorが発生する。publicはアクセス修飾子、newはインスタンス生成に使うもの。（解説P558）"},
+  {id:"b9",
+   cat:"継承",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムを確認し、コンパイルエラーとなる理由を選びなさい。",
+   code:"public class A {\n    private String value;\n    public String getValue() { return value; }\n    public void setValue(String value) { this.value = value; }\n    public String toString() { return getValue(); }\n}\n\npublic class B extends A {\n    public void setValue(String value) {\n        super.setValue(\"[\" + value + \"]\");\n    }\n    public void setValue(String... values) {\n        setValue(test(values));\n    }\n    private String test(String... values) {\n        var sb = new StringBuilder();\n        for (String value : values) {\n            sb.append(value + \", \");\n        }\n    return sb.toString();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        A a = new B();\n        a.setValue(args);\n    }\n}",
+   options:["BのインスタンスをA型で扱ったため", "AクラスのtoStringメソッドをBクラスでオーバーライドしていないため", "Bクラスのtestメソッドがprivateであるため", "BクラスからAクラスのvalueにアクセスできないため", "AクラスにはsetValue(String... values)というメソッドがないため"],
+   answer:4,
+   exp:"ポリモーフィズムでサブクラスのインスタンスをスーパークラス型で扱った場合、サブクラスで拡張した独自のメソッドは呼び出せない。String配列型を受け取るsetValueはBクラスで拡張した独自メソッドなので、A型の変数からは呼び出せずコンパイルエラーになる。（解説P558）"},
+  {id:"b11",
+   cat:"static",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    private static int num;\n    static {\n        num = 10;\n    }\n    static {\n        num = 20;\n    }\n    static void test(int num) {\n        num = num * num;\n    }\n    public static void main(String[] args) {\n        test(num);\n        System.out.println(num);\n    }\n}",
+   options:["10が表示される", "20が表示される", "100が表示される", "400が表示される", "コンパイルエラーが発生する"],
+   answer:1,
+   exp:"staticなフィールドはインスタンスを生成しなくても利用できるため、コンストラクタで初期化できない。代わりにstatic初期化子を使う。static初期化子は複数定義でき、上から順に実行されるので2番目の20で上書きされる。testメソッドのnumは引数として宣言したローカル変数なのでフィールドの値は変わらない。（解説P559〜560）"},
+  {id:"b13",
+   cat:"アクセス修飾子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムの説明として、正しいものを選びなさい。",
+   code:"package test;\n\npublic class Sample {\n    int a;\n    private int b;\n    protected int c;\n    public int d;\n}\n\nimport test.Sample;\n\npublic class Main extends Sample {\n    public static void main(String[] args) {\n        Main s = new Main();\n\n    }\n}",
+   options:["Mainクラスからはaとdの両方にアクセスできる", "Mainクラスからはdのみアクセスできる", "Mainクラスからはcとdの両方にアクセスできる", "Mainクラスからはa、c、およびdにアクセスできる"],
+   answer:2,
+   exp:"異なるパッケージに属しているクラスがアクセスできるのはpublicとprotectedの2種類（protectedは継承関係にあるときだけ）。SampleとMainは異なるパッケージだが継承関係にあるため、publicなdとprotectedなcの2つにアクセスできる。（解説P560〜561）"},
+  {id:"b14",
+   cat:"継承",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class A {\n    private Collection collection;\n    public void set(Collection collection) {\n        this.collection = collection;\n        System.out.println(\"A\");\n    }\n}\n\npublic class B extends A {\n    public void set(Collection collection) {\n        super.set(collection);\n        System.out.println(\"B\");\n    }\n}\n\npublic class C extends B {\n    @Override\n    public void set(Collection collection) {\n        super.super.set(collection);\n        System.out.println(\"C\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new C().set(List.of(1, 2, 3));\n    }\n}",
+   options:["「A」「B」「C」と表示される", "「A」「B」と表示される", "「A」と表示される", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:3,
+   exp:"サブクラスからアクセスできるのは1つ上のスーパークラスだけで、2つ以上上のスーパークラスにアクセスする方法はない。Cクラスの「super.super」は不正なのでコンパイルエラーになる。（解説P561）"},
+  {id:"b15",
+   cat:"継承",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムの空欄に入るコードとして、正しいものを選びなさい。",
+   code:"public class A {\n    private int num;\n    public A(int num) {\n        this.num = num;\n    }\n}\n\npublic class B extends A {\n    private String val;\n    public B(String val, int num) {\n        ［空欄］\n    }\n}",
+   options:["this(num);", "super(num);", "this(val);", "super(val);", "super();"],
+   answer:1,
+   exp:"継承関係にあってもコンストラクタは引き継がれない。サブクラスのインスタンス生成時にはスーパークラスのコンストラクタを実行して初期化する必要があるため、サブクラスのコンストラクタにはsuperによる呼び出しが必要。thisを使うと同じクラスの別のコンストラクタを呼ぶことになる。Aのコンストラクタはint型を受け取るのでsuper(num)。（解説P561）"},
+  {id:"b16",
+   cat:"インポート",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムの説明として、正しいものを選びなさい。",
+   code:"package ex16;\n\nimport java.util.*;\n\npublic class Sample {\n    private List<String> list = List.of(\"A\", \"B\", \"C\");\n    public List<String> getList() {\n        return list;\n    }\n}\n\npackage ex16;\n\npublic class Main {\n    public static void main(String[] args) {\n        Sample s = new Sample();\n        for (String str : s.getList()) {\n            System.out.println(str);\n        }\n    }\n}",
+   options:["2つのクラスは同じパッケージに属するので、Mainクラスでjava.util.Listをインポートする必要はない", "java.util.Listのみがインポートされる", "コンパイルするには、Mainクラスでjava.util.Listをインポートしなければいけない", "java.utilパッケージのすべてのクラスやインタフェースがSampleクラスにインポートされる"],
+   answer:3,
+   exp:"インポート宣言は、利用するクラスの各ソースファイルに記述する。java.util.Listを使っているのはSampleクラスであってMainクラスではないので、Mainではインポート不要。アスタリスク「*」を使うとパッケージ内のすべてのクラスやインタフェースがインポートされる。（解説P561〜562）"},
+  {id:"b18",
+   cat:"アクセス修飾子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムを実行し、「A:B」と表示したい。Mainクラスの空欄に入るコードとして正しいものを選びなさい。",
+   code:"public class Sample {\n    static String header = \"A:\";\n    private String value = \"B\";\n    public static String getValue() {\n        return new Sample().value;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Sample s = new Sample();\n        ［空欄］\n    }\n}",
+   options:["System.out.println(Sample.getValue + s.header);", "System.out.println(Sample.header + Sample.value);", "System.out.println(new Sample().header + new Sample().value);", "System.out.println(s.header + Sample.value);", "System.out.println(Sample.header + Sample.getValue());", "System.out.println(s.header + s.value);"],
+   answer:4,
+   exp:"valueはprivateなのでほかのクラスからアクセスできない（B・C・Dは誤り）。値の取得にはpublicで公開されたgetValueメソッドを使う。Aはカッコがないためフィールドへのアクセスとみなされ、そのようなフィールドは存在しないのでコンパイルエラー。headerとgetValueはstaticなので「クラス名.フィールド名」「クラス名.メソッド名」で記述する。（解説P563）"},
+  {id:"b19",
+   cat:"演算子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        int a = 10;\n        int b = 20;\n        int c = b += a / 5;\n        System.out.println(a + b + c);\n    }\n}",
+   options:["52が表示される", "54が表示される", "38が表示される", "46が表示される"],
+   answer:1,
+   exp:"5行目は右端から評価される。まず a / 5 で 10/5=2。次に b += 2 で b は 20+2=22。最後に c = b で c も 22。よって 10 + 22 + 22 = 54。（解説P563〜564）"},
+  {id:"b20",
+   cat:"配列",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        try {\n            String[] array = new String[5];\n            array[1] = \"A\";\n            array[2] = \"B\";\n            array[3] = \"C\";\n            for (String str : array) {\n                System.out.println(str);\n            }\n        } catch (Exception e) {\n            System.out.println(\"Error\");\n        }\n    }\n}",
+   options:["「A」「B」「C」と表示される", "「null」「A」「B」「C」「null」と表示される", "「Error」と表示される", "コンパイルエラーが発生する"],
+   answer:1,
+   exp:"配列要素のデフォルト値は、整数なら0、浮動小数点数なら0.0、文字なら\\u0000、真偽ならfalse、参照型ならnull。5要素のうち0番目と4番目には何も代入していないのでnullが入っている。拡張for文は要素がなくなるまで繰り返すので、null, A, B, C, null の順に表示される。（解説P564）"},
+  {id:"b21",
+   cat:"変数のスコープ",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    private int num;\n    private int test() {\n        for (int i = 0; i < 3; i++) {\n            num += i;\n        }\n        return num;\n    }\n    public static void main(String[] args) {\n        Sample s = new Sample();\n        int num = s.test();\n        s.test();\n        System.out.println(num);\n    }\n}",
+   options:["3が表示される", "6が表示される", "9が表示される", "実行時に例外がスローされる"],
+   answer:0,
+   exp:"メソッド内で宣言したローカル変数へのアクセスは変数名を書くだけだが、インスタンスのフィールドへは「参照.フィールド名」と書く必要がある。1回目のtestで戻り値3をローカル変数numに受け取り、2回目のtestではフィールドが増えるだけ。出力しているのはローカル変数のnumなので3。（解説P565）"},
+  {id:"b22",
+   cat:"モジュール",
+   src:"総仕上げ問題②",
+   prompt:"java.langパッケージを含むJava SEの基本的なAPIが提供されているモジュールとして正しいものを選びなさい。",
+   code:"",
+   options:["classes", "jdk.base", "java.se", "java.base"],
+   answer:3,
+   exp:"Java SEの基本的なAPIが含まれるモジュールは java.base モジュール。classesやjdk.baseというモジュールは存在しない。java.seモジュールにはJava SEで提供されるAPIが含まれるが、基本的なAPIであるjava.langパッケージは含まれていない。（解説P565）"},
+  {id:"b23",
+   cat:"継承",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"package ex23.a;\n\npublic class A {\n    public int num = 10;\n}\n\npackage ex23.b;\n\nimport ex23.a.A;\n\npublic class B extends A {\n    int num = 20;\n}\n\npackage ex23;\n\nimport ex23.a.A;\nimport ex23.b.B;\n\npublic class Main {\n    public static void main(String[] args) {\n        A a = new B();\n        System.out.println(a.num);\n    }\n}",
+   options:["Bクラスでコンパイルエラーが発生する", "Mainクラスでコンパイルエラーが発生する", "10が表示される", "20が表示される"],
+   answer:2,
+   exp:"ポリモーフィズムでメソッドは実際のインスタンスの型で決まるが、フィールドは参照している変数の型で決まる。変数aはA型なのでAクラスのnum（10）が表示される。（解説P565〜566）"},
+  {id:"b24",
+   cat:"アクセス修飾子",
+   src:"総仕上げ問題②",
+   prompt:"publicで修飾されたメソッドをオーバーライドするときに利用できるアクセス修飾子として、正しいものを選びなさい。",
+   code:"",
+   options:["public", "public、protected", "public、protected、デフォルト", "制限はない"],
+   answer:0,
+   exp:"オーバーライドのルールは、シグニチャが同じ／戻り値型は同じ型かサブクラス型／アクセス修飾子は同じか、より緩くする／throwsで宣言する例外はスローする例外と同じ型かサブクラス型であること。publicより緩い修飾子はないのでpublicのみ。（解説P566〜567）"},
+  {id:"b25",
+   cat:"アクセス修飾子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"package ex25.a;\n\nclass Sample {\n    public String value;\n    public Sample(String value) {\n        this.value = value;\n    }\n}\n\npackage ex25.b;\nimport ex25.a.Sample;\n\npublic class Main {\n    public static void main(String[] args) {\n        Sample s = new Sample(\"Hello Java\");\n        System.out.println(s.value);\n    }\n}",
+   options:["「null」と表示される", "「Hello Java」と表示される", "何も表示されない", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:3,
+   exp:"クラスのアクセス修飾子の問題。アクセス修飾子なしはパッケージ内からしかアクセスできない。Sampleクラスは ex25.a に属し public が付いていないので、ex25.b の Main からは利用できずコンパイルエラーになる。（解説P567）"},
+  {id:"b26",
+   cat:"static",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    int num;\n    private static void test() {\n        num++;\n        System.out.println(num);\n    }\n    public static void main(String[] args) {\n        Main.test();\n        Main.test();\n    }\n}",
+   options:["「1」「2」と表示される", "1が2回表示される", "testメソッドでコンパイルエラーが発生する", "mainメソッドでコンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:2,
+   exp:"staticで修飾されたメソッドからは、staticで修飾されたもの以外にアクセスできない。staticなmainからstaticなtestを呼ぶのは問題ないが、test内でstaticでないnumフィールドをインクリメントしている4行目でコンパイルエラーになる。（解説P567）"},
+  {id:"b27",
+   cat:"文字列",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        String str = \"abcde\";\n        str.replace('c', 'x');\n        str.substring(2, 4);\n        System.out.println(str);\n    }\n}",
+   options:["「abxde」と表示される", "「abcde」と表示される", "「cde」と表示される", "「xde」と表示される"],
+   answer:1,
+   exp:"java.lang.Stringのメソッドはインスタンスが保持する文字列を変更しない。replaceやsubstringは内部の文字列を変更せず新しい文字列を返すだけなので、結果を受け取らなければ元のstrは変わらない。（解説P567〜568）"},
+  {id:"b28",
+   cat:"ラムダ式",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムを実行して、1、2、3と順に表示したい。空欄に入るコードとして、正しいものを選びなさい。",
+   code:"import java.util.List;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> list = List.of(1, 2, 3);\n        ［空欄］\n    }\n}",
+   options:["list.forEach(() -> System.out.println(x));", "list.forEach((x) -> System.out.println(x));", "list.forEach((x) -> { return x });", "list.forEach(list);"],
+   answer:1,
+   exp:"ListインタフェースのforEachはConsumer型のラムダ式を受け取る。Consumerは引数を消費して処理をするインタフェースで戻り値を返さない。Aは引数を受け取っておらず誤り、Cは戻り値を返しており誤り、DはConsumer型ではないので誤り。（解説P568）"},
+  {id:"b29",
+   cat:"クラス設計",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムの説明として、正しいものを選びなさい。",
+   code:"public class Sample {\n    private final int num;\n    public Sample(String str) {\n        this(Integer.parseInt(str));\n    }\n\n    public Sample(int num) {\n        this.num = num;\n    }\n    public Sample() {}\n    public int getNum() {\n        return this.num;\n    }\n}",
+   options:["2行目でコンパイルエラーが発生する", "4行目でコンパイルエラーが発生する", "6行目でコンパイルエラーが発生する", "9行目でコンパイルエラーが発生する"],
+   answer:3,
+   exp:"finalで修飾されたフィールドは定数として扱われ、一度設定した値は変更できないため、コンストラクタで必ず初期化する必要がある。3つあるコンストラクタのうち9行目の引数なしコンストラクタだけがnumを初期化していないのでコンパイルエラーになる。（解説P568）"},
+  {id:"b30",
+   cat:"インタフェース",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"interface Function {\n    void process();\n}\n\nclass Sample implements Function {\n    protected void process() {\n        System.out.println(\"A\");\n    }\n}\n\npublic class Main extends Sample {\n    public void process() {\n        System.out.println(\"B\");\n    }\n    public static void main(String[] args) {\n        Sample s = new Main();\n        Sample s2 = new Sample();\n        test(s);\n        test(s2);\n    }\n    public static void test(Function f) {\n        f.process();\n    }\n}",
+   options:["「A」「A」と表示される", "「B」「A」と表示される", "Sampleクラスでコンパイルエラーが発生する", "Mainクラスでコンパイルエラーが発生する", "SampleクラスとMainクラスの両方でコンパイルエラーが発生する"],
+   answer:2,
+   exp:"インタフェースに定義される抽象メソッドは暗黙的にpublicで修飾される。実装クラスでアクセス修飾子をより厳しいprotectedに変更することはできないため、Sampleクラスでコンパイルエラーになる。（解説P569）"},
+  {id:"b31",
+   cat:"コレクション",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムを確認し、Bクラスの空欄に入るコードとして、正しいものを選びなさい。",
+   code:"import java.util.Collection;\n\npublic class A {\n    private Collection collection;\n    public void set(Collection collection) {\n        this.collection = collection;\n    }\n}\n\nimport java.util.Map;\n\npublic class B extends A {\n    public void set(Map<String, String> map) {\n        ［空欄］\n    }\n}",
+   options:["set(map.values());", "super.set(List<String> map);", "set(super.map);", "map.forEach((k, v) -> set(v));"],
+   answer:0,
+   exp:"Mapはキーとバリューの組み合わせで管理するコレクション。すべてのキーを取り出すにはkeySet、すべてのバリューを取り出すにはvaluesを使う。valuesはjava.util.Collection型の参照を返すのでsetメソッドに渡せる。（解説P569〜570）"},
+  {id:"b32",
+   cat:"インタフェース",
+   src:"総仕上げ問題②",
+   prompt:"次の説明のうち、正しいものを選びなさい。",
+   code:"",
+   options:["Javaでは、クラスとインタフェースは多重継承できない", "インタフェースで、抽象メソッドをオーバーライドして実装を提供できる", "抽象メソッドをオーバーライドした抽象メソッドでは、戻り値の型を変更することはできない", "インタフェースを継承したインタフェースでは、抽象メソッドの実装を提供しなければならない"],
+   answer:1,
+   exp:"クラスの多重継承はできないがインタフェースの多重継承は可能（A誤り）。Java SE 8からデフォルトメソッドが使えるので、スーパーインタフェースの抽象メソッドをサブインタフェースのデフォルトメソッドでオーバーライドできる（B正）。共変戻り値により戻り値型はサブクラス型に変更できる（C誤り）。実装を持つべきなのは具象クラス（D誤り）。（解説P570）"},
+  {id:"b33",
+   cat:"オーバーロード",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public void test(Object[] val) {\n        System.out.println(\"A\");\n    }\n    public void test(long[] val) {\n        System.out.println(\"B\");\n    }\n    public void test(Object val) {\n        System.out.println(\"C\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new Sample().test(new int[3]);\n    }\n}",
+   options:["Aが表示される", "Bが表示される", "Cが表示される", "Sampleクラスでコンパイルエラーが発生する", "Mainクラスでコンパイルエラーが発生する"],
+   answer:2,
+   exp:"int配列型の引数と完全一致するメソッドがない場合、型変換されて対応するメソッドが呼ばれる。配列はObjectクラスのサブクラスなのでObject型として受け取るオーバーロードで処理できる。一方Object[]（参照の集合）とプリミティブ型の配列（値の集合）には互換性がないため選択肢Aは誤り。（解説P570〜571）"},
+  {id:"b34",
+   cat:"配列",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        int[][] array = new int[2][4];\n        array[0] = new int[]{1, 2, 3, 4};\n        array[1] = new int[]{1, 2};\n        for (int[] a : array) {\n            for (int b : a) {\n                System.out.print(b);\n            }\n            System.out.println();\n        }\n    }\n}",
+   options:["「1234」「12」と表示される", "「12」「12」と表示される", "「12」「1200」と表示される", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:0,
+   exp:"2次元配列の1次元目の各要素を、4要素と2要素の新しい配列で置き換えている。2次元目の要素数が揃っていなくても（非対称でも）問題ない。よって「1234」「12」。（解説P571）"},
+  {id:"b35",
+   cat:"Javaの仕組み",
+   src:"総仕上げ問題②",
+   prompt:"次の説明のうち、もっとも適切なものを選びなさい。",
+   code:"",
+   options:["Javaの実行環境は、異なるプログラミング言語のコンパイラによってコンパイルされた実行可能ファイルも処理できる", "コンパイラはリフレクションを使い、メソッドがターゲットプラットフォームのリソースによってサポートされているかどうかをテストする", "コンパイラは、特定のプラットフォームで実行するためにクラスを前処理する", "実行時に、クラスは必要に応じてロードされる"],
+   answer:3,
+   exp:"JVMはあらかじめ決められた形式のコードしか読み込めないので、別形式にコンパイルされた実行可能ファイルは実行できない（A誤り）。実行環境で動作できるかのテストはJVMの役割でコンパイラの役割ではない（B・C誤り）。Javaは必要に応じて必要なクラスファイルを読み込む（D正）。（解説P572）"},
+  {id:"b36",
+   cat:"ラムダ式",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"import java.util.function.Consumer;\n\npublic class Main {\n    public static void main(String[] args) {\n        final String val = \"Hello, Lambda\";\n        Consumer<String> func = (val) -> System.out.println(val);\n        func.accept(\"Hello, Java\");\n    }\n}",
+   options:["「Hello, Lambda」と表示される", "「Hello, Java」と表示される", "何も表示されない", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:3,
+   exp:"ラムダ式は引数宣言のデータ型を省略できる。設問はローカル変数valとラムダ式で宣言している変数valが重複しているためコンパイルエラーになる。（解説P572〜573）"},
+  {id:"b37",
+   cat:"変数のスコープ",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        String str;\n        test(str);\n    }\n    private static void test(String str) {\n        System.out.println(str);\n    }\n}",
+   options:["「null」と表示される", "何も表示されない", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:2,
+   exp:"初期化されていないローカル変数を参照するとコンパイルエラーになる。フィールドの場合はインスタンス生成時にデフォルト値で初期化されるので明示的な初期化がなくても参照できるが、ローカル変数は違う。（解説P573）"},
+  {id:"b38",
+   cat:"演算子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        int result = 30 - 12 / (2 * 5) + 1;\n        System.out.println(result);\n    }\n}",
+   options:["2が表示される", "3が表示される", "28が表示される", "29が表示される", "30が表示される"],
+   answer:4,
+   exp:"まずカッコ内の掛け算 2*5=10。次に加減算より除算が優先され 12/10 は int なので小数点以下が切り捨てられて 1。残りは 30 - 1 + 1 = 30。（解説P574）"},
+  {id:"b39",
+   cat:"繰り返し",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        int[] array = {1, 2, 3, 4, 5};\n        int key = 3;\n        int cnt = 0;\n        for (int i : array) {\n            if (i != key) {\n                continue;\n                cnt++;\n            }\n        }\n        System.out.println(cnt);\n    }\n}",
+   options:["3", "2", "1", "コンパイルエラーが発生する"],
+   answer:3,
+   exp:"continueが繰り返し処理の途中に現れると、それ以降に記述されている処理はスキップされる。設問ではcontinueの次の行のcnt++が到達不能コードになるためコンパイルエラーになる。（解説P574）"},
+  {id:"b40",
+   cat:"演算子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        int num = 0;\n        System.out.println(num++ + num + \",\" + ++num + num);\n    }\n}",
+   options:["「1,22」と表示される", "「2,22」と表示される", "「2,4」と表示される", "コンパイルエラーが発生する"],
+   answer:0,
+   exp:"num++ は変更前の0を返してからnumを1にするので 0+1=1。次に \"1\" + \",\" で文字列連結になり、++num は前置なので2に増えてから連結、最後のnumも2。結果は「1,22」。（解説P574〜575）"},
+  {id:"b41",
+   cat:"繰り返し",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        String[] array = {\"A\",\"B\",\"C\",\"D\",\"E\"};\n        for (String str : array) {\n            if (\"B\".equals(str)) {\n                continue;\n            }\n            System.out.println(str);\n            if (\"C\".equals(str)) {\n                break;\n            }\n        }\n    }\n}",
+   options:["「A」「C」と表示される", "「A」「B」「C」と表示される", "「C」「D」と表示される", "「C」と表示される", "コンパイルエラーが発生する"],
+   answer:0,
+   exp:"1つ目のif文は str が \"B\" のときに実行され、continueによって後ろの出力をスキップする。2つ目のif文は str が \"C\" のときに実行され、breakでループを抜けるのでDとEは表示されない。よって「A」「C」。（解説P575）"},
+  {id:"b42",
+   cat:"例外処理",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample implements AutoCloseable {\n    @Override\n    public void close() throws Exception {\n        System.out.println(\"C\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        try (Sample s = new Sample()) {\n            throw new Exception();\n        } catch (Exception e) {\n            System.out.println(\"A\");\n        } finally {\n            System.out.println(\"B\");\n        }\n    }\n}",
+   options:["「A」「B」「C」と表示される", "「A」「C」「B」と表示される", "「C」「A」「B」と表示される", "コンパイルエラーが発生する"],
+   answer:2,
+   exp:"try-with-resourcesで例外が発生した場合は ①closeメソッドによるリソース解放 → ②catchブロックによる例外処理 → ③finallyブロックによる事後処理 の順で処理される。例外処理よりも先にcloseが行われる点に注意。よって「C」「A」「B」。（解説P576）"},
+  {id:"b44",
+   cat:"継承",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"class A {\n    public A() {\n        System.out.print(\"A\");\n    }\n}\n\nclass B extends A {\n    public B() {\n        System.out.print(\"B\");\n    }\n}\n\nclass C extends B {\n    public C() {\n        System.out.print(\"C\");\n    }\n}\n\npublic class Sample {\n    public static void main(String[] args) {\n        new C();\n    }\n}",
+   options:["「ABC」と表示される", "「C」と表示される", "「CBA」と表示される", "コンパイルエラーが発生する"],
+   answer:0,
+   exp:"コンストラクタチェイン。継承関係にあるとき、サブクラスよりも先にスーパークラスのコンストラクタが実行される。Cのインスタンスを生成するとA→B→Cの順にコンストラクタが実行され「ABC」。何らかのクラスを継承したクラスでは、コンストラクタの先頭行にスーパークラスのコンストラクタ呼び出しがコンパイラによって自動的に追加される。（解説P577）"},
+  {id:"b46",
+   cat:"API",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        int num = 2;\n        int result = (int) Math.round(Math.pow(3.1, num));\n        System.out.println(result);\n    }\n}",
+   options:["8が表示される", "9が表示される", "10が表示される", "3が表示される", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:2,
+   exp:"Math.powは第1引数の値を第2引数の値で累乗するメソッド。3.1の2乗は9.61。Math.roundは小数点以下を四捨五入するので10になる。（解説P578）"},
+  {id:"b47",
+   cat:"継承",
+   src:"総仕上げ問題②",
+   prompt:"次のAクラスを継承したサブクラスに定義できるメソッドとして、正しいものを選びなさい。",
+   code:"public class A {\n    public Number test() {\n        return 100;\n    }\n}",
+   options:["@Override public Integer test() { return 0; }", "@Override public Number test(int num) { return num; }", "@Override public void test() { // do something }", "public Number test() throws Exception { return 0; }"],
+   answer:0,
+   exp:"オーバーライドのルールは、シグニチャが同じ／戻り値型は同じ型かサブクラス型／アクセス修飾子は同じかより緩く／throwsで宣言する例外は同じ型かサブクラス型。IntegerはNumberのサブクラスなので戻り値型として使える。Bは引数が違うのでオーバーロード、Cは戻り値をvoidにしており不可、Dはスーパークラスにない例外をスローしている。（解説P579）"},
+  {id:"b49",
+   cat:"変数のスコープ",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    int a, b;\n    public Sample(int a, int b) {\n        init(a, b);\n    }\n\n    public void init(int a, int b) {\n        this.a = a * a;\n        this.b = b * b;\n    }\n    public static void main(String[] args) {\n        int a = 2, b = 3;\n        Sample s = new Sample(a, b);\n        System.out.println(a + \", \" + b);\n    }\n}",
+   options:["「4, 9」と表示される", "「0, 0」と表示される", "「2, 3」と表示される", "コンパイルエラーが発生する"],
+   answer:2,
+   exp:"同名のフィールドとローカル変数がある場合、thisを使わない限りローカル変数が優先される。mainメソッドで出力しているのはローカル変数のaとbなので「2, 3」。フィールドは変更されているがコンソールには出ていない。（解説P580）"},
+  {id:"b51",
+   cat:"var（型推論）",
+   src:"総仕上げ問題②",
+   prompt:"次のコードに記述されている変数valのデータ型として、正しいものを選びなさい。",
+   code:"var list = new ArrayList<>();\nlist.forEach(val -> System.out.println(val));",
+   options:["String", "ArrayList", "Object", "var"],
+   answer:2,
+   exp:"ダイヤモンド演算子「<>」は代入される変数を参照して型パラメータを推論するが、varで宣言すると変数の型を使って推論できないためObject型が利用される。よってコレクションはObject型の集合になり、forEachで取り出す要素もObject型。（解説P581）"},
+  {id:"b53",
+   cat:"クラス設計",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    private String val;\n    private int num;\n    public Main(int num) {\n        this.num = num;\n    }\n    public Main() {\n        this.val = \"test\";\n        this.num = 10;\n    }\n    public static void main(String[] args) {\n        Main m = new Main(20);\n        System.out.println(m.val + \", \" + m.num);\n    }\n}",
+   options:["「null, 20」と表示される", "「test, 20」と表示される", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:0,
+   exp:"インスタンスのフィールドは明示的に初期化しなければ自動的にデフォルト値で初期化される（整数0／浮動小数点0.0／文字\\u0000／真偽false／参照型null）。new Main(20)はint引数のコンストラクタを呼ぶのでnumは20、valは何も代入されずnullのまま。（解説P582〜583）"},
+  {id:"b55",
+   cat:"インタフェース",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"interface A {\n    public void sample();\n}\n\ninterface B extends A {\n    public void test();\n}\n\nabstract class C implements B {\n    public void test() {\n        System.out.println(\"A\");\n    }\n}\n\nclass D extends C {\n    public void test() {\n        System.out.println(\"B\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        C c = new D();\n        c.test();\n    }\n}",
+   options:["「A」と表示される", "「B」と表示される", "Bインタフェースでコンパイルエラーが発生する", "Cクラスでコンパイルエラーが発生する", "Dクラスでコンパイルエラーが発生する"],
+   answer:4,
+   exp:"抽象メソッドは、実現または継承した具象クラスが実装を定義しなければならない。抽象メソッドはインタフェースAのsampleとインタフェースBのtestの2つ。具象クラスであるDクラスは両方の実装を持つ必要があるが、実装されているのはtestだけでsampleがないためDクラスでコンパイルエラーになる。（解説P584）"},
+  {id:"b56",
+   cat:"演算子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        int a = 4;\n        int b = 8;\n        int c = b += a / 2;\n        System.out.println(a + \", \" + b + \", \" + c);\n    }\n}",
+   options:["「4, 10, 8」と表示される", "「4, 10, 10」と表示される", "「4, 10, 6」と表示される", "「4, 12, 6」と表示される"],
+   answer:1,
+   exp:"右端から順に評価する。a / 2 は 4/2=2。次に b += 2 で b は 8+2=10。最後に c = b で c も 10。a は 4 のまま変わらない。（解説P585）"},
+  {id:"b57",
+   cat:"インポート",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムの空欄に入るコードとして、正しいものを選びなさい。なお、ex57.b.Sampleクラスのパスは /bin/ex57/b/Sample.class とする。",
+   code:"package ex57.a;\n\n［空欄］\n\npublic class Main {\n    public static void main(String[] args) {\n        Sample s = new Sample();\n    }\n}",
+   options:["import ex57.b.Sample;", "import ex57.b;", "import bin.ex57.b.Sample;", "import bin.ex57.b.*;"],
+   answer:0,
+   exp:"インポート宣言は「完全修飾クラス名をそのまま記述する」か「クラス名の部分にアスタリスクを記述してパッケージ内すべてを対象にする」の2通り。Sampleクラスの完全修飾クラス名は ex57.b.Sample。Bはパッケージ名だけで不可。C・Dの配置場所（bin）はコンパイル時や実行時のクラスパスで指定するものであり、インポート宣言には書かない。（解説P585〜586）"},
+  {id:"b58",
+   cat:"文字列",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        String a = \"A\";\n        a = a.concat(\"B\");\n        String b = \"C\";\n        a = a.concat(b);\n        a.replace('C', 'D');\n        a = a.concat(b);\n        System.out.println(a);\n    }\n}",
+   options:["「ABCD」と表示される", "「ACD」と表示される", "「ABCC」と表示される", "「ABD」と表示される", "「ABDC」と表示される"],
+   answer:2,
+   exp:"Stringはimmutable（不変）なクラスで、メソッドを呼び出しても内部の文字列を変更せず新しい文字列を返す。4行目で「AB」、6行目で「ABC」になるが、7行目のreplaceは戻り値を受け取っていないので反映されない。8行目のconcatで「ABCC」になる。（解説P586）"},
+  {id:"b59",
+   cat:"ボクシング",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        int num = 10;\n        Integer val = Integer.valueOf(10);\n        System.out.println(num == val);\n    }\n}",
+   options:["trueが表示される", "falseが表示される", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:0,
+   exp:"==演算子でint型とInteger型を比較すると、数値と参照は比較できないためオートアンボクシングによってintValueメソッドでint値を取り出して比較される。10と10の比較になるのでtrue。プリミティブ型からラッパー型へのボクシングではない点に注意。（解説P586〜587）"},
+  {id:"b60",
+   cat:"パッケージ",
+   src:"総仕上げ問題②",
+   prompt:"Bクラス内からAクラスにアクセスするコードとして、正しいものを選びなさい。",
+   code:"package sample;\npublic class A {\n    // ...\n}\n\npackage sample.sub;\npublic class B {\n    // ...\n}",
+   options:["String val = sample.A.getVal();", "import sample.*;", "import sample.sub.*;", "String val = A.getVal();"],
+   answer:0,
+   exp:"異なるパッケージに属しているクラスを利用するには、インポート宣言をするか完全修飾クラス名で記述する。sample.subのBからsampleのAへアクセスするにはsampleパッケージをインポートする必要があり、sample.subをインポートしている選択肢Cは誤り。完全修飾クラス名で書いている選択肢Aが正解。（解説P587）"},
+  {id:"b61",
+   cat:"繰り返し",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、`java Sample a b c` で実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        for (int i = 0; i < args.length; i++) {\n            System.out.println(args[i]);\n            switch(args[i]) {\n                case \"a\":\n                    continue;\n                case \"b\":\n                    i--;\n                    continue;\n                default:\n                    break;\n            }\n        }\n    }\n}",
+   options:["「a」「b」「c」と表示される", "無限ループになる", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:1,
+   exp:"起動パラメータ a b c を順に表示しながらswitchで分岐する。\"b\" の場合は i-- でカウンタをデクリメントしてからcontinueするため、for文の更新式 i++ で元に戻り、また同じ \"b\" を処理することになる。よって b を表示し続ける無限ループに陥る。（解説P587〜588）"},
+  {id:"b62",
+   cat:"static",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        Test a = new Test();\n        Test b = new Test();\n        a.sample();\n        b.sample();\n        System.out.println(a.value + \", \" + b.value);\n    }\n}\n\nclass Test {\n    static int value = 0;\n    int count = 0;\n    public void sample() {\n        while(count < 5) {\n            count++;\n            value++;\n        }\n    }\n}",
+   options:["「10, 10」と表示される", "「5, 5」と表示される", "「5, 10」と表示される", "コンパイルエラーが発生する"],
+   answer:0,
+   exp:"staticなフィールド（クラス変数）はインスタンスごとではなくクラス単位で管理され、すべてのインスタンスで共有される。countはインスタンスごとなので各5回、valueはstaticなのでsampleを2回呼ぶと5+5=10。a.valueもb.valueも同じクラス変数を指すので「10, 10」。（解説P588）"},
+  {id:"b64",
+   cat:"演算子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        var i = 3;\n        var j = 2;\n        i += (j * 2 + j) / i - 2;\n        System.out.println(i);\n    }\n}",
+   options:["9が表示される", "6が表示される", "3が表示される", "12が表示される"],
+   answer:2,
+   exp:"演算子の優先順位は数学と同じ。まずカッコ内 (2*2+2)=6、次に除算 6/3=2、最後に 2-2=0。加算代入なので i = 3 + 0 = 3。（解説P590）"},
+  {id:"b65",
+   cat:"演算子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        int a = 2;\n        int b = 1;\n        if (a++ > ++b) {\n            System.out.print(\"A \");\n        } else {\n            System.out.print(\"B \");\n        }\n        System.out.println(a + \":\" + b);\n    }\n}",
+   options:["「A 2:1」と表示される", "「A 3:2」と表示される", "「B 2:1」と表示される", "「B 3:2」と表示される"],
+   answer:3,
+   exp:"インクリメントは前置なら加算してから左右オペランドの処理、後置なら処理してから加算される。bは前置なので先に2になり、aは後置なのでこの時点では2。2 > 2 はfalseなのでelseが実行され「B 」を表示。条件の評価が終わったタイミングでaも3になるので「B 3:2」。（解説P591）"},
+  {id:"b69",
+   cat:"繰り返し",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        String[] array = {\"A\", \"B\"};\n        int i = 0;\n        while( i < array.length ) {\n            int j = 0;\n            do {\n                ++j;\n            } while ( j < array[i].length() );\n            System.out.println(array[i] + \":\" + j);\n            i++;\n        }\n    }\n}",
+   options:["A:2 / B:2", "A:1 / B:3", "A:1 / B:1", "実行時に例外がスローされる"],
+   answer:2,
+   exp:"do-while文は条件判定をする前に必ず一度は繰り返し処理を実行する。arrayの要素は「A」「B」という1文字の文字列なので、++jが1回実行された時点で j(1) < 1 が false になりループを抜ける。よってどちらも j は 1。（解説P593）"},
+  {id:"b70",
+   cat:"配列",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムの「// insert code here」に入るコードとして、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        // insert code here\n        array[0] = 2;\n        array[1] = 3;\n        System.out.println(array[0] + \", \" + array[1]);\n    }\n}",
+   options:["int[] array = new int[2];", "int[] array; array = int[2];", "int array = new int[2];", "int array[2];"],
+   answer:0,
+   exp:"配列生成のチェックポイントは、①変数宣言時に大カッコ「[]」があるか（省略不可）②変数宣言時に要素数を指定していないか③インスタンス生成でnewを記述しているか④生成時に要素数を指定しているか⑤[]以外のカッコを使っていないか。Aだけがすべて満たす。（解説P594）"},
+  {id:"b72",
+   cat:"配列",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Sample {\n    public static final int length = 3;\n    public static void main(String[] args) {\n        int[] array = new int[length];\n        for (int i = 0; i < 3; i++) {\n            System.out.print(array[i]);\n        }\n        System.out.println();\n        Integer[] array2 = new Integer[length];\n        for (int i = 0; i < 3; i++) {\n            System.out.print(array2[i]);\n        }\n    }\n}",
+   options:["nullnullnull / 000", "000 / 000", "000 / nullnullnull", "nullnullnull / nullnullnull", "実行時に例外がスローされる"],
+   answer:2,
+   exp:"配列のインスタンスを作ったとき、明示的に初期化しない限り各要素はデフォルト値で初期化される。整数型なら0、浮動小数点型なら0.0、真偽値型はfalse、文字型は\\u0000、参照型ならnull。int配列は000、Integer（参照型）配列はnullnullnull。（解説P595）"},
+  {id:"b73",
+   cat:"演算子",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"result=\" + 2 + 3 + 4);\n        System.out.println(\"result=\" + 2 + 3 * 4);\n    }\n}",
+   options:["result=9 / result=24", "result=9 / result=20", "result=234 / result=212", "result=212 / result=212"],
+   answer:2,
+   exp:"文字列と数値を+演算子で加算すると、数値が文字列に変換されて文字列連結になる。3行目は「result=234」。4行目は乗算が優先されるので \"result=\" + 2 + 12 となり「result=212」。（解説P595）"},
+  {id:"b74",
+   cat:"配列",
+   src:"総仕上げ問題②",
+   prompt:"次のコードを確認し、trueを戻すコードとして正しいものを選びなさい。",
+   code:"char[][] array1 = {{'a', 'b'}, {'c', 'd'}};\nchar[][] array2 = array1.clone();\nchar[] array3 = array1[1].clone();",
+   options:["array1[1] == array3", "array1[1] == array3[1]", "array1[1] == array2[1]", "array1.equals(array2)"],
+   answer:2,
+   exp:"cloneは新しい配列を作り、その配列に同じ要素への参照をコピーする。array2はarray1と同じ要素への参照を共有するので array1[1] == array2[1] は true。array3は新しい配列なのでarray1[1]とは異なる参照。Bは2次元配列の要素（char配列）とcharの比較でコンパイルエラー。equalsはオーバーライドされていないので同一性の検証になりfalse。（解説P596）"},
+  {id:"b75",
+   cat:"変数のスコープ",
+   src:"総仕上げ問題②",
+   prompt:"次のSampleクラスに、引数で受け取った値でフィールドvalueを変更するメソッドを追加したい。メソッドの定義として、正しいものを選びなさい。",
+   code:"public class Sample {\n    private String value;\n}",
+   options:["public void setValue(String value) { value = value; }", "public String setValue(String str) { String value = str; return value; }", "public void setValue(String value) { this.value = value; }", "public void setValue() { this.value = value; }"],
+   answer:2,
+   exp:"同名のフィールドとローカル変数がある場合、thisを使ってフィールドであることを明示しない限りローカル変数が優先される。Aは引数を自分自身に再代入しているだけ、Bは新しいローカル変数に代入しているだけ、Dは引数を宣言していない。（解説P596）"},
+  {id:"b77",
+   cat:"例外処理",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムの説明として、正しいものを選びなさい。",
+   code:"public class SampleException extends Exception {}\n\npublic class SubSampleException extends SampleException {}\n\npublic class Sample {\n    public void test(int num) throws SampleException {\n        if (num < 10) {\n            throw new SubSampleException();\n        }\n    }\n}",
+   options:["testメソッドでは、SampleExceptionクラスか、そのサブクラスであればスローできる", "SampleExceptionは非検査例外である", "SampleExceptionはプログラムで対処しきれないときに使う例外である", "testメソッドでは、SampleExceptionしかスローできないためコンパイルエラーが発生する"],
+   answer:0,
+   exp:"throws句にはそのメソッドがスローする可能性のある例外の種類を宣言する。例外もクラスなのでポリモーフィズムが使え、サブクラス型の例外インスタンスへの参照をスーパークラスの型で扱える。SampleExceptionはExceptionを継承した検査例外であり、プログラムで対処しきれないトラブルを表すのはErrorクラスの役割。（解説P597〜598）"},
+  {id:"b78",
+   cat:"変数のスコープ",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイルすると、何行目でコンパイルエラーになるか。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        sample();\n        int a = b;\n        int b = num;\n    }\n    private static void sample() {\n        System.out.println(num);\n    }\n    static int num;\n}",
+   options:["3行目", "4行目", "5行目", "8行目"],
+   answer:1,
+   exp:"メソッド内に記述したコードは1行目から順に実行されるため、ローカル変数を使うには、それを使っている行よりも上の行で宣言しておく必要がある。4行目で変数bを使っているが宣言は5行目なのでコンパイルエラー。フィールドやメソッドはランダムにアクセスされるので宣言の順番は関係ない。（解説P598）"},
+  {id:"b79",
+   cat:"配列",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        int[] array = {2, 3, 4};\n        int[] array2 = array.clone();\n        array2[0] = 5;\n        for (int i : array) {\n            System.out.println(i);\n        }\n    }\n}",
+   options:["「2」「3」「4」と表示される", "「5」「3」「4」と表示される", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
+   answer:0,
+   exp:"cloneメソッドを使うと同じ値を持った配列インスタンスが複製される。array2の要素を変更してもarrayには影響しない。cloneはObjectクラスに定義されているメソッドですべてのインスタンスが持っているのでコンパイルエラーにもならない。（解説P598）"},
+  {id:"b80",
+   cat:"繰り返し",
+   src:"総仕上げ問題②",
+   prompt:"次のプログラムをコンパイル、実行したときの結果として、正しいものを選びなさい。",
+   code:"public class Main {\n    public static void main(String[] args) {\n        int num = 0;\n        String[] array = {\"A\", \"B\", \"C\", \"D\"};\n        for (String s : array) {\n            switch(s) {\n                case \"D\":\n                case \"A\":\n                    num -= 1;\n                    break;\n                case \"B\":\n                    num++;\n                case \"C\":\n                    num += 2;\n            }\n        }\n        System.out.println(num);\n    }\n}",
+   options:["3が表示される", "4が表示される", "-1が表示される", "コンパイルエラーが発生する"],
+   answer:0,
+   exp:"switch文はcase式でbreakがないと、あとに続くcase式の処理が次々と実行される（フォールスルー）。「A」で -1（break）、「B」で +1 して 0 になりbreakがないので「C」も実行され +2 で 2、「C」で +2 して 4、「D」は処理がないがbreakもないので「A」のcase式が実行され -1 で 3。よって3。（解説P599）"},
+];
+
+const BOOK_MULTI_Q = [
+  {id:"m2",
+   cat:"クラス設計",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"immutableなオブジェクトに関する説明として、正しいものを選びなさい。（3つ選択）",
+   code:"",
+   options:["どのメソッドもオーバーライドできない", "どのメソッドでもフィールドの値を変更しない", "すべてのフィールドをpublicにする", "すべてのフィールドをfinalにする"],
+   answers:[0, 1, 3],
+   exp:"immutable（不変）なオブジェクトの要件は、setterを提供しない／参照型フィールドのgetterは参照をそのまま返さず新しいコピーを返す／フィールドの値を変更するメソッドは新しいインスタンスを生成して返す／すべてのフィールドをfinalかつprivateにする／サブクラスによるメソッドのオーバーライドを許可しない。フィールドをpublicにすると外部から変更できてしまうので選択肢Cは誤り。（解説P554）"},
+  {id:"m4",
+   cat:"継承",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のプログラムの説明として、正しいものを選びなさい。（3つ選択）",
+   code:"public class Trash {\n    List<String> list = new ArrayList<>();\n    protected Trash(String val) {\n        add(val);\n    }\n    public boolean test(String val) {\n        return true;\n    }\n    public void delete(String val) {\n        list.remove(val);\n    }\n    public final void add(String val) {\n        list.add(val);\n    }\n}\n\npublic class CacheTrash extends Trash {\n    private String tmp = null;\n    public CacheTrash() {\n        super(null);\n    }\n    public boolean test(String val) {\n        return list.contains(val);\n    }\n    public void delete(String val) {\n        this.tmp = val;\n    }\n    public void flush() {\n        super.delete(tmp);\n    }\n}",
+   options:["CacheTrashクラスのtestメソッドは常にtrueを戻す", "CacheTrashクラスのdeleteメソッドは、Trashクラスのdeleteメソッドを呼び出す", "CacheTrashクラスのaddメソッドは、引数をlistに追加する", "Trashクラスのlistは、Trashクラスのすべてのサブクラスで参照できる", "CacheTrashクラスのflushメソッドは、Trashクラスのdeleteメソッドを呼び出す", "CacheTrashクラスのコンストラクタは、nullをlistに追加する"],
+   answers:[2, 4, 5],
+   exp:"CacheTrashのtestはcontainsの結果を返すので常にtrueではない（A誤り）。CacheTrashのdeleteはフィールドに代入するだけでスーパークラスのdeleteを呼んでいない（B誤り）。addはスーパークラスTrashに定義があり引数をlistに追加する（C正）。listはアクセス修飾子なし＝同じパッケージ内だけなので、パッケージが異なればサブクラスでもアクセスできない（D誤り）。flushはsuper.deleteを呼んでいる（E正）。コンストラクタはsuper(null)→add(null)でlistにnullを追加する（F正）。（解説P555〜556）"},
+  {id:"m10",
+   cat:"var（型推論）",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のプログラムを確認し、Testクラスの何行目でコンパイルエラーが発生するかを選びなさい。（2つ選択）",
+   code:"public class Sample {\n    String name;\n}\n\n 1. import java.util.ArrayList;\n 2.\n 3. public class Test {\n 4.     var sample = new ArrayList<Sample>();\n 5.     public var test() {\n 6.         var sample = new Sample();\n 7.         var samples = new ArrayList<>();\n 8.         samples.add(\"Java\");\n 9.         samples.add(\"Lambda\");\n10.         for (var s : samples) {\n11.             System.out.println(s);\n12.         }\n13.     }\n14. }",
+   options:["5行目", "10行目", "7行目", "6行目", "4行目"],
+   answers:[0, 4],
+   exp:"varが使えるのはローカル変数の宣言だけ。フィールドや戻り値型などの宣言には使えない。4行目のsampleフィールドの宣言と、5行目の戻り値型でvarを使っているためコンパイルエラーになる。（解説P559）"},
+  {id:"m12",
+   cat:"var（型推論）",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のコードのうち、正常にコンパイルされるものを選びなさい。（2つ選択）",
+   code:"A. var a = {1.0, 2.0, 3.0, 4.0};\nB. var b = new Double{1.0, 2.0, 3.0, 4.0};\nC. var c = new Float[] {1.0F, 2.0F, 3.0F, 4.0F};\nD. var d = new double[] {1.0, 2.0, 3.0, 4.0};",
+   options:["var a = {1.0, 2.0, 3.0, 4.0};", "var b = new Double{1.0, 2.0, 3.0, 4.0};", "var c = new Float[] {1.0F, 2.0F, 3.0F, 4.0F};", "var d = new double[] {1.0, 2.0, 3.0, 4.0};"],
+   answers:[2, 3],
+   exp:"varは代入演算子の右辺の型からデータ型を推論する。Aは右辺・左辺ともに推論できる型情報がないためコンパイルエラー。BはDouble配列型のインスタンス生成に見えるが、配列であることを示す大カッコ「[]」が必要なのでエラー。CはFloat配列にFやfを付けた浮動小数点数リテラルを入れており正しい。Dもdouble配列の生成として正しい。（解説P560）"},
+  {id:"m17",
+   cat:"配列",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のコードのうち、正常にコンパイルされるものを選びなさい。（2つ選択）",
+   code:"A. int[] array;\n   array = new int[] {};\nB. int[] array2 = new int[3];\n   array2 = {1, 2, 3};\nC. Double[] array3 = new Double[3] {};\nD. int[] array4 = {array4[0], array4[1]};\nE. Double[] array5 = {null, 1.0};",
+   options:["int[] array; array = new int[] {};", "int[] array2 = new int[3]; array2 = {1, 2, 3};", "Double[] array3 = new Double[3] {};", "int[] array4 = {array4[0], array4[1]};", "Double[] array5 = {null, 1.0};"],
+   answers:[0, 4],
+   exp:"配列の初期化子「{ }」は変数宣言と同時にしか使えない。Aは無名配列（new int[] {}）を変数に代入しており正常。Bは宣言と別に初期化子を使っているのでエラー。Cは無名配列に要素数を書いているのでエラー。Dは初期化子の中で自分自身を参照しており、まだ代入されていないのでエラー。EはDouble（参照型）なのでnullを許容し、1.0はボクシングされる。（解説P562〜563）"},
+  {id:"m43",
+   cat:"モジュール",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"モジュールシステムに関する説明として、正しいものを選びなさい。（2つ選択）",
+   code:"",
+   options:["module-info.javaは、module-path内のどこにでも配置できる", "java.baseをエクスポートすると、すべてのコアパッケージがエクスポートされる", "利用するモジュールは、module-info.java内で宣言されていなければならない", "デフォルトで、モジュールは、モジュールが動作するディレクトリ内にはアクセスができる", "module-info.javaは空にはできない"],
+   answers:[2, 3],
+   exp:"module-info.javaはモジュールのルートディレクトリに配置する（A誤り）。java.baseはJavaの基本的なクラス群がまとめられたモジュールで、どのモジュールにも自動的に組み込まれるためexportsで宣言する必要はない（B誤り）。利用するモジュールはrequiresで宣言する（C正）。モジュールに含まれるプログラムはモジュール内のディレクトリにアクセス可能（D正）。何も利用せず何も公開しないモジュールならmodule-info.javaを空にできる（E誤り）。（解説P576）"},
+  {id:"m45",
+   cat:"抽象クラス",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のプログラムの「// insert code here」に入るコードとして、正しいものを選びなさい。（3つ選択）",
+   code:"public abstract class Item {\n    int num;\n    // insert code here\n}",
+   options:["public void print();", "public int calculate() { return num * 2; }", "public abstract int getNum() { return num; }", "public abstract int test();", "public static void sample() { // some codes }"],
+   answers:[1, 3, 4],
+   exp:"抽象クラスには実装を持たない抽象メソッドと実装を持つ具象メソッドの両方を定義できる。Aは中カッコがなく抽象メソッドの形だがabstractが付いていないのでコンパイルエラー。Cはabstractで修飾されているのに実装を持つのでコンパイルエラー。B・D・Eは正しい。（解説P578）"},
+  {id:"m48",
+   cat:"コマンド",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のプログラムを実行し、「sample」と表示したい。正しいコマンドを選びなさい。（2つ選択）",
+   code:"public class Sample {\n    public static void main(String[] args) {\n        System.out.println(\"sample\");\n    }\n}",
+   options:["java Sample.class", "javac Sample.java / java Sample.class", "java Sample", "javac Sample.java / java Sample", "java Sample.java"],
+   answers:[3, 4],
+   exp:"javacコマンドの引数には拡張子.javaまで含むソースファイル名を、javaコマンドの引数にはクラスファイルのファイル名ではなく完全修飾クラス名を記述する。Dは手順・引数ともに正しい。EはJava 11以降のソースファイルモードで、コンパイルせずに直接実行できる。（解説P579〜580）"},
+  {id:"m50",
+   cat:"アクセス修飾子",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のプログラムのコンパイルエラーを修正する方法として、正しいものを選びなさい。（2つ選択）",
+   code:"abstract class Sample {\n    protected void doProcess() {}\n    abstract void doTest();\n}\n\npublic class Test extends Sample {\n    void doProcess() {}\n    protected void doTest() {}\n}",
+   options:["Sampleクラスの2行目のメソッドをpublicにする", "Sampleクラスの3行目のメソッドをpublicにする", "Testクラスの2行目のメソッドをprotectedにする", "Testクラスの2行目のメソッドをpublicにする", "Testクラスの3行目のメソッドをpublicにする"],
+   answers:[2, 3],
+   exp:"オーバーライド時のアクセス修飾子は緩くはできるが厳しくはできない。Testクラスの2行目でprotectedをデフォルト（修飾子なし）に厳しく変更しているのが原因。protectedかpublicにすれば解消する。（解説P580〜581）"},
+  {id:"m52",
+   cat:"インスタンス",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のプログラムを実行して「0」と表示したい。Mainクラスの空欄に入るコードとして、正しいものを選びなさい。（3つ選択）",
+   code:"class Test {\n    public int num;\n    public Test(int num) {\n        this.num = num;\n    }\n    public int getNum() {\n        return num;\n    }\n    public void modify(int x) {\n        num += x;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Test t = new Test(100);\n        ［空欄］\n        System.out.println(t.getNum());\n    }\n}",
+   options:["this.num = 0;", "num = 0;", "t(0);", "t.num = 0;", "t.getNum() = 0;", "t.modify(0);", "t.modify(-t.num);", "t.modify(-t.getNum());"],
+   answers:[3, 6, 7],
+   exp:"インスタンスへのアクセスは「参照.フィールド名」「参照.メソッド名」。Aのthisはstaticなmainでは使えない、Bは変数名だけ、Cはメソッド名がない、Eは戻り値に代入できない、Fはmodifyが加算代入なので100+0で100のまま。Dは直接0を代入、GとHは-100を加算代入して0にする。（解説P581〜582）"},
+  {id:"m54",
+   cat:"インタフェース",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次の中から、インタフェースに記述できるコードを選びなさい。（2つ選択）",
+   code:"",
+   options:["public String methodA();", "final void methodB();", "public void methodC() { System.out.println(\"C\"); }", "public int d;", "public abstract void methodE();", "private abstract void methodF();", "final void methodG() { System.out.println(\"G\"); }"],
+   answers:[0, 4],
+   exp:"インタフェースには、publicなメンバの定義／抽象メソッド／デフォルトメソッドとstaticメソッドとしての実装／private具象メソッド／定数（フィールドは不可）を書ける。Aは実装を持たない抽象メソッドの宣言で暗黙的にabstractと解釈される。Bはfinalで抽象メソッドを宣言しており不可。C・Gは具象メソッドなので不可。Dはインスタンス変数なので不可。Fは抽象メソッドをprivateにできない。（解説P583〜584）"},
+  {id:"m63",
+   cat:"繰り返し",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のプログラムを実行して「54321」と表示したい。空欄に入るコードとして正しいものを選びなさい。（2つ選択）",
+   code:"public class Main {\n    public static void main(String[] args) {\n        int[] array = {1, 2, 3, 4, 5};\n        int x = array.length;\n        ［空欄］\n    }\n}",
+   options:["while( 0 <= x ) { System.out.println(array[x]); x--; }", "do { x--; System.out.println(array[x]); } while( 0 <= x );", "do { System.out.println(array[x]); x--; } while( 0 <= x );", "while (0 < x) { x--; System.out.println(array[x]); }", "while (0 < x) { System.out.println(array[--x]); }"],
+   answers:[3, 4],
+   exp:"xには要素数5が入っている。A・Cは最初にarray[5]を取り出すため要素外アクセスでArrayIndexOutOfBoundsExceptionになる。Bはxが0のときさらにデクリメントして-1になり例外。DとEは実は同じコードで、xが5〜1の間デクリメントしてから添字の値を表示するので5,4,3,2,1の順に出力される。（解説P589）"},
+  {id:"m71",
+   cat:"例外処理",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のプログラムのコンパイルエラーを修正する方法として、正しいものを選びなさい。（2つ選択）",
+   code:"public class Main {\n    public static void main(String[] args) {\n        try {\n            if (args.length == 0) {\n                sample(null);\n            } else {\n                sample(args[0]);\n            }\n        } catch (RuntimeException e) {\n            System.out.println(\"error\");\n        }\n    }\n\n    private static void sample(String str) {\n        if (str == null) throw new Exception();\n        throw new RuntimeException();\n    }\n}",
+   options:["mainメソッドの宣言にthrows Exceptionを追加する", "sampleメソッドの宣言にthrows Exceptionを追加する", "mainメソッドとsampleメソッドの両方にthrows Exceptionを追加する", "sampleメソッドの宣言にthrows Exceptionを追加し、catchブロックの型をExceptionに変更する", "mainメソッドの宣言にthrows Exceptionを追加し、catchブロックの型をExceptionに変更する"],
+   answers:[2, 3],
+   exp:"sampleメソッドは検査例外Exceptionをスローするのでthrowsで宣言しなければならない。すると呼び出し元のmainでも対応が必要になるが、mainがキャッチしているのはRuntimeExceptionでExceptionを捕まえられない。よって「両方にthrowsを付ける」か「sampleにthrowsを付けてcatchの型をExceptionに変える」のどちらかで修正する。（解説P594）"},
+  {id:"m76",
+   cat:"ラムダ式",
+   src:"総仕上げ問題②",
+   multi:true,
+   prompt:"次のプログラムを実行し、「HELLO」と表示したい。空欄に入るコードとして、正しいものを選びなさい。（2つ選択）",
+   code:"import java.util.function.Function;\n\npublic class Main {\n    public static void main(String[] args) {\n        Function<String, String> func = ［空欄］;\n        System.out.println(func.apply(\"hello\"));\n    }\n}",
+   options:["String::toUpperCase();", "x -> x.toUpperCase();", "x:toUpperCase();", "x::toUpperCase();", "(String x) -> { return x.toUpperCase(); };"],
+   answers:[1, 4],
+   exp:"BとEは同じ意味のラムダ式（Eは中カッコとreturnを使った記述、Bは中カッコと引数の型宣言を省略した記述）。A・C・Dはメソッド参照に近い記述だが、メソッド参照にはメソッド名の後ろにカッコ「()」を付けない。CとDは変数xを使っているが、コード内にxを宣言している箇所がない。（解説P597）"},
+];
+
+const EXTRA_QUESTIONS = [];
+
+const QUESTIONS = (function(){
+  var all=[...BOOK_QUESTIONS,...BOOK_MULTI_Q,...EXTRA_QUESTIONS];
+  var no=function(q){return parseInt(String(q.id).replace(/^\D+/,''),10)||0;};
+  return all.slice().sort(function(a,b){return no(a)-no(b);});
+})();
+
+const ADVICE = {
+ "例外処理": "検査例外(Exceptionのサブクラス)と非検査例外(RuntimeExceptionのサブクラス)の区別、catchの順序、マルチキャッチの制約を整理する。",
+ "クラス設計": "immutableの5要件（setterなし／getterはコピー／変更は新インスタンス／final+private／オーバーライド禁止）を暗記する。",
+ "型変換": "暗黙の型変換が許されるのは「データの欠損がない」方向だけ。char・short・intのキャストと文字番号を確認する。",
+ "継承": "super の届く範囲は1つ上まで。コンストラクタは引き継がれない。ポリモーフィズムでは変数の型で呼べるメソッドが決まる。",
+ "変数のスコープ": "同名ならローカル変数が優先。フィールドを触るには this. や 参照. を付ける。",
+ "アクセス修飾子": "public / protected / なし(default) / private の4種と、パッケージ・継承関係の組み合わせを表にする。",
+ "var（型推論）": "var が使えるのはローカル変数の宣言だけ。フィールド・戻り値・引数には使えない。",
+ "static": "static初期化子は複数書けて上から順に実行される。staticメンバは「クラス名.〜」でアクセスする。",
+ "インポート": "インポート宣言は使うソースファイルごとに必要。同じパッケージ内なら不要。",
+ "配列": "初期化子 { } は変数宣言と同時のみ。無名配列 new 型[]{...} との違いを押さえる。",
+ "演算子": "複合代入演算子は右辺を先に評価する。優先順位と評価順を式に書き下して確認する。",
+ "モジュール": "java.base に java.lang などの基本APIが含まれる。module-info.java の書き方も確認する。",
+ "文字列": "Stringは不変。replace/substring/concatは新しい文字列を返すだけで元の文字列は変わらない。",
+ "ラムダ式": "Consumerは引数を受け取り戻り値なし、Functionは戻り値あり。ラムダ式の引数名は外側のローカル変数と重複できない。",
+ "インタフェース": "抽象メソッドは暗黙的にpublic。実装側でアクセス修飾子を厳しくできない。デフォルトメソッドと共変戻り値も確認。",
+ "コレクション": "MapのkeySet/values/entrySetの戻り値型を押さえる。valuesはCollection型。",
+ "オーバーロード": "完全一致が無いときの型変換の優先順位（拡大変換→ボクシング→可変長引数）を確認する。",
+ "Javaの仕組み": "コンパイラとJVMの役割分担。クラスは実行時に必要に応じてロードされる。",
+ "繰り返し": "continue直後のコードは到達不能でコンパイルエラー。breakとcontinueの効き方の違いを確認。",
+ "抽象クラス": "抽象クラスは抽象メソッドと具象メソッドの両方を持てる。抽象メソッドにはabstractが必須で実装は書けない。",
+ "API": "Math.round（四捨五入）/ Math.pow（累乗）など頻出APIの引数と戻り値型を確認する。",
+ "コマンド": "javacの引数は拡張子.java付きのファイル名、javaの引数は完全修飾クラス名。Java 11のソースファイルモードも押さえる。",
+ "インスタンス": "インスタンスへのアクセスは「参照.フィールド名」「参照.メソッド名」。staticメソッド内でthisは使えない。",
+ "パッケージ": "別パッケージのクラスを使うにはインポート宣言か完全修飾クラス名。サブパッケージは別パッケージ扱い。",
+ "ボクシング": "==でintとIntegerを比べるとアンボクシングされて値比較になる。Integer同士の==はキャッシュ範囲に注意。"
+};
+
+const FIGS = {};
+const TRACE = {};
+
+/* ============================================================
+   ▲▲▲ 差し替えここまで（この下はエンジン：全科目共通・変更不要） ▲▲▲
+   ============================================================ */
+
+const LETTERS=['A','B','C','D','E','F','G'];
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{perCat:{},log:[]}}catch(e){return{perCat:{},log:[]}}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+let queue=QUESTIONS.map((_,i)=>i);   // 出題順（インデックス）
+let pos=0;                            // queue内の現在位置
+let sessCorrect=0, sessDone=0;
+let answered=false;
+
+const stage=document.getElementById('stage');
+const pbar=document.getElementById('pbar');
+const scoreEl=document.getElementById('score');
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function renderFigure(q){
+  const f=FIGS[q.id]; if(!f) return '';
+  const lines=q.code.split('\n');
+  let rows='';
+  lines.forEach((ln,idx)=>{
+    const n=idx+1, an=f.lines[n], t=an?an[0]:'';
+    rows+=`<div class="figline ${t}"><span class="fno">${n}</span><span class="fcode">${esc(ln)||' '}</span></div>`;
+    if(an) rows+=`<div class="annorow ${t}"><span class="anno">${esc(an[1])}</span></div>`;
+  });
+  const out=f.out?`<div class="figout">▸ ${esc(f.out)}</div>`:'';
+  return `<div class="figure reveal"><div class="fig-label">図解 — プログラムの流れ</div><div class="figbox">${rows}</div>${out}</div>`;
+}
+
+// 問題文のコードを、行番号つきの注釈可能ブロックとして描画（回答前は注釈なし）
+function codeBlockHtml(q){
+  if(!q.code) return '';
+  const lines=q.code.split('\n');
+  const rows=lines.map((ln,i)=>`<div class="figline" data-ln="${i+1}"><span class="fno">${i+1}</span><span class="fcode">${esc(ln)||' '}</span></div>`).join('');
+  return `<div class="figbox qcode" id="qcode">${rows}</div>`;
+}
+
+// 回答後、問題文のコードに直接ハイライト＋連結線＋結果を差し込む
+function revealFigure(q){
+  const f=FIGS[q.id]; const box=document.getElementById('qcode');
+  if(!f||!box) return;
+  Object.keys(f.lines).sort((a,b)=>a-b).forEach(n=>{
+    const t=f.lines[n][0], txt=f.lines[n][1];
+    const line=box.querySelector('.figline[data-ln="'+n+'"]');
+    if(!line) return;
+    line.classList.add(t,'reveal');
+    const ar=document.createElement('div'); ar.className='annorow '+t+' reveal';
+    ar.innerHTML='<span class="anno">'+esc(txt)+'</span>';
+    line.after(ar);
+  });
+  if(f.out){
+    const o=document.createElement('div'); o.className='figout qfigout reveal';
+    o.textContent='▸ '+f.out; box.after(o);
+  }
+}
+
+function renderTrace(q){
+  const t=TRACE[q.id]; if(!t) return '';
+  const head=t.cols.map(c=>`<th>${esc(c)}</th>`).join('');
+  const body=t.rows.map((r,ri)=>{
+    const tds=r.map((c,ci)=>{
+      const st=ci===r.length-1?' class="st"':'';
+      let cell;
+      if(c==='null') cell='<span class="nul">null</span>';
+      else if(c==='') cell='<span class="nul">·</span>';
+      else cell=esc(c);
+      return `<td${st}>${cell}</td>`;
+    }).join('');
+    return `<tr class="${(t.hot!=null&&ri===t.hot)?'hot':''}">${tds}</tr>`;
+  }).join('');
+  return `<div class="trace reveal"><details class="tdet"><summary>変数の変化を追う（トレース）</summary><div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></details></div>`;
+}
+
+let selected=new Set();
+// 横向き2カラムの幅を「選択肢の文字量」と「コードの横幅」に応じて自動調整する
+// 選択肢が短ければ左(コード)を広く、選択肢が長ければ右(選択肢)を広く。
+// インラインstyleではなくCSS変数 --gtc を渡すことで、900px以下のメディアクエリ(1カラム)を壊さない
+function qcolStyle(q){
+  if(!q.code) return '';                                   // コード無しは .nocode の中央1カラムに任せる
+  const w=s=>{let n=0;for(const ch of String(s)){n+=ch.charCodeAt(0)>0xff?2:1;}return n;}; // 全角=2,半角=1
+  const optW=Math.max(1,...(q.options||['']).map(o=>Math.max(1,...String(o).split('\n').map(w)))); // 選択肢の最長行
+  const codeW=Math.max(1,...q.code.split('\n').map(w));    // コードの最長行
+  let l=1,r=1;
+  if(optW<=16){l=1.8;r=1;}          // 選択肢がとても短い(記号/単語)→コードを大きく
+  else if(optW<=26){l=1.4;r=1;}     // やや短い
+  else if(optW>=60){l=1;r=1.6;}     // とても長い(文章/コード)→右を大きく
+  else if(optW>=42){l=1;r=1.3;}     // やや長い
+  if(codeW>=64)l+=0.35;             // コードが横に長い場合は左に加算
+  return ` style="--gtc:minmax(0,${l}fr) minmax(0,${r}fr)"`;
+}
+function renderQuestion(){
+  answered=false; selected=new Set();
+  const q=QUESTIONS[queue[pos]];
+  pbar.style.width=(pos/queue.length*100)+'%';
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  stage.innerHTML=`
+    <div class="card reveal">
+      <div class="eyebrow">
+        <span class="cat">${esc(q.cat)}</span>
+        <span class="qnum">${pos+1} / ${queue.length}</span>
+      </div>
+      <div class="prompt">${esc(q.prompt)} ${q.multi?'<span class="multi-tag">複数選択</span>':''}</div>
+      <div class="qcols${q.code?'':' nocode'}"${qcolStyle(q)}>
+        <div class="qcol-l">${codeBlockHtml(q)}</div>
+        <div class="qcol-r">
+          <div class="opts" id="opts"></div>
+          <div id="after"></div>
+        </div>
+      </div>
+    </div>`;
+  const opts=document.getElementById('opts');
+  const order=shuffle(q.options.map((_,i)=>i));   // 毎回シャッフル
+  q._order=order;
+  order.forEach((origIdx,dispIdx)=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.type='button';
+    b.innerHTML=`<span class="key">${LETTERS[dispIdx]}</span><span class="txt">${esc(q.options[origIdx])}</span><span class="mark"></span>`;
+    b.onclick=()=> q.multi ? toggleSel(dispIdx,b) : choose(dispIdx);
+    opts.appendChild(b);
+  });
+  if(q.multi){
+    const bar=document.createElement('div'); bar.className='actions'; bar.id='mbar';
+    bar.innerHTML=`<button class="btn primary" type="button" id="submitBtn" onclick="submitMulti()" disabled>確定する（${q.answers.length}個選ぶ）</button>`;
+    opts.after(bar);
+  }
+}
+
+function toggleSel(dispIdx,btn){
+  if(answered) return;
+  if(selected.has(dispIdx)){selected.delete(dispIdx);btn.classList.remove('sel');}
+  else{selected.add(dispIdx);btn.classList.add('sel');}
+  const sb=document.getElementById('submitBtn'); if(sb) sb.disabled = selected.size===0;
+}
+
+function submitMulti(){
+  if(answered) return; answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=new Set(q.answers.map(a=>q._order.indexOf(a)));
+  const correct = selected.size===correctDisp.size && [...selected].every(x=>correctDisp.has(x));
+  document.querySelectorAll('#opts .opt').forEach((b,bi)=>{
+    b.disabled=true; b.classList.remove('sel');
+    const isC=correctDisp.has(bi), isS=selected.has(bi);
+    if(isC){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(isS&&!isC){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  const mbar=document.getElementById('mbar'); if(mbar) mbar.remove();
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  const answerLetters=[...correctDisp].sort((a,b)=>a-b).map(i=>LETTERS[i]).join('・');
+  const last=pos===queue.length-1;
+  document.getElementById('after').innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${answerLetters}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function choose(i){
+  if(answered) return;
+  answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=q._order.indexOf(q.answer);   // シャッフル後の正解位置
+  const correct=i===correctDisp;
+  const btns=document.querySelectorAll('#opts .opt');
+  btns.forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===correctDisp){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(bi===i&&!correct){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  // 記録（累積・端末保存）
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+
+  const after=document.getElementById('after');
+  const last=pos===queue.length-1;
+  after.innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${LETTERS[correctDisp]}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function next(){
+  if(pos<queue.length-1){pos++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+  else showResults();
+}
+
+function showResults(){
+  pbar.style.width='100%';
+  const s=load();
+  const cats=Object.keys(ADVICE);
+  let totA=0,totC=0;
+  cats.forEach(c=>{const d=s.perCat[c];if(d){totA+=d.a;totC+=d.c;}});
+  const pct=totA?Math.round(totC/totA*100):0;
+  const weak=cats.filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+
+  let barsHtml=cats.map(c=>{
+    const d=s.perCat[c]||{a:0,c:0};
+    const p=d.a?Math.round(d.c/d.a*100):0;
+    const isWeak=d.a>0&&p<70;
+    const col=d.a===0?'var(--border)':(p<50?'var(--ng)':p<70?'var(--accent)':'var(--ok)');
+    return `<div class="bar-row">
+      <div class="bar-top"><span>${esc(c)}${isWeak?'<span class="weak-badge">要復習</span>':''}</span>
+      <span class="n">${d.a?p+'% ('+d.c+'/'+d.a+')':'未回答'}</span></div>
+      <div class="bar-track"><i style="width:${d.a?p:0}%;background:${col}"></i></div></div>`;
+  }).join('');
+
+  let msg = totA===0?'まだ回答がありません。':
+    pct>=80?'かなり good。取りこぼした分野だけ詰めれば合格圏です。':
+    pct>=60?'あと一歩。下の「要復習」分野を重点的に。':
+    '基礎の詰め直しから。要復習の分野を1つずつ潰しましょう。';
+
+  let adviceHtml = weak.length
+    ? weak.map(c=>`<div class="advice"><div class="a-cat">${esc(c)} <span class="weak-badge">要復習</span></div><div class="a-txt">${esc(ADVICE[c])}</div></div>`).join('')
+    : (totA?'<div class="empty">要復習の分野はありません。全分野70%以上。この調子！</div>':'<div class="empty">問題を解くと、ここに弱点分野と対策が出ます。</div>');
+
+  stage.innerHTML=`
+   <div class="card reveal">
+     <div class="res-head">
+       <div class="ring" style="--p:${pct}"><div class="num"><b>${pct}%</b><span>累計正答率</span></div></div>
+       <div class="res-sum"><h2>成績サマリー</h2><p>${msg}</p>
+         <p style="margin-top:6px">累計 ${totC} / ${totA} 問正解</p></div>
+     </div>
+     <div class="sec-label">分野別の正答率</div>
+     <div class="bars">${barsHtml}</div>
+     <div class="sec-label">重点対策（要復習の分野）</div>
+     ${adviceHtml}
+     <div class="actions">
+       <button class="btn ghost" type="button" onclick="resetAll()">記録をリセット</button>
+       ${weak.length?'<button class="btn" type="button" onclick="retryWeak()">要復習だけ再挑戦</button>':''}
+       <button class="btn primary" type="button" onclick="restart()">もう一度：全問</button>
+     </div>
+   </div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){queue=QUESTIONS.map((_,i)=>i);pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+function retryWeak(){
+  const s=load();
+  const weak=Object.keys(ADVICE).filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+  const idx=QUESTIONS.map((q,i)=>i).filter(i=>weak.includes(QUESTIONS[i].cat));
+  queue=idx.length?idx:QUESTIONS.map((_,i)=>i);
+  pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(){save({perCat:{},log:[]});showResults();}
+
+renderQuestion();
+</script>
+
+<!-- cbt-nav-added -->
+<style>
+  /* ===== 問題選択画面（後付け・既存レイアウトは変更しない） ===== */
+
+  /* 各問題ページに出るのはこのボタンだけ。左下に固定 */
+  .cbtopen{position:fixed;left:14px;bottom:14px;z-index:60;
+    font:600 13px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:12px 18px;cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.18), 0 8px 22px rgba(0,0,0,.14)}
+  .cbtopen:hover{filter:brightness(1.06)}
+  .cbtopen:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* 問題選択画面（全画面オーバーレイ） */
+  .cbtscreen{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+    padding:16px;background:rgba(10,12,16,.55)}
+  .cbtscreen[hidden]{display:none}
+  .cbtpanel{width:min(860px,100%);max-height:min(86vh,760px);display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .cbtpanel-head{display:flex;align-items:center;gap:12px;padding:14px 16px;
+    border-bottom:1px solid var(--border);background:var(--surface-2)}
+  .cbtpanel-head h2{font:600 15px/1.3 var(--sans);color:var(--ink);margin:0}
+  .cbtcount{font:400 12px/1 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums}
+  .cbtclose{margin-left:auto;font:500 13px/1 var(--sans);color:var(--muted);
+    background:var(--surface);border:1px solid var(--border);border-radius:999px;
+    padding:8px 14px;cursor:pointer}
+  .cbtclose:hover{color:var(--ink);border-color:var(--ink)}
+  .cbtfilters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+  .cbtchip{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:7px 12px;cursor:pointer}
+  .cbtchip.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtbody{padding:12px 16px;overflow:auto;flex:1}
+  .cbtgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+  .cbtq{font:600 14px/1 var(--mono);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:10px;padding:12px 0;cursor:pointer;
+    font-variant-numeric:tabular-nums;position:relative}
+  .cbtq:hover{border-color:var(--accent);color:var(--accent)}
+  .cbtq.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .cbtq.ng{background:var(--ng-soft);border-color:var(--ng);color:var(--ng)}
+  .cbtq.fl::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent)}
+  .cbtq.cur{outline:2px solid var(--accent);outline-offset:1px}
+  .cbtempty{font:400 13px/1.6 var(--sans);color:var(--muted);padding:10px 2px}
+  .cbtfoot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    padding:12px 16px;border-top:1px solid var(--border);background:var(--surface-2)}
+  .cbtlegend{font:400 11.5px/1.6 var(--sans);color:var(--faint);
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .cbtlegend i{display:inline-block;width:11px;height:11px;border-radius:3px;
+    border:1px solid var(--border);margin-right:5px;vertical-align:-1px}
+  .cbtlegend i.ok{background:var(--ok-soft);border-color:var(--ok)}
+  .cbtlegend i.ng{background:var(--ng-soft);border-color:var(--ng)}
+  .cbtlegend i.fl{background:var(--accent)}
+  .cbtrun{font:600 12.5px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:9px 16px;cursor:pointer}
+  .cbtrun[disabled]{opacity:.45;cursor:default}
+
+  /* 問題カード右上の「後で見直す」 */
+  .cbtflag{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:6px 11px;cursor:pointer;margin-left:auto}
+  .cbtflag.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtprev{font:400 12px/1 var(--sans);color:var(--muted);margin-left:8px}
+
+  /* 左下のボタンが最下部の内容に重ならないよう余白を足す */
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  @media (max-width:640px){
+    .cbtopen{left:10px;bottom:10px;padding:11px 16px}
+    .cbtgrid{grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+    .cbtscreen{padding:10px}
+  }
+</style>
+<script>
+(function(){
+  // エンジンが読み込まれていない画面（雛形の説明ページ等）では何もしない
+  if(typeof QUESTIONS==='undefined' || typeof renderQuestion!=='function') return;
+  var stage=document.getElementById('stage');
+  if(!stage || !QUESTIONS.length) return;
+
+  // --- 進捗の保存（科目ごとに別キー。既存の成績データとは混ぜない） ---
+  var CKEY=(typeof KEY!=='undefined'?KEY:'quiz')+'_cbt';
+  var st={};
+  try{ st=JSON.parse(localStorage.getItem(CKEY))||{}; }catch(e){ st={}; }
+  function persist(){ try{ localStorage.setItem(CKEY,JSON.stringify(st)); }catch(e){} }
+
+  var filter='all';
+
+  // --- 左下のボタン（各問題ページに出るのはこれだけ） ---
+  var openBtn=document.createElement('button');
+  openBtn.type='button';
+  openBtn.className='cbtopen';
+  openBtn.textContent='問題選択画面';
+  document.body.appendChild(openBtn);
+
+  // --- 問題選択画面（全画面オーバーレイ） ---
+  var scr=document.createElement('div');
+  scr.className='cbtscreen';
+  scr.hidden=true;
+  scr.innerHTML=
+    '<div class="cbtpanel" role="dialog" aria-modal="true" aria-label="問題選択画面">'
+   +  '<div class="cbtpanel-head">'
+   +    '<h2>問題を選ぶ</h2><span class="cbtcount" id="cbtCount"></span>'
+   +    '<button type="button" class="cbtclose" id="cbtClose">閉じる</button>'
+   +  '</div>'
+   +  '<div class="cbtfilters">'
+   +    '<button type="button" class="cbtchip on" data-f="all">すべて</button>'
+   +    '<button type="button" class="cbtchip" data-f="todo">未解答</button>'
+   +    '<button type="button" class="cbtchip" data-f="ng">間違えた</button>'
+   +    '<button type="button" class="cbtchip" data-f="flag">見直し</button>'
+   +  '</div>'
+   +  '<div class="cbtbody"><div class="cbtgrid" id="cbtGrid"></div></div>'
+   +  '<div class="cbtfoot">'
+   +    '<div class="cbtlegend">'
+   +      '<span><i></i>未解答</span><span><i class="ok"></i>正解</span>'
+   +      '<span><i class="ng"></i>不正解</span><span><i class="fl"></i>見直し</span>'
+   +    '</div>'
+   +    '<button type="button" class="cbtrun" id="cbtRun">この絞り込みだけを順に解く</button>'
+   +  '</div>'
+   +'</div>';
+  document.body.appendChild(scr);
+
+  var grid=document.getElementById('cbtGrid');
+  var runBtn=document.getElementById('cbtRun');
+  var countEl=document.getElementById('cbtCount');
+  var closeBtn=document.getElementById('cbtClose');
+
+  function openScreen(){ scr.hidden=false; paint(); closeBtn.focus(); }
+  function closeScreen(){ scr.hidden=true; openBtn.focus(); }
+  openBtn.onclick=openScreen;
+  closeBtn.onclick=closeScreen;
+  scr.addEventListener('click',function(e){ if(e.target===scr) closeScreen(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !scr.hidden) closeScreen(); });
+
+  scr.querySelectorAll('.cbtchip').forEach(function(c){
+    c.onclick=function(){
+      filter=c.dataset.f;
+      scr.querySelectorAll('.cbtchip').forEach(function(x){ x.classList.toggle('on', x===c); });
+      paint();
+    };
+  });
+
+  // 現在の絞り込みに合致する問題インデックス
+  function picked(){
+    var out=[];
+    QUESTIONS.forEach(function(q,i){
+      var s=st[q.id]||{};
+      if(filter==='todo' && s.r) return;
+      if(filter==='ng'   && s.r!=='ng') return;
+      if(filter==='flag' && !s.f) return;
+      out.push(i);
+    });
+    return out;
+  }
+
+  function paint(){
+    if(scr.hidden) return;
+    var list=picked();
+    var done=QUESTIONS.filter(function(q){ return (st[q.id]||{}).r; }).length;
+    countEl.textContent='解答済み '+done+' / '+QUESTIONS.length;
+    grid.innerHTML='';
+    if(!list.length){
+      grid.innerHTML='<div class="cbtempty">該当する問題はありません。</div>';
+      runBtn.disabled=true;
+      return;
+    }
+    runBtn.disabled=false;
+    list.forEach(function(i){
+      var q=QUESTIONS[i], s=st[q.id]||{};
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='cbtq'+(s.r==='ok'?' ok':s.r==='ng'?' ng':'')+(s.f?' fl':'')
+                 +(queue[pos]===i?' cur':'');
+      b.textContent=String(q.id).replace(/^\D+/,'')||String(i+1);
+      b.title=(q.cat||'')+(s.r?(s.r==='ok'?'／前回○':'／前回×'):'');
+      b.onclick=function(){ jump(i); };
+      grid.appendChild(b);
+    });
+  }
+
+  // 任意の問題へジャンプ（出題キューに無ければ全問キューに戻してから移動）
+  function jump(i){
+    var at=queue.indexOf(i);
+    if(at<0){ queue=QUESTIONS.map(function(_,k){return k;}); at=i; }
+    pos=at;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  runBtn.onclick=function(){
+    var list=picked();
+    if(!list.length) return;
+    queue=list; pos=0;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  function toggleFlag(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].f=!st[q.id].f;
+    persist(); decorate(); paint();
+  }
+
+  // 問題カードに「後で見直す」ボタンと前回結果を差し込む
+  function decorate(){
+    var eb=document.querySelector('#stage .eyebrow');
+    if(!eb) return;
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var s=st[q.id]||{};
+    var old=eb.querySelector('.cbtflag'); if(old) old.remove();
+    var oldp=eb.querySelector('.cbtprev'); if(oldp) oldp.remove();
+    if(s.r){
+      var p=document.createElement('span');
+      p.className='cbtprev';
+      p.textContent = s.r==='ok' ? '前回：○正解' : '前回：×不正解';
+      eb.appendChild(p);
+    }
+    var f=document.createElement('button');
+    f.type='button';
+    f.className='cbtflag'+(s.f?' on':'');
+    f.textContent = s.f ? '見直しに登録済み' : '後で見直す';
+    f.onclick=toggleFlag;
+    eb.appendChild(f);
+  }
+
+  // 解答結果を拾って保存する（正解/不正解の判定は既存エンジンの表示を読む）
+  function record(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var v=document.querySelector('#after .verdict'); if(!v) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].r = v.classList.contains('ok') ? 'ok' : 'ng';
+    persist(); paint();
+  }
+
+  // --- 既存関数をラップ（中身は書き換えない） ---
+  var _render=renderQuestion;
+  renderQuestion=function(){ _render.apply(this,arguments); decorate(); paint(); };
+
+  if(typeof choose==='function'){
+    var _choose=choose;
+    choose=function(){ _choose.apply(this,arguments); record(); };
+  }
+  if(typeof submitMulti==='function'){
+    var _submit=submitMulti;
+    submitMulti=function(){ _submit.apply(this,arguments); record(); };
+  }
+
+  decorate();
+})();
+</script>
+
+<!-- back-to-index (jinji) -->
+<style>
+.appshome{position:fixed;right:14px;z-index:9999;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  font:600 13px/1 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  color:#16232b;background:#ffffff;border:1px solid rgba(0,0,0,.16);border-radius:999px;
+  padding:11px 16px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.16),0 8px 20px rgba(0,0,0,.10)}
+.appshome:hover{filter:brightness(.97)}
+.appshome:focus-visible{outline:2px solid #136b5b;outline-offset:2px}
+@media (prefers-color-scheme:dark){
+  .appshome{color:#e9eef1;background:#1d242b;border-color:rgba(255,255,255,.18);
+    box-shadow:0 2px 6px rgba(0,0,0,.45)}}
+@media (max-width:520px){.appshome{right:10px;padding:10px 14px;font-size:12.5px}}
+</style>
+<a class="appshome" href="../">&#8592; アプリ一覧</a>
+<script>
+if('serviceWorker' in navigator){addEventListener('load',function(){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+</script>
+</body></html>

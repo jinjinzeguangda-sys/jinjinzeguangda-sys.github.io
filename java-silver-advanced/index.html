@@ -1,0 +1,872 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><!-- pwa-standalone (jinji) -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Java Silver応">
+<meta name="theme-color" content="#F7F5F1">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<style>
+@media (display-mode:standalone){body{padding-top:env(safe-area-inset-top)}}
+</style>
+</head><body>
+<meta charset="utf-8">
+
+
+
+
+
+<meta name="format-detection" content="telephone=no">
+
+<style>
+  /* iPhoneのノッチ・ホームインジケータを避ける（既存レイアウトは変更しない） */
+  body{
+    padding-left:max(0px,env(safe-area-inset-left));
+    padding-right:max(0px,env(safe-area-inset-right));
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+    -webkit-text-size-adjust:100%;
+  }
+  /* ホーム画面から開いた時に文字選択でズレるのを防ぐ（入力欄は除く） */
+  @media (display-mode:standalone){
+    body{-webkit-touch-callout:none}
+    input,textarea{-webkit-user-select:text}
+  }
+</style>
+
+<title>Java Silver応用 演習コンソール</title>
+<style>
+  :root{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+    --radius:14px; --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+      --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+      --accent:#E4A24A; --accent-soft:#3A2F1E;
+      --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+      --code-bg:#0F1318; --code-ink:#CDD3C6;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+    --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+    --accent:#E4A24A; --accent-soft:#3A2F1E;
+    --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+    --code-bg:#0F1318; --code-ink:#CDD3C6;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;margin:0}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 22px 64px}
+  .qcols{display:grid;grid-template-columns:var(--gtc,minmax(0,1fr) minmax(0,1fr));gap:24px;align-items:start;margin-top:6px}
+  .qcols.nocode{grid-template-columns:minmax(0,720px);justify-content:center}
+  .qcol-l,.qcol-r{min-width:0}
+  .qcol-l .qcode{margin:0}
+  .qcol-l{position:sticky;top:92px}
+  @media (max-width:900px){.wrap{max-width:660px}.qcols{grid-template-columns:1fr;gap:16px}.qcol-l{position:static}}
+  .topbar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);padding:14px 0 12px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand h1{font-size:16px;margin:0;font-weight:650;letter-spacing:.01em}
+  .brand .tag{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;
+    letter-spacing:.14em;font-weight:600}
+  .meta{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .progress{flex:1;height:7px;background:var(--border);border-radius:99px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;
+    transition:width .35s ease}
+  .score{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap}
+  .score b{color:var(--ink)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 20px}
+  .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .cat{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);font-weight:650}
+  .src{font-size:11px;color:var(--faint)}
+  .qnum{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .prompt{font-size:16.5px;font-weight:600;margin:2px 0 14px;text-wrap:balance}
+  pre.code{background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:15.5px;
+    line-height:1.65;padding:14px 15px;border-radius:10px;border:1px solid var(--border);
+    overflow-x:auto;margin:0 0 18px;white-space:pre;tab-size:2}
+
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;cursor:pointer;
+    background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;
+    padding:13px 14px;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.5;
+    transition:border-color .15s,background .15s,transform .05s}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt:active:not(:disabled){transform:translateY(1px)}
+  .opt:disabled{cursor:default}
+  .opt .key{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--muted);
+    border:1.5px solid var(--border);border-radius:7px;min-width:26px;height:26px;display:flex;
+    align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;transition:.15s}
+  .opt .txt{flex:1;padding-top:1px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .opt .mark{font-size:18px;line-height:1.3;flex:0 0 auto;opacity:0}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.correct .key{border-color:var(--ok);background:var(--ok);color:#fff}
+  .opt.correct .mark{opacity:1;color:var(--ok)}
+  .opt.wrong{border-color:var(--ng);background:var(--ng-soft)}
+  .opt.wrong .key{border-color:var(--ng);background:var(--ng);color:#fff}
+  .opt.wrong .mark{opacity:1;color:var(--ng)}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .key{border-color:var(--accent);background:var(--accent);color:#fff}
+  .multi-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;
+    color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:1px 6px;
+    vertical-align:2px;white-space:nowrap}
+
+  .verdict{display:flex;align-items:center;gap:8px;margin:16px 0 4px;font-weight:700;font-size:15px}
+  .verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
+  .exp{background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:8px;padding:13px 15px;font-size:14px;color:var(--ink);margin-top:6px}
+  .exp code{font-family:var(--mono);font-size:12.5px;background:var(--code-bg);padding:1px 5px;
+    border-radius:4px;color:var(--code-ink)}
+  .exp b{color:var(--ink)}
+  .reveal{animation:rise .28s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.reveal{animation:none}.progress>i{transition:none}}
+
+  /* 図解（コード注釈） */
+  .figure{margin-top:14px}
+  .fig-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin-bottom:6px;font-weight:650}
+  .figbox{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:8px 0;
+    overflow-x:auto;font-family:var(--mono);font-size:15.5px;line-height:1.3}
+  .figline{display:flex;gap:10px;padding:0 12px;white-space:pre;min-width:max-content}
+  .figline .fno{color:var(--faint);min-width:1.5em;text-align:right;flex:0 0 auto;user-select:none}
+  .figline .fcode{color:var(--code-ink)}
+  .figline.err{background:var(--ng-soft);box-shadow:inset 3px 0 0 var(--ng)}
+  .figline.info{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+  .figline.ok{background:var(--ok-soft);box-shadow:inset 3px 0 0 var(--ok)}
+  .figline.mute{box-shadow:inset 3px 0 0 var(--border)}
+  .figline.mute .fcode{color:var(--faint)}
+  /* 連結線つき注釈：該当行から L字の線＋矢印で枝分かれ */
+  .annorow{position:relative;padding:3px 12px 9px 42px;min-width:max-content}
+  .annorow::before{content:"";position:absolute;left:5px;top:-4px;width:17px;height:16px;
+    border-left:2px solid currentColor;border-bottom:2px solid currentColor;border-bottom-left-radius:8px;opacity:.9}
+  .annorow::after{content:"";position:absolute;left:20px;top:7px;width:0;height:0;
+    border:5px solid transparent;border-left:7px solid currentColor;opacity:.9}
+  .annorow.err{color:var(--ng)}
+  .annorow.info{color:var(--accent)}
+  .annorow.ok{color:var(--ok)}
+  .annorow.mute{color:var(--faint)}
+  .annorow .anno{font-family:var(--sans);font-size:12.5px;line-height:1.5;white-space:normal;max-width:46ch;display:block}
+  .annorow.ok .anno{font-weight:600}
+  .figout{margin-top:9px;font-family:var(--mono);font-size:12.5px;color:var(--ink);font-weight:700}
+  .figbox.qcode{margin:0 0 16px;font-size:15.5px}
+  .qfigout{margin:8px 2px 16px}
+  /* 変数トレース表（クリックで開閉） */
+  .trace{margin-top:14px}
+  .trace details{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .trace summary{cursor:pointer;list-style:none;padding:9px 13px;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650;
+    background:var(--surface-2);display:flex;align-items:center;gap:8px;user-select:none}
+  .trace summary::-webkit-details-marker{display:none}
+  .trace summary::before{content:"▸";color:var(--accent)}
+  .trace details[open] summary::before{content:"▾"}
+  .trace summary:hover{color:var(--ink)}
+  .trace summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .tscroll{overflow-x:auto;border-top:1px solid var(--border)}
+  .trace table{border-collapse:collapse;width:100%;font-size:12.5px}
+  .trace th,.trace td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+    padding:6px 10px;text-align:left;white-space:normal;vertical-align:top;overflow-wrap:anywhere}
+  .trace th{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;
+    color:var(--muted);background:var(--surface-2);white-space:nowrap}
+  .trace td{font-family:var(--mono);color:var(--code-ink);font-variant-numeric:tabular-nums}
+  .trace td.st{font-family:var(--sans);color:var(--ink)}
+  .trace tr.hot td{background:var(--ng-soft)}
+  .trace .nul{color:var(--faint)}
+  .trace tbody tr:last-child td{border-bottom:none}
+  .trace th:last-child,.trace td:last-child{border-right:none}
+
+  .actions{display:flex;gap:10px;margin-top:18px}
+  .btn{font-family:inherit;font-size:14.5px;font-weight:600;border-radius:10px;padding:11px 18px;
+    cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--ink);
+    transition:.15s;flex:0 0 auto}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.ghost{color:var(--muted)}
+
+  /* results */
+  .res-head{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .ring{--p:0;width:104px;height:104px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--border) 0);
+    display:grid;place-items:center;position:relative}
+  .ring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface)}
+  .ring .num{position:relative;z-index:1;text-align:center}
+  .ring .num b{font-size:26px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .ring .num span{display:block;font-size:11px;color:var(--muted)}
+  .res-sum h2{margin:0 0 4px;font-size:18px}
+  .res-sum p{margin:0;color:var(--muted);font-size:13.5px}
+  .sec-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin:22px 0 10px;font-weight:650}
+  .bars{display:flex;flex-direction:column;gap:11px}
+  .bar-row .bar-top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px}
+  .bar-row .bar-top .n{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+  .bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+  .bar-track>i{display:block;height:100%;border-radius:99px}
+  .weak-badge{font-size:10.5px;font-family:var(--mono);color:var(--ng);border:1px solid var(--ng);
+    border-radius:5px;padding:0 5px;margin-left:7px;vertical-align:1px}
+  .advice{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+    margin-top:10px}
+  .advice .a-cat{font-weight:650;font-size:14px;margin-bottom:3px;display:flex;align-items:center}
+  .advice .a-txt{font-size:13.5px;color:var(--muted)}
+  .advice+.advice{margin-top:8px}
+  .empty{color:var(--muted);font-size:13.5px;padding:6px 0}
+  .footer{margin-top:26px;text-align:center;color:var(--faint);font-size:11.5px;line-height:1.7}
+  .footer .warn{color:var(--muted)}
+  a.link{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a.link:hover{border-color:var(--accent)}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <h1>Java Silver応用 演習コンソール</h1>
+      <span class="tag">Java / 応用</span>
+    </div>
+    <div class="meta">
+      <div class="progress"><i id="pbar"></i></div>
+      <div class="score" id="score">0 / 0</div>
+    </div>
+  </div>
+  <div id="stage"></div>
+  <div class="footer">
+    成績はこの端末のブラウザ内にのみ保存されます（localStorage）。<br>
+    <span class="warn">コレクション・例外・ジェネリクス・ラムダ/Stream・インターフェースを確認する4択演習（オリジナル問題・全30問）。</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ▼▼▼ ここから下だけを科目ごとに差し替える（エンジン部は触らない） ▼▼▼
+   自動生成: build_quizzes_v2.py（商用・オリジナル問題）
+   ============================================================ */
+
+// localStorage 保存キー：科目ごとに必ず変える（他科目と成績が混ざらないように）
+const KEY='javaSilverAdvancedQuizV1';
+
+// 【単一選択】4択。answer は options の正解インデックス（0始まり）。
+const BOOK_QUESTIONS = [
+  {"id": "b1", "cat": "コレクション", "src": "オリジナル", "prompt": "10万件規模のデータに対し、リストの先頭付近へ要素の挿入・削除を頻繁に行う処理を実装する場合、最も適切なコレクションは次のうちどれか。", "code": "", "options": ["LinkedList", "ArrayList", "HashSet", "TreeMap"], "answer": 0, "exp": "LinkedListは双方向連結リストとして実装されており、先頭付近への挿入・削除は要素をずらす必要がなくポインタの付け替えだけで済むため高速である。一方ArrayListは配列ベースのため、先頭付近への挿入・削除のたびに後続要素をずらす必要がありコストが高い。HashSetは順序を保証せず位置を指定した操作に向かず、TreeMapはキーの自然順序に基づく管理を行うマップであり、リストの先頭・末尾操作という要件には合わない。"},
+  {"id": "b2", "cat": "コレクション", "src": "オリジナル", "prompt": "HashMapにおけるキーの扱いに関して、正しい記述はどれか。", "code": "", "options": ["HashMapはnullキーを許容しない(NullPointerExceptionが発生する)", "HashMapはnullをキーとして1つだけ許容し、null値も許容する", "Hashtableと同様、HashMapもnullキー・null値を一切許容しない", "HashMapは複数のnullキーを許容し内部で別々に管理する"], "answer": 1, "exp": "HashMapはnullキーを1つだけ許容し、値としてもnullを許容する点が特徴である。対してHashtableはnullキー・null値のいずれも許容せず、格納しようとするとNullPointerExceptionが発生する。nullキーは1つしか存在し得ない（キーとしてのnullは常に同一視される）ため、複数のnullキーを別々に管理することはできない。"},
+  {"id": "b3", "cat": "コレクション", "src": "オリジナル", "prompt": "次のコードを実行した場合に起こる現象として正しいものはどれか。", "code": "List<String> list = new ArrayList<>(List.of(\"a\", \"b\", \"c\"));\nfor (String s : list) {\n    if (s.equals(\"b\")) {\n        list.remove(s);\n    }\n}", "options": ["正常に\"b\"のみが削除される", "何も削除されず正常終了する", "ConcurrentModificationExceptionがスローされる", "コンパイルエラーになる"], "answer": 2, "exp": "拡張for文は内部的にIteratorを利用しており、Iterator自身のremove()以外の方法でコレクションの構造を変更すると、次のnext()呼び出し時にConcurrentModificationExceptionがスローされる。安全に要素を削除するには、Iteratorのremove()メソッドを使うか、Collection#removeIf()を利用する必要がある。"},
+  {"id": "b4", "cat": "コレクション", "src": "オリジナル", "prompt": "独自クラスのインスタンスに「自然順序付け(natural ordering)」を定義し、TreeSetでの管理やCollections.sort(list)（比較用引数なし）での並べ替えを可能にするために実装すべき手段として正しいものはどれか。", "code": "", "options": ["Comparatorインターフェースを実装し、compare(T o1, T o2)を定義する", "Iterableインターフェースを実装し、iterator()を定義する", "Cloneableインターフェースを実装し、clone()をオーバーライドする", "Comparableインターフェースを実装し、compareTo(T o)を定義する"], "answer": 3, "exp": "自然順序付け(natural ordering)をクラス自身に定義するのはComparableインターフェースのcompareTo(T o)メソッドである。TreeSetやCollections.sort(list)（比較用引数なし）はこのcompareToを用いて順序を決定する。Comparatorは外部から比較ロジックを注入したい場合（自然順序とは別の並び順を使いたい場合）に用いるものであり、IterableやCloneableは順序付けとは無関係のインターフェースである。"},
+  {"id": "b5", "cat": "コレクション", "src": "オリジナル", "prompt": "equals()をオーバーライドしたがhashCode()をオーバーライドしなかったクラスのインスタンスをHashSetに格納した場合に起こりうる問題として、最も適切なものはどれか。", "code": "", "options": ["equals()で等しいと判定される異なるインスタンスが、異なるハッシュバケットに格納され、重複要素として扱われてしまう可能性がある", "コンパイルエラーになる", "実行時に必ず例外がスローされる", "HashSetが自動的にhashCode()を推論して正しく動作する"], "answer": 0, "exp": "equalsとhashCodeには「等しいと判定されるオブジェクトは同じhashCodeを返さなければならない」という契約がある。hashCodeをオーバーライドしないとObjectのデフォルト実装（メモリアドレス相当の値）が使われ続けるため、equalsでは等しいはずの異なるインスタンスが異なるハッシュバケットに配置され、HashSetのcontains()やadd()での重複排除が正しく機能しなくなる。コンパイルエラーにはならず、例外も発生しない点が発見しづらいバグにつながる。"},
+  {"id": "b6", "cat": "コレクション", "src": "オリジナル", "prompt": "「重複を許容せず、要素の挿入順序を保持する」という要件を満たすコレクション実装として最も適切なものはどれか。", "code": "", "options": ["HashSet", "LinkedHashSet", "TreeSet", "ArrayList"], "answer": 1, "exp": "LinkedHashSetは重複を許さないSetでありながら、内部的にハッシュテーブルと連結リストを組み合わせて実装されており、要素の挿入順序を保持する。HashSetは順序を保証しない。TreeSetは自然順序またはComparatorによる順序で並び、挿入順とは異なる。ArrayListは重複を許容するコレクションであり「重複を許容しない」という要件を満たさない。"},
+  {"id": "b7", "cat": "例外処理", "src": "オリジナル", "prompt": "次のうち、非検査例外（unchecked exception）に分類されるものはどれか。", "code": "", "options": ["IOException", "SQLException", "NullPointerException", "ClassNotFoundException"], "answer": 2, "exp": "NullPointerExceptionはRuntimeExceptionのサブクラスであり、非検査例外(unchecked exception)に分類される。IOException、SQLException、ClassNotFoundExceptionはいずれもExceptionを継承するがRuntimeExceptionは継承していないため検査例外(checked exception)に分類され、呼び出し元でthrows宣言かtry-catchによる対応が必須となる。"},
+  {"id": "b8", "cat": "例外処理", "src": "オリジナル", "prompt": "次のtry-with-resources文で複数のリソースを宣言した場合のclose()呼び出し順序として正しいものはどれか。", "code": "try (ResourceA a = new ResourceA(); ResourceB b = new ResourceB()) {\n    // 処理\n}", "options": ["宣言と同じ順(Aが先、Bが後)にcloseされる", "どちらが先にcloseされるかは実行時にランダムに決まる", "close()はガベージコレクション実行時まで呼ばれない", "宣言と逆順（Bが先、Aが後）にcloseされる"], "answer": 3, "exp": "try-with-resources文で複数のリソースを宣言した場合、それらの後始末(close)は宣言順とは逆順で行われる。後からオープンしたリソースを先にクローズするという、一般的な資源管理の作法（コンストラクタ呼び出しの逆順で解放する）に対応している。ランダムに決まることはなく、tryブロックを抜ける時点で即座にcloseされるためガベージコレクションを待つ必要もない。"},
+  {"id": "b9", "cat": "例外処理", "src": "オリジナル", "prompt": "下位層で発生したチェック例外を、呼び出し元にはより意味のある独自の非検査例外として伝えつつ、元の例外情報（スタックトレース含む）も保持したい場合に用いる手法として最も適切なものはどれか。", "code": "", "options": ["独自例外のコンストラクタでcauseとして元の例外を渡し、例外の連鎖(chained exception)を構成する", "catchブロックでe.printStackTrace()を呼んだ後、何もthrowしない", "元の例外をそのままthrowし、独自例外は使わない", "元の例外をキャッチしてSystem.exit()を呼び出す"], "answer": 0, "exp": "例外の連鎖(exception chaining)は、独自例外のコンストラクタ引数やinitCause()メソッドで元の例外(cause)を設定し、Throwable#getCause()で後から元の原因を辿れるようにする手法である。printStackTraceのみでは呼び出し元に例外を伝播できず、単に元の例外をそのままthrowすると呼び出し元にとって意味のあるメッセージを付与できない。System.exit()はエラーハンドリングとして不適切であり、原因の保持にも寄与しない。"},
+  {"id": "b10", "cat": "例外処理", "src": "オリジナル", "prompt": "次のコードを実行した場合の戻り値として正しいものはどれか。", "code": "public static int test() {\n    try {\n        return 1;\n    } finally {\n        return 2;\n    }\n}", "options": ["1", "2", "コンパイルエラーになる", "例外がスローされる"], "answer": 1, "exp": "finallyブロック内でreturn文を実行すると、tryブロックで既に評価されていたreturn文の結果を上書きし、最終的にはfinallyのreturn値がメソッドの戻り値として採用される。これはfinallyが必ず実行されるという性質に起因する挙動であり、可読性やバグの温床になりやすいため、実務ではfinally内でのreturnは避けるべきとされる。コンパイルエラーにはならず、例外も発生しない。"},
+  {"id": "b11", "cat": "例外処理", "src": "オリジナル", "prompt": "独自の検査例外クラス(RuntimeExceptionを継承しない)をスローするメソッドを定義する場合に必要な対応として正しいものはどれか。", "code": "", "options": ["検査例外であっても、呼び出し元では何も対応しなくてもコンパイルが通る", "独自例外はRuntimeExceptionを継承しない限り定義そのものができない", "メソッドのシグネチャにthrows宣言を書くか、メソッド内でtry-catchして処理する必要がある", "throws宣言をすると、そのメソッドは呼び出し元でオーバーライドできなくなる"], "answer": 2, "exp": "検査例外(RuntimeExceptionを継承しないException派生クラス)をスローする可能性があるメソッドは、throws宣言を行うか、メソッド内部でtry-catchして処理しなければコンパイルエラーになる。これは検査例外に特有のコンパイル時チェックである。RuntimeExceptionを継承せずとも独自の検査例外クラスは定義可能であり、throws宣言の有無はオーバーライドの可否そのものには影響しない。"},
+  {"id": "b12", "cat": "例外処理", "src": "オリジナル", "prompt": "次のマルチキャッチのコードに関する記述として正しいものはどれか。", "code": "try {\n    process();\n} catch (IOException | SQLException e) {\n    log(e);\n}", "options": ["マルチキャッチで捕捉した変数eは、catchブロック内で再代入することができる", "マルチキャッチは最大2つの例外型までしか指定できない", "IOExceptionとSQLExceptionが継承関係にある場合でも問題なくコンパイルできる", "マルチキャッチで指定する例外型同士が継承関係にある場合はコンパイルエラーになる"], "answer": 3, "exp": "マルチキャッチ(catch (A | B e))では、指定する例外型の一方が他方のサブクラスである場合、片方の指定が冗長になるためコンパイルエラーになる。またマルチキャッチで受け取る変数は暗黙的にfinal相当として扱われ、catchブロック内で再代入することはできない。指定できる例外型の数に2つという上限はなく、3つ以上でも指定できる。"},
+  {"id": "b13", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "次のメソッドに関する記述として正しいものはどれか。", "code": "public void printAll(List<? extends Number> list) {\n    list.add(10); // ここに注目\n    for (Number n : list) {\n        System.out.println(n);\n    }\n}", "options": ["list.add(10)はコンパイルエラーになる。<? extends Number>は読み取り専用的に扱われ、null以外の要素を追加できない", "List<? extends Number>型の変数に対してadd(10)を呼ぶことができ、正常にコンパイルされる", "List<? extends Number>はList<Number>と完全に同じ型として扱われる", "for文でNumber型として取り出すこと自体がコンパイルエラーになる"], "answer": 0, "exp": "<? extends Number>は「Numberまたはその何らかの未知のサブクラス」を表すワイルドカードであり、コンパイラは実際の具体的な型を特定できないため、addで新たな要素（null以外）を書き込むことは型安全性の観点からコンパイルエラーになる（PECS原則のProducer=extendsであり読み取り専用的に扱われる）。一方、要素を取り出す際はどんなサブクラスであってもNumberとして安全に扱えるため、for文での取り出しは問題ない。List<? extends Number>はList<Number>とは異なる型であり、相互に代入することはできない。"},
+  {"id": "b14", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "Numberのリストや、その親クラスであるObjectのリストなど、Integer型の要素を安全に追加できるようにしたい場合に適切な宣言はどれか。", "code": "", "options": ["List<? extends Integer>", "List<? super Integer>", "List<?>", "List<Integer>のみで、ワイルドカードは使えない"], "answer": 1, "exp": "PECS原則（Producer-Extends, Consumer-Super）に従うと、要素を書き込む(Consumer)用途にはsuperワイルドカードを使う。List<? super Integer>はIntegerまたはその祖先型（Number、Objectなど）のリストを受け入れることができ、Integer型の要素を安全に追加できる。extendsを使ったList<? extends Integer>は読み取り専用的になり書き込みができない。List<?>はnull以外の要素を追加できず、List<Integer>では柔軟性に欠け、親クラスのリストを受け取れない。"},
+  {"id": "b15", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "ジェネリクスの「型消去(erasure)」の結果として、Javaでコンパイルエラーになる記述はどれか。", "code": "", "options": ["List<String> list = new ArrayList<>();", "void method(List<String> list) { }", "if (obj instanceof List<String>) { }", "List<String>[] arr; （配列型の変数宣言のみ）"], "answer": 2, "exp": "型消去(erasure)により、実行時にはList<String>とList<Integer>の型引数の違いは保持されない。そのため、instanceof演算子でList<String>のようなパラメータ化された型を直接判定しようとする記述はコンパイルエラーになる（instanceof List<?>であれば可能）。変数宣言、メソッド引数としての利用、および配列型の変数宣言（実際にジェネリック配列を生成しない限り）はいずれも問題なくコンパイルできる。"},
+  {"id": "b16", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "次のうち、正しく定義されたジェネリックメソッドはどれか。", "code": "", "options": ["public void <T> printItem(T item) { System.out.println(item); }", "public T void printItem(T item) { System.out.println(item); }", "public void printItem<T>(T item) { System.out.println(item); }", "public <T> void printItem(T item) { System.out.println(item); }"], "answer": 3, "exp": "ジェネリックメソッドは、アクセス修飾子の直後・戻り値の型の直前に型パラメータ<T>を宣言する構文になっている。型パラメータの宣言位置を戻り値の型の後にしたり、メソッド名の後に付けたりする記述は構文として誤りでありコンパイルエラーになる。"},
+  {"id": "b17", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "次のコードに関する記述として最も適切なものはどれか。", "code": "List list = new ArrayList();  // 生型(raw type)\nlist.add(\"文字列\");\nlist.add(100);\nfor (Object o : list) {\n    String s = (String) o;  // ここで例外\n    System.out.println(s);\n}", "options": ["生型を使っているため、コンパイル時に警告(unchecked警告)は出るが、コンパイル自体は通る。実行時にIntegerをStringにキャストしようとしてClassCastExceptionが発生する", "生型を使うとコンパイルエラーになるため、このコードはそもそもコンパイルできない", "生型のリストは型安全性が保証されているため、実行時エラーは発生しない", "add(100)の呼び出し自体がコンパイルエラーになる"], "answer": 0, "exp": "生型(raw type)を使用すると型チェックが無効化され、異なる型の要素が混在して格納できてしまう。コンパイラはuncheckedな操作について警告を出すが、コンパイル自体には成功する。実行時に、Integerとして格納された要素をStringへキャストしようとした箇所でClassCastExceptionが発生する。これが生型の使用を避けるべき理由であり、型安全性は保証されていない。"},
+  {"id": "b18", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "型パラメータTに対して「Tを実装したComparableでなければならない」という制約を課し、compareToメソッドが呼べるようにするための正しい宣言はどれか。", "code": "", "options": ["public static <T implements Comparable<T>> T max(T a, T b)", "public static <T extends Comparable<T>> T max(T a, T b)", "public static <T super Comparable<T>> T max(T a, T b)", "public static <T> T max(T a, T b) where T is Comparable"], "answer": 1, "exp": "型パラメータへの境界指定は、対象がクラスであってもインターフェースであっても常にextendsキーワードを用いる（implementsは使わない）。<T extends Comparable<T>>と記述することで、Tがcompareメソッド(compareTo)を持つことをコンパイラに保証させ、a.compareTo(b)のような呼び出しが型安全に行えるようになる。implements、super、where句を用いる書き方はいずれもJavaの構文として存在しない。"},
+  {"id": "b19", "cat": "ラムダ・Stream", "src": "オリジナル", "prompt": "関数型インターフェース(functional interface)の条件に関する記述として正しいものはどれか。", "code": "", "options": ["メソッドを1つも持ってはならない", "抽象メソッドを持つ数に制限はなく、@FunctionalInterfaceを付ければ何個でもよい", "抽象メソッドをちょうど1つだけ持ち、default/staticメソッドはいくつ持っていてもよい", "defaultメソッドを1つだけ持ち、抽象メソッドは持ってはならない"], "answer": 2, "exp": "関数型インターフェースの条件は「抽象メソッドがちょうど1つであること」である。defaultメソッドやstaticメソッドはいくつ持っていても関数型インターフェースの条件には影響しない。@FunctionalInterfaceアノテーションは、抽象メソッドが2つ以上になった場合にコンパイルエラーを発生させて条件違反を検出するための注釈であり、複数の抽象メソッドを許容するものではない。"},
+  {"id": "b20", "cat": "ラムダ・Stream", "src": "オリジナル", "prompt": "次のうち、静的メソッド参照(static method reference)の正しい例はどれか。", "code": "", "options": ["String::toUpperCase", "list::add", "new ArrayList<>()::size", "Integer::parseInt"], "answer": 3, "exp": "Integer::parseIntはstaticメソッドparseIntへの参照であり、静的メソッド参照(static method reference)に分類される。String::toUpperCaseは「特定の型の任意のインスタンス」に対するインスタンスメソッド参照(unbound instance method reference)、list::addやnew ArrayList<>()::sizeは既に存在する特定のインスタンスに対するメソッド参照(bound instance method reference)に分類される。"},
+  {"id": "b21", "cat": "ラムダ・Stream", "src": "オリジナル", "prompt": "次のコードを実行した際の動作として正しいものはどれか。", "code": "Stream<Integer> stream = Stream.of(1, 2, 3)\n    .filter(n -> {\n        System.out.println(\"filter: \" + n);\n        return n % 2 == 0;\n    });\nSystem.out.println(\"ここまで到達\");", "options": ["「ここまで到達」のみが出力され、filter内の処理は一切実行されない", "\"filter: 1\"、\"filter: 2\"、\"filter: 3\"が出力された後に「ここまで到達」が出力される", "コンパイルエラーになる", "filter内の処理と「ここまで到達」が並行して出力される"], "answer": 0, "exp": "Streamの中間操作(filterやmapなど)は遅延評価(lazy evaluation)される。これらはcollectやforEachといった終端操作(terminal operation)が呼び出されて初めて実行される仕組みになっている。設問のコードには終端操作が存在しないため、filter内のラムダ式は一度も実行されず、「ここまで到達」という出力だけが行われる。"},
+  {"id": "b22", "cat": "ラムダ・Stream", "src": "オリジナル", "prompt": "次のコードに関する記述として正しいものはどれか。", "code": "Optional<String> opt = Optional.of(\"値あり\");\nString result = opt.orElse(computeDefault());\n// computeDefault()は呼び出されると\"計算中\"と出力し、重い処理を行うメソッドとする", "options": ["optに値が存在するため、computeDefault()は呼び出されず\"計算中\"は出力されない", "optに値が存在してもcomputeDefault()は必ず呼び出され、\"計算中\"が出力される", "orElseは遅延評価されるため、opt.orElseGet(...)と完全に同じ挙動になる", "コンパイルエラーになる"], "answer": 1, "exp": "orElse(T other)メソッドは、引数として渡された式をメソッド呼び出しの時点で即座に評価する。つまりOptionalに値が存在するかどうかに関わらず、computeDefault()という引数の式自体は必ず評価され実行される。一方orElseGet(Supplier)はSupplierを遅延評価するため、値が存在する場合はSupplierの処理自体が呼び出されない。この評価タイミングの違いにより、両者の挙動は異なる。"},
+  {"id": "b23", "cat": "ラムダ・Stream", "src": "オリジナル", "prompt": "次のコードの実行結果として正しいものはどれか。", "code": "List<Integer> nums = List.of(1, 2, 3, 4);\nint result = nums.stream().reduce(10, (a, b) -> a + b);\nSystem.out.println(result);", "options": ["10", "24", "20", "実行時に例外がスローされる"], "answer": 2, "exp": "reduce(identity, accumulator)は、初期値identity（この場合は10）から開始し、ストリームの各要素を順にaccumulator関数で累積していく。10に対して1、2、3、4を順に加算すると10+1+2+3+4=20となる。初期値のみでは10にしかならず、accumulatorが適用されていない誤りであり、例外が発生することもない。"},
+  {"id": "b24", "cat": "ラムダ・Stream", "src": "オリジナル", "prompt": "次のコードを実行した場合の動作として正しいものはどれか。", "code": "List<String> words = List.of(\"apple\", \"avocado\", \"banana\");\nMap<Character, String> map = words.stream()\n    .collect(Collectors.toMap(w -> w.charAt(0), w -> w));", "options": ["正常に実行され、キー'a'に対して\"apple\"と\"avocado\"のどちらか一方が上書きされて格納される", "正常に実行され、キー'a'に対して両方の値がリストとして格納される", "コンパイルエラーになる", "実行時にIllegalStateException（キーの重複）がスローされる"], "answer": 3, "exp": "Collectors.toMap(keyMapper, valueMapper)の2引数版は、同一キーが複数回生成された場合にマージ方法が指定されていないため、実行時にIllegalStateExceptionをスローする。設問のコードでは\"apple\"と\"avocado\"がともに先頭文字'a'というキーを生成するため重複が発生する。重複時に値を上書きしたり、リストにまとめたりしたい場合は、マージ関数を指定する3引数版のtoMap(keyMapper, valueMapper, mergeFunction)や、Collectors.groupingBy()を使う必要がある。"},
+  {"id": "b25", "cat": "インターフェース", "src": "オリジナル", "prompt": "Java 8で導入されたインターフェースのdefaultメソッドの主な目的として最も適切なものはどれか。", "code": "", "options": ["インターフェースに新しいメソッドを追加しても、既存の実装クラスに影響を与えず（コンパイルエラーにせず）に済むようにするため", "インターフェースにインスタンスフィールドを持たせるため", "インターフェースの多重継承を完全に禁止するため", "abstractメソッドをすべてdefaultメソッドに置き換えることを強制するため"], "answer": 0, "exp": "defaultメソッドは、既存のインターフェースに新しいメソッドを追加した際、それを実装している既存クラスがメソッド未実装によりコンパイルエラーになってしまう問題を回避するために導入された(Java 8でCollectionインターフェースにStream関連のメソッドが追加された際の後方互換性維持が代表例)。インターフェースにインスタンスフィールド(状態)を持たせることはできず、defaultメソッドはむしろ複数実装時の菱形継承問題を新たに生む側面がある。abstractメソッドの置き換えを強制するものでもない。"},
+  {"id": "b26", "cat": "インターフェース", "src": "オリジナル", "prompt": "次のように、2つのインターフェースが同名のdefaultメソッドを持ち、あるクラスが両方を実装した場合の記述として正しいものはどれか。", "code": "interface A { default void hello() { System.out.println(\"A\"); } }\ninterface B { default void hello() { System.out.println(\"B\"); } }\nclass C implements A, B {\n    // ここでhello()をオーバーライドしていない場合\n}", "options": ["コンパイルは通り、実行時にどちらのhello()が呼ばれるかはランダムに決まる", "コンパイルエラーになる。CクラスはA.super.hello()やB.super.hello()を用いて明示的にhello()をオーバーライドする必要がある", "常にAのhello()が優先されるため問題なくコンパイル・実行できる", "常にBのhello()が優先されるため問題なくコンパイル・実行できる"], "answer": 1, "exp": "2つの実装インターフェースが同名・同シグネチャのdefaultメソッドを持つ場合、コンパイラはどちらを採用すべきか一意に決定できないためコンパイルエラーになる。この菱形継承問題を解決するには、実装クラス側でhello()を明示的にオーバーライドし、必要であればA.super.hello()やB.super.hello()という構文で呼び分ける必要がある。どちらか一方が自動的に優先されることはない。"},
+  {"id": "b27", "cat": "インターフェース", "src": "オリジナル", "prompt": "インターフェースのstaticメソッドに関する記述として正しいものはどれか。", "code": "", "options": ["インターフェースのstaticメソッドは、それを実装するクラスのインスタンスからも呼び出せる（継承される）", "インターフェースはstaticメソッドを持つことができない", "インターフェースのstaticメソッドは実装クラスに継承されず、インターフェース名を通じてのみ呼び出せる", "staticメソッドはインターフェース内でabstractメソッドと同じ扱いになり、実装が強制される"], "answer": 2, "exp": "インターフェースのstaticメソッドはそのインターフェース自身に属する機能であり、実装クラスには継承されない。呼び出す際はInterfaceName.method()という形式でインターフェース名を通じて呼び出す必要があり、実装クラスのインスタンスやクラス名を経由して呼び出すことはできない。Java 8以降、インターフェースはstaticメソッドを持つことができ、abstractメソッドのように実装が強制されるものでもない。"},
+  {"id": "b28", "cat": "インターフェース", "src": "オリジナル", "prompt": "次のインターフェースの記述に関して正しいものはどれか。", "code": "interface Config {\n    int MAX_SIZE = 100;\n}", "options": ["MAX_SIZEはデフォルトでprivateとなり、実装クラスからアクセスできない", "MAX_SIZEはインスタンスごとに異なる値を持てるインスタンスフィールドである", "インターフェースにフィールドを定義することはできず、コンパイルエラーになる", "MAX_SIZEは暗黙的にpublic static finalとなり、再代入しようとするとコンパイルエラーになる"], "answer": 3, "exp": "インターフェース内で定義されたフィールドは、修飾子を明示的に書かなくても暗黙的にpublic static finalとして扱われる定数である。そのため実装クラスや外部から再代入しようとするとコンパイルエラーになる。privateにはならずアクセス可能であり、インスタンスごとに異なる値を持つインスタンスフィールドとしては使えない。インターフェースにフィールド（定数）を定義すること自体は可能である。"},
+  {"id": "b29", "cat": "インターフェース", "src": "オリジナル", "prompt": "抽象クラス(abstract class)とインターフェースの違いに関する記述として正しいものはどれか。", "code": "", "options": ["抽象クラスはコンストラクタとインスタンスフィールド（状態）を持てるが、インターフェースは（Java 8以降のdefault/staticメソッドを除き）状態を持つインスタンスフィールドを持てない", "インターフェースは複数の抽象クラスを継承(extends)できるが、抽象クラスは複数継承できない", "抽象クラスは1つもインスタンスメソッドの実装を持てない", "インターフェースはコンストラクタを持つことができ、newで直接インスタンス化できる"], "answer": 0, "exp": "抽象クラスはコンストラクタを持ち、サブクラスに継承されるインスタンスフィールド(状態)を保持できる。一方インターフェースが持てるフィールドは暗黙的にpublic static finalな定数のみであり、インスタンスごとに異なる状態を保持することはできない。抽象クラスは通常のインスタンスメソッドの実装を持つことができ、逆に多重継承(複数実装)が可能なのはクラスの継承ではなくインターフェースの実装(implements)の方である。インターフェースはコンストラクタを持てず、newで直接インスタンス化することもできない。"},
+  {"id": "b30", "cat": "インターフェース", "src": "オリジナル", "prompt": "java.util.function.Function<T, R>インターフェースに関する記述として正しいものはどれか。", "code": "", "options": ["Function<T, R>は型パラメータを1つしか取れない", "Function<T, R>は抽象メソッドapply(T t)を1つ持つ関数型インターフェースであり、andThenやcomposeといったdefaultメソッドを介した合成が可能である", "Function<T, R>は抽象メソッドを2つ持つため、ラムダ式では表現できない", "Function<T, R>はチェック例外をスローするメソッドとしてのみ利用できる"], "answer": 1, "exp": "Function<T, R>は抽象メソッドapply(T t)をただ1つ持つ関数型インターフェースであり、ラムダ式やメソッド参照を代入できる。andThen(after)やcompose(before)というdefaultメソッドを持ち、複数のFunctionを合成した一連の処理を簡潔に記述できる。型パラメータはTとRの2つを取る。チェック例外のスローは考慮されておらず、スローする場合はラムダ内でtry-catchするか、独自の関数型インターフェースを定義する必要がある。"},
+];
+
+// 複数選択は本科目では未使用。
+const BOOK_MULTI_Q = [];
+const EXTRA_QUESTIONS = [];
+
+// 出題順：id 末尾の数字の昇順。エンジンはこの QUESTIONS だけを参照する。
+const QUESTIONS = (function(){
+  var all=[...BOOK_QUESTIONS,...BOOK_MULTI_Q,...EXTRA_QUESTIONS];
+  var no=function(q){return parseInt(String(q.id).replace(/^\D+/,''),10)||0;};
+  return all.slice().sort(function(a,b){return no(a)-no(b);});
+})();
+
+// カテゴリ別の復習アドバイス（正答率70%未満で「要復習」表示）。
+const ADVICE = {
+  "コレクション":"List/Set/Mapの実装ごとの内部構造（配列・連結リスト・ハッシュ・木構造）の違いを意識し、equals/hashCodeとComparable/Comparatorの役割の違いを整理しておこう。",
+  "例外処理":"検査例外と非検査例外の違い、try-with-resourcesのクローズ順序、finally内でのreturnの挙動など、コンパイル時と実行時それぞれで何が起こるかを区別して覚えよう。",
+  "ジェネリクス":"PECS原則(Producer-Extends, Consumer-Super)を軸に境界ワイルドカードを整理し、型消去によって実行時にできないこと(instanceof判定やジェネリック配列生成など)を押さえよう。",
+  "ラムダ・Stream":"Streamの中間操作が遅延評価される点、OptionalのorElseとorElseGetの評価タイミングの違いなど、実際に「いつ処理が実行されるか」を意識して学習しよう。",
+  "インターフェース":"defaultメソッド導入の経緯(既存実装との後方互換性)と、複数インターフェース実装時の衝突解決(明示的オーバーライド)の仕組みを、抽象クラスとの違いと合わせて整理しよう。",
+};
+
+// 本科目ではコード図解・トレース表は未使用。
+const FIGS = {};
+const TRACE = {};
+
+/* ============================================================
+   ▲▲▲ 差し替えここまで（この下はエンジン：全科目共通・変更不要） ▲▲▲
+   ============================================================ */
+
+const LETTERS=['A','B','C','D','E','F','G'];
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{perCat:{},log:[]}}catch(e){return{perCat:{},log:[]}}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+let queue=QUESTIONS.map((_,i)=>i);   // 出題順（インデックス）
+let pos=0;                            // queue内の現在位置
+let sessCorrect=0, sessDone=0;
+let answered=false;
+
+const stage=document.getElementById('stage');
+const pbar=document.getElementById('pbar');
+const scoreEl=document.getElementById('score');
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function renderFigure(q){
+  const f=FIGS[q.id]; if(!f) return '';
+  const lines=q.code.split('\n');
+  let rows='';
+  lines.forEach((ln,idx)=>{
+    const n=idx+1, an=f.lines[n], t=an?an[0]:'';
+    rows+=`<div class="figline ${t}"><span class="fno">${n}</span><span class="fcode">${esc(ln)||' '}</span></div>`;
+    if(an) rows+=`<div class="annorow ${t}"><span class="anno">${esc(an[1])}</span></div>`;
+  });
+  const out=f.out?`<div class="figout">▸ ${esc(f.out)}</div>`:'';
+  return `<div class="figure reveal"><div class="fig-label">図解 — プログラムの流れ</div><div class="figbox">${rows}</div>${out}</div>`;
+}
+
+// 問題文のコードを、行番号つきの注釈可能ブロックとして描画（回答前は注釈なし）
+function codeBlockHtml(q){
+  if(!q.code) return '';
+  const lines=q.code.split('\n');
+  const rows=lines.map((ln,i)=>`<div class="figline" data-ln="${i+1}"><span class="fno">${i+1}</span><span class="fcode">${esc(ln)||' '}</span></div>`).join('');
+  return `<div class="figbox qcode" id="qcode">${rows}</div>`;
+}
+
+// 回答後、問題文のコードに直接ハイライト＋連結線＋結果を差し込む
+function revealFigure(q){
+  const f=FIGS[q.id]; const box=document.getElementById('qcode');
+  if(!f||!box) return;
+  Object.keys(f.lines).sort((a,b)=>a-b).forEach(n=>{
+    const t=f.lines[n][0], txt=f.lines[n][1];
+    const line=box.querySelector('.figline[data-ln="'+n+'"]');
+    if(!line) return;
+    line.classList.add(t,'reveal');
+    const ar=document.createElement('div'); ar.className='annorow '+t+' reveal';
+    ar.innerHTML='<span class="anno">'+esc(txt)+'</span>';
+    line.after(ar);
+  });
+  if(f.out){
+    const o=document.createElement('div'); o.className='figout qfigout reveal';
+    o.textContent='▸ '+f.out; box.after(o);
+  }
+}
+
+function renderTrace(q){
+  const t=TRACE[q.id]; if(!t) return '';
+  const head=t.cols.map(c=>`<th>${esc(c)}</th>`).join('');
+  const body=t.rows.map((r,ri)=>{
+    const tds=r.map((c,ci)=>{
+      const st=ci===r.length-1?' class="st"':'';
+      let cell;
+      if(c==='null') cell='<span class="nul">null</span>';
+      else if(c==='') cell='<span class="nul">·</span>';
+      else cell=esc(c);
+      return `<td${st}>${cell}</td>`;
+    }).join('');
+    return `<tr class="${(t.hot!=null&&ri===t.hot)?'hot':''}">${tds}</tr>`;
+  }).join('');
+  return `<div class="trace reveal"><details class="tdet"><summary>変数の変化を追う（トレース）</summary><div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></details></div>`;
+}
+
+let selected=new Set();
+// 横向き2カラムの幅を「選択肢の文字量」と「コードの横幅」に応じて自動調整する
+// 選択肢が短ければ左(コード)を広く、選択肢が長ければ右(選択肢)を広く。
+// インラインstyleではなくCSS変数 --gtc を渡すことで、900px以下のメディアクエリ(1カラム)を壊さない
+function qcolStyle(q){
+  if(!q.code) return '';                                   // コード無しは .nocode の中央1カラムに任せる
+  const w=s=>{let n=0;for(const ch of String(s)){n+=ch.charCodeAt(0)>0xff?2:1;}return n;}; // 全角=2,半角=1
+  const optW=Math.max(1,...(q.options||['']).map(o=>Math.max(1,...String(o).split('\n').map(w)))); // 選択肢の最長行
+  const codeW=Math.max(1,...q.code.split('\n').map(w));    // コードの最長行
+  let l=1,r=1;
+  if(optW<=16){l=1.8;r=1;}          // 選択肢がとても短い(記号/単語)→コードを大きく
+  else if(optW<=26){l=1.4;r=1;}     // やや短い
+  else if(optW>=60){l=1;r=1.6;}     // とても長い(文章/コード)→右を大きく
+  else if(optW>=42){l=1;r=1.3;}     // やや長い
+  if(codeW>=64)l+=0.35;             // コードが横に長い場合は左に加算
+  return ` style="--gtc:minmax(0,${l}fr) minmax(0,${r}fr)"`;
+}
+function renderQuestion(){
+  answered=false; selected=new Set();
+  const q=QUESTIONS[queue[pos]];
+  pbar.style.width=(pos/queue.length*100)+'%';
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  stage.innerHTML=`
+    <div class="card reveal">
+      <div class="eyebrow">
+        <span class="cat">${esc(q.cat)}</span>
+        <span class="qnum">${pos+1} / ${queue.length}</span>
+      </div>
+      <div class="prompt">${esc(q.prompt)} ${q.multi?'<span class="multi-tag">複数選択</span>':''}</div>
+      <div class="qcols${q.code?'':' nocode'}"${qcolStyle(q)}>
+        <div class="qcol-l">${codeBlockHtml(q)}</div>
+        <div class="qcol-r">
+          <div class="opts" id="opts"></div>
+          <div id="after"></div>
+        </div>
+      </div>
+    </div>`;
+  const opts=document.getElementById('opts');
+  const order=shuffle(q.options.map((_,i)=>i));   // 毎回シャッフル
+  q._order=order;
+  order.forEach((origIdx,dispIdx)=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.type='button';
+    b.innerHTML=`<span class="key">${LETTERS[dispIdx]}</span><span class="txt">${esc(q.options[origIdx])}</span><span class="mark"></span>`;
+    b.onclick=()=> q.multi ? toggleSel(dispIdx,b) : choose(dispIdx);
+    opts.appendChild(b);
+  });
+  if(q.multi){
+    const bar=document.createElement('div'); bar.className='actions'; bar.id='mbar';
+    bar.innerHTML=`<button class="btn primary" type="button" id="submitBtn" onclick="submitMulti()" disabled>確定する（${q.answers.length}個選ぶ）</button>`;
+    opts.after(bar);
+  }
+}
+
+function toggleSel(dispIdx,btn){
+  if(answered) return;
+  if(selected.has(dispIdx)){selected.delete(dispIdx);btn.classList.remove('sel');}
+  else{selected.add(dispIdx);btn.classList.add('sel');}
+  const sb=document.getElementById('submitBtn'); if(sb) sb.disabled = selected.size===0;
+}
+
+function submitMulti(){
+  if(answered) return; answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=new Set(q.answers.map(a=>q._order.indexOf(a)));
+  const correct = selected.size===correctDisp.size && [...selected].every(x=>correctDisp.has(x));
+  document.querySelectorAll('#opts .opt').forEach((b,bi)=>{
+    b.disabled=true; b.classList.remove('sel');
+    const isC=correctDisp.has(bi), isS=selected.has(bi);
+    if(isC){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(isS&&!isC){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  const mbar=document.getElementById('mbar'); if(mbar) mbar.remove();
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  const answerLetters=[...correctDisp].sort((a,b)=>a-b).map(i=>LETTERS[i]).join('・');
+  const last=pos===queue.length-1;
+  document.getElementById('after').innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${answerLetters}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function choose(i){
+  if(answered) return;
+  answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=q._order.indexOf(q.answer);   // シャッフル後の正解位置
+  const correct=i===correctDisp;
+  const btns=document.querySelectorAll('#opts .opt');
+  btns.forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===correctDisp){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(bi===i&&!correct){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  // 記録（累積・端末保存）
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+
+  const after=document.getElementById('after');
+  const last=pos===queue.length-1;
+  after.innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${LETTERS[correctDisp]}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function next(){
+  if(pos<queue.length-1){pos++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+  else showResults();
+}
+
+function showResults(){
+  pbar.style.width='100%';
+  const s=load();
+  const cats=Object.keys(ADVICE);
+  let totA=0,totC=0;
+  cats.forEach(c=>{const d=s.perCat[c];if(d){totA+=d.a;totC+=d.c;}});
+  const pct=totA?Math.round(totC/totA*100):0;
+  const weak=cats.filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+
+  let barsHtml=cats.map(c=>{
+    const d=s.perCat[c]||{a:0,c:0};
+    const p=d.a?Math.round(d.c/d.a*100):0;
+    const isWeak=d.a>0&&p<70;
+    const col=d.a===0?'var(--border)':(p<50?'var(--ng)':p<70?'var(--accent)':'var(--ok)');
+    return `<div class="bar-row">
+      <div class="bar-top"><span>${esc(c)}${isWeak?'<span class="weak-badge">要復習</span>':''}</span>
+      <span class="n">${d.a?p+'% ('+d.c+'/'+d.a+')':'未回答'}</span></div>
+      <div class="bar-track"><i style="width:${d.a?p:0}%;background:${col}"></i></div></div>`;
+  }).join('');
+
+  let msg = totA===0?'まだ回答がありません。':
+    pct>=80?'かなり good。取りこぼした分野だけ詰めれば合格圏です。':
+    pct>=60?'あと一歩。下の「要復習」分野を重点的に。':
+    '基礎の詰め直しから。要復習の分野を1つずつ潰しましょう。';
+
+  let adviceHtml = weak.length
+    ? weak.map(c=>`<div class="advice"><div class="a-cat">${esc(c)} <span class="weak-badge">要復習</span></div><div class="a-txt">${esc(ADVICE[c])}</div></div>`).join('')
+    : (totA?'<div class="empty">要復習の分野はありません。全分野70%以上。この調子！</div>':'<div class="empty">問題を解くと、ここに弱点分野と対策が出ます。</div>');
+
+  stage.innerHTML=`
+   <div class="card reveal">
+     <div class="res-head">
+       <div class="ring" style="--p:${pct}"><div class="num"><b>${pct}%</b><span>累計正答率</span></div></div>
+       <div class="res-sum"><h2>成績サマリー</h2><p>${msg}</p>
+         <p style="margin-top:6px">累計 ${totC} / ${totA} 問正解</p></div>
+     </div>
+     <div class="sec-label">分野別の正答率</div>
+     <div class="bars">${barsHtml}</div>
+     <div class="sec-label">重点対策（要復習の分野）</div>
+     ${adviceHtml}
+     <div class="actions">
+       <button class="btn ghost" type="button" onclick="resetAll()">記録をリセット</button>
+       ${weak.length?'<button class="btn" type="button" onclick="retryWeak()">要復習だけ再挑戦</button>':''}
+       <button class="btn primary" type="button" onclick="restart()">もう一度：全問</button>
+     </div>
+   </div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){queue=QUESTIONS.map((_,i)=>i);pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+function retryWeak(){
+  const s=load();
+  const weak=Object.keys(ADVICE).filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+  const idx=QUESTIONS.map((q,i)=>i).filter(i=>weak.includes(QUESTIONS[i].cat));
+  queue=idx.length?idx:QUESTIONS.map((_,i)=>i);
+  pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(){save({perCat:{},log:[]});showResults();}
+
+renderQuestion();
+</script>
+
+<!-- cbt-nav-added -->
+<style>
+  /* ===== 問題選択画面（後付け・既存レイアウトは変更しない） ===== */
+
+  /* 各問題ページに出るのはこのボタンだけ。左下に固定 */
+  .cbtopen{position:fixed;left:14px;bottom:14px;z-index:60;
+    font:600 13px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:12px 18px;cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.18), 0 8px 22px rgba(0,0,0,.14)}
+  .cbtopen:hover{filter:brightness(1.06)}
+  .cbtopen:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* 問題選択画面（全画面オーバーレイ） */
+  .cbtscreen{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+    padding:16px;background:rgba(10,12,16,.55)}
+  .cbtscreen[hidden]{display:none}
+  .cbtpanel{width:min(860px,100%);max-height:min(86vh,760px);display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .cbtpanel-head{display:flex;align-items:center;gap:12px;padding:14px 16px;
+    border-bottom:1px solid var(--border);background:var(--surface-2)}
+  .cbtpanel-head h2{font:600 15px/1.3 var(--sans);color:var(--ink);margin:0}
+  .cbtcount{font:400 12px/1 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums}
+  .cbtclose{margin-left:auto;font:500 13px/1 var(--sans);color:var(--muted);
+    background:var(--surface);border:1px solid var(--border);border-radius:999px;
+    padding:8px 14px;cursor:pointer}
+  .cbtclose:hover{color:var(--ink);border-color:var(--ink)}
+  .cbtfilters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+  .cbtchip{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:7px 12px;cursor:pointer}
+  .cbtchip.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtbody{padding:12px 16px;overflow:auto;flex:1}
+  .cbtgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+  .cbtq{font:600 14px/1 var(--mono);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:10px;padding:12px 0;cursor:pointer;
+    font-variant-numeric:tabular-nums;position:relative}
+  .cbtq:hover{border-color:var(--accent);color:var(--accent)}
+  .cbtq.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .cbtq.ng{background:var(--ng-soft);border-color:var(--ng);color:var(--ng)}
+  .cbtq.fl::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent)}
+  .cbtq.cur{outline:2px solid var(--accent);outline-offset:1px}
+  .cbtempty{font:400 13px/1.6 var(--sans);color:var(--muted);padding:10px 2px}
+  .cbtfoot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    padding:12px 16px;border-top:1px solid var(--border);background:var(--surface-2)}
+  .cbtlegend{font:400 11.5px/1.6 var(--sans);color:var(--faint);
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .cbtlegend i{display:inline-block;width:11px;height:11px;border-radius:3px;
+    border:1px solid var(--border);margin-right:5px;vertical-align:-1px}
+  .cbtlegend i.ok{background:var(--ok-soft);border-color:var(--ok)}
+  .cbtlegend i.ng{background:var(--ng-soft);border-color:var(--ng)}
+  .cbtlegend i.fl{background:var(--accent)}
+  .cbtrun{font:600 12.5px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:9px 16px;cursor:pointer}
+  .cbtrun[disabled]{opacity:.45;cursor:default}
+
+  /* 問題カード右上の「後で見直す」 */
+  .cbtflag{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:6px 11px;cursor:pointer;margin-left:auto}
+  .cbtflag.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtprev{font:400 12px/1 var(--sans);color:var(--muted);margin-left:8px}
+
+  /* 左下のボタンが最下部の内容に重ならないよう余白を足す */
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  @media (max-width:640px){
+    .cbtopen{left:10px;bottom:10px;padding:11px 16px}
+    .cbtgrid{grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+    .cbtscreen{padding:10px}
+  }
+</style>
+<script>
+(function(){
+  // エンジンが読み込まれていない画面（雛形の説明ページ等）では何もしない
+  if(typeof QUESTIONS==='undefined' || typeof renderQuestion!=='function') return;
+  var stage=document.getElementById('stage');
+  if(!stage || !QUESTIONS.length) return;
+
+  // --- 進捗の保存（科目ごとに別キー。既存の成績データとは混ぜない） ---
+  var CKEY=(typeof KEY!=='undefined'?KEY:'quiz')+'_cbt';
+  var st={};
+  try{ st=JSON.parse(localStorage.getItem(CKEY))||{}; }catch(e){ st={}; }
+  function persist(){ try{ localStorage.setItem(CKEY,JSON.stringify(st)); }catch(e){} }
+
+  var filter='all';
+
+  // --- 左下のボタン（各問題ページに出るのはこれだけ） ---
+  var openBtn=document.createElement('button');
+  openBtn.type='button';
+  openBtn.className='cbtopen';
+  openBtn.textContent='問題選択画面';
+  document.body.appendChild(openBtn);
+
+  // --- 問題選択画面（全画面オーバーレイ） ---
+  var scr=document.createElement('div');
+  scr.className='cbtscreen';
+  scr.hidden=true;
+  scr.innerHTML=
+    '<div class="cbtpanel" role="dialog" aria-modal="true" aria-label="問題選択画面">'
+   +  '<div class="cbtpanel-head">'
+   +    '<h2>問題を選ぶ</h2><span class="cbtcount" id="cbtCount"></span>'
+   +    '<button type="button" class="cbtclose" id="cbtClose">閉じる</button>'
+   +  '</div>'
+   +  '<div class="cbtfilters">'
+   +    '<button type="button" class="cbtchip on" data-f="all">すべて</button>'
+   +    '<button type="button" class="cbtchip" data-f="todo">未解答</button>'
+   +    '<button type="button" class="cbtchip" data-f="ng">間違えた</button>'
+   +    '<button type="button" class="cbtchip" data-f="flag">見直し</button>'
+   +  '</div>'
+   +  '<div class="cbtbody"><div class="cbtgrid" id="cbtGrid"></div></div>'
+   +  '<div class="cbtfoot">'
+   +    '<div class="cbtlegend">'
+   +      '<span><i></i>未解答</span><span><i class="ok"></i>正解</span>'
+   +      '<span><i class="ng"></i>不正解</span><span><i class="fl"></i>見直し</span>'
+   +    '</div>'
+   +    '<button type="button" class="cbtrun" id="cbtRun">この絞り込みだけを順に解く</button>'
+   +  '</div>'
+   +'</div>';
+  document.body.appendChild(scr);
+
+  var grid=document.getElementById('cbtGrid');
+  var runBtn=document.getElementById('cbtRun');
+  var countEl=document.getElementById('cbtCount');
+  var closeBtn=document.getElementById('cbtClose');
+
+  function openScreen(){ scr.hidden=false; paint(); closeBtn.focus(); }
+  function closeScreen(){ scr.hidden=true; openBtn.focus(); }
+  openBtn.onclick=openScreen;
+  closeBtn.onclick=closeScreen;
+  scr.addEventListener('click',function(e){ if(e.target===scr) closeScreen(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !scr.hidden) closeScreen(); });
+
+  scr.querySelectorAll('.cbtchip').forEach(function(c){
+    c.onclick=function(){
+      filter=c.dataset.f;
+      scr.querySelectorAll('.cbtchip').forEach(function(x){ x.classList.toggle('on', x===c); });
+      paint();
+    };
+  });
+
+  // 現在の絞り込みに合致する問題インデックス
+  function picked(){
+    var out=[];
+    QUESTIONS.forEach(function(q,i){
+      var s=st[q.id]||{};
+      if(filter==='todo' && s.r) return;
+      if(filter==='ng'   && s.r!=='ng') return;
+      if(filter==='flag' && !s.f) return;
+      out.push(i);
+    });
+    return out;
+  }
+
+  function paint(){
+    if(scr.hidden) return;
+    var list=picked();
+    var done=QUESTIONS.filter(function(q){ return (st[q.id]||{}).r; }).length;
+    countEl.textContent='解答済み '+done+' / '+QUESTIONS.length;
+    grid.innerHTML='';
+    if(!list.length){
+      grid.innerHTML='<div class="cbtempty">該当する問題はありません。</div>';
+      runBtn.disabled=true;
+      return;
+    }
+    runBtn.disabled=false;
+    list.forEach(function(i){
+      var q=QUESTIONS[i], s=st[q.id]||{};
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='cbtq'+(s.r==='ok'?' ok':s.r==='ng'?' ng':'')+(s.f?' fl':'')
+                 +(queue[pos]===i?' cur':'');
+      b.textContent=String(q.id).replace(/^\D+/,'')||String(i+1);
+      b.title=(q.cat||'')+(s.r?(s.r==='ok'?'／前回○':'／前回×'):'');
+      b.onclick=function(){ jump(i); };
+      grid.appendChild(b);
+    });
+  }
+
+  // 任意の問題へジャンプ（出題キューに無ければ全問キューに戻してから移動）
+  function jump(i){
+    var at=queue.indexOf(i);
+    if(at<0){ queue=QUESTIONS.map(function(_,k){return k;}); at=i; }
+    pos=at;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  runBtn.onclick=function(){
+    var list=picked();
+    if(!list.length) return;
+    queue=list; pos=0;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  function toggleFlag(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].f=!st[q.id].f;
+    persist(); decorate(); paint();
+  }
+
+  // 問題カードに「後で見直す」ボタンと前回結果を差し込む
+  function decorate(){
+    var eb=document.querySelector('#stage .eyebrow');
+    if(!eb) return;
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var s=st[q.id]||{};
+    var old=eb.querySelector('.cbtflag'); if(old) old.remove();
+    var oldp=eb.querySelector('.cbtprev'); if(oldp) oldp.remove();
+    if(s.r){
+      var p=document.createElement('span');
+      p.className='cbtprev';
+      p.textContent = s.r==='ok' ? '前回：○正解' : '前回：×不正解';
+      eb.appendChild(p);
+    }
+    var f=document.createElement('button');
+    f.type='button';
+    f.className='cbtflag'+(s.f?' on':'');
+    f.textContent = s.f ? '見直しに登録済み' : '後で見直す';
+    f.onclick=toggleFlag;
+    eb.appendChild(f);
+  }
+
+  // 解答結果を拾って保存する（正解/不正解の判定は既存エンジンの表示を読む）
+  function record(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var v=document.querySelector('#after .verdict'); if(!v) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].r = v.classList.contains('ok') ? 'ok' : 'ng';
+    persist(); paint();
+  }
+
+  // --- 既存関数をラップ（中身は書き換えない） ---
+  var _render=renderQuestion;
+  renderQuestion=function(){ _render.apply(this,arguments); decorate(); paint(); };
+
+  if(typeof choose==='function'){
+    var _choose=choose;
+    choose=function(){ _choose.apply(this,arguments); record(); };
+  }
+  if(typeof submitMulti==='function'){
+    var _submit=submitMulti;
+    submitMulti=function(){ _submit.apply(this,arguments); record(); };
+  }
+
+  decorate();
+})();
+</script>
+
+<!-- back-to-index (jinji) -->
+<style>
+.appshome{position:fixed;right:14px;z-index:9999;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  font:600 13px/1 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  color:#16232b;background:#ffffff;border:1px solid rgba(0,0,0,.16);border-radius:999px;
+  padding:11px 16px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.16),0 8px 20px rgba(0,0,0,.10)}
+.appshome:hover{filter:brightness(.97)}
+.appshome:focus-visible{outline:2px solid #136b5b;outline-offset:2px}
+@media (prefers-color-scheme:dark){
+  .appshome{color:#e9eef1;background:#1d242b;border-color:rgba(255,255,255,.18);
+    box-shadow:0 2px 6px rgba(0,0,0,.45)}}
+@media (max-width:520px){.appshome{right:10px;padding:10px 14px;font-size:12.5px}}
+</style>
+<a class="appshome" href="../">&#8592; アプリ一覧</a>
+<script>
+if('serviceWorker' in navigator){addEventListener('load',function(){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+</script>
+</body></html>

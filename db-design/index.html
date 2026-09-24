@@ -1,0 +1,872 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><!-- pwa-standalone (jinji) -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="データベース設計">
+<meta name="theme-color" content="#F7F5F1">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<style>
+@media (display-mode:standalone){body{padding-top:env(safe-area-inset-top)}}
+</style>
+</head><body>
+<meta charset="utf-8">
+
+
+
+
+
+<meta name="format-detection" content="telephone=no">
+
+<style>
+  /* iPhoneのノッチ・ホームインジケータを避ける（既存レイアウトは変更しない） */
+  body{
+    padding-left:max(0px,env(safe-area-inset-left));
+    padding-right:max(0px,env(safe-area-inset-right));
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+    -webkit-text-size-adjust:100%;
+  }
+  /* ホーム画面から開いた時に文字選択でズレるのを防ぐ（入力欄は除く） */
+  @media (display-mode:standalone){
+    body{-webkit-touch-callout:none}
+    input,textarea{-webkit-user-select:text}
+  }
+</style>
+
+<title>データベース設計 演習コンソール</title>
+<style>
+  :root{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+    --radius:14px; --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+      --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+      --accent:#E4A24A; --accent-soft:#3A2F1E;
+      --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+      --code-bg:#0F1318; --code-ink:#CDD3C6;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+    --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+    --accent:#E4A24A; --accent-soft:#3A2F1E;
+    --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+    --code-bg:#0F1318; --code-ink:#CDD3C6;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;margin:0}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 22px 64px}
+  .qcols{display:grid;grid-template-columns:var(--gtc,minmax(0,1fr) minmax(0,1fr));gap:24px;align-items:start;margin-top:6px}
+  .qcols.nocode{grid-template-columns:minmax(0,720px);justify-content:center}
+  .qcol-l,.qcol-r{min-width:0}
+  .qcol-l .qcode{margin:0}
+  .qcol-l{position:sticky;top:92px}
+  @media (max-width:900px){.wrap{max-width:660px}.qcols{grid-template-columns:1fr;gap:16px}.qcol-l{position:static}}
+  .topbar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);padding:14px 0 12px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand h1{font-size:16px;margin:0;font-weight:650;letter-spacing:.01em}
+  .brand .tag{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;
+    letter-spacing:.14em;font-weight:600}
+  .meta{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .progress{flex:1;height:7px;background:var(--border);border-radius:99px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;
+    transition:width .35s ease}
+  .score{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap}
+  .score b{color:var(--ink)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 20px}
+  .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .cat{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);font-weight:650}
+  .src{font-size:11px;color:var(--faint)}
+  .qnum{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .prompt{font-size:16.5px;font-weight:600;margin:2px 0 14px;text-wrap:balance}
+  pre.code{background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:15.5px;
+    line-height:1.65;padding:14px 15px;border-radius:10px;border:1px solid var(--border);
+    overflow-x:auto;margin:0 0 18px;white-space:pre;tab-size:2}
+
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;cursor:pointer;
+    background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;
+    padding:13px 14px;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.5;
+    transition:border-color .15s,background .15s,transform .05s}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt:active:not(:disabled){transform:translateY(1px)}
+  .opt:disabled{cursor:default}
+  .opt .key{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--muted);
+    border:1.5px solid var(--border);border-radius:7px;min-width:26px;height:26px;display:flex;
+    align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;transition:.15s}
+  .opt .txt{flex:1;padding-top:1px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .opt .mark{font-size:18px;line-height:1.3;flex:0 0 auto;opacity:0}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.correct .key{border-color:var(--ok);background:var(--ok);color:#fff}
+  .opt.correct .mark{opacity:1;color:var(--ok)}
+  .opt.wrong{border-color:var(--ng);background:var(--ng-soft)}
+  .opt.wrong .key{border-color:var(--ng);background:var(--ng);color:#fff}
+  .opt.wrong .mark{opacity:1;color:var(--ng)}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .key{border-color:var(--accent);background:var(--accent);color:#fff}
+  .multi-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;
+    color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:1px 6px;
+    vertical-align:2px;white-space:nowrap}
+
+  .verdict{display:flex;align-items:center;gap:8px;margin:16px 0 4px;font-weight:700;font-size:15px}
+  .verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
+  .exp{background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:8px;padding:13px 15px;font-size:14px;color:var(--ink);margin-top:6px}
+  .exp code{font-family:var(--mono);font-size:12.5px;background:var(--code-bg);padding:1px 5px;
+    border-radius:4px;color:var(--code-ink)}
+  .exp b{color:var(--ink)}
+  .reveal{animation:rise .28s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.reveal{animation:none}.progress>i{transition:none}}
+
+  /* 図解（コード注釈） */
+  .figure{margin-top:14px}
+  .fig-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin-bottom:6px;font-weight:650}
+  .figbox{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:8px 0;
+    overflow-x:auto;font-family:var(--mono);font-size:15.5px;line-height:1.3}
+  .figline{display:flex;gap:10px;padding:0 12px;white-space:pre;min-width:max-content}
+  .figline .fno{color:var(--faint);min-width:1.5em;text-align:right;flex:0 0 auto;user-select:none}
+  .figline .fcode{color:var(--code-ink)}
+  .figline.err{background:var(--ng-soft);box-shadow:inset 3px 0 0 var(--ng)}
+  .figline.info{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+  .figline.ok{background:var(--ok-soft);box-shadow:inset 3px 0 0 var(--ok)}
+  .figline.mute{box-shadow:inset 3px 0 0 var(--border)}
+  .figline.mute .fcode{color:var(--faint)}
+  /* 連結線つき注釈：該当行から L字の線＋矢印で枝分かれ */
+  .annorow{position:relative;padding:3px 12px 9px 42px;min-width:max-content}
+  .annorow::before{content:"";position:absolute;left:5px;top:-4px;width:17px;height:16px;
+    border-left:2px solid currentColor;border-bottom:2px solid currentColor;border-bottom-left-radius:8px;opacity:.9}
+  .annorow::after{content:"";position:absolute;left:20px;top:7px;width:0;height:0;
+    border:5px solid transparent;border-left:7px solid currentColor;opacity:.9}
+  .annorow.err{color:var(--ng)}
+  .annorow.info{color:var(--accent)}
+  .annorow.ok{color:var(--ok)}
+  .annorow.mute{color:var(--faint)}
+  .annorow .anno{font-family:var(--sans);font-size:12.5px;line-height:1.5;white-space:normal;max-width:46ch;display:block}
+  .annorow.ok .anno{font-weight:600}
+  .figout{margin-top:9px;font-family:var(--mono);font-size:12.5px;color:var(--ink);font-weight:700}
+  .figbox.qcode{margin:0 0 16px;font-size:15.5px}
+  .qfigout{margin:8px 2px 16px}
+  /* 変数トレース表（クリックで開閉） */
+  .trace{margin-top:14px}
+  .trace details{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .trace summary{cursor:pointer;list-style:none;padding:9px 13px;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650;
+    background:var(--surface-2);display:flex;align-items:center;gap:8px;user-select:none}
+  .trace summary::-webkit-details-marker{display:none}
+  .trace summary::before{content:"▸";color:var(--accent)}
+  .trace details[open] summary::before{content:"▾"}
+  .trace summary:hover{color:var(--ink)}
+  .trace summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .tscroll{overflow-x:auto;border-top:1px solid var(--border)}
+  .trace table{border-collapse:collapse;width:100%;font-size:12.5px}
+  .trace th,.trace td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+    padding:6px 10px;text-align:left;white-space:normal;vertical-align:top;overflow-wrap:anywhere}
+  .trace th{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;
+    color:var(--muted);background:var(--surface-2);white-space:nowrap}
+  .trace td{font-family:var(--mono);color:var(--code-ink);font-variant-numeric:tabular-nums}
+  .trace td.st{font-family:var(--sans);color:var(--ink)}
+  .trace tr.hot td{background:var(--ng-soft)}
+  .trace .nul{color:var(--faint)}
+  .trace tbody tr:last-child td{border-bottom:none}
+  .trace th:last-child,.trace td:last-child{border-right:none}
+
+  .actions{display:flex;gap:10px;margin-top:18px}
+  .btn{font-family:inherit;font-size:14.5px;font-weight:600;border-radius:10px;padding:11px 18px;
+    cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--ink);
+    transition:.15s;flex:0 0 auto}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.ghost{color:var(--muted)}
+
+  /* results */
+  .res-head{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .ring{--p:0;width:104px;height:104px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--border) 0);
+    display:grid;place-items:center;position:relative}
+  .ring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface)}
+  .ring .num{position:relative;z-index:1;text-align:center}
+  .ring .num b{font-size:26px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .ring .num span{display:block;font-size:11px;color:var(--muted)}
+  .res-sum h2{margin:0 0 4px;font-size:18px}
+  .res-sum p{margin:0;color:var(--muted);font-size:13.5px}
+  .sec-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin:22px 0 10px;font-weight:650}
+  .bars{display:flex;flex-direction:column;gap:11px}
+  .bar-row .bar-top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px}
+  .bar-row .bar-top .n{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+  .bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+  .bar-track>i{display:block;height:100%;border-radius:99px}
+  .weak-badge{font-size:10.5px;font-family:var(--mono);color:var(--ng);border:1px solid var(--ng);
+    border-radius:5px;padding:0 5px;margin-left:7px;vertical-align:1px}
+  .advice{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+    margin-top:10px}
+  .advice .a-cat{font-weight:650;font-size:14px;margin-bottom:3px;display:flex;align-items:center}
+  .advice .a-txt{font-size:13.5px;color:var(--muted)}
+  .advice+.advice{margin-top:8px}
+  .empty{color:var(--muted);font-size:13.5px;padding:6px 0}
+  .footer{margin-top:26px;text-align:center;color:var(--faint);font-size:11.5px;line-height:1.7}
+  .footer .warn{color:var(--muted)}
+  a.link{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a.link:hover{border-color:var(--accent)}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <h1>データベース設計 演習コンソール</h1>
+      <span class="tag">Database / 設計</span>
+    </div>
+    <div class="meta">
+      <div class="progress"><i id="pbar"></i></div>
+      <div class="score" id="score">0 / 0</div>
+    </div>
+  </div>
+  <div id="stage"></div>
+  <div class="footer">
+    成績はこの端末のブラウザ内にのみ保存されます（localStorage）。<br>
+    <span class="warn">正規化・ER・主キー/外部キー・インデックス設計・トランザクションを確認する4択演習（オリジナル問題・全30問）。</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ▼▼▼ ここから下だけを科目ごとに差し替える（エンジン部は触らない） ▼▼▼
+   自動生成: build_quizzes_v2.py（商用・オリジナル問題）
+   ============================================================ */
+
+// localStorage 保存キー：科目ごとに必ず変える（他科目と成績が混ざらないように）
+const KEY='dbDesignQuizV1';
+
+// 【単一選択】4択。answer は options の正解インデックス（0始まり）。
+const BOOK_QUESTIONS = [
+  {"id": "b1", "cat": "正規化", "src": "オリジナル", "prompt": "第1正規形（1NF）を満たしている状態として最も適切なものはどれか。", "code": "", "options": ["すべての非キー属性が主キー全体に完全関数従属している", "すべての非キー属性が主キーに対して推移的に従属していない", "各列の値がそれ以上分割できない単一の値（原子値）である", "テーブル間の結合を一切行わずに済む"], "answer": 2, "exp": "1NFは繰り返し項目や複数値を持つ列を排除し、各セルが原子値であることを求める規則です。1つ目の選択肢は第2正規形、2つ目の選択肢は第3正規形の説明であり、1NFの定義とは異なります。"},
+  {"id": "b2", "cat": "正規化", "src": "オリジナル", "prompt": "複合主キー(受注ID, 商品ID)を持つ「受注明細」テーブルに「商品名」列があり、商品名の値は商品IDだけで決まり受注IDには関係しない。この状態を表す用語と、第2正規形にするための対応として正しいものはどれか。", "code": "", "options": ["これは部分関数従属であり、商品名を商品マスタなど別テーブルに分離すべきである", "これは推移的関数従属であり、受注IDを削除すべきである", "これは多対多の関係であり、中間テーブルを新設すべきである", "正規化上の問題はなく、そのままでよい"], "answer": 0, "exp": "複合主キーの一部(商品ID)だけに従属する非キー属性が存在するのは部分関数従属です。第2正規形にするには、その属性を商品IDを主キーとする別テーブルに分離します。"},
+  {"id": "b3", "cat": "正規化", "src": "オリジナル", "prompt": "「社員」テーブルが 社員ID(主キー)、部署ID、部署名 の列を持ち、部署名の値が部署IDのみによって決まるとする。この状態の名称と、第3正規形にするための対応はどれか。", "code": "", "options": ["部分関数従属であり、部署IDを主キーに追加する", "多値従属であり、部署名を繰り返し列にする", "これは正規化と無関係な問題であり対応不要", "推移的関数従属であり、部署名を部署テーブルへ分離し社員テーブルには部署IDのみ残す"], "answer": 3, "exp": "社員ID→部署ID→部署名という間接的な依存を推移的関数従属と呼びます。第3正規形では非キー属性同士の従属を排除するため、部署名は部署テーブルへ分離します。"},
+  {"id": "b4", "cat": "正規化", "src": "オリジナル", "prompt": "意図的に非正規化（テーブルの統合や冗長な列の追加）を行う理由として適切なものと、それに伴うデメリットの組み合わせで正しいものはどれか。", "code": "", "options": ["理由: 主キーの一意性を保証するため／デメリット: 外部キー制約が使えなくなる", "理由: 結合(JOIN)を減らし参照性能を高めるため／デメリット: データ冗長化により更新時の不整合リスクが増す", "理由: ストレージ容量を削減するため／デメリット: インデックスが作成できなくなる", "理由: トランザクションのACID特性を強化するため／デメリット: ロック待ちが減少する"], "answer": 1, "exp": "非正規化は主にJOINを減らし読み取り性能を高める目的で行われますが、同じ情報が複数箇所に重複するため、更新時に一部だけ反映され不整合が生じるリスクが増します。"},
+  {"id": "b5", "cat": "正規化", "src": "オリジナル", "prompt": "正規化が不十分なテーブルで、同じ内容の情報が複数行に重複して格納されている結果、値を変更する際に一部の行だけ更新して他が古いままになり、データに矛盾が生じる現象を何と呼ぶか。", "code": "", "options": ["更新時異常（更新異常）", "挿入時異常（挿入異常）", "削除時異常（削除異常）", "ファントムリード"], "answer": 0, "exp": "冗長なデータの一部だけが更新されて食い違いが生じる現象は更新異常と呼ばれます。挿入異常・削除異常は別の場面で生じる現象、ファントムリードはトランザクション分離の文脈の用語です。"},
+  {"id": "b6", "cat": "正規化", "src": "オリジナル", "prompt": "「受注明細」テーブルに顧客情報を非正規化してすべて格納しており、顧客テーブルが存在しない設計だとする。ある顧客がまだ一度も注文していない場合にその顧客情報を登録できず、また、ある顧客の最後の注文明細行を削除すると顧客情報そのものが消えてしまう。それぞれ何と呼ばれる現象か。", "code": "", "options": ["前者は削除異常、後者は挿入異常", "どちらも更新異常", "前者は挿入異常、後者は削除異常", "どちらもドメイン制約違反"], "answer": 2, "exp": "注文がないと顧客情報を登録できないのは挿入異常、最後の明細行を削除すると顧客情報まで失われるのは削除異常です。これらは顧客テーブルを分離することで解消できます。"},
+  {"id": "b7", "cat": "ER・関係", "src": "オリジナル", "prompt": "ER図（実体関連図）における「エンティティ」と「属性」の関係を正しく説明しているものはどれか。", "code": "", "options": ["エンティティは属性同士を結び付ける線であり、属性は実体そのものを表す", "エンティティは管理対象となる実体や概念であり、属性はそのエンティティが持つ性質や特徴を表す", "エンティティは常にテーブルの列として表現され、属性は行として表現される", "属性はエンティティ間のカーディナリティを表す記号である"], "answer": 1, "exp": "エンティティは顧客や商品といった管理対象の実体、属性はそのエンティティが持つ氏名や価格などの性質です。リレーショナルDBではエンティティがテーブル、属性が列に対応するため、3つ目の選択肢は逆の説明になっています。"},
+  {"id": "b8", "cat": "ER・関係", "src": "オリジナル", "prompt": "「部署」と「社員」の関係で、1つの部署に複数の社員が所属するが、1人の社員は1つの部署にしか所属しないとする。この関係のカーディナリティと、外部キーを持つべき側の組み合わせとして正しいものはどれか。", "code": "", "options": ["1対多の関係であり、1側である「部署」テーブルが「社員ID」を外部キーとして持つ", "多対多の関係であり、中間テーブルが必要である", "1対1の関係であり、どちらのテーブルに外部キーを置いてもよい", "1対多の関係であり、多側である「社員」テーブルが「部署ID」を外部キーとして持つ"], "answer": 3, "exp": "1対多の関係では「多」側のテーブルに「1」側の主キーを外部キーとして持たせるのが基本です。この例では社員テーブルが部署IDを外部キーとして保持します。"},
+  {"id": "b9", "cat": "ER・関係", "src": "オリジナル", "prompt": "「学生」と「講座」が多対多の関係(1人の学生は複数講座を受講でき、1つの講座には複数の学生が在籍する)にある場合、リレーショナルDBで正しく表現する方法はどれか。", "code": "", "options": ["「受講」のような中間テーブルを作り、学生IDと講座IDの両方を外部キーとして持たせる", "「学生」テーブルに講座IDを繰り返し列として複数追加する", "「講座」テーブルに学生IDを1つだけ外部キーとして追加する", "多対多の関係はテーブル設計では表現できないためアプリ側で制御する"], "answer": 0, "exp": "多対多の関係はRDBのテーブル構造では直接表現できないため、両者のキーを持つ中間(連関)テーブルを設け、1対多の関係2つに分解して表現します。"},
+  {"id": "b10", "cat": "ER・関係", "src": "オリジナル", "prompt": "ER図で、関係を表す線の両端に「1」と「多(N)」の記号が付けられている場合、この表記が意味する内容として正しいものはどれか。", "code": "", "options": ["「1」側と「多」側は常に同数のレコードが存在しなければならないことを示す", "「多」側のテーブルにしか主キーを設定できないことを示す", "「1」側の1つのインスタンスに対して、「多」側は0件以上または1件以上の複数のインスタンスが対応し得ることを示す", "「1」と「多」の表記はインデックスの数を表している"], "answer": 2, "exp": "カーディナリティ表記は、一方のエンティティの1つのインスタンスに対して他方が何件対応し得るかを示すものであり、レコード数を同数に強制するものではありません。"},
+  {"id": "b11", "cat": "ER・関係", "src": "オリジナル", "prompt": "ある関連エンティティにおいて、親エンティティの主キーが子エンティティの主キーの一部として引き継がれる関係を「識別関係」、親の主キーが子の外部キー(非キー属性)としてのみ含まれる関係を「非識別関係」と呼ぶ。「受注」と「受注明細」で、受注明細の主キーが(受注ID, 明細番号)の複合キーである場合、この関係はどちらか。", "code": "", "options": ["非識別関係（受注明細は受注がなくても独立して存在できる）", "識別関係（受注明細は受注が存在しなければ意味を持たない弱エンティティである）", "多対多関係（中間テーブルが別途必要である）", "自己参照関係（同一テーブル内での関連である）"], "answer": 1, "exp": "親の主キー(受注ID)が子の主キーの一部を構成しているため識別関係にあたります。受注明細は受注が存在して初めて意味を持つ弱エンティティです。"},
+  {"id": "b12", "cat": "ER・関係", "src": "オリジナル", "prompt": "単独では主キーによって一意に識別できず、必ず親エンティティとの関連を通じて初めて一意に識別できるエンティティを何と呼ぶか。", "code": "", "options": ["独立エンティティ", "集約エンティティ", "サブタイプエンティティ", "弱エンティティ"], "answer": 3, "exp": "親の識別子に依存して初めて一意になるエンティティを弱エンティティ(weak entity)と呼びます。受注明細などが典型例です。"},
+  {"id": "b13", "cat": "主キー・外部キー", "src": "オリジナル", "prompt": "リレーショナルDBにおける主キー(PRIMARY KEY)が満たすべき性質として正しいものはどれか。", "code": "", "options": ["テーブル内の各行を一意に識別でき、かつNULLを許容しない", "1つのテーブルに複数個定義することが必須である", "値は必ず数値型でなければならない", "主キーの値は定期的に変更されることが推奨される"], "answer": 0, "exp": "主キーは一意性とNOT NULL制約を満たす必要があります。1テーブルに主キーは1つのみ(複合キーとして複数列を組み合わせることは可能)であり、型や変更頻度は必須要件ではありません。"},
+  {"id": "b14", "cat": "主キー・外部キー", "src": "オリジナル", "prompt": "複合主キー(複数列からなる主キー)について正しい説明はどれか。", "code": "", "options": ["複合主キーを構成する列は、それぞれ単独でも一意でなければならない", "複合主キーは1つのテーブルに1列しか含めることができない", "複数の列を組み合わせて初めて行を一意に識別できる場合に使用し、例として多対多の中間テーブルの(親キーA, 親キーB)が挙げられる", "複合主キーを使うと外部キー制約は設定できなくなる"], "answer": 2, "exp": "複合主キーは複数列の組み合わせによって一意性を担保する仕組みで、多対多の中間テーブルなどで用いられます。各列単独での一意性は不要で、外部キー制約とも併用できます。"},
+  {"id": "b15", "cat": "主キー・外部キー", "src": "オリジナル", "prompt": "「マイナンバー」のように業務上の意味を持つ値を主キーとして使う「ナチュラルキー」に対し、業務的な意味を持たない連番などをシステムが自動生成して主キーとする「サロゲートキー」を採用する主な利点はどれか。", "code": "", "options": ["一意性を担保する必要がなくなる", "業務ルールの変更でキーの値が変わっても、他テーブルとの参照関係に影響を与えにくい", "NULL値を許容できるようになる", "外部キー制約が不要になる"], "answer": 1, "exp": "サロゲートキーは業務的な意味を持たないため、制度変更などで業務上の値が変わっても参照関係への影響を受けにくいという利点があります。一意性やNULL制約、外部キー制約の要否は変わりません。"},
+  {"id": "b16", "cat": "主キー・外部キー", "src": "オリジナル", "prompt": "「注文」テーブルの「顧客ID」列に、「顧客」テーブルの主キーを参照する外部キー制約を設定する目的として正しいものはどれか。", "code": "", "options": ["「注文」テーブルの顧客ID列の値を自動的に暗号化する", "「顧客」テーブルの行数を「注文」テーブルの行数以下に制限する", "「注文」テーブルの主キーを自動的に採番する", "「顧客」テーブルに存在しない顧客IDが「注文」テーブルに登録されることを防ぎ、参照整合性を保つ"], "answer": 3, "exp": "外部キー制約は、参照先に存在しない値が登録されることを防ぎ、テーブル間のデータの整合性(参照整合性)を保証するために設定します。"},
+  {"id": "b17", "cat": "主キー・外部キー", "src": "オリジナル", "prompt": "外部キー制約に ON DELETE CASCADE を設定した場合の挙動として正しいものはどれか。", "code": "", "options": ["参照される親テーブルの行が削除されると、それを参照している子テーブルの行も自動的に削除される", "親テーブルの行は、子テーブルに参照されている限り削除できなくなる", "子テーブルの行を削除すると、親テーブルの対応する行も自動的に削除される", "親テーブルの行が削除されると、子テーブルの外部キー列の値が自動的にNULLに変更される"], "answer": 0, "exp": "ON DELETE CASCADEは、親テーブルの行が削除された際に、それを参照する子テーブルの行も連鎖して削除する設定です。2つ目の選択肢はRESTRICT/NO ACTION、4つ目はON DELETE SET NULLの挙動です。"},
+  {"id": "b18", "cat": "主キー・外部キー", "src": "オリジナル", "prompt": "一意制約(UNIQUE制約)と主キー制約の違いとして正しいものはどれか。", "code": "", "options": ["一意制約は1つのテーブルに設定できないが、主キー制約は複数設定できる", "一意制約は複合列に設定できないが、主キー制約は複合列に設定できる", "一意制約はNULLを含む値を許容できる場合があるが、主キー制約はNULLを許容しない", "主キー制約はインデックスを自動的に作成しないが、一意制約は必ず作成する"], "answer": 2, "exp": "一意制約はNULLを許容できる(多くのRDBMSでNULL同士は重複と扱われない)一方、主キー制約はNOT NULLが必須です。また一意制約は1テーブルに複数設定でき、複合列にも設定可能です。"},
+  {"id": "b19", "cat": "インデックス設計", "src": "オリジナル", "prompt": "B木(B-Tree)インデックスをテーブルの列に作成する主な目的として正しいものはどれか。", "code": "", "options": ["テーブルの正規化を自動的に行う", "検索条件やソート処理の際に、全行を走査せず目的の行へ効率的にたどり着けるようにする", "外部キー制約を代替し参照整合性を保証する", "データの重複を自動的に排除する"], "answer": 1, "exp": "インデックスは検索やソート処理を高速化することが主目的です。正規化・参照整合性の保証・重複排除とは別の役割であり、それぞれ設計や制約で対応します。"},
+  {"id": "b20", "cat": "インデックス設計", "src": "オリジナル", "prompt": "列(部署ID, 入社日)の順で複合インデックスを作成した場合、効率的にインデックスが利用されやすい検索条件はどれか。", "code": "", "options": ["入社日のみを条件に指定する検索", "部署IDと入社日のどちらも条件に指定しない検索", "入社日の範囲検索のみを条件に指定する検索(部署IDは指定しない)", "部署IDを条件に指定する検索、および部署IDと入社日の両方を条件に指定する検索"], "answer": 3, "exp": "複合インデックスは左端の列(この場合部署ID)を含む条件で有効に利用されやすいという「左端一致の原則」があります。入社日単独の検索では一般に効果的に使われません。"},
+  {"id": "b21", "cat": "インデックス設計", "src": "オリジナル", "prompt": "列の「選択性(セレクティビティ)」が高い(値の種類が多く絞り込み効果が大きい)ほどインデックスの効果が出やすいとされる。次の列のうち、一般に最も選択性が低くインデックス単体では効果が薄いと考えられるものはどれか。", "code": "", "options": ["「性別」列(値が「男性」「女性」など数種類のみ)", "「メールアドレス」列(利用者ごとに一意な値)", "「マイナンバー」列(利用者ごとに一意な値)", "「会員ID」列(主キーであり一意な値)"], "answer": 0, "exp": "選択性は値の種類の多さによる絞り込み効果を表します。性別のように値の種類が数種類しかない列は選択性が低く、単独インデックスの効果が薄くなります。"},
+  {"id": "b22", "cat": "インデックス設計", "src": "オリジナル", "prompt": "テーブルに多数のインデックスを作成しすぎることによって生じるデメリットとして適切なものはどれか。", "code": "", "options": ["SELECT文の結果に重複行が発生するようになる", "外部キー制約が自動的に無効化される", "INSERT/UPDATE/DELETE時にインデックスの更新処理も発生するため、更新性能が低下し、ストレージ使用量も増加する", "テーブルの列数に上限がなくなる"], "answer": 2, "exp": "インデックスはデータの更新のたびに追随して更新する必要があるため、更新性能の低下とストレージ消費の増加というコストが発生します。読み取り性能とのトレードオフです。"},
+  {"id": "b23", "cat": "インデックス設計", "src": "オリジナル", "prompt": "あるSELECT文が必要とする列がすべて1つの複合インデックスに含まれているため、実テーブル(データ本体)へアクセスせずインデックスだけで結果を返せる場合、このインデックスは何と呼ばれるか。", "code": "", "options": ["クラスタインデックス", "カバリングインデックス", "ユニークインデックス", "パーティションインデックス"], "answer": 1, "exp": "必要な列をすべて含み、テーブル本体を参照せずに検索を完結できるインデックスをカバリングインデックスと呼びます。"},
+  {"id": "b24", "cat": "インデックス設計", "src": "オリジナル", "prompt": "テーブルの行数が非常に少ない場合や、SELECT文の条件に合致する行がテーブル全体の大部分を占める場合、オプティマイザがインデックスを使わずテーブルの全件走査(フルスキャン)を選択することがある。この理由として最も適切な説明はどれか。", "code": "", "options": ["インデックスは行数が少ないテーブルには作成できないため", "フルスキャンの方が常にインデックス経由の検索より高速であるため", "インデックスを使うとデータが破損する可能性があるため", "抽出割合が大きいと、インデックス経由で1行ずつ参照する方式より全件走査の方が総コストが低くなる場合があるため"], "answer": 3, "exp": "抽出割合(選択率)が高い場合、インデックス経由のランダムアクセスを積み重ねるより、全件を順に読むフルスキャンの方が総コストが低くなることがあり、オプティマイザがそれを選択することがあります。"},
+  {"id": "b25", "cat": "トランザクション", "src": "オリジナル", "prompt": "トランザクションが備えるべき性質「ACID」のうち、「一連の処理がすべて成功するか、すべて取り消されるかのいずれかになる」性質を表すものはどれか。", "code": "", "options": ["原子性(Atomicity)", "一貫性(Consistency)", "独立性(Isolation)", "永続性(Durability)"], "answer": 0, "exp": "原子性(Atomicity)は「オールオアナッシング」を保証する性質です。一貫性はデータ整合性の維持、独立性は同時実行時の干渉防止、永続性はコミット後の結果が失われないことを指します。"},
+  {"id": "b26", "cat": "トランザクション", "src": "オリジナル", "prompt": "分離レベル「READ COMMITTED」の特徴として正しいものはどれか。", "code": "", "options": ["他のトランザクションが未コミットの変更内容も読み取れるため、ダーティリードが発生する", "トランザクション開始時点のスナップショットのみを参照し続けるため、ノンリピータブルリードもファントムリードも発生しない", "コミット済みのデータのみを読み取るためダーティリードは発生しないが、同一トランザクション内で同じ行を2回読むと値が変わっている「ノンリピータブルリード」は発生し得る", "複数のトランザクションを直列に実行しているのと同じ結果を常に保証する"], "answer": 2, "exp": "READ COMMITTEDはコミット済みのデータのみを読むためダーティリードは防げますが、他のトランザクションのコミットにより再読み込み時に値が変わるノンリピータブルリードは起こり得ます。1つ目はREAD UNCOMMITTED、4つ目はSERIALIZABLEの説明です。"},
+  {"id": "b27", "cat": "トランザクション", "src": "オリジナル", "prompt": "分離レベル「REPEATABLE READ」について正しい説明はどれか。", "code": "", "options": ["ダーティリードとノンリピータブルリードの両方が発生し得るが、ファントムリードは発生しない", "同一トランザクション内で同じ行を再度読んだ場合の値は保証されるが、標準的な定義ではファントムリード(検索条件に合致する新規行が現れる現象)は起こり得るとされる", "未コミットの変更を他のトランザクションから読み取れるようにする分離レベルである", "トランザクションを一切並行実行できなくする最も厳格な分離レベルである"], "answer": 1, "exp": "REPEATABLE READは同じ行の再読み取り結果を保証しノンリピータブルリードを防ぎますが、標準的な定義ではファントムリードまでは防止対象外とされます(実装によっては防止される場合もあります)。最も厳格なのはSERIALIZABLEです。"},
+  {"id": "b28", "cat": "トランザクション", "src": "オリジナル", "prompt": "分離レベル「SERIALIZABLE」について正しい説明はどれか。", "code": "", "options": ["ダーティリードの発生を許容する代わりに処理速度を最優先する分離レベルである", "分離レベルの中で最も並行実行性能が高く、ロック待ちが発生しない", "コミット前のデータを他のトランザクションに公開する分離レベルである", "複数のトランザクションを実際には並行実行しても、あたかも直列に(1つずつ順番に)実行したかのような結果を保証する、最も厳格な分離レベルである"], "answer": 3, "exp": "SERIALIZABLEは最も厳格な分離レベルで、ダーティリード・ノンリピータブルリード・ファントムリードのすべてを防止しますが、その分ロック競合が増え並行性能は低下しやすくなります。"},
+  {"id": "b29", "cat": "トランザクション", "src": "オリジナル", "prompt": "トランザクションAが行Xをロックして行Yのロック待ちをしており、同時にトランザクションBが行Yをロックして行Xのロック待ちをしている状態を何と呼ぶか。", "code": "", "options": ["デッドロック", "ダーティリード", "ファントムリード", "楽観的ロック"], "answer": 0, "exp": "互いに相手のロック解放を待ち続け処理が進まなくなる状態をデッドロックと呼びます。DBMSはこれを検知し、いずれかのトランザクションを強制的にロールバックすることが多いです。"},
+  {"id": "b30", "cat": "トランザクション", "src": "オリジナル", "prompt": "「他のトランザクションがまだコミットしていない変更内容を読み取ってしまう」現象を指す用語として正しいものはどれか。", "code": "", "options": ["ノンリピータブルリード", "ファントムリード", "ダーティリード", "ロストアップデート"], "answer": 2, "exp": "未コミットのデータを読み取ってしまう現象をダーティリードと呼びます。ノンリピータブルリードは同一行の再読み取りで値が変わる現象、ファントムリードは条件検索で該当行の増減が見える現象、ロストアップデートは更新内容が上書きされ消失する現象です。"},
+];
+
+// 複数選択は本科目では未使用。
+const BOOK_MULTI_Q = [];
+const EXTRA_QUESTIONS = [];
+
+// 出題順：id 末尾の数字の昇順。エンジンはこの QUESTIONS だけを参照する。
+const QUESTIONS = (function(){
+  var all=[...BOOK_QUESTIONS,...BOOK_MULTI_Q,...EXTRA_QUESTIONS];
+  var no=function(q){return parseInt(String(q.id).replace(/^\D+/,''),10)||0;};
+  return all.slice().sort(function(a,b){return no(a)-no(b);});
+})();
+
+// カテゴリ別の復習アドバイス（正答率70%未満で「要復習」表示）。
+const ADVICE = {
+  "正規化":"正規化は「1つの事実は1か所にだけ書く」という原則を段階的に適用する作業です。第1正規形は各列が原子値であること、第2正規形は複合主キーの一部だけに従属する列を分離すること、第3正規形は非キー属性同士の従属(推移的関数従属)を解消することだと整理して覚えましょう。過度に正規化するとJOINが増えるため、非正規化とのトレードオフ(検索性能と更新整合性のバランス)も併せて理解してください。",
+  "ER・関係":"ER図はまず「エンティティ(モノ)」「属性(性質)」「関連(関係)」の3要素に分解して読むと迷いません。1対多の関係では「多」側のテーブルが「1」側の主キーを外部キーとして持つこと、多対多の関係は必ず中間テーブルで1対多×2に分解することの2パターンを、実際に図を書いて確認するのが効果的です。識別関係/非識別関係は「親がいなければ子が意味を持つか」で判断しましょう。",
+  "主キー・外部キー":"主キーは「一意性」と「NOT NULL」の2条件、外部キーは「参照整合性の保証」という役割をセットで覚えてください。サロゲートキーとナチュラルキーの使い分けは、業務要件の変化に強いかどうかで判断します。ON DELETE CASCADE/SET NULL/RESTRICTなど参照時の動作オプションは、実際にどのデータが連鎖して消えるかを図に書いて確認する習慣をつけましょう。",
+  "インデックス設計":"インデックスは「検索は速くなるが更新は遅くなる」というトレードオフを常にセットで考えるのがコツです。複合インデックスは列の並び順(左端一致の原則)が効果を左右し、カーディナリティ(選択性)が低い列だけに単独インデックスを張っても効果が薄い点に注意しましょう。カバリングインデックスや、オプティマイザがフルスキャンを選ぶ条件など、実務での判断基準も押さえておくと設計力が上がります。",
+  "トランザクション":"ACID特性(原子性・一貫性・独立性・永続性)をまず整理した上で、分離レベルはダーティリード・ノンリピータブルリード・ファントムリードという3つの異常のうち「どこまで防げるか」を自分で表にまとめると混乱しません。READ COMMITTEDからREPEATABLE READ、SERIALIZABLEの順に防止できる異常が増える一方、並行性能とロック競合はトレードオフになる点も合わせて理解しましょう。",
+};
+
+// 本科目ではコード図解・トレース表は未使用。
+const FIGS = {};
+const TRACE = {};
+
+/* ============================================================
+   ▲▲▲ 差し替えここまで（この下はエンジン：全科目共通・変更不要） ▲▲▲
+   ============================================================ */
+
+const LETTERS=['A','B','C','D','E','F','G'];
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{perCat:{},log:[]}}catch(e){return{perCat:{},log:[]}}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+let queue=QUESTIONS.map((_,i)=>i);   // 出題順（インデックス）
+let pos=0;                            // queue内の現在位置
+let sessCorrect=0, sessDone=0;
+let answered=false;
+
+const stage=document.getElementById('stage');
+const pbar=document.getElementById('pbar');
+const scoreEl=document.getElementById('score');
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function renderFigure(q){
+  const f=FIGS[q.id]; if(!f) return '';
+  const lines=q.code.split('\n');
+  let rows='';
+  lines.forEach((ln,idx)=>{
+    const n=idx+1, an=f.lines[n], t=an?an[0]:'';
+    rows+=`<div class="figline ${t}"><span class="fno">${n}</span><span class="fcode">${esc(ln)||' '}</span></div>`;
+    if(an) rows+=`<div class="annorow ${t}"><span class="anno">${esc(an[1])}</span></div>`;
+  });
+  const out=f.out?`<div class="figout">▸ ${esc(f.out)}</div>`:'';
+  return `<div class="figure reveal"><div class="fig-label">図解 — プログラムの流れ</div><div class="figbox">${rows}</div>${out}</div>`;
+}
+
+// 問題文のコードを、行番号つきの注釈可能ブロックとして描画（回答前は注釈なし）
+function codeBlockHtml(q){
+  if(!q.code) return '';
+  const lines=q.code.split('\n');
+  const rows=lines.map((ln,i)=>`<div class="figline" data-ln="${i+1}"><span class="fno">${i+1}</span><span class="fcode">${esc(ln)||' '}</span></div>`).join('');
+  return `<div class="figbox qcode" id="qcode">${rows}</div>`;
+}
+
+// 回答後、問題文のコードに直接ハイライト＋連結線＋結果を差し込む
+function revealFigure(q){
+  const f=FIGS[q.id]; const box=document.getElementById('qcode');
+  if(!f||!box) return;
+  Object.keys(f.lines).sort((a,b)=>a-b).forEach(n=>{
+    const t=f.lines[n][0], txt=f.lines[n][1];
+    const line=box.querySelector('.figline[data-ln="'+n+'"]');
+    if(!line) return;
+    line.classList.add(t,'reveal');
+    const ar=document.createElement('div'); ar.className='annorow '+t+' reveal';
+    ar.innerHTML='<span class="anno">'+esc(txt)+'</span>';
+    line.after(ar);
+  });
+  if(f.out){
+    const o=document.createElement('div'); o.className='figout qfigout reveal';
+    o.textContent='▸ '+f.out; box.after(o);
+  }
+}
+
+function renderTrace(q){
+  const t=TRACE[q.id]; if(!t) return '';
+  const head=t.cols.map(c=>`<th>${esc(c)}</th>`).join('');
+  const body=t.rows.map((r,ri)=>{
+    const tds=r.map((c,ci)=>{
+      const st=ci===r.length-1?' class="st"':'';
+      let cell;
+      if(c==='null') cell='<span class="nul">null</span>';
+      else if(c==='') cell='<span class="nul">·</span>';
+      else cell=esc(c);
+      return `<td${st}>${cell}</td>`;
+    }).join('');
+    return `<tr class="${(t.hot!=null&&ri===t.hot)?'hot':''}">${tds}</tr>`;
+  }).join('');
+  return `<div class="trace reveal"><details class="tdet"><summary>変数の変化を追う（トレース）</summary><div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></details></div>`;
+}
+
+let selected=new Set();
+// 横向き2カラムの幅を「選択肢の文字量」と「コードの横幅」に応じて自動調整する
+// 選択肢が短ければ左(コード)を広く、選択肢が長ければ右(選択肢)を広く。
+// インラインstyleではなくCSS変数 --gtc を渡すことで、900px以下のメディアクエリ(1カラム)を壊さない
+function qcolStyle(q){
+  if(!q.code) return '';                                   // コード無しは .nocode の中央1カラムに任せる
+  const w=s=>{let n=0;for(const ch of String(s)){n+=ch.charCodeAt(0)>0xff?2:1;}return n;}; // 全角=2,半角=1
+  const optW=Math.max(1,...(q.options||['']).map(o=>Math.max(1,...String(o).split('\n').map(w)))); // 選択肢の最長行
+  const codeW=Math.max(1,...q.code.split('\n').map(w));    // コードの最長行
+  let l=1,r=1;
+  if(optW<=16){l=1.8;r=1;}          // 選択肢がとても短い(記号/単語)→コードを大きく
+  else if(optW<=26){l=1.4;r=1;}     // やや短い
+  else if(optW>=60){l=1;r=1.6;}     // とても長い(文章/コード)→右を大きく
+  else if(optW>=42){l=1;r=1.3;}     // やや長い
+  if(codeW>=64)l+=0.35;             // コードが横に長い場合は左に加算
+  return ` style="--gtc:minmax(0,${l}fr) minmax(0,${r}fr)"`;
+}
+function renderQuestion(){
+  answered=false; selected=new Set();
+  const q=QUESTIONS[queue[pos]];
+  pbar.style.width=(pos/queue.length*100)+'%';
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  stage.innerHTML=`
+    <div class="card reveal">
+      <div class="eyebrow">
+        <span class="cat">${esc(q.cat)}</span>
+        <span class="qnum">${pos+1} / ${queue.length}</span>
+      </div>
+      <div class="prompt">${esc(q.prompt)} ${q.multi?'<span class="multi-tag">複数選択</span>':''}</div>
+      <div class="qcols${q.code?'':' nocode'}"${qcolStyle(q)}>
+        <div class="qcol-l">${codeBlockHtml(q)}</div>
+        <div class="qcol-r">
+          <div class="opts" id="opts"></div>
+          <div id="after"></div>
+        </div>
+      </div>
+    </div>`;
+  const opts=document.getElementById('opts');
+  const order=shuffle(q.options.map((_,i)=>i));   // 毎回シャッフル
+  q._order=order;
+  order.forEach((origIdx,dispIdx)=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.type='button';
+    b.innerHTML=`<span class="key">${LETTERS[dispIdx]}</span><span class="txt">${esc(q.options[origIdx])}</span><span class="mark"></span>`;
+    b.onclick=()=> q.multi ? toggleSel(dispIdx,b) : choose(dispIdx);
+    opts.appendChild(b);
+  });
+  if(q.multi){
+    const bar=document.createElement('div'); bar.className='actions'; bar.id='mbar';
+    bar.innerHTML=`<button class="btn primary" type="button" id="submitBtn" onclick="submitMulti()" disabled>確定する（${q.answers.length}個選ぶ）</button>`;
+    opts.after(bar);
+  }
+}
+
+function toggleSel(dispIdx,btn){
+  if(answered) return;
+  if(selected.has(dispIdx)){selected.delete(dispIdx);btn.classList.remove('sel');}
+  else{selected.add(dispIdx);btn.classList.add('sel');}
+  const sb=document.getElementById('submitBtn'); if(sb) sb.disabled = selected.size===0;
+}
+
+function submitMulti(){
+  if(answered) return; answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=new Set(q.answers.map(a=>q._order.indexOf(a)));
+  const correct = selected.size===correctDisp.size && [...selected].every(x=>correctDisp.has(x));
+  document.querySelectorAll('#opts .opt').forEach((b,bi)=>{
+    b.disabled=true; b.classList.remove('sel');
+    const isC=correctDisp.has(bi), isS=selected.has(bi);
+    if(isC){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(isS&&!isC){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  const mbar=document.getElementById('mbar'); if(mbar) mbar.remove();
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  const answerLetters=[...correctDisp].sort((a,b)=>a-b).map(i=>LETTERS[i]).join('・');
+  const last=pos===queue.length-1;
+  document.getElementById('after').innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${answerLetters}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function choose(i){
+  if(answered) return;
+  answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=q._order.indexOf(q.answer);   // シャッフル後の正解位置
+  const correct=i===correctDisp;
+  const btns=document.querySelectorAll('#opts .opt');
+  btns.forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===correctDisp){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(bi===i&&!correct){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  // 記録（累積・端末保存）
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+
+  const after=document.getElementById('after');
+  const last=pos===queue.length-1;
+  after.innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${LETTERS[correctDisp]}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function next(){
+  if(pos<queue.length-1){pos++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+  else showResults();
+}
+
+function showResults(){
+  pbar.style.width='100%';
+  const s=load();
+  const cats=Object.keys(ADVICE);
+  let totA=0,totC=0;
+  cats.forEach(c=>{const d=s.perCat[c];if(d){totA+=d.a;totC+=d.c;}});
+  const pct=totA?Math.round(totC/totA*100):0;
+  const weak=cats.filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+
+  let barsHtml=cats.map(c=>{
+    const d=s.perCat[c]||{a:0,c:0};
+    const p=d.a?Math.round(d.c/d.a*100):0;
+    const isWeak=d.a>0&&p<70;
+    const col=d.a===0?'var(--border)':(p<50?'var(--ng)':p<70?'var(--accent)':'var(--ok)');
+    return `<div class="bar-row">
+      <div class="bar-top"><span>${esc(c)}${isWeak?'<span class="weak-badge">要復習</span>':''}</span>
+      <span class="n">${d.a?p+'% ('+d.c+'/'+d.a+')':'未回答'}</span></div>
+      <div class="bar-track"><i style="width:${d.a?p:0}%;background:${col}"></i></div></div>`;
+  }).join('');
+
+  let msg = totA===0?'まだ回答がありません。':
+    pct>=80?'かなり good。取りこぼした分野だけ詰めれば合格圏です。':
+    pct>=60?'あと一歩。下の「要復習」分野を重点的に。':
+    '基礎の詰め直しから。要復習の分野を1つずつ潰しましょう。';
+
+  let adviceHtml = weak.length
+    ? weak.map(c=>`<div class="advice"><div class="a-cat">${esc(c)} <span class="weak-badge">要復習</span></div><div class="a-txt">${esc(ADVICE[c])}</div></div>`).join('')
+    : (totA?'<div class="empty">要復習の分野はありません。全分野70%以上。この調子！</div>':'<div class="empty">問題を解くと、ここに弱点分野と対策が出ます。</div>');
+
+  stage.innerHTML=`
+   <div class="card reveal">
+     <div class="res-head">
+       <div class="ring" style="--p:${pct}"><div class="num"><b>${pct}%</b><span>累計正答率</span></div></div>
+       <div class="res-sum"><h2>成績サマリー</h2><p>${msg}</p>
+         <p style="margin-top:6px">累計 ${totC} / ${totA} 問正解</p></div>
+     </div>
+     <div class="sec-label">分野別の正答率</div>
+     <div class="bars">${barsHtml}</div>
+     <div class="sec-label">重点対策（要復習の分野）</div>
+     ${adviceHtml}
+     <div class="actions">
+       <button class="btn ghost" type="button" onclick="resetAll()">記録をリセット</button>
+       ${weak.length?'<button class="btn" type="button" onclick="retryWeak()">要復習だけ再挑戦</button>':''}
+       <button class="btn primary" type="button" onclick="restart()">もう一度：全問</button>
+     </div>
+   </div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){queue=QUESTIONS.map((_,i)=>i);pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+function retryWeak(){
+  const s=load();
+  const weak=Object.keys(ADVICE).filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+  const idx=QUESTIONS.map((q,i)=>i).filter(i=>weak.includes(QUESTIONS[i].cat));
+  queue=idx.length?idx:QUESTIONS.map((_,i)=>i);
+  pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(){save({perCat:{},log:[]});showResults();}
+
+renderQuestion();
+</script>
+
+<!-- cbt-nav-added -->
+<style>
+  /* ===== 問題選択画面（後付け・既存レイアウトは変更しない） ===== */
+
+  /* 各問題ページに出るのはこのボタンだけ。左下に固定 */
+  .cbtopen{position:fixed;left:14px;bottom:14px;z-index:60;
+    font:600 13px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:12px 18px;cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.18), 0 8px 22px rgba(0,0,0,.14)}
+  .cbtopen:hover{filter:brightness(1.06)}
+  .cbtopen:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* 問題選択画面（全画面オーバーレイ） */
+  .cbtscreen{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+    padding:16px;background:rgba(10,12,16,.55)}
+  .cbtscreen[hidden]{display:none}
+  .cbtpanel{width:min(860px,100%);max-height:min(86vh,760px);display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .cbtpanel-head{display:flex;align-items:center;gap:12px;padding:14px 16px;
+    border-bottom:1px solid var(--border);background:var(--surface-2)}
+  .cbtpanel-head h2{font:600 15px/1.3 var(--sans);color:var(--ink);margin:0}
+  .cbtcount{font:400 12px/1 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums}
+  .cbtclose{margin-left:auto;font:500 13px/1 var(--sans);color:var(--muted);
+    background:var(--surface);border:1px solid var(--border);border-radius:999px;
+    padding:8px 14px;cursor:pointer}
+  .cbtclose:hover{color:var(--ink);border-color:var(--ink)}
+  .cbtfilters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+  .cbtchip{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:7px 12px;cursor:pointer}
+  .cbtchip.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtbody{padding:12px 16px;overflow:auto;flex:1}
+  .cbtgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+  .cbtq{font:600 14px/1 var(--mono);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:10px;padding:12px 0;cursor:pointer;
+    font-variant-numeric:tabular-nums;position:relative}
+  .cbtq:hover{border-color:var(--accent);color:var(--accent)}
+  .cbtq.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .cbtq.ng{background:var(--ng-soft);border-color:var(--ng);color:var(--ng)}
+  .cbtq.fl::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent)}
+  .cbtq.cur{outline:2px solid var(--accent);outline-offset:1px}
+  .cbtempty{font:400 13px/1.6 var(--sans);color:var(--muted);padding:10px 2px}
+  .cbtfoot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    padding:12px 16px;border-top:1px solid var(--border);background:var(--surface-2)}
+  .cbtlegend{font:400 11.5px/1.6 var(--sans);color:var(--faint);
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .cbtlegend i{display:inline-block;width:11px;height:11px;border-radius:3px;
+    border:1px solid var(--border);margin-right:5px;vertical-align:-1px}
+  .cbtlegend i.ok{background:var(--ok-soft);border-color:var(--ok)}
+  .cbtlegend i.ng{background:var(--ng-soft);border-color:var(--ng)}
+  .cbtlegend i.fl{background:var(--accent)}
+  .cbtrun{font:600 12.5px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:9px 16px;cursor:pointer}
+  .cbtrun[disabled]{opacity:.45;cursor:default}
+
+  /* 問題カード右上の「後で見直す」 */
+  .cbtflag{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:6px 11px;cursor:pointer;margin-left:auto}
+  .cbtflag.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtprev{font:400 12px/1 var(--sans);color:var(--muted);margin-left:8px}
+
+  /* 左下のボタンが最下部の内容に重ならないよう余白を足す */
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  @media (max-width:640px){
+    .cbtopen{left:10px;bottom:10px;padding:11px 16px}
+    .cbtgrid{grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+    .cbtscreen{padding:10px}
+  }
+</style>
+<script>
+(function(){
+  // エンジンが読み込まれていない画面（雛形の説明ページ等）では何もしない
+  if(typeof QUESTIONS==='undefined' || typeof renderQuestion!=='function') return;
+  var stage=document.getElementById('stage');
+  if(!stage || !QUESTIONS.length) return;
+
+  // --- 進捗の保存（科目ごとに別キー。既存の成績データとは混ぜない） ---
+  var CKEY=(typeof KEY!=='undefined'?KEY:'quiz')+'_cbt';
+  var st={};
+  try{ st=JSON.parse(localStorage.getItem(CKEY))||{}; }catch(e){ st={}; }
+  function persist(){ try{ localStorage.setItem(CKEY,JSON.stringify(st)); }catch(e){} }
+
+  var filter='all';
+
+  // --- 左下のボタン（各問題ページに出るのはこれだけ） ---
+  var openBtn=document.createElement('button');
+  openBtn.type='button';
+  openBtn.className='cbtopen';
+  openBtn.textContent='問題選択画面';
+  document.body.appendChild(openBtn);
+
+  // --- 問題選択画面（全画面オーバーレイ） ---
+  var scr=document.createElement('div');
+  scr.className='cbtscreen';
+  scr.hidden=true;
+  scr.innerHTML=
+    '<div class="cbtpanel" role="dialog" aria-modal="true" aria-label="問題選択画面">'
+   +  '<div class="cbtpanel-head">'
+   +    '<h2>問題を選ぶ</h2><span class="cbtcount" id="cbtCount"></span>'
+   +    '<button type="button" class="cbtclose" id="cbtClose">閉じる</button>'
+   +  '</div>'
+   +  '<div class="cbtfilters">'
+   +    '<button type="button" class="cbtchip on" data-f="all">すべて</button>'
+   +    '<button type="button" class="cbtchip" data-f="todo">未解答</button>'
+   +    '<button type="button" class="cbtchip" data-f="ng">間違えた</button>'
+   +    '<button type="button" class="cbtchip" data-f="flag">見直し</button>'
+   +  '</div>'
+   +  '<div class="cbtbody"><div class="cbtgrid" id="cbtGrid"></div></div>'
+   +  '<div class="cbtfoot">'
+   +    '<div class="cbtlegend">'
+   +      '<span><i></i>未解答</span><span><i class="ok"></i>正解</span>'
+   +      '<span><i class="ng"></i>不正解</span><span><i class="fl"></i>見直し</span>'
+   +    '</div>'
+   +    '<button type="button" class="cbtrun" id="cbtRun">この絞り込みだけを順に解く</button>'
+   +  '</div>'
+   +'</div>';
+  document.body.appendChild(scr);
+
+  var grid=document.getElementById('cbtGrid');
+  var runBtn=document.getElementById('cbtRun');
+  var countEl=document.getElementById('cbtCount');
+  var closeBtn=document.getElementById('cbtClose');
+
+  function openScreen(){ scr.hidden=false; paint(); closeBtn.focus(); }
+  function closeScreen(){ scr.hidden=true; openBtn.focus(); }
+  openBtn.onclick=openScreen;
+  closeBtn.onclick=closeScreen;
+  scr.addEventListener('click',function(e){ if(e.target===scr) closeScreen(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !scr.hidden) closeScreen(); });
+
+  scr.querySelectorAll('.cbtchip').forEach(function(c){
+    c.onclick=function(){
+      filter=c.dataset.f;
+      scr.querySelectorAll('.cbtchip').forEach(function(x){ x.classList.toggle('on', x===c); });
+      paint();
+    };
+  });
+
+  // 現在の絞り込みに合致する問題インデックス
+  function picked(){
+    var out=[];
+    QUESTIONS.forEach(function(q,i){
+      var s=st[q.id]||{};
+      if(filter==='todo' && s.r) return;
+      if(filter==='ng'   && s.r!=='ng') return;
+      if(filter==='flag' && !s.f) return;
+      out.push(i);
+    });
+    return out;
+  }
+
+  function paint(){
+    if(scr.hidden) return;
+    var list=picked();
+    var done=QUESTIONS.filter(function(q){ return (st[q.id]||{}).r; }).length;
+    countEl.textContent='解答済み '+done+' / '+QUESTIONS.length;
+    grid.innerHTML='';
+    if(!list.length){
+      grid.innerHTML='<div class="cbtempty">該当する問題はありません。</div>';
+      runBtn.disabled=true;
+      return;
+    }
+    runBtn.disabled=false;
+    list.forEach(function(i){
+      var q=QUESTIONS[i], s=st[q.id]||{};
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='cbtq'+(s.r==='ok'?' ok':s.r==='ng'?' ng':'')+(s.f?' fl':'')
+                 +(queue[pos]===i?' cur':'');
+      b.textContent=String(q.id).replace(/^\D+/,'')||String(i+1);
+      b.title=(q.cat||'')+(s.r?(s.r==='ok'?'／前回○':'／前回×'):'');
+      b.onclick=function(){ jump(i); };
+      grid.appendChild(b);
+    });
+  }
+
+  // 任意の問題へジャンプ（出題キューに無ければ全問キューに戻してから移動）
+  function jump(i){
+    var at=queue.indexOf(i);
+    if(at<0){ queue=QUESTIONS.map(function(_,k){return k;}); at=i; }
+    pos=at;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  runBtn.onclick=function(){
+    var list=picked();
+    if(!list.length) return;
+    queue=list; pos=0;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  function toggleFlag(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].f=!st[q.id].f;
+    persist(); decorate(); paint();
+  }
+
+  // 問題カードに「後で見直す」ボタンと前回結果を差し込む
+  function decorate(){
+    var eb=document.querySelector('#stage .eyebrow');
+    if(!eb) return;
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var s=st[q.id]||{};
+    var old=eb.querySelector('.cbtflag'); if(old) old.remove();
+    var oldp=eb.querySelector('.cbtprev'); if(oldp) oldp.remove();
+    if(s.r){
+      var p=document.createElement('span');
+      p.className='cbtprev';
+      p.textContent = s.r==='ok' ? '前回：○正解' : '前回：×不正解';
+      eb.appendChild(p);
+    }
+    var f=document.createElement('button');
+    f.type='button';
+    f.className='cbtflag'+(s.f?' on':'');
+    f.textContent = s.f ? '見直しに登録済み' : '後で見直す';
+    f.onclick=toggleFlag;
+    eb.appendChild(f);
+  }
+
+  // 解答結果を拾って保存する（正解/不正解の判定は既存エンジンの表示を読む）
+  function record(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var v=document.querySelector('#after .verdict'); if(!v) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].r = v.classList.contains('ok') ? 'ok' : 'ng';
+    persist(); paint();
+  }
+
+  // --- 既存関数をラップ（中身は書き換えない） ---
+  var _render=renderQuestion;
+  renderQuestion=function(){ _render.apply(this,arguments); decorate(); paint(); };
+
+  if(typeof choose==='function'){
+    var _choose=choose;
+    choose=function(){ _choose.apply(this,arguments); record(); };
+  }
+  if(typeof submitMulti==='function'){
+    var _submit=submitMulti;
+    submitMulti=function(){ _submit.apply(this,arguments); record(); };
+  }
+
+  decorate();
+})();
+</script>
+
+<!-- back-to-index (jinji) -->
+<style>
+.appshome{position:fixed;right:14px;z-index:9999;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  font:600 13px/1 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  color:#16232b;background:#ffffff;border:1px solid rgba(0,0,0,.16);border-radius:999px;
+  padding:11px 16px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.16),0 8px 20px rgba(0,0,0,.10)}
+.appshome:hover{filter:brightness(.97)}
+.appshome:focus-visible{outline:2px solid #136b5b;outline-offset:2px}
+@media (prefers-color-scheme:dark){
+  .appshome{color:#e9eef1;background:#1d242b;border-color:rgba(255,255,255,.18);
+    box-shadow:0 2px 6px rgba(0,0,0,.45)}}
+@media (max-width:520px){.appshome{right:10px;padding:10px 14px;font-size:12.5px}}
+</style>
+<a class="appshome" href="../">&#8592; アプリ一覧</a>
+<script>
+if('serviceWorker' in navigator){addEventListener('load',function(){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+</script>
+</body></html>

@@ -1,0 +1,872 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><!-- pwa-standalone (jinji) -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="アルゴリズム基礎">
+<meta name="theme-color" content="#F7F5F1">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<style>
+@media (display-mode:standalone){body{padding-top:env(safe-area-inset-top)}}
+</style>
+</head><body>
+<meta charset="utf-8">
+
+
+
+
+
+<meta name="format-detection" content="telephone=no">
+
+<style>
+  /* iPhoneのノッチ・ホームインジケータを避ける（既存レイアウトは変更しない） */
+  body{
+    padding-left:max(0px,env(safe-area-inset-left));
+    padding-right:max(0px,env(safe-area-inset-right));
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+    -webkit-text-size-adjust:100%;
+  }
+  /* ホーム画面から開いた時に文字選択でズレるのを防ぐ（入力欄は除く） */
+  @media (display-mode:standalone){
+    body{-webkit-touch-callout:none}
+    input,textarea{-webkit-user-select:text}
+  }
+</style>
+
+<title>アルゴリズム基礎 演習コンソール</title>
+<style>
+  :root{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+    --radius:14px; --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+      --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+      --accent:#E4A24A; --accent-soft:#3A2F1E;
+      --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+      --code-bg:#0F1318; --code-ink:#CDD3C6;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+    --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+    --accent:#E4A24A; --accent-soft:#3A2F1E;
+    --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+    --code-bg:#0F1318; --code-ink:#CDD3C6;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;margin:0}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 22px 64px}
+  .qcols{display:grid;grid-template-columns:var(--gtc,minmax(0,1fr) minmax(0,1fr));gap:24px;align-items:start;margin-top:6px}
+  .qcols.nocode{grid-template-columns:minmax(0,720px);justify-content:center}
+  .qcol-l,.qcol-r{min-width:0}
+  .qcol-l .qcode{margin:0}
+  .qcol-l{position:sticky;top:92px}
+  @media (max-width:900px){.wrap{max-width:660px}.qcols{grid-template-columns:1fr;gap:16px}.qcol-l{position:static}}
+  .topbar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);padding:14px 0 12px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand h1{font-size:16px;margin:0;font-weight:650;letter-spacing:.01em}
+  .brand .tag{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;
+    letter-spacing:.14em;font-weight:600}
+  .meta{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .progress{flex:1;height:7px;background:var(--border);border-radius:99px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;
+    transition:width .35s ease}
+  .score{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap}
+  .score b{color:var(--ink)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 20px}
+  .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .cat{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);font-weight:650}
+  .src{font-size:11px;color:var(--faint)}
+  .qnum{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .prompt{font-size:16.5px;font-weight:600;margin:2px 0 14px;text-wrap:balance}
+  pre.code{background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:15.5px;
+    line-height:1.65;padding:14px 15px;border-radius:10px;border:1px solid var(--border);
+    overflow-x:auto;margin:0 0 18px;white-space:pre;tab-size:2}
+
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;cursor:pointer;
+    background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;
+    padding:13px 14px;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.5;
+    transition:border-color .15s,background .15s,transform .05s}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt:active:not(:disabled){transform:translateY(1px)}
+  .opt:disabled{cursor:default}
+  .opt .key{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--muted);
+    border:1.5px solid var(--border);border-radius:7px;min-width:26px;height:26px;display:flex;
+    align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;transition:.15s}
+  .opt .txt{flex:1;padding-top:1px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .opt .mark{font-size:18px;line-height:1.3;flex:0 0 auto;opacity:0}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.correct .key{border-color:var(--ok);background:var(--ok);color:#fff}
+  .opt.correct .mark{opacity:1;color:var(--ok)}
+  .opt.wrong{border-color:var(--ng);background:var(--ng-soft)}
+  .opt.wrong .key{border-color:var(--ng);background:var(--ng);color:#fff}
+  .opt.wrong .mark{opacity:1;color:var(--ng)}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .key{border-color:var(--accent);background:var(--accent);color:#fff}
+  .multi-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;
+    color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:1px 6px;
+    vertical-align:2px;white-space:nowrap}
+
+  .verdict{display:flex;align-items:center;gap:8px;margin:16px 0 4px;font-weight:700;font-size:15px}
+  .verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
+  .exp{background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:8px;padding:13px 15px;font-size:14px;color:var(--ink);margin-top:6px}
+  .exp code{font-family:var(--mono);font-size:12.5px;background:var(--code-bg);padding:1px 5px;
+    border-radius:4px;color:var(--code-ink)}
+  .exp b{color:var(--ink)}
+  .reveal{animation:rise .28s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.reveal{animation:none}.progress>i{transition:none}}
+
+  /* 図解（コード注釈） */
+  .figure{margin-top:14px}
+  .fig-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin-bottom:6px;font-weight:650}
+  .figbox{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:8px 0;
+    overflow-x:auto;font-family:var(--mono);font-size:15.5px;line-height:1.3}
+  .figline{display:flex;gap:10px;padding:0 12px;white-space:pre;min-width:max-content}
+  .figline .fno{color:var(--faint);min-width:1.5em;text-align:right;flex:0 0 auto;user-select:none}
+  .figline .fcode{color:var(--code-ink)}
+  .figline.err{background:var(--ng-soft);box-shadow:inset 3px 0 0 var(--ng)}
+  .figline.info{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+  .figline.ok{background:var(--ok-soft);box-shadow:inset 3px 0 0 var(--ok)}
+  .figline.mute{box-shadow:inset 3px 0 0 var(--border)}
+  .figline.mute .fcode{color:var(--faint)}
+  /* 連結線つき注釈：該当行から L字の線＋矢印で枝分かれ */
+  .annorow{position:relative;padding:3px 12px 9px 42px;min-width:max-content}
+  .annorow::before{content:"";position:absolute;left:5px;top:-4px;width:17px;height:16px;
+    border-left:2px solid currentColor;border-bottom:2px solid currentColor;border-bottom-left-radius:8px;opacity:.9}
+  .annorow::after{content:"";position:absolute;left:20px;top:7px;width:0;height:0;
+    border:5px solid transparent;border-left:7px solid currentColor;opacity:.9}
+  .annorow.err{color:var(--ng)}
+  .annorow.info{color:var(--accent)}
+  .annorow.ok{color:var(--ok)}
+  .annorow.mute{color:var(--faint)}
+  .annorow .anno{font-family:var(--sans);font-size:12.5px;line-height:1.5;white-space:normal;max-width:46ch;display:block}
+  .annorow.ok .anno{font-weight:600}
+  .figout{margin-top:9px;font-family:var(--mono);font-size:12.5px;color:var(--ink);font-weight:700}
+  .figbox.qcode{margin:0 0 16px;font-size:15.5px}
+  .qfigout{margin:8px 2px 16px}
+  /* 変数トレース表（クリックで開閉） */
+  .trace{margin-top:14px}
+  .trace details{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .trace summary{cursor:pointer;list-style:none;padding:9px 13px;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650;
+    background:var(--surface-2);display:flex;align-items:center;gap:8px;user-select:none}
+  .trace summary::-webkit-details-marker{display:none}
+  .trace summary::before{content:"▸";color:var(--accent)}
+  .trace details[open] summary::before{content:"▾"}
+  .trace summary:hover{color:var(--ink)}
+  .trace summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .tscroll{overflow-x:auto;border-top:1px solid var(--border)}
+  .trace table{border-collapse:collapse;width:100%;font-size:12.5px}
+  .trace th,.trace td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+    padding:6px 10px;text-align:left;white-space:normal;vertical-align:top;overflow-wrap:anywhere}
+  .trace th{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;
+    color:var(--muted);background:var(--surface-2);white-space:nowrap}
+  .trace td{font-family:var(--mono);color:var(--code-ink);font-variant-numeric:tabular-nums}
+  .trace td.st{font-family:var(--sans);color:var(--ink)}
+  .trace tr.hot td{background:var(--ng-soft)}
+  .trace .nul{color:var(--faint)}
+  .trace tbody tr:last-child td{border-bottom:none}
+  .trace th:last-child,.trace td:last-child{border-right:none}
+
+  .actions{display:flex;gap:10px;margin-top:18px}
+  .btn{font-family:inherit;font-size:14.5px;font-weight:600;border-radius:10px;padding:11px 18px;
+    cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--ink);
+    transition:.15s;flex:0 0 auto}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.ghost{color:var(--muted)}
+
+  /* results */
+  .res-head{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .ring{--p:0;width:104px;height:104px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--border) 0);
+    display:grid;place-items:center;position:relative}
+  .ring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface)}
+  .ring .num{position:relative;z-index:1;text-align:center}
+  .ring .num b{font-size:26px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .ring .num span{display:block;font-size:11px;color:var(--muted)}
+  .res-sum h2{margin:0 0 4px;font-size:18px}
+  .res-sum p{margin:0;color:var(--muted);font-size:13.5px}
+  .sec-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin:22px 0 10px;font-weight:650}
+  .bars{display:flex;flex-direction:column;gap:11px}
+  .bar-row .bar-top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px}
+  .bar-row .bar-top .n{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+  .bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+  .bar-track>i{display:block;height:100%;border-radius:99px}
+  .weak-badge{font-size:10.5px;font-family:var(--mono);color:var(--ng);border:1px solid var(--ng);
+    border-radius:5px;padding:0 5px;margin-left:7px;vertical-align:1px}
+  .advice{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+    margin-top:10px}
+  .advice .a-cat{font-weight:650;font-size:14px;margin-bottom:3px;display:flex;align-items:center}
+  .advice .a-txt{font-size:13.5px;color:var(--muted)}
+  .advice+.advice{margin-top:8px}
+  .empty{color:var(--muted);font-size:13.5px;padding:6px 0}
+  .footer{margin-top:26px;text-align:center;color:var(--faint);font-size:11.5px;line-height:1.7}
+  .footer .warn{color:var(--muted)}
+  a.link{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a.link:hover{border-color:var(--accent)}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <h1>アルゴリズム基礎 演習コンソール</h1>
+      <span class="tag">Algorithm / CS</span>
+    </div>
+    <div class="meta">
+      <div class="progress"><i id="pbar"></i></div>
+      <div class="score" id="score">0 / 0</div>
+    </div>
+  </div>
+  <div id="stage"></div>
+  <div class="footer">
+    成績はこの端末のブラウザ内にのみ保存されます（localStorage）。<br>
+    <span class="warn">計算量(O記法)・ソート・探索・データ構造・再帰を確認する4択演習（オリジナル問題・全30問）。</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ▼▼▼ ここから下だけを科目ごとに差し替える（エンジン部は触らない） ▼▼▼
+   自動生成: build_quizzes_v2.py（商用・オリジナル問題）
+   ============================================================ */
+
+// localStorage 保存キー：科目ごとに必ず変える（他科目と成績が混ざらないように）
+const KEY='algoBasicsQuizV1';
+
+// 【単一選択】4択。answer は options の正解インデックス（0始まり）。
+const BOOK_QUESTIONS = [
+  {"id": "b1", "cat": "計算量(O記法)", "src": "オリジナル", "prompt": "アルゴリズムの計算量を表す「O記法（ビッグオー記法）」が主に表しているものとして、最も適切なものはどれか。", "code": "", "options": ["入力サイズが大きくなったときの、実行時間やメモリ使用量の増加の傾向（オーダー）", "プログラムを実際にコンピュータで実行したときの正確な秒数", "プログラムのソースコードの行数", "アルゴリズムが使用しているプログラミング言語の種類"], "answer": 0, "exp": "O記法は入力サイズnが大きくなったときに処理時間や使用メモリがどのくらいの割合で増えていくか（増加のオーダー）を表す指標であり、実際の秒数や行数、言語の種類とは無関係です。"},
+  {"id": "b2", "cat": "計算量(O記法)", "src": "オリジナル", "prompt": "線形探索における「最悪計算量」と「平均計算量」の違いを説明したものとして正しいものはどれか。", "code": "", "options": ["最悪計算量は、あらゆる入力の中で最も処理時間がかかるケースを想定した計算量である", "平均計算量は、必ず最悪計算量よりも大きくなる", "最悪計算量は、最も好条件な入力（最速で終わるケース）を想定した計算量である", "平均計算量と最悪計算量は、常に完全に一致する"], "answer": 0, "exp": "最悪計算量は入力の中で最も時間がかかる場合を想定した評価であり、平均計算量は起こりうる入力全体を平均した評価です。平均計算量が最悪計算量を上回ることはなく、常に一致するとも限りません。"},
+  {"id": "b3", "cat": "計算量(O記法)", "src": "オリジナル", "prompt": "入力サイズnが十分大きいとき、次の計算量を「増加が緩やかなもの（速い）」から「増加が急激なもの（遅い）」の順に正しく並べたものはどれか。", "code": "", "options": ["O(n^2) < O(n log n) < O(n) < O(log n) < O(1)", "O(log n) < O(1) < O(n) < O(n^2) < O(n log n)", "O(1) < O(n) < O(log n) < O(n^2) < O(n log n)", "O(1) < O(log n) < O(n) < O(n log n) < O(n^2)"], "answer": 3, "exp": "入力サイズnが大きいほど、O(1) < O(log n) < O(n) < O(n log n) < O(n^2) の順に増加が急激になります。定数時間が最も速く、二乗のオーダーが最も遅くなります。"},
+  {"id": "b4", "cat": "計算量(O記法)", "src": "オリジナル", "prompt": "次の疑似コードの時間計算量として最も適切なものはどれか。", "code": "for i in range(n):\n    print(i)", "options": ["O(1)", "O(log n)", "O(n)", "O(n^2)"], "answer": 2, "exp": "配列やリストの要素数nに対して1回だけのループを実行しているため、処理回数はnに比例します。よって時間計算量はO(n)です。"},
+  {"id": "b5", "cat": "計算量(O記法)", "src": "オリジナル", "prompt": "次の疑似コードの時間計算量として最も適切なものはどれか。", "code": "for i in range(n):\n    for j in range(n):\n        print(i, j)", "options": ["O(n)", "O(n log n)", "O(n^2)", "O(2n)"], "answer": 2, "exp": "外側・内側ともにn回繰り返す二重ループなので、内部の処理はn×n回実行されます。したがって時間計算量はO(n^2)です。O(2n)という表記はO記法としては通常O(n)にまとめられるため誤りです。"},
+  {"id": "b6", "cat": "計算量(O記法)", "src": "オリジナル", "prompt": "「空間計算量」の説明として最も適切なものはどれか。", "code": "", "options": ["アルゴリズムの実行にかかる時間の長さを表す指標", "アルゴリズムの実行に必要な追加のメモリ使用量が、入力サイズに応じてどう増加するかを表す指標", "ソースコードのファイルサイズを表す指標", "アルゴリズムが出力する結果のデータ量を表す指標"], "answer": 1, "exp": "空間計算量は、入力サイズnに対してアルゴリズムの実行中に追加で必要となるメモリ量（作業用配列や再帰のスタックなど）がどの程度増加するかを表す指標です。実行時間を表す時間計算量とは区別されます。"},
+  {"id": "b7", "cat": "ソート", "src": "オリジナル", "prompt": "バブルソートの計算量に関する説明として正しいものはどれか。", "code": "", "options": ["最悪計算量・平均計算量ともにO(n log n)である", "隣接する要素を比較・交換していく方式であり、最悪計算量はO(n^2)である", "常にO(n)で完了する", "再帰を用いなければ実装できない"], "answer": 1, "exp": "バブルソートは隣り合う要素を比較し、順序が逆であれば交換する操作をリスト全体に繰り返す方式で、最悪の場合（逆順に並んでいる場合など）はO(n^2)の計算量になります。再帰を使わない反復実装も一般的です。"},
+  {"id": "b8", "cat": "ソート", "src": "オリジナル", "prompt": "選択ソートに関する説明として正しいものはどれか。", "code": "", "options": ["各データを比較する回数は、データの並び順によって大きく変動する", "毎回の走査で最小値（または最大値）を探して所定の位置と交換するため、比較回数はデータの並び順によらずおよそn(n-1)/2回でほぼ一定である", "交換回数は比較回数と比べて常に多くなる", "選択ソートは安定ソートである"], "answer": 1, "exp": "選択ソートは未整理部分から最小値を探して確定済み部分の末尾に交換していくため、比較回数はデータの並び順にかかわらずおよそn(n-1)/2回とほぼ一定です。一方で交換回数は最大でn-1回程度と少なくなります。また、同じ値でも遠くの要素と交換されるため一般には安定ソートではありません。"},
+  {"id": "b9", "cat": "ソート", "src": "オリジナル", "prompt": "挿入ソートの特徴として正しいものはどれか。", "code": "", "options": ["常にO(n^2)回の比較が必要であり、データの並び順による影響を受けない", "挿入ソートは分割統治法に基づくアルゴリズムである", "挿入ソートは必ずマージソートより高速である", "データがほぼソート済みの状態では比較・移動の回数が少なくなり、O(n)に近い速さで処理できる"], "answer": 3, "exp": "挿入ソートは、すでに整列済みの部分に新しい要素を適切な位置へ挿入していく方式のため、データがほぼソート済みであれば移動回数が少なく高速に動作します（最良計算量はO(n)）。最悪計算量はO(n^2)ですが、分割統治法ではありません。"},
+  {"id": "b10", "cat": "ソート", "src": "オリジナル", "prompt": "マージソートに関する説明として正しいものはどれか。", "code": "", "options": ["配列を分割せず、そのまま全体を1回だけ走査して整列する", "最悪・平均・最良のいずれの場合でも計算量はO(n log n)であり、実装によっては安定ソートにもなる", "計算量はデータの並び順によって大きく変動し、最悪の場合O(n^2)になる", "追加のメモリを一切使わずに整列できる"], "answer": 1, "exp": "マージソートは配列を再帰的に分割し、整列済みの部分列をマージ（併合）していく分割統治法です。分割とマージの手順によって計算量が常にO(n log n)となり、並び順の影響を受けにくく、マージの実装次第で安定ソートにできます。ただし一般にマージ用の追加配列を必要とします。"},
+  {"id": "b11", "cat": "ソート", "src": "オリジナル", "prompt": "クイックソートに関する説明として正しいものはどれか。", "code": "", "options": ["常に最悪計算量O(n log n)が保証される", "枢軸（ピボット）の選び方によっては最悪計算量がO(n^2)になり得るが、平均計算量はO(n log n)である", "クイックソートは配列の要素をすべて比較する必要がないため、計算量はO(1)である", "クイックソートは常に安定ソートである"], "answer": 1, "exp": "クイックソートは枢軸を選んで配列を分割していく方式で、平均計算量はO(n log n)です。しかし枢軸の選び方が悪い（すでにソート済みの配列で常に端を選ぶなど）と、分割が偏り最悪計算量はO(n^2)になります。一般的な実装では安定ソートではありません。"},
+  {"id": "b12", "cat": "ソート", "src": "オリジナル", "prompt": "「安定ソート」の定義として正しいものはどれか。", "code": "", "options": ["常にO(n log n)で完了するソートアルゴリズムのこと", "追加のメモリを使わずに整列できるソートアルゴリズムのこと", "並べ替えの前後で、キーの値が等しい要素同士の相対的な順序が保たれるソートアルゴリズムのこと", "再帰を使わずに実装されたソートアルゴリズムのこと"], "answer": 2, "exp": "安定ソートとは、整列のキーとなる値が等しい要素が複数存在する場合に、それらの並び替え前の相対的な順序が並び替え後も保たれる性質を持つソートアルゴリズムのことです。計算量やメモリ使用量、再帰の有無とは直接関係ありません。"},
+  {"id": "b13", "cat": "探索", "src": "オリジナル", "prompt": "要素数nの配列に対する線形探索の計算量に関する説明として正しいものはどれか。", "code": "", "options": ["配列がソートされている場合に限り実行できる探索方法であり、計算量はO(log n)である", "先頭から順に1つずつ比較していく探索方法であり、最悪計算量はO(n)である", "配列の中央の要素から比較を始める探索方法である", "常に1回の比較で目的の要素を発見できる"], "answer": 1, "exp": "線形探索は配列の先頭から順番に目的の値と一致するかを確認していく方法で、ソートされていない配列にも適用できます。目的の要素が末尾にある場合や存在しない場合は全要素を確認するため、最悪計算量はO(n)です。"},
+  {"id": "b14", "cat": "探索", "src": "オリジナル", "prompt": "二分探索を正しく行うための前提条件として最も適切なものはどれか。", "code": "", "options": ["配列の要素数が偶数であること", "配列があらかじめ昇順または降順にソートされていること", "配列の要素がすべて異なる値であること", "配列の要素数が2の累乗であること"], "answer": 1, "exp": "二分探索は中央の要素と目的の値を比較し、探索範囲を半分ずつ絞り込んでいく方法です。この「大小関係で範囲を絞れる」という前提が成り立つためには、配列があらかじめソートされている必要があります。要素数の偶奇や2の累乗、値の重複の有無は前提条件ではありません。"},
+  {"id": "b15", "cat": "探索", "src": "オリジナル", "prompt": "ソート済みの要素数1024（=2^10）の配列に対して二分探索を行う場合、最悪でおよそ何回の比較で探索範囲を1個まで絞り込めるか。", "code": "", "options": ["約10回", "約100回", "約512回", "約1024回"], "answer": 0, "exp": "二分探索は1回の比較ごとに探索範囲がおよそ半分になるため、必要な比較回数はlog2(n)にほぼ比例します。log2(1024)=10なので、最悪でも約10回の比較で探索範囲を1個まで絞り込めます。"},
+  {"id": "b16", "cat": "探索", "src": "オリジナル", "prompt": "ハッシュテーブルを用いた探索の計算量に関する説明として正しいものはどれか。", "code": "", "options": ["常にO(n)の計算量になり、配列の線形探索より遅い", "必ずソートされたデータでなければ利用できない", "二分探索と同じくO(log n)が保証される", "衝突が少なく適切なハッシュ関数が使われている場合、平均計算量はO(1)に近くなる"], "answer": 3, "exp": "ハッシュテーブルはキーからハッシュ関数で格納位置を計算するため、衝突が少なく適切に設計されていれば、平均的にはほぼ一定時間（O(1)に近い計算量）で目的のデータにアクセスできます。ただし衝突が多発する最悪の場合はO(n)に近づくこともあります。ソート済みである必要はありません。"},
+  {"id": "b17", "cat": "探索", "src": "オリジナル", "prompt": "幅優先探索（BFS）の基本的な考え方を説明したものとして正しいものはどれか。", "code": "", "options": ["開始点から近い順（同じ深さの頂点を優先）に探索を進め、一般にキューを用いて実装される", "見つけた道を行き止まりまで一直線に進み、行き止まったら1つ前まで戻って別の道を試す", "常に配列の中央から探索を始める", "探索対象を必ずあらかじめソートしておく必要がある"], "answer": 0, "exp": "幅優先探索（BFS）は、開始点に近い頂点から順に、同じ距離（深さ）の頂点をまとめて探索していく方法で、次に訪れる頂点を管理するためにキュー（FIFO）を用いるのが一般的です。行き止まりまで一直線に進むのは深さ優先探索（DFS）の説明です。"},
+  {"id": "b18", "cat": "探索", "src": "オリジナル", "prompt": "深さ優先探索（DFS）の基本的な考え方を説明したものとして正しいものはどれか。", "code": "", "options": ["開始点から近い順に、同じ深さの頂点をすべて調べてから次の深さに進む", "1つの道をたどれるところまで進み、行き止まったら直前の分岐まで戻って別の道を試すことを繰り返し、一般に再帰またはスタックで実装される", "探索対象の中央の要素と比較し、範囲を半分に絞り込みながら進める", "ハッシュ関数を使って直接目的の頂点の位置を計算する"], "answer": 1, "exp": "深さ優先探索（DFS）は、1つの経路を行き止まりまで掘り下げてから、直前の分岐点に戻って（バックトラックして）別の経路を試す方法で、再帰呼び出しや明示的なスタックを使って実装されるのが一般的です。同じ深さを優先して調べるのは幅優先探索（BFS）の説明です。"},
+  {"id": "b19", "cat": "データ構造", "src": "オリジナル", "prompt": "配列と連結リストの計算量を比較した説明として正しいものはどれか。", "code": "", "options": ["配列も連結リストも、任意の位置への要素アクセスは同じくO(1)である", "配列は途中への挿入もO(1)で行えるが、連結リストの挿入は常にO(n)である", "連結リストは要素数に関わらず常に配列よりメモリ効率が良い", "配列はインデックスを指定した要素アクセスがO(1)である一方、連結リストは先頭から辿る必要がありアクセスはO(n)になる。逆に、途中への要素挿入は配列がO(n)であるのに対し、連結リストは挿入位置さえ分かっていればO(1)で行える"], "answer": 3, "exp": "配列は連続したメモリ上に要素を並べるため、インデックスを使った直接アクセスがO(1)で可能です。しかし途中に要素を挿入するには後続要素をずらす必要がありO(n)かかります。一方、連結リストは要素をポインタでつなぐ構造のため、途中の要素へのアクセスは先頭から辿る必要がありO(n)ですが、挿入位置の直前ノードが分かっていればポインタの繋ぎ替えだけでO(1)で挿入できます。"},
+  {"id": "b20", "cat": "データ構造", "src": "オリジナル", "prompt": "スタック（LIFO）の説明として正しいものはどれか。", "code": "", "options": ["最初に入れたデータを最初に取り出す構造であり、代表的な用途はプリンタの印刷待ち行列である", "最後に入れたデータを最初に取り出す構造であり、関数呼び出しの管理（コールスタック）やブラウザの「戻る」機能などに利用される", "データの挿入・削除がどちらもO(n)になる構造である", "常にキーの大小関係に基づいてデータを取り出す構造である"], "answer": 1, "exp": "スタックはLast In, First Out（LIFO）、すなわち最後に追加したデータを最初に取り出す構造です。代表的な用途として、関数呼び出しの管理を行うコールスタックや、Webブラウザの「戻る」履歴の管理などが挙げられます。挿入・削除（push/pop）は通常O(1)で行えます。"},
+  {"id": "b21", "cat": "データ構造", "src": "オリジナル", "prompt": "キュー（FIFO）の説明として正しいものはどれか。", "code": "", "options": ["最後に入れたデータを最初に取り出す構造であり、関数呼び出しの管理に使われる", "常に配列の中央から要素を取り出す構造である", "最初に入れたデータを最初に取り出す構造であり、幅優先探索や印刷待ち行列（タスクの順番待ち）などに利用される", "キーの大小関係に基づいて最小値（または最大値）を優先的に取り出す構造である"], "answer": 2, "exp": "キューはFirst In, First Out（FIFO）、すなわち最初に追加したデータを最初に取り出す構造です。幅優先探索での訪問順の管理や、印刷ジョブの順番待ちなど、到着順に処理したい場面で利用されます。"},
+  {"id": "b22", "cat": "データ構造", "src": "オリジナル", "prompt": "二分探索木（BST）の性質に関する説明として正しいものはどれか。", "code": "", "options": ["各ノードについて、左の子孫の値はそのノードの値より小さく、右の子孫の値はそのノードの値より大きいという規則を持ち、木の高さが平衡している場合、探索の計算量はおよそO(log n)になる", "二分探索木は必ず配列よりも探索が遅い", "二分探索木の各ノードは、必ず3つ以上の子を持つ", "二分探索木では、要素の追加順序に関わらず常に木の高さがO(log n)に保たれる"], "answer": 0, "exp": "二分探索木は「左の子孫は親より小さい値、右の子孫は親より大きい値」という規則を持つ木構造で、木の高さが平衡していればO(log n)で探索できます。ただし、要素を挿入する順序によっては木が偏り（例えば昇順にデータを挿入し続けると一直線の連結リストのようになり）、最悪計算量がO(n)になる場合もあります。各ノードの子は最大2つです。"},
+  {"id": "b23", "cat": "データ構造", "src": "オリジナル", "prompt": "ハッシュテーブルにおける「衝突（コリジョン）」とその対処法に関する説明として正しいものはどれか。", "code": "", "options": ["衝突とは、異なるキーに対してハッシュ関数が同じ格納位置を計算してしまう現象であり、対処法として同じ位置に複数のデータを連結リストなどでつなげる「チェイン法」がある", "衝突とは、ハッシュテーブルのメモリ使用量が配列より少なくなる現象のことである", "衝突は理論上絶対に発生しない現象であり、対策を考える必要はない", "衝突が発生した場合、そのデータは必ず失われて復元できない"], "answer": 0, "exp": "衝突とは、異なるキーであってもハッシュ関数の計算結果（格納位置）が一致してしまう現象です。対処法としては、同じ位置に複数の要素を連結リストなどでつなげて保持する「チェイン法」や、別の空き位置を探す「オープンアドレス法」などがあり、データが失われることはありません。"},
+  {"id": "b24", "cat": "データ構造", "src": "オリジナル", "prompt": "ヒープ（二分ヒープ）の性質に関する説明として正しいものはどれか。", "code": "", "options": ["常に左の子が右の子より大きいという規則を持つ木構造である", "完全二分木の形をしており、親ノードの値は常に子ノードの値以上（または以下）であるという規則を持つため、最小値（または最大値）を優先度付きキューとして効率よく取り出せる", "要素はキーの値順に一列に並べられ、二分探索と同じ方法で任意の要素を探索できる", "ヒープはLIFOの規則に基づいてデータを取り出す構造である"], "answer": 1, "exp": "ヒープは形状としては完全二分木であり、親ノードの値が子ノードの値以上（最大ヒープ）または以下（最小ヒープ）であるという規則を持ちます。この性質により、根にある最大値・最小値をO(1)で参照でき、削除・追加もO(log n)で行えるため、優先度付きキューの実装によく使われます。任意要素の探索に特化した構造ではありません。"},
+  {"id": "b25", "cat": "再帰", "src": "オリジナル", "prompt": "再帰関数における「基底条件（base case）」の役割として正しいものはどれか。", "code": "", "options": ["再帰呼び出しをできるだけ多く発生させ、処理を複雑にするための条件", "プログラムの実行速度を測定するための条件", "再帰関数を並列に実行するための条件", "それ以上自分自身を呼び出さずに直接答えを返す条件であり、これがないと再帰が終了しなくなる"], "answer": 3, "exp": "基底条件（base case）は、それ以上自分自身を呼び出さずに直接結果を返すための条件です。再帰関数には必ず基底条件が必要で、これが正しく設定されていないと再帰呼び出しが終わらず、無限再帰に陥ってしまいます。"},
+  {"id": "b26", "cat": "再帰", "src": "オリジナル", "prompt": "上の疑似コードで定義された再帰関数factorialについて、factorial(4)を呼び出したときの戻り値として正しいものはどれか。", "code": "function factorial(n):\n    if n == 0:\n        return 1\n    return n * factorial(n - 1)", "options": ["4", "10", "24", "120"], "answer": 2, "exp": "factorial(4) = 4 × factorial(3) = 4 × 3 × factorial(2) = 4 × 3 × 2 × factorial(1) = 4 × 3 × 2 × 1 × factorial(0) = 4 × 3 × 2 × 1 × 1 = 24 となります。基底条件はn==0のときに1を返す部分です。"},
+  {"id": "b27", "cat": "再帰", "src": "オリジナル", "prompt": "再帰呼び出しとコールスタックの関係についての説明として正しいものはどれか。", "code": "", "options": ["再帰呼び出しを行っても、コールスタックには何も積まれない", "関数を再帰的に呼び出すたびに、その呼び出しの実行状態（ローカル変数や戻り先など）がコールスタックに積まれていき、基底条件に達すると積まれた分だけ順に処理を終えてスタックから取り除かれていく", "再帰関数は必ずヒープ領域のみを使用し、スタック領域は一切使用しない", "コールスタックのサイズには上限がなく、どれだけ深く再帰してもエラーになることはない"], "answer": 1, "exp": "再帰関数を呼び出すたびに、その呼び出しに関する情報（ローカル変数の値や戻り先アドレスなど）がスタックフレームとしてコールスタックに積まれます。基底条件に達すると、それぞれの呼び出しが結果を返しながらスタックから取り除かれていきます。コールスタックのサイズには上限があり、再帰が深すぎるとスタックオーバーフローが発生します。"},
+  {"id": "b28", "cat": "再帰", "src": "オリジナル", "prompt": "「末尾再帰」の説明として最も適切なものはどれか。", "code": "", "options": ["関数の再帰呼び出しが、その関数内で最後に実行される処理として行われる形式のことで、一部の言語・処理系ではこの形式を検出してループのように最適化できる", "再帰呼び出しを1回も行わない関数のこと", "再帰呼び出しのたびに必ず2つ以上の関数を同時に呼び出す形式のこと", "配列の末尾の要素だけを処理する再帰のこと"], "answer": 0, "exp": "末尾再帰とは、再帰呼び出しがその関数の処理の最後（末尾）で行われ、呼び出した後に他の計算が残っていない形式のことです。この形式では呼び出し元の情報を保持し続ける必要がないため、一部の言語やコンパイラ・処理系ではスタックを積み増さないループ処理として最適化（末尾呼び出し最適化）できる場合があります。"},
+  {"id": "b29", "cat": "再帰", "src": "オリジナル", "prompt": "「分割統治法」の考え方を説明したものとして最も適切なものはどれか。", "code": "", "options": ["問題をそのまま解こうとせず、常に総当たりで全パターンを試す方法", "問題をより小さな同じ形の部分問題に分割し、それぞれを（多くの場合は再帰的に）解いてから、その結果を組み合わせて元の問題の答えを得る手法", "データを1つずつ順番に処理し、途中で分割は一切行わない手法", "問題を解く前に必ずすべてのデータをハッシュテーブルに格納する手法"], "answer": 1, "exp": "分割統治法は、大きな問題を同じ構造を持つより小さな部分問題に分割し、それぞれを（しばしば再帰を用いて）解いた後、部分問題の解を組み合わせて元の問題の解を得るという設計手法です。マージソートやクイックソートはこの考え方に基づく代表的なアルゴリズムです。"},
+  {"id": "b30", "cat": "再帰", "src": "オリジナル", "prompt": "再帰関数に基底条件が設定されていない、または基底条件に到達しない場合に起こりうることとして正しいものはどれか。", "code": "", "options": ["自動的に反復処理（ループ）に変換され、問題なく実行が完了する", "再帰呼び出しが際限なく続き、コールスタックに呼び出しの情報が積まれ続けた結果、スタックオーバーフローが発生してプログラムが異常終了する可能性がある", "常にO(1)で処理が終了する", "計算結果が自動的にキャッシュされ、次回以降は再計算されなくなる"], "answer": 1, "exp": "基底条件が存在しない、または条件を満たすことがない再帰関数は、自分自身の呼び出しを無限に繰り返そうとします。呼び出しのたびにコールスタックに情報が積まれ続けるため、スタック領域の上限を超えるとスタックオーバーフローが発生し、プログラムが異常終了します。"},
+];
+
+// 複数選択は本科目では未使用。
+const BOOK_MULTI_Q = [];
+const EXTRA_QUESTIONS = [];
+
+// 出題順：id 末尾の数字の昇順。エンジンはこの QUESTIONS だけを参照する。
+const QUESTIONS = (function(){
+  var all=[...BOOK_QUESTIONS,...BOOK_MULTI_Q,...EXTRA_QUESTIONS];
+  var no=function(q){return parseInt(String(q.id).replace(/^\D+/,''),10)||0;};
+  return all.slice().sort(function(a,b){return no(a)-no(b);});
+})();
+
+// カテゴリ別の復習アドバイス（正答率70%未満で「要復習」表示）。
+const ADVICE = {
+  "計算量(O記法)":"計算量はまず「入力サイズが増えたときにどのくらい処理量が増えるか」という増加傾向の話だと理解しましょう。O(1)<O(log n)<O(n)<O(n log n)<O(n^2)の順序を覚え、ループが1重ならO(n)、2重ならO(n^2)になりやすいという感覚を、簡単な疑似コードを自分で書いて確かめながら身につけると定着します。",
+  "ソート":"各ソートの計算量は「なぜその計算量になるのか」を動作から理解すると忘れにくくなります。バブル/選択/挿入は基本O(n^2)ですが挿入ソートはほぼ整列済みデータに強いこと、マージソートは常にO(n log n)、クイックソートは平均O(n log n)だが枢軸次第で最悪O(n^2)になること、そして「安定ソートかどうか」は同じ値の要素の順序が保たれるかという別軸の性質であることを整理しておきましょう。",
+  "探索":"探索は前提条件の違いに注目すると整理しやすいです。線形探索はソート不要でO(n)、二分探索はソート済みが前提でO(log n)、ハッシュ探索は衝突が少なければ平均O(1)です。BFSはキューで近い順に、DFSはスタックや再帰で行き止まりまで進む、という動作イメージを持つと迷いません。",
+  "データ構造":"データ構造は「得意な操作・苦手な操作」で比較すると覚えやすくなります。配列はアクセスが速く挿入が遅い、連結リストはその逆、スタックはLIFO、キューはFIFO、二分探索木は平衡していればO(log n)だが偏ると遅くなる、ハッシュテーブルは衝突対策とセットで理解し、ヒープは優先度付きキューの実装によく使われる完全二分木、という要点を押さえましょう。",
+  "再帰":"再帰は「基底条件」と「自分自身をより小さい問題で呼び出す部分」の2つがセットになっていることを常に意識しましょう。階乗やフィボナッチで実際に手を動かして呼び出しの流れを追い、コールスタックに積まれていく様子や、末尾再帰・分割統治・無限再帰によるスタックオーバーフローとの関係を具体例で確認すると理解が深まります。",
+};
+
+// 本科目ではコード図解・トレース表は未使用。
+const FIGS = {};
+const TRACE = {};
+
+/* ============================================================
+   ▲▲▲ 差し替えここまで（この下はエンジン：全科目共通・変更不要） ▲▲▲
+   ============================================================ */
+
+const LETTERS=['A','B','C','D','E','F','G'];
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{perCat:{},log:[]}}catch(e){return{perCat:{},log:[]}}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+let queue=QUESTIONS.map((_,i)=>i);   // 出題順（インデックス）
+let pos=0;                            // queue内の現在位置
+let sessCorrect=0, sessDone=0;
+let answered=false;
+
+const stage=document.getElementById('stage');
+const pbar=document.getElementById('pbar');
+const scoreEl=document.getElementById('score');
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function renderFigure(q){
+  const f=FIGS[q.id]; if(!f) return '';
+  const lines=q.code.split('\n');
+  let rows='';
+  lines.forEach((ln,idx)=>{
+    const n=idx+1, an=f.lines[n], t=an?an[0]:'';
+    rows+=`<div class="figline ${t}"><span class="fno">${n}</span><span class="fcode">${esc(ln)||' '}</span></div>`;
+    if(an) rows+=`<div class="annorow ${t}"><span class="anno">${esc(an[1])}</span></div>`;
+  });
+  const out=f.out?`<div class="figout">▸ ${esc(f.out)}</div>`:'';
+  return `<div class="figure reveal"><div class="fig-label">図解 — プログラムの流れ</div><div class="figbox">${rows}</div>${out}</div>`;
+}
+
+// 問題文のコードを、行番号つきの注釈可能ブロックとして描画（回答前は注釈なし）
+function codeBlockHtml(q){
+  if(!q.code) return '';
+  const lines=q.code.split('\n');
+  const rows=lines.map((ln,i)=>`<div class="figline" data-ln="${i+1}"><span class="fno">${i+1}</span><span class="fcode">${esc(ln)||' '}</span></div>`).join('');
+  return `<div class="figbox qcode" id="qcode">${rows}</div>`;
+}
+
+// 回答後、問題文のコードに直接ハイライト＋連結線＋結果を差し込む
+function revealFigure(q){
+  const f=FIGS[q.id]; const box=document.getElementById('qcode');
+  if(!f||!box) return;
+  Object.keys(f.lines).sort((a,b)=>a-b).forEach(n=>{
+    const t=f.lines[n][0], txt=f.lines[n][1];
+    const line=box.querySelector('.figline[data-ln="'+n+'"]');
+    if(!line) return;
+    line.classList.add(t,'reveal');
+    const ar=document.createElement('div'); ar.className='annorow '+t+' reveal';
+    ar.innerHTML='<span class="anno">'+esc(txt)+'</span>';
+    line.after(ar);
+  });
+  if(f.out){
+    const o=document.createElement('div'); o.className='figout qfigout reveal';
+    o.textContent='▸ '+f.out; box.after(o);
+  }
+}
+
+function renderTrace(q){
+  const t=TRACE[q.id]; if(!t) return '';
+  const head=t.cols.map(c=>`<th>${esc(c)}</th>`).join('');
+  const body=t.rows.map((r,ri)=>{
+    const tds=r.map((c,ci)=>{
+      const st=ci===r.length-1?' class="st"':'';
+      let cell;
+      if(c==='null') cell='<span class="nul">null</span>';
+      else if(c==='') cell='<span class="nul">·</span>';
+      else cell=esc(c);
+      return `<td${st}>${cell}</td>`;
+    }).join('');
+    return `<tr class="${(t.hot!=null&&ri===t.hot)?'hot':''}">${tds}</tr>`;
+  }).join('');
+  return `<div class="trace reveal"><details class="tdet"><summary>変数の変化を追う（トレース）</summary><div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></details></div>`;
+}
+
+let selected=new Set();
+// 横向き2カラムの幅を「選択肢の文字量」と「コードの横幅」に応じて自動調整する
+// 選択肢が短ければ左(コード)を広く、選択肢が長ければ右(選択肢)を広く。
+// インラインstyleではなくCSS変数 --gtc を渡すことで、900px以下のメディアクエリ(1カラム)を壊さない
+function qcolStyle(q){
+  if(!q.code) return '';                                   // コード無しは .nocode の中央1カラムに任せる
+  const w=s=>{let n=0;for(const ch of String(s)){n+=ch.charCodeAt(0)>0xff?2:1;}return n;}; // 全角=2,半角=1
+  const optW=Math.max(1,...(q.options||['']).map(o=>Math.max(1,...String(o).split('\n').map(w)))); // 選択肢の最長行
+  const codeW=Math.max(1,...q.code.split('\n').map(w));    // コードの最長行
+  let l=1,r=1;
+  if(optW<=16){l=1.8;r=1;}          // 選択肢がとても短い(記号/単語)→コードを大きく
+  else if(optW<=26){l=1.4;r=1;}     // やや短い
+  else if(optW>=60){l=1;r=1.6;}     // とても長い(文章/コード)→右を大きく
+  else if(optW>=42){l=1;r=1.3;}     // やや長い
+  if(codeW>=64)l+=0.35;             // コードが横に長い場合は左に加算
+  return ` style="--gtc:minmax(0,${l}fr) minmax(0,${r}fr)"`;
+}
+function renderQuestion(){
+  answered=false; selected=new Set();
+  const q=QUESTIONS[queue[pos]];
+  pbar.style.width=(pos/queue.length*100)+'%';
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  stage.innerHTML=`
+    <div class="card reveal">
+      <div class="eyebrow">
+        <span class="cat">${esc(q.cat)}</span>
+        <span class="qnum">${pos+1} / ${queue.length}</span>
+      </div>
+      <div class="prompt">${esc(q.prompt)} ${q.multi?'<span class="multi-tag">複数選択</span>':''}</div>
+      <div class="qcols${q.code?'':' nocode'}"${qcolStyle(q)}>
+        <div class="qcol-l">${codeBlockHtml(q)}</div>
+        <div class="qcol-r">
+          <div class="opts" id="opts"></div>
+          <div id="after"></div>
+        </div>
+      </div>
+    </div>`;
+  const opts=document.getElementById('opts');
+  const order=shuffle(q.options.map((_,i)=>i));   // 毎回シャッフル
+  q._order=order;
+  order.forEach((origIdx,dispIdx)=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.type='button';
+    b.innerHTML=`<span class="key">${LETTERS[dispIdx]}</span><span class="txt">${esc(q.options[origIdx])}</span><span class="mark"></span>`;
+    b.onclick=()=> q.multi ? toggleSel(dispIdx,b) : choose(dispIdx);
+    opts.appendChild(b);
+  });
+  if(q.multi){
+    const bar=document.createElement('div'); bar.className='actions'; bar.id='mbar';
+    bar.innerHTML=`<button class="btn primary" type="button" id="submitBtn" onclick="submitMulti()" disabled>確定する（${q.answers.length}個選ぶ）</button>`;
+    opts.after(bar);
+  }
+}
+
+function toggleSel(dispIdx,btn){
+  if(answered) return;
+  if(selected.has(dispIdx)){selected.delete(dispIdx);btn.classList.remove('sel');}
+  else{selected.add(dispIdx);btn.classList.add('sel');}
+  const sb=document.getElementById('submitBtn'); if(sb) sb.disabled = selected.size===0;
+}
+
+function submitMulti(){
+  if(answered) return; answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=new Set(q.answers.map(a=>q._order.indexOf(a)));
+  const correct = selected.size===correctDisp.size && [...selected].every(x=>correctDisp.has(x));
+  document.querySelectorAll('#opts .opt').forEach((b,bi)=>{
+    b.disabled=true; b.classList.remove('sel');
+    const isC=correctDisp.has(bi), isS=selected.has(bi);
+    if(isC){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(isS&&!isC){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  const mbar=document.getElementById('mbar'); if(mbar) mbar.remove();
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  const answerLetters=[...correctDisp].sort((a,b)=>a-b).map(i=>LETTERS[i]).join('・');
+  const last=pos===queue.length-1;
+  document.getElementById('after').innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${answerLetters}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function choose(i){
+  if(answered) return;
+  answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=q._order.indexOf(q.answer);   // シャッフル後の正解位置
+  const correct=i===correctDisp;
+  const btns=document.querySelectorAll('#opts .opt');
+  btns.forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===correctDisp){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(bi===i&&!correct){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  // 記録（累積・端末保存）
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+
+  const after=document.getElementById('after');
+  const last=pos===queue.length-1;
+  after.innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${LETTERS[correctDisp]}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function next(){
+  if(pos<queue.length-1){pos++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+  else showResults();
+}
+
+function showResults(){
+  pbar.style.width='100%';
+  const s=load();
+  const cats=Object.keys(ADVICE);
+  let totA=0,totC=0;
+  cats.forEach(c=>{const d=s.perCat[c];if(d){totA+=d.a;totC+=d.c;}});
+  const pct=totA?Math.round(totC/totA*100):0;
+  const weak=cats.filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+
+  let barsHtml=cats.map(c=>{
+    const d=s.perCat[c]||{a:0,c:0};
+    const p=d.a?Math.round(d.c/d.a*100):0;
+    const isWeak=d.a>0&&p<70;
+    const col=d.a===0?'var(--border)':(p<50?'var(--ng)':p<70?'var(--accent)':'var(--ok)');
+    return `<div class="bar-row">
+      <div class="bar-top"><span>${esc(c)}${isWeak?'<span class="weak-badge">要復習</span>':''}</span>
+      <span class="n">${d.a?p+'% ('+d.c+'/'+d.a+')':'未回答'}</span></div>
+      <div class="bar-track"><i style="width:${d.a?p:0}%;background:${col}"></i></div></div>`;
+  }).join('');
+
+  let msg = totA===0?'まだ回答がありません。':
+    pct>=80?'かなり good。取りこぼした分野だけ詰めれば合格圏です。':
+    pct>=60?'あと一歩。下の「要復習」分野を重点的に。':
+    '基礎の詰め直しから。要復習の分野を1つずつ潰しましょう。';
+
+  let adviceHtml = weak.length
+    ? weak.map(c=>`<div class="advice"><div class="a-cat">${esc(c)} <span class="weak-badge">要復習</span></div><div class="a-txt">${esc(ADVICE[c])}</div></div>`).join('')
+    : (totA?'<div class="empty">要復習の分野はありません。全分野70%以上。この調子！</div>':'<div class="empty">問題を解くと、ここに弱点分野と対策が出ます。</div>');
+
+  stage.innerHTML=`
+   <div class="card reveal">
+     <div class="res-head">
+       <div class="ring" style="--p:${pct}"><div class="num"><b>${pct}%</b><span>累計正答率</span></div></div>
+       <div class="res-sum"><h2>成績サマリー</h2><p>${msg}</p>
+         <p style="margin-top:6px">累計 ${totC} / ${totA} 問正解</p></div>
+     </div>
+     <div class="sec-label">分野別の正答率</div>
+     <div class="bars">${barsHtml}</div>
+     <div class="sec-label">重点対策（要復習の分野）</div>
+     ${adviceHtml}
+     <div class="actions">
+       <button class="btn ghost" type="button" onclick="resetAll()">記録をリセット</button>
+       ${weak.length?'<button class="btn" type="button" onclick="retryWeak()">要復習だけ再挑戦</button>':''}
+       <button class="btn primary" type="button" onclick="restart()">もう一度：全問</button>
+     </div>
+   </div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){queue=QUESTIONS.map((_,i)=>i);pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+function retryWeak(){
+  const s=load();
+  const weak=Object.keys(ADVICE).filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+  const idx=QUESTIONS.map((q,i)=>i).filter(i=>weak.includes(QUESTIONS[i].cat));
+  queue=idx.length?idx:QUESTIONS.map((_,i)=>i);
+  pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(){save({perCat:{},log:[]});showResults();}
+
+renderQuestion();
+</script>
+
+<!-- cbt-nav-added -->
+<style>
+  /* ===== 問題選択画面（後付け・既存レイアウトは変更しない） ===== */
+
+  /* 各問題ページに出るのはこのボタンだけ。左下に固定 */
+  .cbtopen{position:fixed;left:14px;bottom:14px;z-index:60;
+    font:600 13px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:12px 18px;cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.18), 0 8px 22px rgba(0,0,0,.14)}
+  .cbtopen:hover{filter:brightness(1.06)}
+  .cbtopen:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* 問題選択画面（全画面オーバーレイ） */
+  .cbtscreen{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+    padding:16px;background:rgba(10,12,16,.55)}
+  .cbtscreen[hidden]{display:none}
+  .cbtpanel{width:min(860px,100%);max-height:min(86vh,760px);display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .cbtpanel-head{display:flex;align-items:center;gap:12px;padding:14px 16px;
+    border-bottom:1px solid var(--border);background:var(--surface-2)}
+  .cbtpanel-head h2{font:600 15px/1.3 var(--sans);color:var(--ink);margin:0}
+  .cbtcount{font:400 12px/1 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums}
+  .cbtclose{margin-left:auto;font:500 13px/1 var(--sans);color:var(--muted);
+    background:var(--surface);border:1px solid var(--border);border-radius:999px;
+    padding:8px 14px;cursor:pointer}
+  .cbtclose:hover{color:var(--ink);border-color:var(--ink)}
+  .cbtfilters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+  .cbtchip{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:7px 12px;cursor:pointer}
+  .cbtchip.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtbody{padding:12px 16px;overflow:auto;flex:1}
+  .cbtgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+  .cbtq{font:600 14px/1 var(--mono);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:10px;padding:12px 0;cursor:pointer;
+    font-variant-numeric:tabular-nums;position:relative}
+  .cbtq:hover{border-color:var(--accent);color:var(--accent)}
+  .cbtq.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .cbtq.ng{background:var(--ng-soft);border-color:var(--ng);color:var(--ng)}
+  .cbtq.fl::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent)}
+  .cbtq.cur{outline:2px solid var(--accent);outline-offset:1px}
+  .cbtempty{font:400 13px/1.6 var(--sans);color:var(--muted);padding:10px 2px}
+  .cbtfoot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    padding:12px 16px;border-top:1px solid var(--border);background:var(--surface-2)}
+  .cbtlegend{font:400 11.5px/1.6 var(--sans);color:var(--faint);
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .cbtlegend i{display:inline-block;width:11px;height:11px;border-radius:3px;
+    border:1px solid var(--border);margin-right:5px;vertical-align:-1px}
+  .cbtlegend i.ok{background:var(--ok-soft);border-color:var(--ok)}
+  .cbtlegend i.ng{background:var(--ng-soft);border-color:var(--ng)}
+  .cbtlegend i.fl{background:var(--accent)}
+  .cbtrun{font:600 12.5px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:9px 16px;cursor:pointer}
+  .cbtrun[disabled]{opacity:.45;cursor:default}
+
+  /* 問題カード右上の「後で見直す」 */
+  .cbtflag{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:6px 11px;cursor:pointer;margin-left:auto}
+  .cbtflag.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtprev{font:400 12px/1 var(--sans);color:var(--muted);margin-left:8px}
+
+  /* 左下のボタンが最下部の内容に重ならないよう余白を足す */
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  @media (max-width:640px){
+    .cbtopen{left:10px;bottom:10px;padding:11px 16px}
+    .cbtgrid{grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+    .cbtscreen{padding:10px}
+  }
+</style>
+<script>
+(function(){
+  // エンジンが読み込まれていない画面（雛形の説明ページ等）では何もしない
+  if(typeof QUESTIONS==='undefined' || typeof renderQuestion!=='function') return;
+  var stage=document.getElementById('stage');
+  if(!stage || !QUESTIONS.length) return;
+
+  // --- 進捗の保存（科目ごとに別キー。既存の成績データとは混ぜない） ---
+  var CKEY=(typeof KEY!=='undefined'?KEY:'quiz')+'_cbt';
+  var st={};
+  try{ st=JSON.parse(localStorage.getItem(CKEY))||{}; }catch(e){ st={}; }
+  function persist(){ try{ localStorage.setItem(CKEY,JSON.stringify(st)); }catch(e){} }
+
+  var filter='all';
+
+  // --- 左下のボタン（各問題ページに出るのはこれだけ） ---
+  var openBtn=document.createElement('button');
+  openBtn.type='button';
+  openBtn.className='cbtopen';
+  openBtn.textContent='問題選択画面';
+  document.body.appendChild(openBtn);
+
+  // --- 問題選択画面（全画面オーバーレイ） ---
+  var scr=document.createElement('div');
+  scr.className='cbtscreen';
+  scr.hidden=true;
+  scr.innerHTML=
+    '<div class="cbtpanel" role="dialog" aria-modal="true" aria-label="問題選択画面">'
+   +  '<div class="cbtpanel-head">'
+   +    '<h2>問題を選ぶ</h2><span class="cbtcount" id="cbtCount"></span>'
+   +    '<button type="button" class="cbtclose" id="cbtClose">閉じる</button>'
+   +  '</div>'
+   +  '<div class="cbtfilters">'
+   +    '<button type="button" class="cbtchip on" data-f="all">すべて</button>'
+   +    '<button type="button" class="cbtchip" data-f="todo">未解答</button>'
+   +    '<button type="button" class="cbtchip" data-f="ng">間違えた</button>'
+   +    '<button type="button" class="cbtchip" data-f="flag">見直し</button>'
+   +  '</div>'
+   +  '<div class="cbtbody"><div class="cbtgrid" id="cbtGrid"></div></div>'
+   +  '<div class="cbtfoot">'
+   +    '<div class="cbtlegend">'
+   +      '<span><i></i>未解答</span><span><i class="ok"></i>正解</span>'
+   +      '<span><i class="ng"></i>不正解</span><span><i class="fl"></i>見直し</span>'
+   +    '</div>'
+   +    '<button type="button" class="cbtrun" id="cbtRun">この絞り込みだけを順に解く</button>'
+   +  '</div>'
+   +'</div>';
+  document.body.appendChild(scr);
+
+  var grid=document.getElementById('cbtGrid');
+  var runBtn=document.getElementById('cbtRun');
+  var countEl=document.getElementById('cbtCount');
+  var closeBtn=document.getElementById('cbtClose');
+
+  function openScreen(){ scr.hidden=false; paint(); closeBtn.focus(); }
+  function closeScreen(){ scr.hidden=true; openBtn.focus(); }
+  openBtn.onclick=openScreen;
+  closeBtn.onclick=closeScreen;
+  scr.addEventListener('click',function(e){ if(e.target===scr) closeScreen(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !scr.hidden) closeScreen(); });
+
+  scr.querySelectorAll('.cbtchip').forEach(function(c){
+    c.onclick=function(){
+      filter=c.dataset.f;
+      scr.querySelectorAll('.cbtchip').forEach(function(x){ x.classList.toggle('on', x===c); });
+      paint();
+    };
+  });
+
+  // 現在の絞り込みに合致する問題インデックス
+  function picked(){
+    var out=[];
+    QUESTIONS.forEach(function(q,i){
+      var s=st[q.id]||{};
+      if(filter==='todo' && s.r) return;
+      if(filter==='ng'   && s.r!=='ng') return;
+      if(filter==='flag' && !s.f) return;
+      out.push(i);
+    });
+    return out;
+  }
+
+  function paint(){
+    if(scr.hidden) return;
+    var list=picked();
+    var done=QUESTIONS.filter(function(q){ return (st[q.id]||{}).r; }).length;
+    countEl.textContent='解答済み '+done+' / '+QUESTIONS.length;
+    grid.innerHTML='';
+    if(!list.length){
+      grid.innerHTML='<div class="cbtempty">該当する問題はありません。</div>';
+      runBtn.disabled=true;
+      return;
+    }
+    runBtn.disabled=false;
+    list.forEach(function(i){
+      var q=QUESTIONS[i], s=st[q.id]||{};
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='cbtq'+(s.r==='ok'?' ok':s.r==='ng'?' ng':'')+(s.f?' fl':'')
+                 +(queue[pos]===i?' cur':'');
+      b.textContent=String(q.id).replace(/^\D+/,'')||String(i+1);
+      b.title=(q.cat||'')+(s.r?(s.r==='ok'?'／前回○':'／前回×'):'');
+      b.onclick=function(){ jump(i); };
+      grid.appendChild(b);
+    });
+  }
+
+  // 任意の問題へジャンプ（出題キューに無ければ全問キューに戻してから移動）
+  function jump(i){
+    var at=queue.indexOf(i);
+    if(at<0){ queue=QUESTIONS.map(function(_,k){return k;}); at=i; }
+    pos=at;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  runBtn.onclick=function(){
+    var list=picked();
+    if(!list.length) return;
+    queue=list; pos=0;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  function toggleFlag(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].f=!st[q.id].f;
+    persist(); decorate(); paint();
+  }
+
+  // 問題カードに「後で見直す」ボタンと前回結果を差し込む
+  function decorate(){
+    var eb=document.querySelector('#stage .eyebrow');
+    if(!eb) return;
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var s=st[q.id]||{};
+    var old=eb.querySelector('.cbtflag'); if(old) old.remove();
+    var oldp=eb.querySelector('.cbtprev'); if(oldp) oldp.remove();
+    if(s.r){
+      var p=document.createElement('span');
+      p.className='cbtprev';
+      p.textContent = s.r==='ok' ? '前回：○正解' : '前回：×不正解';
+      eb.appendChild(p);
+    }
+    var f=document.createElement('button');
+    f.type='button';
+    f.className='cbtflag'+(s.f?' on':'');
+    f.textContent = s.f ? '見直しに登録済み' : '後で見直す';
+    f.onclick=toggleFlag;
+    eb.appendChild(f);
+  }
+
+  // 解答結果を拾って保存する（正解/不正解の判定は既存エンジンの表示を読む）
+  function record(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var v=document.querySelector('#after .verdict'); if(!v) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].r = v.classList.contains('ok') ? 'ok' : 'ng';
+    persist(); paint();
+  }
+
+  // --- 既存関数をラップ（中身は書き換えない） ---
+  var _render=renderQuestion;
+  renderQuestion=function(){ _render.apply(this,arguments); decorate(); paint(); };
+
+  if(typeof choose==='function'){
+    var _choose=choose;
+    choose=function(){ _choose.apply(this,arguments); record(); };
+  }
+  if(typeof submitMulti==='function'){
+    var _submit=submitMulti;
+    submitMulti=function(){ _submit.apply(this,arguments); record(); };
+  }
+
+  decorate();
+})();
+</script>
+
+<!-- back-to-index (jinji) -->
+<style>
+.appshome{position:fixed;right:14px;z-index:9999;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  font:600 13px/1 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  color:#16232b;background:#ffffff;border:1px solid rgba(0,0,0,.16);border-radius:999px;
+  padding:11px 16px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.16),0 8px 20px rgba(0,0,0,.10)}
+.appshome:hover{filter:brightness(.97)}
+.appshome:focus-visible{outline:2px solid #136b5b;outline-offset:2px}
+@media (prefers-color-scheme:dark){
+  .appshome{color:#e9eef1;background:#1d242b;border-color:rgba(255,255,255,.18);
+    box-shadow:0 2px 6px rgba(0,0,0,.45)}}
+@media (max-width:520px){.appshome{right:10px;padding:10px 14px;font-size:12.5px}}
+</style>
+<a class="appshome" href="../">&#8592; アプリ一覧</a>
+<script>
+if('serviceWorker' in navigator){addEventListener('load',function(){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+</script>
+</body></html>

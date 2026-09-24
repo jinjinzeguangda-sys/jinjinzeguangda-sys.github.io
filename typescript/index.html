@@ -1,0 +1,872 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><!-- pwa-standalone (jinji) -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TypeScript基礎">
+<meta name="theme-color" content="#F7F5F1">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<style>
+@media (display-mode:standalone){body{padding-top:env(safe-area-inset-top)}}
+</style>
+</head><body>
+<meta charset="utf-8">
+
+
+
+
+
+<meta name="format-detection" content="telephone=no">
+
+<style>
+  /* iPhoneのノッチ・ホームインジケータを避ける（既存レイアウトは変更しない） */
+  body{
+    padding-left:max(0px,env(safe-area-inset-left));
+    padding-right:max(0px,env(safe-area-inset-right));
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+    -webkit-text-size-adjust:100%;
+  }
+  /* ホーム画面から開いた時に文字選択でズレるのを防ぐ（入力欄は除く） */
+  @media (display-mode:standalone){
+    body{-webkit-touch-callout:none}
+    input,textarea{-webkit-user-select:text}
+  }
+</style>
+
+<title>TypeScript基礎 演習コンソール</title>
+<style>
+  :root{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+    --radius:14px; --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+      --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+      --accent:#E4A24A; --accent-soft:#3A2F1E;
+      --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+      --code-bg:#0F1318; --code-ink:#CDD3C6;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+    --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+    --accent:#E4A24A; --accent-soft:#3A2F1E;
+    --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+    --code-bg:#0F1318; --code-ink:#CDD3C6;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;margin:0}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 22px 64px}
+  .qcols{display:grid;grid-template-columns:var(--gtc,minmax(0,1fr) minmax(0,1fr));gap:24px;align-items:start;margin-top:6px}
+  .qcols.nocode{grid-template-columns:minmax(0,720px);justify-content:center}
+  .qcol-l,.qcol-r{min-width:0}
+  .qcol-l .qcode{margin:0}
+  .qcol-l{position:sticky;top:92px}
+  @media (max-width:900px){.wrap{max-width:660px}.qcols{grid-template-columns:1fr;gap:16px}.qcol-l{position:static}}
+  .topbar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);padding:14px 0 12px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand h1{font-size:16px;margin:0;font-weight:650;letter-spacing:.01em}
+  .brand .tag{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;
+    letter-spacing:.14em;font-weight:600}
+  .meta{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .progress{flex:1;height:7px;background:var(--border);border-radius:99px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;
+    transition:width .35s ease}
+  .score{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap}
+  .score b{color:var(--ink)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 20px}
+  .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .cat{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);font-weight:650}
+  .src{font-size:11px;color:var(--faint)}
+  .qnum{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .prompt{font-size:16.5px;font-weight:600;margin:2px 0 14px;text-wrap:balance}
+  pre.code{background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:15.5px;
+    line-height:1.65;padding:14px 15px;border-radius:10px;border:1px solid var(--border);
+    overflow-x:auto;margin:0 0 18px;white-space:pre;tab-size:2}
+
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;cursor:pointer;
+    background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;
+    padding:13px 14px;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.5;
+    transition:border-color .15s,background .15s,transform .05s}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt:active:not(:disabled){transform:translateY(1px)}
+  .opt:disabled{cursor:default}
+  .opt .key{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--muted);
+    border:1.5px solid var(--border);border-radius:7px;min-width:26px;height:26px;display:flex;
+    align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;transition:.15s}
+  .opt .txt{flex:1;padding-top:1px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .opt .mark{font-size:18px;line-height:1.3;flex:0 0 auto;opacity:0}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.correct .key{border-color:var(--ok);background:var(--ok);color:#fff}
+  .opt.correct .mark{opacity:1;color:var(--ok)}
+  .opt.wrong{border-color:var(--ng);background:var(--ng-soft)}
+  .opt.wrong .key{border-color:var(--ng);background:var(--ng);color:#fff}
+  .opt.wrong .mark{opacity:1;color:var(--ng)}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .key{border-color:var(--accent);background:var(--accent);color:#fff}
+  .multi-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;
+    color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:1px 6px;
+    vertical-align:2px;white-space:nowrap}
+
+  .verdict{display:flex;align-items:center;gap:8px;margin:16px 0 4px;font-weight:700;font-size:15px}
+  .verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
+  .exp{background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:8px;padding:13px 15px;font-size:14px;color:var(--ink);margin-top:6px}
+  .exp code{font-family:var(--mono);font-size:12.5px;background:var(--code-bg);padding:1px 5px;
+    border-radius:4px;color:var(--code-ink)}
+  .exp b{color:var(--ink)}
+  .reveal{animation:rise .28s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.reveal{animation:none}.progress>i{transition:none}}
+
+  /* 図解（コード注釈） */
+  .figure{margin-top:14px}
+  .fig-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin-bottom:6px;font-weight:650}
+  .figbox{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:8px 0;
+    overflow-x:auto;font-family:var(--mono);font-size:15.5px;line-height:1.3}
+  .figline{display:flex;gap:10px;padding:0 12px;white-space:pre;min-width:max-content}
+  .figline .fno{color:var(--faint);min-width:1.5em;text-align:right;flex:0 0 auto;user-select:none}
+  .figline .fcode{color:var(--code-ink)}
+  .figline.err{background:var(--ng-soft);box-shadow:inset 3px 0 0 var(--ng)}
+  .figline.info{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+  .figline.ok{background:var(--ok-soft);box-shadow:inset 3px 0 0 var(--ok)}
+  .figline.mute{box-shadow:inset 3px 0 0 var(--border)}
+  .figline.mute .fcode{color:var(--faint)}
+  /* 連結線つき注釈：該当行から L字の線＋矢印で枝分かれ */
+  .annorow{position:relative;padding:3px 12px 9px 42px;min-width:max-content}
+  .annorow::before{content:"";position:absolute;left:5px;top:-4px;width:17px;height:16px;
+    border-left:2px solid currentColor;border-bottom:2px solid currentColor;border-bottom-left-radius:8px;opacity:.9}
+  .annorow::after{content:"";position:absolute;left:20px;top:7px;width:0;height:0;
+    border:5px solid transparent;border-left:7px solid currentColor;opacity:.9}
+  .annorow.err{color:var(--ng)}
+  .annorow.info{color:var(--accent)}
+  .annorow.ok{color:var(--ok)}
+  .annorow.mute{color:var(--faint)}
+  .annorow .anno{font-family:var(--sans);font-size:12.5px;line-height:1.5;white-space:normal;max-width:46ch;display:block}
+  .annorow.ok .anno{font-weight:600}
+  .figout{margin-top:9px;font-family:var(--mono);font-size:12.5px;color:var(--ink);font-weight:700}
+  .figbox.qcode{margin:0 0 16px;font-size:15.5px}
+  .qfigout{margin:8px 2px 16px}
+  /* 変数トレース表（クリックで開閉） */
+  .trace{margin-top:14px}
+  .trace details{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .trace summary{cursor:pointer;list-style:none;padding:9px 13px;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650;
+    background:var(--surface-2);display:flex;align-items:center;gap:8px;user-select:none}
+  .trace summary::-webkit-details-marker{display:none}
+  .trace summary::before{content:"▸";color:var(--accent)}
+  .trace details[open] summary::before{content:"▾"}
+  .trace summary:hover{color:var(--ink)}
+  .trace summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .tscroll{overflow-x:auto;border-top:1px solid var(--border)}
+  .trace table{border-collapse:collapse;width:100%;font-size:12.5px}
+  .trace th,.trace td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+    padding:6px 10px;text-align:left;white-space:normal;vertical-align:top;overflow-wrap:anywhere}
+  .trace th{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;
+    color:var(--muted);background:var(--surface-2);white-space:nowrap}
+  .trace td{font-family:var(--mono);color:var(--code-ink);font-variant-numeric:tabular-nums}
+  .trace td.st{font-family:var(--sans);color:var(--ink)}
+  .trace tr.hot td{background:var(--ng-soft)}
+  .trace .nul{color:var(--faint)}
+  .trace tbody tr:last-child td{border-bottom:none}
+  .trace th:last-child,.trace td:last-child{border-right:none}
+
+  .actions{display:flex;gap:10px;margin-top:18px}
+  .btn{font-family:inherit;font-size:14.5px;font-weight:600;border-radius:10px;padding:11px 18px;
+    cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--ink);
+    transition:.15s;flex:0 0 auto}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.ghost{color:var(--muted)}
+
+  /* results */
+  .res-head{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .ring{--p:0;width:104px;height:104px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--border) 0);
+    display:grid;place-items:center;position:relative}
+  .ring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface)}
+  .ring .num{position:relative;z-index:1;text-align:center}
+  .ring .num b{font-size:26px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .ring .num span{display:block;font-size:11px;color:var(--muted)}
+  .res-sum h2{margin:0 0 4px;font-size:18px}
+  .res-sum p{margin:0;color:var(--muted);font-size:13.5px}
+  .sec-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin:22px 0 10px;font-weight:650}
+  .bars{display:flex;flex-direction:column;gap:11px}
+  .bar-row .bar-top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px}
+  .bar-row .bar-top .n{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+  .bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+  .bar-track>i{display:block;height:100%;border-radius:99px}
+  .weak-badge{font-size:10.5px;font-family:var(--mono);color:var(--ng);border:1px solid var(--ng);
+    border-radius:5px;padding:0 5px;margin-left:7px;vertical-align:1px}
+  .advice{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+    margin-top:10px}
+  .advice .a-cat{font-weight:650;font-size:14px;margin-bottom:3px;display:flex;align-items:center}
+  .advice .a-txt{font-size:13.5px;color:var(--muted)}
+  .advice+.advice{margin-top:8px}
+  .empty{color:var(--muted);font-size:13.5px;padding:6px 0}
+  .footer{margin-top:26px;text-align:center;color:var(--faint);font-size:11.5px;line-height:1.7}
+  .footer .warn{color:var(--muted)}
+  a.link{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a.link:hover{border-color:var(--accent)}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <h1>TypeScript基礎 演習コンソール</h1>
+      <span class="tag">TypeScript / 型</span>
+    </div>
+    <div class="meta">
+      <div class="progress"><i id="pbar"></i></div>
+      <div class="score" id="score">0 / 0</div>
+    </div>
+  </div>
+  <div id="stage"></div>
+  <div class="footer">
+    成績はこの端末のブラウザ内にのみ保存されます（localStorage）。<br>
+    <span class="warn">型注釈・interface/type・ジェネリクス・ユニオン型・tsconfigを確認する4択演習（オリジナル問題・全30問）。</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ▼▼▼ ここから下だけを科目ごとに差し替える（エンジン部は触らない） ▼▼▼
+   自動生成: build_quizzes_v2.py（商用・オリジナル問題）
+   ============================================================ */
+
+// localStorage 保存キー：科目ごとに必ず変える（他科目と成績が混ざらないように）
+const KEY='tsBasicsQuizV1';
+
+// 【単一選択】4択。answer は options の正解インデックス（0始まり）。
+const BOOK_QUESTIONS = [
+  {"id": "b1", "cat": "型注釈", "src": "オリジナル", "prompt": "文字列の配列を表す型注釈として正しいものはどれか。", "code": "", "options": ["string[]", "Array<number>", "[string]", "string"], "answer": 0, "exp": "string[]は文字列型の要素からなる配列を表す。Array<number>は数値の配列、[string]は要素が1つの文字列というタプル型、stringは単一の文字列型であり、配列全体を表す注釈としてはいずれも不適切。"},
+  {"id": "b2", "cat": "型注釈", "src": "オリジナル", "prompt": "unknown型とany型の違いに関する記述として正しいものはどれか。", "code": "", "options": ["unknown型もany型も、値を使用する前に型を絞り込む必要がある点で同じである", "any型は値を使う前に型ガードによる絞り込みが必須だが、unknown型は絞り込みなしで自由に操作できる", "any型は型チェックを事実上無効化するが、unknown型はプロパティアクセスなどの操作をする前に型ガードで絞り込む必要がある", "unknown型はnullとundefinedにしか代入できない特殊な型である"], "answer": 2, "exp": "unknown型はどんな値も代入できる点はanyと同じだが、使用（プロパティアクセスや呼び出しなど）する前にtypeofやinstanceofなどで型を絞り込むことをコンパイラが要求する。anyはそうした制約を一切課さない。"},
+  {"id": "b3", "cat": "型注釈", "src": "オリジナル", "prompt": "関数の戻り値の型としてneverを注釈するのに最も適切なケースはどれか。", "code": "function fail(message: string): never {\n  throw new Error(message);\n}", "options": ["値を返さずundefinedを返す関数", "必ず例外をthrowするか無限ループし、正常に処理を終えて値を返すことがない関数", "文字列または数値のどちらかを返す関数", "Promiseオブジェクトを返す非同期関数"], "answer": 1, "exp": "neverは「決して正常に値を返さない」ことを表す型。例示のfailのように必ずthrowする関数の戻り値に使う。単に値を返さない場合はvoidを使うのが適切。"},
+  {"id": "b4", "cat": "型注釈", "src": "オリジナル", "prompt": "変数directionに文字列\"up\"以外を代入できないようにする型注釈はどれか。", "code": "let direction = \"up\"; // 型注釈を変更したい", "options": ["string", "String", "any", "\"up\""], "answer": 3, "exp": "リテラル型\"up\"を注釈すると、その変数には文字列\"up\"だけが代入可能になる。stringやanyは任意の文字列（や任意の値）を許容してしまい制約にならない。"},
+  {"id": "b5", "cat": "型注釈", "src": "オリジナル", "prompt": "次のコードで、letで宣言されたcountの型はどのように推論されるか。", "code": "let count = 10;", "options": ["number（リテラル型10ではなく、より広いnumber型に推論される）", "any（型注釈がないため）", "10（リテラル型のまま固定される）", "unknown"], "answer": 0, "exp": "letのように再代入可能な変数では、初期値のリテラル型10ではなく、より広いnumber型にwidening（拡大）されて推論される。constで宣言した場合はリテラル型10のまま推論される点との違いに注意。"},
+  {"id": "b6", "cat": "型注釈", "src": "オリジナル", "prompt": "引数num1・num2をnumber型、戻り値もnumber型として明示した関数addの定義として正しいものはどれか。", "code": "// 元のコード\nfunction add(num1, num2) {\n  return num1 + num2;\n}", "options": ["function add(num1: string, num2: string): number { return num1 + num2; }", "function add(num1: number, num2: number): void { return num1 + num2; }", "function add(num1: number, num2: number): number { return num1 + num2; }", "function add(num1, num2): number[] { return num1 + num2; }"], "answer": 2, "exp": "引数と戻り値の両方をnumber型として明示するにはこの形が正しい。voidは戻り値なしを意味するため数値を返す関数には不適切、引数をstringにすると加算の意図と矛盾する。"},
+  {"id": "b7", "cat": "interface・type", "src": "オリジナル", "prompt": "TypeScriptのinterfaceとtypeエイリアスの違いに関する記述として正しいものはどれか。", "code": "", "options": ["typeエイリアスは同名で複数回宣言すると自動的にマージされるが、interfaceはできない", "interfaceは同名で複数回宣言すると宣言的マージが行われ定義が結合されるが、typeエイリアスは同名の再宣言ができずエラーになる", "interfaceはユニオン型を表現できるが、typeエイリアスはユニオン型を表現できない", "typeエイリアスはオブジェクトの形を定義できないが、interfaceはできる"], "answer": 1, "exp": "interfaceは同名宣言が自動的にマージされる（宣言的マージ）が、typeエイリアスは同じスコープで同名を再宣言するとコンパイルエラーになる。ユニオン型はtypeエイリアスでのみ直接表現でき、オブジェクトの形状はどちらでも定義可能。"},
+  {"id": "b8", "cat": "interface・type", "src": "オリジナル", "prompt": "オブジェクト型でプロパティageが省略可能（あってもなくてもよい）であることを表す記法はどれか。", "code": "interface User {\n  name: string;\n  ???\n}", "options": ["age!: number;", "age: number | null;", "readonly age: number;", "age?: number;"], "answer": 3, "exp": "プロパティ名の後に?を付けるとオプショナルプロパティとなり、そのプロパティを省略してもオブジェクトとして許容される。age!はnon-nullアサーションで用途が異なり、number | nullは値としてnullを許すがプロパティ自体の省略は許さない。"},
+  {"id": "b9", "cat": "interface・type", "src": "オリジナル", "prompt": "readonly修飾子を付けたプロパティに関する記述として正しいものはどれか。", "code": "interface Point {\n  readonly x: number;\n  readonly y: number;\n}\nconst p: Point = { x: 1, y: 2 };\np.x = 5; // ?", "options": ["オブジェクト生成後にそのプロパティへ再代入しようとするとコンパイルエラーになる", "実行時にも再代入を検知して例外をthrowする", "readonlyを付けても通常のプロパティと全く同じで、再代入は自由にできる", "readonlyを付けると、そのプロパティは初期化時にも値を設定できなくなる"], "answer": 0, "exp": "readonlyはコンパイル時のチェックであり、p.x = 5;のような再代入はコンパイルエラーになる。ただし実行時のJavaScriptにこの制約は残らないため、実行時の変更を防ぐ機能ではない。初期化時の代入は可能。"},
+  {"id": "b10", "cat": "interface・type", "src": "オリジナル", "prompt": "interfaceの拡張(extends)と、typeエイリアスの交差型(&)を使ったオブジェクト型結合に関する記述として正しいものはどれか。", "code": "interface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\n\ntype Animal2 = { name: string };\ntype Dog2 = Animal2 & { breed: string };", "options": ["interfaceはextendsによる拡張ができず、&でしか結合できない", "typeエイリアスは&による交差型を作れず、extendsキーワードのみが使える", "interfaceはextends、typeエイリアスは交差型(&)を使うことで、どちらも同様にプロパティを合成した型を作れる", "extendsと&は全く異なる意味を持ち、DogとDog2は互換性のない型になる"], "answer": 2, "exp": "interfaceの拡張はextendsキーワード、typeエイリアスの合成は交差型(&)で行う。書き方は異なるが、どちらもDog/Dog2のようにプロパティを合成した型を作ることができ、構造的にはほぼ同等になる。"},
+  {"id": "b11", "cat": "interface・type", "src": "オリジナル", "prompt": "次のコードのように同名のinterfaceを複数回宣言した場合の挙動として正しいものはどれか。", "code": "interface Box {\n  width: number;\n}\ninterface Box {\n  height: number;\n}\nconst b: Box = { width: 10, height: 20 };", "options": ["2つ目のBox宣言は無視され、widthプロパティしか持たない型になる", "宣言的マージにより2つの宣言が結合され、widthとheightの両方を持つ1つのBox型になる", "コンパイルエラーになり、同名のinterfaceは宣言できない", "1つ目のBox宣言が上書きされ、heightプロパティしか持たない型になる"], "answer": 1, "exp": "interfaceは同じ名前で複数回宣言すると、それらが自動的に統合される「宣言的マージ」が行われる。結果としてBoxはwidthとheightの両方のプロパティを持つ型になる。"},
+  {"id": "b12", "cat": "interface・type", "src": "オリジナル", "prompt": "次のうち、TypeScriptのオブジェクト型の記述として妥当なものはどれか。", "code": "type Product = {\n  readonly id: number;\n  name: string;\n  price?: number;\n};", "options": ["idプロパティは省略可能で、priceプロパティは再代入できない", "nameプロパティは省略可能である", "idとpriceはどちらも読み取り専用で、再代入するとコンパイルエラーになる", "idは再代入不可(readonly)、priceは省略可能(オプショナル)なプロパティである"], "answer": 3, "exp": "readonlyは再代入不可を、?は省略可能を意味する修飾子で、それぞれ独立して付与できる。idはreadonlyのみ、priceは?のみが付いているため、idは再代入不可・priceは省略可能というのが正しい理解。"},
+  {"id": "b13", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "次のジェネリック関数identityに関する説明として正しいものはどれか。", "code": "function identity<T>(value: T): T {\n  return value;\n}\nconst a = identity<string>(\"hello\");\nconst b = identity(42);", "options": ["Tは常にany型として扱われるため、型安全性は失われる", "identity<string>(\"hello\")のように型引数を明示しない限り、bはコンパイルエラーになる", "Tは呼び出し時の引数や明示的な型引数によって決まり、aはstring型、bはnumber型（型推論）になる", "identityは一度定義すると、以後はstring型の引数しか受け付けなくなる"], "answer": 2, "exp": "ジェネリクスの型パラメータTは呼び出しごとに決定される。identity<string>(\"hello\")のように明示することも、identity(42)のように引数から推論させることもでき、それぞれaはstring型、bはnumber型になる。"},
+  {"id": "b14", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "次のようにジェネリック関数の型パラメータに制約を付ける目的として正しいものはどれか。", "code": "function getLength<T extends { length: number }>(item: T): number {\n  return item.length;\n}", "options": ["Tをlengthプロパティを持つ型に限定し、item.lengthへの安全なアクセスをコンパイラに保証させるため", "Tを数値型のみに限定するため", "Tがどんな型であっても関数を呼び出せるようにするため（実質的な制約なし）", "戻り値の型をT自身に強制するため"], "answer": 0, "exp": "extends { length: number }という制約により、Tはlengthプロパティを持つ型（配列や文字列など）に限定される。これによりitem.lengthへのアクセスがコンパイル時に安全であると保証される。"},
+  {"id": "b15", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "次のジェネリックインターフェースの記述に関する説明として正しいものはどれか。", "code": "interface ApiResponse<T = string> {\n  data: T;\n  status: number;\n}\nconst res1: ApiResponse = { data: \"ok\", status: 200 };\nconst res2: ApiResponse<number> = { data: 1, status: 200 };", "options": ["型引数を省略するとコンパイルエラーになるため、res1は不正な記述である", "デフォルト型引数はinterfaceには使用できず、type宣言でのみ有効である", "T = stringという記法は、Tの初期値として文字列\"string\"というリテラル値を代入する構文である", "T = stringはデフォルト型引数を意味し、型引数を省略した場合Tはstring型として扱われる。そのためres1は妥当で、res2のように明示的に指定すればその型が優先される"], "answer": 3, "exp": "<T = string>はジェネリクスのデフォルト型引数の構文で、型引数省略時はTがstring型になる。ApiResponse<number>のように明示すれば、その型が優先されT=numberになる。この機能はinterfaceでもtypeでも使用可能。"},
+  {"id": "b16", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "次のkeyof演算子の使い方に関する説明として正しいものはどれか。", "code": "interface Person {\n  name: string;\n  age: number;\n}\ntype PersonKey = keyof Person;\n// PersonKeyの型は？", "options": ["PersonKeyはstring型そのものになる", "PersonKeyは\"name\" | \"age\"というリテラル型のユニオンになる", "PersonKeyはPerson型のインスタンスそのものになる", "keyofはinterfaceには使えず、type宣言にのみ使用できる"], "answer": 1, "exp": "keyof Tは、Tが持つプロパティ名をリテラル型のユニオンとして取り出す演算子。Personのプロパティはnameとageなので、PersonKeyは\"name\" | \"age\"という型になる。interface・typeのどちらにも使用できる。"},
+  {"id": "b17", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "次のユーティリティ型に関する説明として正しいものはどれか。", "code": "interface Todo {\n  title: string;\n  done: boolean;\n  memo: string;\n}\ntype TodoPreview = Pick<Todo, \"title\" | \"done\">;\ntype TodoDraft = Partial<Todo>;", "options": ["PickはTodoのすべてのプロパティを省略可能にした型を作る", "PartialはTodoから指定したプロパティだけを取り出した型を作る", "TodoPreviewはtitleとdoneだけを持つ型になり、TodoDraftはTodoの全プロパティが省略可能になった型になる", "PickとPartialは同じ機能を持つユーティリティ型で、名前が違うだけである"], "answer": 2, "exp": "Pick<T, K>はTから指定したキーKのプロパティだけを取り出した型を作る。Partial<T>はTの全プロパティを省略可能(オプショナル)にした型を作る。したがってTodoPreviewはtitleとdoneのみ、TodoDraftは全プロパティが?付きになる。"},
+  {"id": "b18", "cat": "ジェネリクス", "src": "オリジナル", "prompt": "次のジェネリックインターフェースに関する説明として正しいものはどれか。", "code": "interface Box<T> {\n  content: T;\n}\nconst stringBox: Box<string> = { content: \"hello\" };\nconst numberBox: Box<number> = { content: 42 };", "options": ["Box<T>は型パラメータTを持つインターフェースで、Box<string>やBox<number>のように具体的な型を指定してインスタンスの形を定義できる", "Box<T>はTに関わらず常にcontentプロパティをany型として扱う", "stringBoxのcontentにはnumber型の値も代入できてしまう", "ジェネリックインターフェースは関数には使えるが、オブジェクトの型定義には使用できない"], "answer": 0, "exp": "Box<T>のようにインターフェースに型パラメータを持たせることで、Box<string>・Box<number>など用途に応じた具体的な型を柔軟に生成できる。contentの型はTで固定されるため、stringBoxにnumber型を代入するとコンパイルエラーになる。"},
+  {"id": "b19", "cat": "ユニオン型", "src": "オリジナル", "prompt": "次のコードのformatValue関数に関する説明として正しいものはどれか。", "code": "function formatValue(value: string | number): string {\n  if (typeof value === \"string\") {\n    return value.toUpperCase();\n  }\n  return value.toFixed(2);\n}", "options": ["typeofによる分岐に関わらず、valueは常にstring型として扱われる", "typeof value === \"string\"の分岐内ではvalueがstring型に絞り込まれ、それ以外の分岐ではnumber型に絞り込まれる", "string | numberというユニオン型はコンパイルエラーになり、そもそも定義できない", "toFixedメソッドはstring型にもnumber型にも共通して存在するメソッドである"], "answer": 1, "exp": "typeofによる型ガードによって、if文の中ではvalueがstring型に絞り込まれてtoUpperCaseが呼べる。else側（return文）ではnumber型に絞り込まれてtoFixedが呼べる。これがnarrowing（型の絞り込み）の典型例。"},
+  {"id": "b20", "cat": "ユニオン型", "src": "オリジナル", "prompt": "次の判別可能なユニオン型（Discriminated Union）に関する説明として正しいものはどれか。", "code": "type Circle = { kind: \"circle\"; radius: number };\ntype Square = { kind: \"square\"; side: number };\ntype Shape = Circle | Square;\n\nfunction area(shape: Shape): number {\n  if (shape.kind === \"circle\") {\n    return Math.PI * shape.radius ** 2;\n  }\n  return shape.side ** 2;\n}", "options": ["kindプロパティは実行時には存在せず、型チェックのためだけの架空のプロパティである", "shape.kindで分岐しても、shapeの型はShapeのまま絞り込まれず、radiusやsideに直接アクセスするとエラーになる", "CircleとSquareはkindプロパティの型が同じ\"shape\"であるため区別できない", "kindのようなリテラル型の共通プロパティ（判別子）を持たせることで、その値によってif文の中でCircleかSquareかが自動的に絞り込まれ、radiusやsideに安全にアクセスできる"], "answer": 3, "exp": "kindのような共通のリテラル型プロパティ（判別子/タグ）を持つユニオン型を判別可能なユニオンと呼ぶ。shape.kind === \"circle\"で分岐すると、その節の中でshapeはCircle型に絞り込まれ、radiusに安全にアクセスできる。kindは実行時にも存在する通常のプロパティ。"},
+  {"id": "b21", "cat": "ユニオン型", "src": "オリジナル", "prompt": "オプショナルチェイニング(?.)の動作に関する説明として正しいものはどれか。", "code": "type User = { profile?: { nickname?: string } };\nconst user: User = {};\nconst name = user.profile?.nickname;", "options": ["profileがundefinedの場合、それ以降のプロパティアクセスは評価されず、name全体がundefinedになる", "profileがundefinedの場合、実行時にTypeErrorがthrowされる", "?.はnullやundefinedかどうかに関わらず、常にプロパティへのアクセスを強制する", "?.はコンパイル時にのみ意味を持ち、コンパイル後のJavaScriptには一切コードが出力されない"], "answer": 0, "exp": "?.はプロパティチェーンの途中がnullまたはundefinedだった場合、それ以降の評価を打ち切り式全体の結果としてundefinedを返す。これによりuser.profileが未定義でもエラーにならずnameはundefinedになる。実行時のJavaScriptにも判定ロジックとして出力される。"},
+  {"id": "b22", "cat": "ユニオン型", "src": "オリジナル", "prompt": "Null合体演算子(??)に関する説明として正しいものはどれか。", "code": "const input1: number | null = null;\nconst input2: number = 0;\nconst result1 = input1 ?? 10;\nconst result2 = input2 ?? 10;", "options": ["??は左辺がfalsyな値（0や空文字列を含む）であれば右辺の値を返す", "result2は0ではなく10になる", "??は左辺がnullまたはundefinedの場合にのみ右辺の値を返す。したがってresult1は10、result2は0（左辺がそのまま使われる）になる", "??は論理OR演算子(||)と全く同じ動作をする"], "answer": 2, "exp": "??（Null合体演算子）は左辺がnullまたはundefinedの場合にのみ右辺を返す。0や空文字列などのfalsyだが有効な値はそのまま使われる点が||との違い。したがってresult1（null）は10、result2（0）はそのまま0になる。"},
+  {"id": "b23", "cat": "ユニオン型", "src": "オリジナル", "prompt": "次のリテラルユニオン型に関する説明として正しいものはどれか。", "code": "type Status = \"pending\" | \"success\" | \"error\";\nlet current: Status = \"pending\";\ncurrent = \"success\"; // OK\ncurrent = \"loading\"; // ?", "options": ["\"loading\"はstring型なので問題なく代入できる", "Statusは\"pending\"・\"success\"・\"error\"の3つの文字列リテラルのみを許容する型であり、\"loading\"を代入しようとするとコンパイルエラーになる", "リテラルユニオン型は3つ以上の値を持てない", "Status型の変数には、文字列であれば\"loading\"を含めどんな値でも代入できる"], "answer": 1, "exp": "リテラルユニオン型\"pending\" | \"success\" | \"error\"は、指定した文字列リテラルのいずれかしか値として許容しない。定義にない\"loading\"を代入しようとするとコンパイルエラーになる。"},
+  {"id": "b24", "cat": "ユニオン型", "src": "オリジナル", "prompt": "次のコードのように、string | nullという型でnullを許容する変数を扱う場合、値を安全に使うために必要な対応として正しいものはどれか。", "code": "function greet(name: string | null): string {\n  return \"Hello, \" + name.toUpperCase();\n}", "options": ["string | null型はnullチェックなしでも常に安全に使えるため、対応は不要である", "any型にキャストすればnullチェックを行わなくても実行時エラーが起きなくなる", "name.toUpperCase()の前にreturn文を書き直すだけで自動的に絞り込まれる", "if (name !== null) のようなnullチェック（narrowing）を行い、nullでないことを確認したブロック内でtoUpperCaseを呼び出す必要がある"], "answer": 3, "exp": "string | null型のnameはnullの可能性があるため、そのままtoUpperCaseを呼ぶとコンパイルエラーになる（strictNullChecks有効時）。if (name !== null)のような絞り込みを行い、nullではないと確定した範囲でメソッドを呼び出す必要がある。"},
+  {"id": "b25", "cat": "tsconfig", "src": "オリジナル", "prompt": "tsconfig.jsonの\"strict\": trueに関する説明として正しいものはどれか。", "code": "", "options": ["strictはコンパイル速度を上げるためだけのオプションで、型チェックの厳しさには影響しない", "strictを有効にすると、既存のコンパイルエラーがすべて警告扱いになり、ビルドは常に成功するようになる", "strictはnoImplicitAnyやstrictNullChecksなど複数の厳格な型チェックオプションを一括で有効にするフラグである", "strictはJavaScriptファイルの型チェックを完全に禁止するオプションである"], "answer": 2, "exp": "\"strict\": trueは、noImplicitAny・strictNullChecks・strictFunctionTypesなど複数の個別厳格化オプションをまとめて有効にする集約フラグ。プロジェクト全体の型安全性を底上げする際に推奨される設定。"},
+  {"id": "b26", "cat": "tsconfig", "src": "オリジナル", "prompt": "noImplicitAnyオプションが有効な場合の挙動として正しいものはどれか。", "code": "function greet(name) {\n  return \"Hello, \" + name;\n}", "options": ["パラメータnameの型が推論できずany型が暗黙的に付与される場合、コンパイルエラーが発生する", "型注釈がなくてもany型が自動的に付与され、コンパイルは問題なく成功する", "noImplicitAnyはstrictNullChecksと同じ意味を持つ別名オプションである", "noImplicitAnyを有効にすると、明示的にany型注釈を書くこと自体が禁止される"], "answer": 0, "exp": "noImplicitAnyを有効にすると、型注釈がなく推論もできないためコンパイラが暗黙的にany型を割り当てようとする箇所（この例のname）でコンパイルエラーが発生する。明示的に: anyと書くこと自体は禁止されない。"},
+  {"id": "b27", "cat": "tsconfig", "src": "オリジナル", "prompt": "tsconfig.jsonのtargetとmoduleオプションに関する説明として正しいものはどれか。", "code": "", "options": ["targetはモジュールの読み込み方式（CommonJSやESModulesなど）を指定するオプションである", "moduleは出力するJavaScriptのECMAScriptバージョン（ES5やES2020など）を指定するオプションである", "targetとmoduleは同じ意味を持つ重複したオプションであり、どちらか一方だけ設定すればよい", "targetはコンパイル後に出力するJavaScriptのECMAScriptバージョンを、moduleは出力するモジュール形式（CommonJSやESNextなど）をそれぞれ指定するオプションである"], "answer": 3, "exp": "targetは出力先JSのECMAScriptバージョン（例: ES5, ES2020）を、moduleは出力するモジュールシステム（例: CommonJS, ESNext）を指定する、それぞれ独立した役割を持つオプション。"},
+  {"id": "b28", "cat": "tsconfig", "src": "オリジナル", "prompt": "strictNullChecksオプションが無効(false)の場合の挙動として正しいものはどれか。", "code": "let name: string = null; // strictNullChecksが無効な場合は？", "options": ["無効であってもコンパイルエラーになり、nullはどんな型にも代入できない", "無効の場合、nullやundefinedは（voidを除く）ほぼすべての型に代入可能となり、上記のコードはコンパイルエラーにならない", "strictNullChecksはnullとundefinedの区別を行わなくするオプションで、型チェック全体には影響しない", "strictNullChecksを無効にすると、逆にnullチェックがより厳しくなる"], "answer": 1, "exp": "strictNullChecksが無効な場合、nullとundefinedはvoidなどごく一部を除きほぼすべての型に代入可能な値として扱われる。そのためlet name: string = null;もエラーにならない。有効にすると型ごとに明示的な許容（string | nullなど）が必要になる。"},
+  {"id": "b29", "cat": "tsconfig", "src": "オリジナル", "prompt": "esModuleInteropオプションに関する説明として正しいものはどれか。", "code": "import React from \"react\"; // CommonJS形式で書かれたライブラリ", "options": ["esModuleInteropはtsconfig.jsonに設定できない実行時オプションである", "esModuleInteropを有効にすると、TypeScriptの型チェック自体が無効になる", "esModuleInteropを有効にすると、CommonJS形式でエクスポートされたモジュールに対してもimport Foo from \"foo\"のようなデフォルトインポート構文が違和感なく使えるようになる", "esModuleInteropはstrictオプションに含まれるサブオプションの一つで、strict: trueとすると自動的に有効になる"], "answer": 2, "exp": "esModuleInteropは、CommonJS形式のモジュールとESModules形式のimport/exportとの間の相互運用性を高めるオプション。有効にすることで、CommonJSのモジュールに対してもimport Foo from \"foo\"という書き方が自然に使えるようになる。strictオプション群には含まれない独立した設定。"},
+  {"id": "b30", "cat": "tsconfig", "src": "オリジナル", "prompt": "TypeScriptの型注釈とtscコンパイラの役割に関する説明として正しいものはどれか。", "code": "let age: number = 25;\n// コンパイル後のJavaScript\nlet age = 25;", "options": ["型注釈はコンパイル時にのみ使われ、tscがJavaScriptに変換する際に型情報は消去される（実行時には型情報は残らない）", "型注釈はJavaScriptに変換された後も実行時の値チェックとして残り続ける", "tscの役割は型チェックのみであり、TypeScriptコードをJavaScriptに変換する機能は持たない", "number型のような注釈は、実行時にNumber型のラッパーオブジェクトへ自動的に変換される"], "answer": 0, "exp": "TypeScriptの型注釈はコンパイル時の静的チェックのために使われ、tscがJavaScriptを出力する際に型情報は消去される（型消去）。実行時のJavaScriptには型チェックの仕組みは残らない。tscは型チェックとJS変換（トランスパイル）の両方を担う。"},
+];
+
+// 複数選択は本科目では未使用。
+const BOOK_MULTI_Q = [];
+const EXTRA_QUESTIONS = [];
+
+// 出題順：id 末尾の数字の昇順。エンジンはこの QUESTIONS だけを参照する。
+const QUESTIONS = (function(){
+  var all=[...BOOK_QUESTIONS,...BOOK_MULTI_Q,...EXTRA_QUESTIONS];
+  var no=function(q){return parseInt(String(q.id).replace(/^\D+/,''),10)||0;};
+  return all.slice().sort(function(a,b){return no(a)-no(b);});
+})();
+
+// カテゴリ別の復習アドバイス（正答率70%未満で「要復習」表示）。
+const ADVICE = {
+  "型注釈":"基本の型注釈はコードの意図を明確にするためのもの。unknownとanyの違い、リテラル型やneverの使いどころ、letとconstで推論結果が変わる（widening）点を必ず押さえておこう。",
+  "interface・type":"interfaceとtypeエイリアスは似ているが、宣言的マージの有無や同名再宣言の可否といった違いがある。オブジェクトの形を定義する場面ではreadonlyや?を組み合わせて安全性を高める習慣をつけよう。",
+  "ジェネリクス":"ジェネリクスは「型の関数」と捉えると理解しやすい。<T extends U>による制約、keyofでのプロパティ名抽出、Partial/PickなどのユーティリティAPI型は実務での型定義の再利用に直結する。",
+  "ユニオン型":"ユニオン型はnarrowing（型の絞り込み）とセットで使いこなす。typeof/inによる型ガード、判別可能なユニオンのkindプロパティ、?.と??の違いは頻出ポイントなので実例で体に染み込ませよう。",
+  "tsconfig":"tsconfigはプロジェクト全体の型安全性を左右する設定ファイル。strictを軸に、noImplicitAnyやstrictNullChecksが何を厳格化するのか、target/moduleが出力にどう影響するかを理解しておこう。型情報はコンパイル時のみで実行時には消える点も忘れずに。",
+};
+
+// 本科目ではコード図解・トレース表は未使用。
+const FIGS = {};
+const TRACE = {};
+
+/* ============================================================
+   ▲▲▲ 差し替えここまで（この下はエンジン：全科目共通・変更不要） ▲▲▲
+   ============================================================ */
+
+const LETTERS=['A','B','C','D','E','F','G'];
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{perCat:{},log:[]}}catch(e){return{perCat:{},log:[]}}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+let queue=QUESTIONS.map((_,i)=>i);   // 出題順（インデックス）
+let pos=0;                            // queue内の現在位置
+let sessCorrect=0, sessDone=0;
+let answered=false;
+
+const stage=document.getElementById('stage');
+const pbar=document.getElementById('pbar');
+const scoreEl=document.getElementById('score');
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function renderFigure(q){
+  const f=FIGS[q.id]; if(!f) return '';
+  const lines=q.code.split('\n');
+  let rows='';
+  lines.forEach((ln,idx)=>{
+    const n=idx+1, an=f.lines[n], t=an?an[0]:'';
+    rows+=`<div class="figline ${t}"><span class="fno">${n}</span><span class="fcode">${esc(ln)||' '}</span></div>`;
+    if(an) rows+=`<div class="annorow ${t}"><span class="anno">${esc(an[1])}</span></div>`;
+  });
+  const out=f.out?`<div class="figout">▸ ${esc(f.out)}</div>`:'';
+  return `<div class="figure reveal"><div class="fig-label">図解 — プログラムの流れ</div><div class="figbox">${rows}</div>${out}</div>`;
+}
+
+// 問題文のコードを、行番号つきの注釈可能ブロックとして描画（回答前は注釈なし）
+function codeBlockHtml(q){
+  if(!q.code) return '';
+  const lines=q.code.split('\n');
+  const rows=lines.map((ln,i)=>`<div class="figline" data-ln="${i+1}"><span class="fno">${i+1}</span><span class="fcode">${esc(ln)||' '}</span></div>`).join('');
+  return `<div class="figbox qcode" id="qcode">${rows}</div>`;
+}
+
+// 回答後、問題文のコードに直接ハイライト＋連結線＋結果を差し込む
+function revealFigure(q){
+  const f=FIGS[q.id]; const box=document.getElementById('qcode');
+  if(!f||!box) return;
+  Object.keys(f.lines).sort((a,b)=>a-b).forEach(n=>{
+    const t=f.lines[n][0], txt=f.lines[n][1];
+    const line=box.querySelector('.figline[data-ln="'+n+'"]');
+    if(!line) return;
+    line.classList.add(t,'reveal');
+    const ar=document.createElement('div'); ar.className='annorow '+t+' reveal';
+    ar.innerHTML='<span class="anno">'+esc(txt)+'</span>';
+    line.after(ar);
+  });
+  if(f.out){
+    const o=document.createElement('div'); o.className='figout qfigout reveal';
+    o.textContent='▸ '+f.out; box.after(o);
+  }
+}
+
+function renderTrace(q){
+  const t=TRACE[q.id]; if(!t) return '';
+  const head=t.cols.map(c=>`<th>${esc(c)}</th>`).join('');
+  const body=t.rows.map((r,ri)=>{
+    const tds=r.map((c,ci)=>{
+      const st=ci===r.length-1?' class="st"':'';
+      let cell;
+      if(c==='null') cell='<span class="nul">null</span>';
+      else if(c==='') cell='<span class="nul">·</span>';
+      else cell=esc(c);
+      return `<td${st}>${cell}</td>`;
+    }).join('');
+    return `<tr class="${(t.hot!=null&&ri===t.hot)?'hot':''}">${tds}</tr>`;
+  }).join('');
+  return `<div class="trace reveal"><details class="tdet"><summary>変数の変化を追う（トレース）</summary><div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></details></div>`;
+}
+
+let selected=new Set();
+// 横向き2カラムの幅を「選択肢の文字量」と「コードの横幅」に応じて自動調整する
+// 選択肢が短ければ左(コード)を広く、選択肢が長ければ右(選択肢)を広く。
+// インラインstyleではなくCSS変数 --gtc を渡すことで、900px以下のメディアクエリ(1カラム)を壊さない
+function qcolStyle(q){
+  if(!q.code) return '';                                   // コード無しは .nocode の中央1カラムに任せる
+  const w=s=>{let n=0;for(const ch of String(s)){n+=ch.charCodeAt(0)>0xff?2:1;}return n;}; // 全角=2,半角=1
+  const optW=Math.max(1,...(q.options||['']).map(o=>Math.max(1,...String(o).split('\n').map(w)))); // 選択肢の最長行
+  const codeW=Math.max(1,...q.code.split('\n').map(w));    // コードの最長行
+  let l=1,r=1;
+  if(optW<=16){l=1.8;r=1;}          // 選択肢がとても短い(記号/単語)→コードを大きく
+  else if(optW<=26){l=1.4;r=1;}     // やや短い
+  else if(optW>=60){l=1;r=1.6;}     // とても長い(文章/コード)→右を大きく
+  else if(optW>=42){l=1;r=1.3;}     // やや長い
+  if(codeW>=64)l+=0.35;             // コードが横に長い場合は左に加算
+  return ` style="--gtc:minmax(0,${l}fr) minmax(0,${r}fr)"`;
+}
+function renderQuestion(){
+  answered=false; selected=new Set();
+  const q=QUESTIONS[queue[pos]];
+  pbar.style.width=(pos/queue.length*100)+'%';
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  stage.innerHTML=`
+    <div class="card reveal">
+      <div class="eyebrow">
+        <span class="cat">${esc(q.cat)}</span>
+        <span class="qnum">${pos+1} / ${queue.length}</span>
+      </div>
+      <div class="prompt">${esc(q.prompt)} ${q.multi?'<span class="multi-tag">複数選択</span>':''}</div>
+      <div class="qcols${q.code?'':' nocode'}"${qcolStyle(q)}>
+        <div class="qcol-l">${codeBlockHtml(q)}</div>
+        <div class="qcol-r">
+          <div class="opts" id="opts"></div>
+          <div id="after"></div>
+        </div>
+      </div>
+    </div>`;
+  const opts=document.getElementById('opts');
+  const order=shuffle(q.options.map((_,i)=>i));   // 毎回シャッフル
+  q._order=order;
+  order.forEach((origIdx,dispIdx)=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.type='button';
+    b.innerHTML=`<span class="key">${LETTERS[dispIdx]}</span><span class="txt">${esc(q.options[origIdx])}</span><span class="mark"></span>`;
+    b.onclick=()=> q.multi ? toggleSel(dispIdx,b) : choose(dispIdx);
+    opts.appendChild(b);
+  });
+  if(q.multi){
+    const bar=document.createElement('div'); bar.className='actions'; bar.id='mbar';
+    bar.innerHTML=`<button class="btn primary" type="button" id="submitBtn" onclick="submitMulti()" disabled>確定する（${q.answers.length}個選ぶ）</button>`;
+    opts.after(bar);
+  }
+}
+
+function toggleSel(dispIdx,btn){
+  if(answered) return;
+  if(selected.has(dispIdx)){selected.delete(dispIdx);btn.classList.remove('sel');}
+  else{selected.add(dispIdx);btn.classList.add('sel');}
+  const sb=document.getElementById('submitBtn'); if(sb) sb.disabled = selected.size===0;
+}
+
+function submitMulti(){
+  if(answered) return; answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=new Set(q.answers.map(a=>q._order.indexOf(a)));
+  const correct = selected.size===correctDisp.size && [...selected].every(x=>correctDisp.has(x));
+  document.querySelectorAll('#opts .opt').forEach((b,bi)=>{
+    b.disabled=true; b.classList.remove('sel');
+    const isC=correctDisp.has(bi), isS=selected.has(bi);
+    if(isC){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(isS&&!isC){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  const mbar=document.getElementById('mbar'); if(mbar) mbar.remove();
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  const answerLetters=[...correctDisp].sort((a,b)=>a-b).map(i=>LETTERS[i]).join('・');
+  const last=pos===queue.length-1;
+  document.getElementById('after').innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${answerLetters}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function choose(i){
+  if(answered) return;
+  answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=q._order.indexOf(q.answer);   // シャッフル後の正解位置
+  const correct=i===correctDisp;
+  const btns=document.querySelectorAll('#opts .opt');
+  btns.forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===correctDisp){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(bi===i&&!correct){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  // 記録（累積・端末保存）
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+
+  const after=document.getElementById('after');
+  const last=pos===queue.length-1;
+  after.innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${LETTERS[correctDisp]}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function next(){
+  if(pos<queue.length-1){pos++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+  else showResults();
+}
+
+function showResults(){
+  pbar.style.width='100%';
+  const s=load();
+  const cats=Object.keys(ADVICE);
+  let totA=0,totC=0;
+  cats.forEach(c=>{const d=s.perCat[c];if(d){totA+=d.a;totC+=d.c;}});
+  const pct=totA?Math.round(totC/totA*100):0;
+  const weak=cats.filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+
+  let barsHtml=cats.map(c=>{
+    const d=s.perCat[c]||{a:0,c:0};
+    const p=d.a?Math.round(d.c/d.a*100):0;
+    const isWeak=d.a>0&&p<70;
+    const col=d.a===0?'var(--border)':(p<50?'var(--ng)':p<70?'var(--accent)':'var(--ok)');
+    return `<div class="bar-row">
+      <div class="bar-top"><span>${esc(c)}${isWeak?'<span class="weak-badge">要復習</span>':''}</span>
+      <span class="n">${d.a?p+'% ('+d.c+'/'+d.a+')':'未回答'}</span></div>
+      <div class="bar-track"><i style="width:${d.a?p:0}%;background:${col}"></i></div></div>`;
+  }).join('');
+
+  let msg = totA===0?'まだ回答がありません。':
+    pct>=80?'かなり good。取りこぼした分野だけ詰めれば合格圏です。':
+    pct>=60?'あと一歩。下の「要復習」分野を重点的に。':
+    '基礎の詰め直しから。要復習の分野を1つずつ潰しましょう。';
+
+  let adviceHtml = weak.length
+    ? weak.map(c=>`<div class="advice"><div class="a-cat">${esc(c)} <span class="weak-badge">要復習</span></div><div class="a-txt">${esc(ADVICE[c])}</div></div>`).join('')
+    : (totA?'<div class="empty">要復習の分野はありません。全分野70%以上。この調子！</div>':'<div class="empty">問題を解くと、ここに弱点分野と対策が出ます。</div>');
+
+  stage.innerHTML=`
+   <div class="card reveal">
+     <div class="res-head">
+       <div class="ring" style="--p:${pct}"><div class="num"><b>${pct}%</b><span>累計正答率</span></div></div>
+       <div class="res-sum"><h2>成績サマリー</h2><p>${msg}</p>
+         <p style="margin-top:6px">累計 ${totC} / ${totA} 問正解</p></div>
+     </div>
+     <div class="sec-label">分野別の正答率</div>
+     <div class="bars">${barsHtml}</div>
+     <div class="sec-label">重点対策（要復習の分野）</div>
+     ${adviceHtml}
+     <div class="actions">
+       <button class="btn ghost" type="button" onclick="resetAll()">記録をリセット</button>
+       ${weak.length?'<button class="btn" type="button" onclick="retryWeak()">要復習だけ再挑戦</button>':''}
+       <button class="btn primary" type="button" onclick="restart()">もう一度：全問</button>
+     </div>
+   </div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){queue=QUESTIONS.map((_,i)=>i);pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+function retryWeak(){
+  const s=load();
+  const weak=Object.keys(ADVICE).filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+  const idx=QUESTIONS.map((q,i)=>i).filter(i=>weak.includes(QUESTIONS[i].cat));
+  queue=idx.length?idx:QUESTIONS.map((_,i)=>i);
+  pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(){save({perCat:{},log:[]});showResults();}
+
+renderQuestion();
+</script>
+
+<!-- cbt-nav-added -->
+<style>
+  /* ===== 問題選択画面（後付け・既存レイアウトは変更しない） ===== */
+
+  /* 各問題ページに出るのはこのボタンだけ。左下に固定 */
+  .cbtopen{position:fixed;left:14px;bottom:14px;z-index:60;
+    font:600 13px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:12px 18px;cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.18), 0 8px 22px rgba(0,0,0,.14)}
+  .cbtopen:hover{filter:brightness(1.06)}
+  .cbtopen:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* 問題選択画面（全画面オーバーレイ） */
+  .cbtscreen{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+    padding:16px;background:rgba(10,12,16,.55)}
+  .cbtscreen[hidden]{display:none}
+  .cbtpanel{width:min(860px,100%);max-height:min(86vh,760px);display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .cbtpanel-head{display:flex;align-items:center;gap:12px;padding:14px 16px;
+    border-bottom:1px solid var(--border);background:var(--surface-2)}
+  .cbtpanel-head h2{font:600 15px/1.3 var(--sans);color:var(--ink);margin:0}
+  .cbtcount{font:400 12px/1 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums}
+  .cbtclose{margin-left:auto;font:500 13px/1 var(--sans);color:var(--muted);
+    background:var(--surface);border:1px solid var(--border);border-radius:999px;
+    padding:8px 14px;cursor:pointer}
+  .cbtclose:hover{color:var(--ink);border-color:var(--ink)}
+  .cbtfilters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+  .cbtchip{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:7px 12px;cursor:pointer}
+  .cbtchip.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtbody{padding:12px 16px;overflow:auto;flex:1}
+  .cbtgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+  .cbtq{font:600 14px/1 var(--mono);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:10px;padding:12px 0;cursor:pointer;
+    font-variant-numeric:tabular-nums;position:relative}
+  .cbtq:hover{border-color:var(--accent);color:var(--accent)}
+  .cbtq.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .cbtq.ng{background:var(--ng-soft);border-color:var(--ng);color:var(--ng)}
+  .cbtq.fl::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent)}
+  .cbtq.cur{outline:2px solid var(--accent);outline-offset:1px}
+  .cbtempty{font:400 13px/1.6 var(--sans);color:var(--muted);padding:10px 2px}
+  .cbtfoot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    padding:12px 16px;border-top:1px solid var(--border);background:var(--surface-2)}
+  .cbtlegend{font:400 11.5px/1.6 var(--sans);color:var(--faint);
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .cbtlegend i{display:inline-block;width:11px;height:11px;border-radius:3px;
+    border:1px solid var(--border);margin-right:5px;vertical-align:-1px}
+  .cbtlegend i.ok{background:var(--ok-soft);border-color:var(--ok)}
+  .cbtlegend i.ng{background:var(--ng-soft);border-color:var(--ng)}
+  .cbtlegend i.fl{background:var(--accent)}
+  .cbtrun{font:600 12.5px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:9px 16px;cursor:pointer}
+  .cbtrun[disabled]{opacity:.45;cursor:default}
+
+  /* 問題カード右上の「後で見直す」 */
+  .cbtflag{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:6px 11px;cursor:pointer;margin-left:auto}
+  .cbtflag.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtprev{font:400 12px/1 var(--sans);color:var(--muted);margin-left:8px}
+
+  /* 左下のボタンが最下部の内容に重ならないよう余白を足す */
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  @media (max-width:640px){
+    .cbtopen{left:10px;bottom:10px;padding:11px 16px}
+    .cbtgrid{grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+    .cbtscreen{padding:10px}
+  }
+</style>
+<script>
+(function(){
+  // エンジンが読み込まれていない画面（雛形の説明ページ等）では何もしない
+  if(typeof QUESTIONS==='undefined' || typeof renderQuestion!=='function') return;
+  var stage=document.getElementById('stage');
+  if(!stage || !QUESTIONS.length) return;
+
+  // --- 進捗の保存（科目ごとに別キー。既存の成績データとは混ぜない） ---
+  var CKEY=(typeof KEY!=='undefined'?KEY:'quiz')+'_cbt';
+  var st={};
+  try{ st=JSON.parse(localStorage.getItem(CKEY))||{}; }catch(e){ st={}; }
+  function persist(){ try{ localStorage.setItem(CKEY,JSON.stringify(st)); }catch(e){} }
+
+  var filter='all';
+
+  // --- 左下のボタン（各問題ページに出るのはこれだけ） ---
+  var openBtn=document.createElement('button');
+  openBtn.type='button';
+  openBtn.className='cbtopen';
+  openBtn.textContent='問題選択画面';
+  document.body.appendChild(openBtn);
+
+  // --- 問題選択画面（全画面オーバーレイ） ---
+  var scr=document.createElement('div');
+  scr.className='cbtscreen';
+  scr.hidden=true;
+  scr.innerHTML=
+    '<div class="cbtpanel" role="dialog" aria-modal="true" aria-label="問題選択画面">'
+   +  '<div class="cbtpanel-head">'
+   +    '<h2>問題を選ぶ</h2><span class="cbtcount" id="cbtCount"></span>'
+   +    '<button type="button" class="cbtclose" id="cbtClose">閉じる</button>'
+   +  '</div>'
+   +  '<div class="cbtfilters">'
+   +    '<button type="button" class="cbtchip on" data-f="all">すべて</button>'
+   +    '<button type="button" class="cbtchip" data-f="todo">未解答</button>'
+   +    '<button type="button" class="cbtchip" data-f="ng">間違えた</button>'
+   +    '<button type="button" class="cbtchip" data-f="flag">見直し</button>'
+   +  '</div>'
+   +  '<div class="cbtbody"><div class="cbtgrid" id="cbtGrid"></div></div>'
+   +  '<div class="cbtfoot">'
+   +    '<div class="cbtlegend">'
+   +      '<span><i></i>未解答</span><span><i class="ok"></i>正解</span>'
+   +      '<span><i class="ng"></i>不正解</span><span><i class="fl"></i>見直し</span>'
+   +    '</div>'
+   +    '<button type="button" class="cbtrun" id="cbtRun">この絞り込みだけを順に解く</button>'
+   +  '</div>'
+   +'</div>';
+  document.body.appendChild(scr);
+
+  var grid=document.getElementById('cbtGrid');
+  var runBtn=document.getElementById('cbtRun');
+  var countEl=document.getElementById('cbtCount');
+  var closeBtn=document.getElementById('cbtClose');
+
+  function openScreen(){ scr.hidden=false; paint(); closeBtn.focus(); }
+  function closeScreen(){ scr.hidden=true; openBtn.focus(); }
+  openBtn.onclick=openScreen;
+  closeBtn.onclick=closeScreen;
+  scr.addEventListener('click',function(e){ if(e.target===scr) closeScreen(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !scr.hidden) closeScreen(); });
+
+  scr.querySelectorAll('.cbtchip').forEach(function(c){
+    c.onclick=function(){
+      filter=c.dataset.f;
+      scr.querySelectorAll('.cbtchip').forEach(function(x){ x.classList.toggle('on', x===c); });
+      paint();
+    };
+  });
+
+  // 現在の絞り込みに合致する問題インデックス
+  function picked(){
+    var out=[];
+    QUESTIONS.forEach(function(q,i){
+      var s=st[q.id]||{};
+      if(filter==='todo' && s.r) return;
+      if(filter==='ng'   && s.r!=='ng') return;
+      if(filter==='flag' && !s.f) return;
+      out.push(i);
+    });
+    return out;
+  }
+
+  function paint(){
+    if(scr.hidden) return;
+    var list=picked();
+    var done=QUESTIONS.filter(function(q){ return (st[q.id]||{}).r; }).length;
+    countEl.textContent='解答済み '+done+' / '+QUESTIONS.length;
+    grid.innerHTML='';
+    if(!list.length){
+      grid.innerHTML='<div class="cbtempty">該当する問題はありません。</div>';
+      runBtn.disabled=true;
+      return;
+    }
+    runBtn.disabled=false;
+    list.forEach(function(i){
+      var q=QUESTIONS[i], s=st[q.id]||{};
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='cbtq'+(s.r==='ok'?' ok':s.r==='ng'?' ng':'')+(s.f?' fl':'')
+                 +(queue[pos]===i?' cur':'');
+      b.textContent=String(q.id).replace(/^\D+/,'')||String(i+1);
+      b.title=(q.cat||'')+(s.r?(s.r==='ok'?'／前回○':'／前回×'):'');
+      b.onclick=function(){ jump(i); };
+      grid.appendChild(b);
+    });
+  }
+
+  // 任意の問題へジャンプ（出題キューに無ければ全問キューに戻してから移動）
+  function jump(i){
+    var at=queue.indexOf(i);
+    if(at<0){ queue=QUESTIONS.map(function(_,k){return k;}); at=i; }
+    pos=at;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  runBtn.onclick=function(){
+    var list=picked();
+    if(!list.length) return;
+    queue=list; pos=0;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  function toggleFlag(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].f=!st[q.id].f;
+    persist(); decorate(); paint();
+  }
+
+  // 問題カードに「後で見直す」ボタンと前回結果を差し込む
+  function decorate(){
+    var eb=document.querySelector('#stage .eyebrow');
+    if(!eb) return;
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var s=st[q.id]||{};
+    var old=eb.querySelector('.cbtflag'); if(old) old.remove();
+    var oldp=eb.querySelector('.cbtprev'); if(oldp) oldp.remove();
+    if(s.r){
+      var p=document.createElement('span');
+      p.className='cbtprev';
+      p.textContent = s.r==='ok' ? '前回：○正解' : '前回：×不正解';
+      eb.appendChild(p);
+    }
+    var f=document.createElement('button');
+    f.type='button';
+    f.className='cbtflag'+(s.f?' on':'');
+    f.textContent = s.f ? '見直しに登録済み' : '後で見直す';
+    f.onclick=toggleFlag;
+    eb.appendChild(f);
+  }
+
+  // 解答結果を拾って保存する（正解/不正解の判定は既存エンジンの表示を読む）
+  function record(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var v=document.querySelector('#after .verdict'); if(!v) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].r = v.classList.contains('ok') ? 'ok' : 'ng';
+    persist(); paint();
+  }
+
+  // --- 既存関数をラップ（中身は書き換えない） ---
+  var _render=renderQuestion;
+  renderQuestion=function(){ _render.apply(this,arguments); decorate(); paint(); };
+
+  if(typeof choose==='function'){
+    var _choose=choose;
+    choose=function(){ _choose.apply(this,arguments); record(); };
+  }
+  if(typeof submitMulti==='function'){
+    var _submit=submitMulti;
+    submitMulti=function(){ _submit.apply(this,arguments); record(); };
+  }
+
+  decorate();
+})();
+</script>
+
+<!-- back-to-index (jinji) -->
+<style>
+.appshome{position:fixed;right:14px;z-index:9999;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  font:600 13px/1 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  color:#16232b;background:#ffffff;border:1px solid rgba(0,0,0,.16);border-radius:999px;
+  padding:11px 16px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.16),0 8px 20px rgba(0,0,0,.10)}
+.appshome:hover{filter:brightness(.97)}
+.appshome:focus-visible{outline:2px solid #136b5b;outline-offset:2px}
+@media (prefers-color-scheme:dark){
+  .appshome{color:#e9eef1;background:#1d242b;border-color:rgba(255,255,255,.18);
+    box-shadow:0 2px 6px rgba(0,0,0,.45)}}
+@media (max-width:520px){.appshome{right:10px;padding:10px 14px;font-size:12.5px}}
+</style>
+<a class="appshome" href="../">&#8592; アプリ一覧</a>
+<script>
+if('serviceWorker' in navigator){addEventListener('load',function(){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+</script>
+</body></html>

@@ -1,0 +1,1352 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style><!-- pwa-standalone (jinji) -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Java Bronze ">
+<meta name="theme-color" content="#F7F5F1">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<style>
+@media (display-mode:standalone){body{padding-top:env(safe-area-inset-top)}}
+</style>
+</head><body>
+<meta charset="utf-8">
+<!--
+  Java Bronze 練習問題 演習アプリ（全60問）
+  ⚠️ 市販問題集からの逐語書き起こしを含みます。個人学習用のみ。配布・販売はできません。
+  出典突合：解説ページ 362〜380（全60問）
+  ※既存の JavaBronze演習アプリ.html（src=Bronze模試2）とは別物です。
+-->
+
+
+
+
+
+<meta name="format-detection" content="telephone=no">
+
+<style>
+  /* iPhoneのノッチ・ホームインジケータを避ける（既存レイアウトは変更しない） */
+  body{
+    padding-left:max(0px,env(safe-area-inset-left));
+    padding-right:max(0px,env(safe-area-inset-right));
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+    -webkit-text-size-adjust:100%;
+  }
+  /* ホーム画面から開いた時に文字選択でズレるのを防ぐ（入力欄は除く） */
+  @media (display-mode:standalone){
+    body{-webkit-touch-callout:none}
+    input,textarea{-webkit-user-select:text}
+  }
+</style>
+
+<title>Java Bronze 練習問題 演習コンソール</title>
+<style>
+  :root{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+    --radius:14px; --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+      --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+      --accent:#E4A24A; --accent-soft:#3A2F1E;
+      --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+      --code-bg:#0F1318; --code-ink:#CDD3C6;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+    --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+    --accent:#E4A24A; --accent-soft:#3A2F1E;
+    --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+    --code-bg:#0F1318; --code-ink:#CDD3C6;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;margin:0}
+  .wrap{max-width:1180px;margin:0 auto;padding:20px 22px 64px}
+  .qcols{display:grid;grid-template-columns:var(--gtc,minmax(0,1fr) minmax(0,1fr));gap:24px;align-items:start;margin-top:6px}
+  .qcols.nocode{grid-template-columns:minmax(0,720px);justify-content:center}
+  .qcol-l,.qcol-r{min-width:0}
+  .qcol-l .qcode{margin:0}
+  .qcol-l{position:sticky;top:92px}
+  @media (max-width:900px){.wrap{max-width:660px}.qcols{grid-template-columns:1fr;gap:16px}.qcol-l{position:static}}
+  .topbar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);padding:14px 0 12px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand h1{font-size:16px;margin:0;font-weight:650;letter-spacing:.01em}
+  .brand .tag{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;
+    letter-spacing:.14em;font-weight:600}
+  .meta{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .progress{flex:1;height:7px;background:var(--border);border-radius:99px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;
+    transition:width .35s ease}
+  .score{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap}
+  .score b{color:var(--ink)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 20px}
+  .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .cat{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);font-weight:650}
+  .src{font-size:11px;color:var(--faint)}
+  .qnum{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .prompt{font-size:16.5px;font-weight:600;margin:2px 0 14px;text-wrap:balance}
+  pre.code{background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:15.5px;
+    line-height:1.65;padding:14px 15px;border-radius:10px;border:1px solid var(--border);
+    overflow-x:auto;margin:0 0 18px;white-space:pre;tab-size:2}
+
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;cursor:pointer;
+    background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;
+    padding:13px 14px;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.5;
+    transition:border-color .15s,background .15s,transform .05s}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt:active:not(:disabled){transform:translateY(1px)}
+  .opt:disabled{cursor:default}
+  .opt .key{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--muted);
+    border:1.5px solid var(--border);border-radius:7px;min-width:26px;height:26px;display:flex;
+    align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;transition:.15s}
+  .opt .txt{flex:1;padding-top:1px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .opt .mark{font-size:18px;line-height:1.3;flex:0 0 auto;opacity:0}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.correct .key{border-color:var(--ok);background:var(--ok);color:#fff}
+  .opt.correct .mark{opacity:1;color:var(--ok)}
+  .opt.wrong{border-color:var(--ng);background:var(--ng-soft)}
+  .opt.wrong .key{border-color:var(--ng);background:var(--ng);color:#fff}
+  .opt.wrong .mark{opacity:1;color:var(--ng)}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .key{border-color:var(--accent);background:var(--accent);color:#fff}
+  .multi-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;
+    color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:1px 6px;
+    vertical-align:2px;white-space:nowrap}
+
+  .verdict{display:flex;align-items:center;gap:8px;margin:16px 0 4px;font-weight:700;font-size:15px}
+  .verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
+  .exp{background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:8px;padding:13px 15px;font-size:14px;color:var(--ink);margin-top:6px}
+  .exp code{font-family:var(--mono);font-size:12.5px;background:var(--code-bg);padding:1px 5px;
+    border-radius:4px;color:var(--code-ink)}
+  .exp b{color:var(--ink)}
+  .reveal{animation:rise .28s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.reveal{animation:none}.progress>i{transition:none}}
+
+  /* 図解（コード注釈） */
+  .figure{margin-top:14px}
+  .fig-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin-bottom:6px;font-weight:650}
+  .figbox{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:8px 0;
+    overflow-x:auto;font-family:var(--mono);font-size:15.5px;line-height:1.3}
+  .figline{display:flex;gap:10px;padding:0 12px;white-space:pre;min-width:max-content}
+  .figline .fno{color:var(--faint);min-width:1.5em;text-align:right;flex:0 0 auto;user-select:none}
+  .figline .fcode{color:var(--code-ink)}
+  .figline.err{background:var(--ng-soft);box-shadow:inset 3px 0 0 var(--ng)}
+  .figline.info{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+  .figline.ok{background:var(--ok-soft);box-shadow:inset 3px 0 0 var(--ok)}
+  .figline.mute{box-shadow:inset 3px 0 0 var(--border)}
+  .figline.mute .fcode{color:var(--faint)}
+  /* 連結線つき注釈：該当行から L字の線＋矢印で枝分かれ */
+  .annorow{position:relative;padding:3px 12px 9px 42px;min-width:max-content}
+  .annorow::before{content:"";position:absolute;left:5px;top:-4px;width:17px;height:16px;
+    border-left:2px solid currentColor;border-bottom:2px solid currentColor;border-bottom-left-radius:8px;opacity:.9}
+  .annorow::after{content:"";position:absolute;left:20px;top:7px;width:0;height:0;
+    border:5px solid transparent;border-left:7px solid currentColor;opacity:.9}
+  .annorow.err{color:var(--ng)}
+  .annorow.info{color:var(--accent)}
+  .annorow.ok{color:var(--ok)}
+  .annorow.mute{color:var(--faint)}
+  .annorow .anno{font-family:var(--sans);font-size:12.5px;line-height:1.5;white-space:normal;max-width:46ch;display:block}
+  .annorow.ok .anno{font-weight:600}
+  .figout{margin-top:9px;font-family:var(--mono);font-size:12.5px;color:var(--ink);font-weight:700}
+  .figbox.qcode{margin:0 0 16px;font-size:15.5px}
+  .qfigout{margin:8px 2px 16px}
+  /* 変数トレース表（クリックで開閉） */
+  .trace{margin-top:14px}
+  .trace details{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .trace summary{cursor:pointer;list-style:none;padding:9px 13px;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650;
+    background:var(--surface-2);display:flex;align-items:center;gap:8px;user-select:none}
+  .trace summary::-webkit-details-marker{display:none}
+  .trace summary::before{content:"▸";color:var(--accent)}
+  .trace details[open] summary::before{content:"▾"}
+  .trace summary:hover{color:var(--ink)}
+  .trace summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .tscroll{overflow-x:auto;border-top:1px solid var(--border)}
+  .trace table{border-collapse:collapse;width:100%;font-size:12.5px}
+  .trace th,.trace td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+    padding:6px 10px;text-align:left;white-space:normal;vertical-align:top;overflow-wrap:anywhere}
+  .trace th{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;
+    color:var(--muted);background:var(--surface-2);white-space:nowrap}
+  .trace td{font-family:var(--mono);color:var(--code-ink);font-variant-numeric:tabular-nums}
+  .trace td.st{font-family:var(--sans);color:var(--ink)}
+  .trace tr.hot td{background:var(--ng-soft)}
+  .trace .nul{color:var(--faint)}
+  .trace tbody tr:last-child td{border-bottom:none}
+  .trace th:last-child,.trace td:last-child{border-right:none}
+
+  .actions{display:flex;gap:10px;margin-top:18px}
+  .btn{font-family:inherit;font-size:14.5px;font-weight:600;border-radius:10px;padding:11px 18px;
+    cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--ink);
+    transition:.15s;flex:0 0 auto}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.ghost{color:var(--muted)}
+
+  /* results */
+  .res-head{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .ring{--p:0;width:104px;height:104px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--border) 0);
+    display:grid;place-items:center;position:relative}
+  .ring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface)}
+  .ring .num{position:relative;z-index:1;text-align:center}
+  .ring .num b{font-size:26px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .ring .num span{display:block;font-size:11px;color:var(--muted)}
+  .res-sum h2{margin:0 0 4px;font-size:18px}
+  .res-sum p{margin:0;color:var(--muted);font-size:13.5px}
+  .sec-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin:22px 0 10px;font-weight:650}
+  .bars{display:flex;flex-direction:column;gap:11px}
+  .bar-row .bar-top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px}
+  .bar-row .bar-top .n{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+  .bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+  .bar-track>i{display:block;height:100%;border-radius:99px}
+  .weak-badge{font-size:10.5px;font-family:var(--mono);color:var(--ng);border:1px solid var(--ng);
+    border-radius:5px;padding:0 5px;margin-left:7px;vertical-align:1px}
+  .advice{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+    margin-top:10px}
+  .advice .a-cat{font-weight:650;font-size:14px;margin-bottom:3px;display:flex;align-items:center}
+  .advice .a-txt{font-size:13.5px;color:var(--muted)}
+  .advice+.advice{margin-top:8px}
+  .empty{color:var(--muted);font-size:13.5px;padding:6px 0}
+  .footer{margin-top:26px;text-align:center;color:var(--faint);font-size:11.5px;line-height:1.7}
+  .footer .warn{color:var(--muted)}
+  a.link{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a.link:hover{border-color:var(--accent)}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <h1>Java Bronze 練習問題 演習コンソール</h1>
+      <span class="tag">全60問</span>
+    </div>
+    <div class="meta">
+      <div class="progress"><i id="pbar"></i></div>
+      <div class="score" id="score">0 / 0</div>
+    </div>
+  </div>
+  <div id="stage"></div>
+  <div class="footer">
+    成績はこの端末のブラウザ内にのみ保存されます（localStorage）。<br>
+    <span class="warn">⚠️ 市販問題集（練習問題・書籍326〜361ページ）の逐語書き起こしです。<b>個人学習用のみ・配布/販売不可</b>。全60問すべて解説ページ（362〜380ページ）で正解を突合済み。</span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ▼▼▼ ここから下だけを科目ごとに差し替える（エンジン部は触らない） ▼▼▼
+   scratchpad/演習アプリ_作成手順.md も参照
+   ============================================================ */
+
+// localStorage 保存キー：科目ごとに必ず変える
+const KEY='javaBronzePracticeV1';
+
+const BOOK_QUESTIONS = [
+  {id:"b6",
+   cat:"演算子",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"public class Test {\n  public static void main(String[] args) {\n    int x = 3;\n    int y = 4;\n    System.out.print((2 + 3 * 3) + \" \");\n    System.out.print(++x * y++);\n  }\n}",
+   options:["11 20", "11 12", "11 16", "15 20", "15 12", "15 16"],
+   answer:2,
+   exp:"5行目ではまず 3*3 が処理された後に2加算となるため11が出力される。6行目では ++x は前置のインクリメントなので処理前に1加算され、y++ は後置なので処理後に1加算となる。つまり x は4、y は4で掛け算が行われ16が出力される。（解説P363）"},
+  {id:"b7",
+   cat:"演算子",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"public class Test {\n  public static void main(String[] args) {\n    int a = 20;\n    System.out.println((a += 5) + \" : \" + (a++));\n  }\n}",
+   options:["20 : 21", "25 : 26", "25 : 25", "20 : 25"],
+   answer:2,
+   exp:"4行目では a += 5 が処理されるため、a変数に5を加算しさらにa変数に代入される。したがって25が出力される。また a++ は後置のインクリメントであるため処理後に1加算となる。つまり25が出力される。（解説P363）"},
+  {id:"b8",
+   cat:"条件分岐",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"public class Test {\n  public static void main(String[] args) {\n    String data = \"null\";\n    if(data == null) {\n      System.out.println(\"null\");\n    }else if(data.length() == 0) {\n      System.out.println(\"0\");\n    }else{\n      System.out.println(\"else\");\n    }\n  }\n}",
+   options:["null", "0", "else", "コンパイルエラー", "実行時エラー"],
+   answer:2,
+   exp:"3行目のdata変数には null 文字列が格納されている。null が \"\" で囲まれているので、何も参照しないnullリテラルではなく4文字の文字列であることに注意する。したがって4行目・6行目の条件文には一致しないため、elseブロックが実行され else が出力される。（解説P363）"},
+  {id:"b9",
+   cat:"参照型",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Employee { }\n\npublic class Test {\n  public static void main(String[] args) {\n    Employee e1 = new Employee();\n    Employee e2 = e1;\n    Employee e3 = new Employee();\n\n    if(e1 == e2) {\n      System.out.println(\"e1 == e2\");\n    }else{\n      System.out.println(\"e1 != e2\");\n    }\n    if(e1 == e3) {\n      System.out.println(\"e1 == e3\");\n    }else{\n      System.out.println(\"e1 != e3\");\n    }\n  }\n}",
+   options:["e1 == e2 / e1 == e3", "e1 == e2 / e1 != e3", "e1 != e2 / e1 == e3", "e1 != e2 / e1 != e3", "コンパイルエラー"],
+   answer:1,
+   exp:"Employeeをインスタンス化しているのは5行目と7行目のみ。6行目はe2変数を宣言し、e1が参照しているオブジェクトと同じオブジェクトを参照する。参照型の変数に対して == 演算子を使用している場合は、同じ参照先であればtrue、異なればfalseとなる。（解説P363〜364）"},
+  {id:"b10",
+   cat:"条件分岐",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"public class Test {\n  public static void main(String[] args) {\n    String words = \"ABCDEFGHIJ\";\n    String msg = null;\n    switch(words.charAt(7)){\n      case 'H':\n        msg = \"Hello \";\n        break;\n      case 'G':\n        msg = \"GoodBye \";\n      default:\n         msg = \"other \";\n    }\n    System.out.println(msg);\n  }\n}",
+   options:["Hello", "GoodBye", "other", "GoodBye other", "Hello other", "コンパイルエラー"],
+   answer:0,
+   exp:"3行目でA〜Jの文字列が用意されている。5行目でその文字列に対し charAt(7) を実行しており、これはインデックス7番目の文字をchar型で返す。インデックスは0から数えるため H が返る。5〜13行目のswitch文では6行目のcaseが合致するためmsg変数にはHello文字列が格納され、8行目のbreak文によりswitch文の処理が終了する。（解説P364）"},
+  {id:"b11",
+   cat:"条件分岐",
+   src:"練習問題",
+   prompt:"コンパイル結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    int x = 10, y = 5;\n    if (x = 10) { }\n    if (x != 0 | y != 0) { }\n    if (y == 10) { }\n    if (x == 10 and y == 5) { }\n    if (x >= y) { }\n  }\n}",
+   options:["4 行目に問題があるためコンパイルエラーとなる", "5 行目に問題があるためコンパイルエラーとなる", "6 行目に問題があるためコンパイルエラーとなる", "7 行目に問題があるためコンパイルエラーとなる", "8 行目に問題があるためコンパイルエラーとなる", "複数行に問題があるためコンパイルエラーとなる", "コンパイルは成功する"],
+   answer:5,
+   exp:"if文の条件式は判定結果がboolean値になる式でなければならない。したがって4行目は文法エラーとなる。また、Java言語では7行目のような and 論理演算子は提供されていない。したがって複数行に問題がある。（解説P364）"},
+  {id:"b12",
+   cat:"配列",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    String[] ary = new String[3];\n    ary[1] = \"Lemon\";\n    ary[2] = null;\n    ary[3] = \"Grape\";\n    for(int i = 0; i < ary.length; i++) {\n      System.out.print(ary[i] + \" \");\n    }\n  }\n}",
+   options:["Lemon Grape", "Lemon null Grape", "コンパイルエラー", "実行時エラー"],
+   answer:3,
+   exp:"3行目で配列を作成しているが領域は3。したがって使用できるインデックスは0〜2。5行目のようにnullリテラルを明示的に代入しても問題ないが、6行目は要素外にアクセスしており、コンパイルは成功するが実行時に ArrayIndexOutOfBoundsException が発生する。（解説P364〜365）"},
+  {id:"b13",
+   cat:"繰り返し",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    for(int i = 3; i < i++; i++) {\n      System.out.print(i + \" \");\n    }\n  }\n}",
+   options:["3", "3 4", "実行されるが何も出力されない", "コンパイルエラー", "実行時エラー"],
+   answer:2,
+   exp:"3行目の式1では変数は3で初期化され、式2が i < i++ とある。インクリメントは後置であるため、まず 3 < 3 の比較が先に行われる。その結果falseが返り、4行目は1回も実行されないままfor文の処理が終了する。（解説P365）"},
+  {id:"b14",
+   cat:"繰り返し",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    int num = 0;\n    boolean flag = false;\n    while((num++ < 3) && !flag) {\n      System.out.print(\"5 \");\n      if(num == 2) {\n        flag = true;\n        System.out.print(\"* \");\n      }\n    }\n  }\n}",
+   options:["5 *", "5 5", "5 5 *", "5 5 * 5", "コンパイルエラー", "実行されるが何も出力されない"],
+   answer:2,
+   exp:"1回目：num=0、flag=false なのでwhile条件はtrue。その後numが1加算され「5 」を出力、if条件はfalse。2回目：num=1 なので条件true、numが2になり「5 」を出力、if条件でtrueが返り「* 」を出力しflagにtrueが代入される。3回目：num=2、flag=true なので !true により条件はfalseとなり繰り返しが終了する。（解説P365〜366）"},
+  {id:"b15",
+   cat:"繰り返し",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    boolean flag = false;\n    if(flag == true) {\n      while(!flag) {\n        System.out.print(\"T \");\n        flag = false;\n      }\n    }else{\n      System.out.print(\"F \");\n    }\n  }\n}",
+   options:["4 行目でコンパイルエラー", "5 行目でコンパイルエラー", "T", "F", "実行されるが何も出力されない", "実行時エラー"],
+   answer:3,
+   exp:"flag変数はfalseで初期化されているため4行目のif条件ではfalseが返る。そのため9行目に制御が移り10行目が実行される。なお4行目を if(flag = true) にした場合は、= による代入でもflag変数はboolean型でありtrueを代入したことで条件式の結果はboolean型となるため問題なくコンパイル・実行できるが、5行目の (!flag) でfalseが返るため何も出力されない。（解説P366〜367）"},
+  {id:"b16",
+   cat:"繰り返し",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    int num = 0;\n    do {\n      num++;\n      if(num % 2 == 0){\n        num++;\n      } System.out.print(num + \" \");\n    }while(num <= 10);\n  }\n}",
+   options:["2 4 6 8 10", "2 4 6 8 10 12", "1 3 5 7 9", "1 3 5 7 9 11"],
+   answer:3,
+   exp:"9行目のwhile条件式では num変数が10を超えたらfalseを返す。6行目のif条件式は num変数値を2で割り余りが0のときtrueを返す。if文に {} を記述していないため条件式がtrueのときのみ7行目が実行される。8行目はif条件に関係なく実行される文。結果は 1 3 5 7 9 11 となる。（解説P367）"},
+  {id:"b17",
+   cat:"繰り返し",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    int num = 0;\n    do {\n      num++;\n      System.out.print(\"Hi \");\n    }while(num < 3);\n  }\n}",
+   options:["Hi Hi", "Hi Hi Hi", "Hi Hi Hi Hi", "コンパイルエラー", "実行時エラー"],
+   answer:1,
+   exp:"num変数が1〜3の間にHiの出力がある。Hiの出力後にwhile条件が評価されるため、numが4になった際に繰り返し処理は終了する。したがってHiは3回出力される。（解説P367）"},
+  {id:"b18",
+   cat:"繰り返し",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    int num = 0;\n    do {\n      num++;\n      if(num == 1) {\n        continue;\n      }\n      System.out.print(num + \" \");\n    }while(num < 1);\n  }\n}",
+   options:["0", "1", "0 1", "1 が無限に出力される", "実行されるが何も出力されない"],
+   answer:4,
+   exp:"5行目でnumは1となり6行目のif条件式はtrueが返る。そのため7行目のcontinue文が実行され、continue文以下にある繰り返しの残りの処理はスキップされる（9行目の出力はスキップ）。そして10行目のwhile条件式でfalseが返り繰り返し処理が終了する。したがってコンパイル・実行ともに成功するが何も出力されない。（解説P367）"},
+  {id:"b19",
+   cat:"繰り返し",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    String[] ary = {\"A\",\"B\",\"C\"};\n    for(int i = 0; i < 2; i++) {\n      for(String s : ary){\n        System.out.print(ary[i] + \" \");\n      }\n    }\n  }\n}",
+   options:["実行時エラー", "A A B B", "A B A B", "A A A B B B", "A B C A B C"],
+   answer:3,
+   exp:"4行目の外側のループは2回（i変数が0と1）実行する。5行目のループは配列の大きさ分（3回）実行する。したがってi変数が0のとき ary[0]（A）を3回出力し、i変数が1のとき ary[1]（B）を3回出力する。（解説P368）"},
+  {id:"b20",
+   cat:"条件分岐",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    int arry[] = {10, 30, 50};\n    int num = 0;\n    for (int val : arry) {\n      switch (val) {\n        case 10:\n          num++;\n        case 20:\n          num++;\n          break;\n        case 30:\n          num++;\n          break;\n        case 40:\n          num++;\n        case 50:\n          num++;\n      }\n    }\n    System.out.println(num);\n  }\n}",
+   options:["3", "4", "5", "6", "コンパイルエラー", "実行時エラー"],
+   answer:1,
+   exp:"拡張for文内にswitch文を定義している。1回目のループでは配列の0番目の要素である10に対して分岐処理が行われ7行目が一致する。8行目でnum変数がインクリメントされるが、その下にbreak文がないため引き続き9〜10行目が実行され、num変数は2となる。11行目にbreak文があるためswitch文から抜けてfor文に制御が戻る。その後、1番目の30と2番目の50に対しそれぞれnum変数をインクリメントして処理が終了する。（解説P368）"},
+  {id:"b21",
+   cat:"繰り返し",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    int x = 5;\n    do {\n      x = 4;\n      System.out.println(x);\n    } while (true);\n  }\n}",
+   options:["コンパイルエラー", "実行時エラー", "4 が 5 回出力する", "5 が 4 回出力する", "無限ループとなる"],
+   answer:4,
+   exp:"問題文のソースコードでは while文の条件式がtrueとなっている上、doブロック内にループ処理を終了するコードがない。そのため実行すると4の出力が続き無限ループとなる。ループを終了するには [Ctrl] キーを押しながら [C] キーを押す。（解説P368）"},
+  {id:"b22",
+   cat:"配列",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    String[] str = new String[3];\n    str[0] = \"JP\";\n    str[1] = null;\n    str[2] = \"US\";\n    for (int i = 1; i < str.length; i++) {\n      System.out.print(str[i] + \" \");\n    }\n  }\n}",
+   options:["JP null US", "null US", "JP US", "何も出力せず実行時エラーとなる", "str 配列の一部の要素を出力後、実行時エラーとなる", "コンパイルエラー"],
+   answer:1,
+   exp:"問題12の類似問題。3行目でString型の配列を作成し4〜6行目で文字列を格納している。5行目のようにnullリテラルを明示的に代入しても問題ない。7〜9行目で各要素を出力しているが、i変数は1で初期化されているため添え字が1の要素からの出力となる。（解説P368）"},
+  {id:"b23",
+   cat:"条件分岐",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    char[] array = {'a', 'b', 'c'};\n    for (int i = 0; i < array.length; i++) {\n      System.out.print(i + \" \");\n      switch (array[i]) {\n        case 'a': System.out.print(\"a \");\n        case 'b': System.out.print(\"b \");\n        case 'c': System.out.print(\"c \");\n      }\n    }\n  }\n}",
+   options:["コンパイルエラー", "0 a b c", "0 a 1 b 2 c", "0 a b c 1 b c 2 c", "0 a b c 1 a b c 2 a b c"],
+   answer:3,
+   exp:"5行目によりまず0が出力される。6行目のswitch文の条件式では配列の0番目の要素と一致するcaseは7行目となるが、このswitch文にはbreak文の指定がないため a b c が続けて出力される。その後、制御はfor文に戻り1が出力された後、配列の1番目と一致するcaseは8行目となって b c の出力と続く。（解説P368〜369）"},
+  {id:"b24",
+   cat:"参照型",
+   src:"練習問題",
+   prompt:"メモリ内には、User クラスのオブジェクトがいくつ作成されますか。",
+   code:"User user1 = new User();\nUser user2 = user1;\nUser user3 = null;\nUser user4 = user3;",
+   options:["1", "2", "3", "4"],
+   answer:0,
+   exp:"user1変数はインスタンス化したUserオブジェクトを参照している。user2変数はuser1変数が参照しているオブジェクトを参照しており、新たにオブジェクトを生成しているわけではない。user3変数はnullリテラル（何も参照していないことを意味する値）を代入し、user4も同じくnullリテラルを代入している。つまりuser3・user4は変数宣言を行っているだけ。したがって作成されたUserオブジェクトの数は1つ。（解説P369）"},
+  {id:"b26",
+   cat:"クラス設計",
+   src:"練習問題",
+   prompt:"サブクラスがもつ構成要素のうち、スーパークラスと同じ名前を使用できるものは次のどれですか。",
+   code:"",
+   options:["変数とコンストラクタ", "変数とメンバメソッド", "メンバメソッドのみ", "変数、コンストラクタ、メンバメソッド"],
+   answer:1,
+   exp:"コンストラクタはクラス名と同じでなければならないため、クラス名が変わればコンストラクタ名も変わる。また、メンバ変数・メソッドはサブクラスでスーパークラスと同じ名前を使用することが可能。（解説P370）"},
+  {id:"b27",
+   cat:"クラス設計",
+   src:"練習問題",
+   prompt:"実行する際は `>java Fruit lemon grape` とします。実行した結果として正しいものは次のどれですか。",
+   code:"public class Fruit {\n  String kind = \"orange\";\n  public static void main(String[] args) {\n    String kind = args[1];\n    Fruit obj = new Fruit();\n    System.out.println(obj.kind);\n  }\n}",
+   options:["lemon", "grape", "orange", "null", "実行時エラー"],
+   answer:2,
+   exp:"5行目では自クラスであるFruitクラスをインスタンス化し、6行目の obj.kind によりそのオブジェクトがもつインスタンス変数にアクセスしているので orange。mainメソッド内の4行目で宣言しているkind変数はローカル変数であり、obj.kind とは別物。（解説P370〜371）"},
+  {id:"b28",
+   cat:"繰り返し",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"public class Fruit {\n  public static void main(String[] args) {\n    Fruit[] ary = {new Fruit(), new Fruit(), new Fruit()};\n    int num = ary.length;\n    while(num > 0) {\n      System.out.print(num-- + \" \");\n    }do;\n  }\n}",
+   options:["3 行目でコンパイルエラー", "5 行目でコンパイルエラー", "7 行目でコンパイルエラー", "3 2 1", "2 1", "2 1 0", "1 0"],
+   answer:2,
+   exp:"繰り返し文として do{} while(条件式) は記述できるが、while(条件式){} do という記述は文法として許可されていない。したがってコンパイルエラー。もし7行目にある do; を削除するとコンパイル・実行ともに成功し、実行結果は 3 2 1 になる。（解説P371）"},
+  {id:"b29",
+   cat:"クラス設計",
+   src:"練習問題",
+   prompt:"プログラムが正常にコンパイルするために、①に挿入するコードとして正しいものは次のどれですか。",
+   code:"class Test {\n  boolean flag;\n  public static void main(String[] args) {\n    Test obj = new Test();\n    if([   ①   ]) {\n      System.out.print(\"OK\");\n    } else {\n      System.out.print(\"NG\");\n    }\n  }\n}",
+   options:["obj.flag.equals(\"true\")", "obj.flag == \"true\"", "obj.flag", "obj.flag = \"true\"", "obj.flag.equals(true)"],
+   answer:2,
+   exp:"obj.flag により false が返るため、if文の条件式に使用することが可能（flagはインスタンス変数なのでデフォルト値 false で初期化されている）。Aは基本データ型のbooleanにequals()等のメソッドが無い。Bは基本データ型と参照型を == で比較できない。Dは基本データ型の変数に参照型データを = で代入できない。（解説P371）"},
+  {id:"b31",
+   cat:"オーバーロード",
+   src:"練習問題",
+   prompt:"実行する際は `>java Test w x y z` とします。コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public static void main(String[] args) {\n    System.out.print(\"data : \" + args[2] + args[3]);\n  }\n  public static void main(char[] args) {\n    System.out.print(\"data = \" + args[0] + args[1]);\n  }\n}",
+   options:["コンパイルエラー", "実行時エラー", "data : xy", "data : yz", "data = xy", "data = yz"],
+   answer:3,
+   exp:"main()メソッドをオーバーロードしているが、javaコマンドを実行した際は必ず String型の配列を引数にもつ main() メソッドが呼び出される。（解説P372）"},
+  {id:"b33",
+   cat:"オーバーロード",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Test {\n  public float calc(int val1, float val2) {\n    return val1 + val2;\n  }\n  public String calc(String val1, String val2) {\n    return val1 + val2;\n  }\n  public static void main(String[] args) {\n    Test obj = new Test();\n    System.out.println(\"ans : \" + obj.calc(10, 30));\n    System.out.println(\"ans : \" + obj.calc(\"20\", \"10\"));\n  }\n}",
+   options:["ans : 40 / ans : 2010", "ans : 40.0 / ans : 2010", "ans : 40 / ans : 30", "ans : 40.0 / ans : 30", "コンパイルエラー"],
+   answer:1,
+   exp:"calcメソッドをオーバーロードしている（引数の型が異なるため定義可能）。10行目の呼び出しではint型の10と30を引数に指定している。型の合致するcalcメソッドはないが、2行目にはint型とfloat型を引数にとるcalcメソッドが定義されており int→float は暗黙の型変換が行われるのでこのメソッドが実行される。int値+float値の結果はfloat型となるため 40.0。11行目の呼び出しは5行目のcalcメソッドが実行され文字列結合し 2010 となる。（解説P372）"},
+  {id:"b34",
+   cat:"カプセル化",
+   src:"練習問題",
+   prompt:"クラスのメンバ変数を宣言する際に、適切にカプセル化し、値を変更されないようにするために使用すべき修飾子は次のどれですか。",
+   code:"",
+   options:["private final", "private static", "public final", "public abstract", "private abstract"],
+   answer:0,
+   exp:"「カプセル化する」によりメンバ変数に付与するアクセス修飾子は private が適切。また「値を変更されないようにする」により定数にする必要があるため final 修飾子が適切。なお選択肢D・Eにある abstract 修飾子は変数に付与することはできない。（解説P372）"},
+  {id:"b36",
+   cat:"カプセル化",
+   src:"練習問題",
+   prompt:"setData() メソッドの説明として正しいものは次のどれですか。",
+   code:"class SuperClass { }\n\nclass SubClass extends SuperClass {\n  private double data;\n\n  private void setData(double data) {\n    this.data = data;\n  }\n}",
+   options:["同じパッケージ内にあるクラスのメソッドから呼び出すことができる", "すべてのパッケージ内にあるクラスのメソッドから呼び出すことができる", "同じパッケージ内にある、SuperClass クラスのサブクラスのメソッドから呼び出すことができる", "クラス内の他メソッドから呼び出すことができる", "スーパークラスのメソッドから呼び出すことができる"],
+   answer:3,
+   exp:"問題文のsetData()メソッドは private 修飾子が付与されている。privateメンバは同じクラス内のメンバからしかアクセスを許可しない。（解説P373）"},
+  {id:"b37",
+   cat:"static",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Foo {\n  static int val;\n  static int methodA() {\n    return ++val;\n  }\n  int methodB() {\n    return methodA();\n  }\n}\nclass Test {\n  public static void main(String[] args) {\n    Foo obj = new Foo();\n    obj.methodA();\n    int num = obj.methodB();\n    System.out.println(num);\n  }\n}",
+   options:["1", "2", "4 行目でコンパイルエラー", "7 行目でコンパイルエラー", "13 行目でコンパイルエラー", "14 行目でコンパイルエラー"],
+   answer:1,
+   exp:"Fooクラスは、インスタンスメソッド（methodB()）がstaticメソッド（methodA()）を呼び出していること、staticメソッド（methodA()）がstatic変数（val）を利用していることのいずれもコンパイル・実行ともに成功する。Testクラス側の13行目ではmethodA()呼び出しによりval変数がインクリメントされる。14行目のmethodB()呼び出しにより6行目が実行され、次に再度methodA()が呼ばれval変数がインクリメントされる。15行目では2が出力される。（解説P373）"},
+  {id:"b39",
+   cat:"継承",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Foo {\n  Foo() { System.out.print(\"Foo() \"); }\n  Foo(String s) { System.out.print(\"Foo(String s) \"); }\n}\nclass Test extends Foo{\n  Test() { System.out.print(\"Test()\"); }\n  Test(String s) { System.out.print(\"Test(String s)\"); }\n  public static void main(String[] args) {\n    Test obj = new Test(\"test\");\n  }\n}",
+   options:["Test(String s)  Foo(String s)", "Test(String s)  Foo()", "Foo(String s)  Test(String s)", "Foo()  Test(String s)"],
+   answer:3,
+   exp:"各クラスのコンストラクタでは this() や super() によるコンストラクタ呼び出しのコードがない。したがって暗黙で super() が追加される。これにより Test(\"test\") が呼ばれると7行目に制御が移り、暗黙で追加された super() により2行目に制御が移る。よって実行結果は 2行目→7行目 の順となる。（解説P374）"},
+  {id:"b40",
+   cat:"オーバーライド",
+   src:"練習問題",
+   prompt:"User クラスのサブクラスで task() メソッドのオーバーライドをする際の説明として正しいものは次のどれですか。",
+   code:"class User {\n  int data;\n  public long task(int num) {\n    return data += num;\n  }\n}",
+   options:["オーバーライドを行うメソッドで引数の変数名は num とする必要がある", "オーバーライドを行うメソッドの戻り値は long 型とする必要がある", "オーバーライドを行うメソッドの引数リストを変更することができる", "オーバーライドを行うメソッドは、private 修飾子を付与することができる", "オーバーライドを行うメソッドは戻り値を int 型にすることができる"],
+   answer:1,
+   exp:"オーバーライドのルールは、①メソッド名・引数リストがまったく同じメソッドをサブクラスで定義する ②戻り値はスーパークラスで定義したメソッドが返す型と同じかそのサブクラス型とする ③アクセス修飾子はスーパークラスと同じものか、それよりも公開範囲が広いものであれば使用可能。引数の変数名はルールに含まれない（A誤り）。引数リストを変更するとオーバーライドではなくオーバーロードとみなされる（C誤り）。publicをprivateに狭めることはできない（D誤り）。（解説P374〜375）"},
+  {id:"b41",
+   cat:"オーバーライド",
+   src:"練習問題",
+   prompt:"メソッドをオーバーライドしてコンパイルが成功するために、①に挿入するコードは次のどれですか。",
+   code:"class Employee {\n  protected void report() {\n    System.out.println(\"EmployeeA:report()\");\n  }\n}\nclass Manager extends Employee {\n  [   ①   ]\n}",
+   options:["void report(String s1, String s2) { System.out.println(\"Manager : report()\"); }", "public void report(String s1) { System.out.println(\"Manager : report()\"); }", "public void report() { System.out.println(\"Manager : report()\"); }", "void report() { System.out.println(\"Manager : report()\"); }"],
+   answer:2,
+   exp:"選択肢A・Bは引数の数が異なるため継承関係のあるオーバーロードとみなされ誤り。問題文のEmployeeクラスのreport()メソッドは protected 修飾子が付与されているため、それより公開範囲が広い選択肢Cが正しい。選択肢Dのデフォルト修飾子は protected より公開範囲が狭くなるため誤り。（解説P375）"},
+  {id:"b42",
+   cat:"継承",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class A {\n  void show() {\n    System.out.print(\"X \");\n  }\n}\nclass B {\n  public void show() {\n    System.out.print(\"Y \");\n  }\n}\nclass Test{\n  public static void main(String[] args) {\n    A obj = new B();\n    obj.show();\n  }\n}",
+   options:["X", "Y", "X Y", "コンパイルエラー", "実行時エラー"],
+   answer:3,
+   exp:"AクラスとBクラスは継承関係がない。したがって13行目の = 演算子で左辺と右辺に互換性がないためコンパイルエラー。もし6行目のBクラスの宣言が `class B extends A{` のようにAクラスのサブクラスであれば、コンパイル・実行ともに成功し実行結果はYとなる。（解説P375）"},
+  {id:"b44",
+   cat:"継承",
+   src:"練習問題",
+   prompt:"コンパイル、実行が成功し `Hi : Text` の出力結果をえるために、①に挿入するコードとして正しいものは次のどれですか。",
+   code:"class ClassA {\n  String msg;\n  ClassA(String msg) {\n    this.msg = msg;\n  }\n}\nclass ClassB extends ClassA {\n  private String type;\n  ClassB(String msg, String type) {\n    [   ①   ]\n  }\n  public static void main(String[] args) {\n    ClassB obj = new ClassB(\"Hi\", \"Text\");\n    System.out.println(obj.msg + \" : \" + obj.type);\n  }\n}",
+   options:["super(msg); / this.type = type;", "this.type = type; / super(msg);", "this.type = type; / super.msg = msg;", "super.msg = msg; / this.type = type;", "this.type = type; / ClassA.msg = msg;"],
+   answer:0,
+   exp:"ClassAのmsg変数およびClassBのtype変数にはインスタンス化時に引数で渡すHiとTextが代入される必要がある。ClassAでは引数をもつコンストラクタのみ定義されているので、サブクラスであるClassBでは明示的にこのコンストラクタを呼ぶ必要がある。選択肢Bはsuper()の呼び出しが2行目に記述されているため誤り。選択肢C・Dはスーパークラスのコンストラクタ呼び出しコードがないため、暗黙でsuper()が追加されるがClassAには引数をもたないコンストラクタがないためコンパイルエラー。選択肢Eの ClassA.msg はstatic変数へアクセスするときの記述のためコンパイルエラー。（解説P376）"},
+  {id:"b46",
+   cat:"抽象クラス",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class A {\n  int func(int x , int y){\n    return x / y;\n  }\n}\nclass B {\n  int func(int x , int y) {\n    return (int)(Math.PI * x * y);\n  }\n}\nclass Test {\n  public static void main(String[] args) {\n    A a = new A();\n    System.out.print(a.func(10, 2) + \" \");\n    B b = new B();\n    System.out.print(b.func(10, 10));\n  }\n}",
+   options:["A クラス内の定義内容に問題がありコンパイルエラーとなる", "B クラス内の定義内容に問題がありコンパイルエラーとなる", "14 行目でコンパイルエラーとなる", "16 行目でコンパイルエラーとなる", "5 314 と出力する", "5 314.1592653589793 と出力する"],
+   answer:4,
+   exp:"14行目により2行目が実行され5が出力される。8行目ではJavaライブラリで提供されているMathクラスのPI定数（円周率）を使用している。16行目により7行目が実行され 3.14 * 10 * 10 の演算が行われる。その結果は 314.1592653589793 となるが、int型にキャストしているため実行結果は 314 となる。（解説P376）"},
+  {id:"b47",
+   cat:"抽象クラス",
+   src:"練習問題",
+   prompt:"プログラムが正常にコンパイルするために、①に挿入するコードとして正しいものは次のどれですか。",
+   code:"abstract class ClassA {\n  public abstract String method();\n}\nclass ClassB extends ClassA {\n  [   ①   ]\n}",
+   options:["void method(String s){}", "String method() { return null; }", "public void method() {}", "public void method(String s){}", "public String method() { return null; }", "public String method(String s) { return null; }"],
+   answer:4,
+   exp:"抽象クラスであるClassAを継承したClassBでは、抽象メソッドである method() を適切にオーバーライドする必要がある。オーバーライドのルールにしたがって定義しているのは選択肢Eのみ。（解説P377）"},
+  {id:"b48",
+   cat:"抽象クラス",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"public abstract class Foo {\n  public Foo(String str) {\n    methodA(str);\n    methodB();\n  }\n  public void methodA(String str) {\n    System.out.print(str + \" \");\n  }\n  public abstract void methodB();\n\n  public static void main(String[] args) {\n    System.out.print(\"start \");\n    Foo obj = new Foo(\"orange\");\n    obj.methodA(\"lemon\");\n  }\n}",
+   options:["start orange lemon と出力する", "start の出力後、実行時エラーが発生する", "start orange の出力後、実行時エラーが発生する", "コンパイルエラー", "実行されるが何も出力されない"],
+   answer:3,
+   exp:"Fooクラスは抽象クラスであるためインスタンス化できない。したがって13行目でコンパイルエラーとなる。（解説P377）"},
+  {id:"b49",
+   cat:"オーバーライド",
+   src:"練習問題",
+   prompt:"サブクラス側でスーパークラス側のメソッドを実装することを何と呼びますか。",
+   code:"",
+   options:["オーバーロード", "継承", "ポリモフィズム", "実行時バインド", "カプセル化"],
+   answer:2,
+   exp:"問題文はオーバーライドを意味している。オーバーライドによりポリモフィズムが実現できるため、選択肢の中ではCが適切。（解説P377）"},
+  {id:"b50",
+   cat:"インタフェース",
+   src:"練習問題",
+   prompt:"インタフェースの説明として正しいものは次のどれですか。",
+   code:"",
+   options:["インタフェースで宣言した変数は、暗黙的に private final となる", "インタフェースがインタフェースを実装（implements）できる", "インタフェースは複数のインタフェースを継承（extends）できる", "インタフェースでは抽象メソッドを 1 つ以上宣言する必要がある"],
+   answer:2,
+   exp:"インタフェース内で変数を宣言すると暗黙的に public static final 修飾子が付与されるため選択肢Aは誤り。インタフェースを実装（implements）できるのはクラスであるため選択肢Bは誤り。インタフェースは複数のインタフェースを継承することが可能であるため選択肢Cは正しい（なお具象クラスおよび抽象クラスが継承（extends）できるクラスの数は1つだけ）。インタフェースでは抽象メソッドを記述せず定数のみ宣言することも可能であるため選択肢Dは誤り。（解説P377）"},
+  {id:"b51",
+   cat:"インタフェース",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"interface I {\n  void show();\n}\nclass ClassA implements I {\n  public void show(){\n    System.out.println(\"ClassA\");\n  }\n}\nclass ClassB extends ClassA {\n  public void show(){\n    System.out.println(\"ClassB\");\n  }\n  public static void main(String[] args) {\n    I obj;\n    ClassA objA = new ClassA();\n    ClassB objB = new ClassB();\n    obj = objB;\n    obj.show();\n  }\n}",
+   options:["ClassA", "ClassB", "コンパイルエラー", "実行時エラー"],
+   answer:1,
+   exp:"15・16行目でClassAとClassBをインスタンス化している。17行目によりI型で宣言した変数は objB 変数が参照しているオブジェクトを参照する。ClassBクラスはIインタフェースの実装クラスであるためコンパイルは成功する。18行目でshow()メソッドを呼び出しているが、obj変数が参照しているのはClassBのオブジェクトであるため出力結果はClassB。（解説P377〜378）"},
+  {id:"b52",
+   cat:"インタフェース",
+   src:"練習問題",
+   prompt:"Foo クラスの定義として正しいものは次のどれですか。",
+   code:"interface X { }\n\ninterface Y { }\n\nclass Z { }",
+   options:["public class Foo extends Z implements X, Y {}", "public class Foo implements Z extends X, Y {}", "public class Foo extends X, Y implements Z {}", "public class Foo implements X, Y extends Z {}"],
+   answer:0,
+   exp:"クラスを定義する際、複数のインタフェースを実装（implements）することは可能。また implements と extends の併用も可能だが、併用する場合は extends を先に書く必要がある。（解説P378）"},
+  {id:"b53",
+   cat:"継承",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class ClassA {\n  String name;\n  ClassA(String name) { this.name = name; }\n  public void show(){\n    System.out.println(name);\n  }\n}\nclass ClassB extends ClassA {\n  private String no;\n  ClassB(String no, String name) {\n    super(name);\n    this.no = no;\n  }\n  public void show(){\n    System.out.println(no + \" : \" + name);\n  }\n}\nclass Test {\n  public static void main(String[] args) {\n    ClassA obj1, obj2;\n    obj1 = new ClassA(\"taro\");\n    obj2 = new ClassB(\"T001\", \"ryo\");\n    obj1.show();\n    obj2.show();\n  }\n}",
+   options:["taro / T001 : ryo", "taro / T001 : taro", "taro / taro", "T001 : ryo / T001 : ryo", "コンパイルエラー", "実行時エラー"],
+   answer:0,
+   exp:"ClassBはClassAを継承しているため、ClassBオブジェクトはClassA型で宣言した変数に代入可能。よって20〜22行目のコードは問題ない。21行目により3行目が呼ばれname変数にtaroを格納する。22行目により10行目が呼ばれ、11行目により3行目が呼ばれname変数にryoを格納し、12行目によりno変数にT001を格納する。23・24行目で各オブジェクトのshow()メソッドが呼ばれ、それぞれのメソッド（4行目・14行目）が実行される。（解説P378）"},
+  {id:"b54",
+   cat:"ポリモーフィズム",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Bar {\n  void func() {\n    System.out.println(\"Bar:func()\");\n  }\n}\nclass Test extends Bar {\n  void func() {\n    System.out.println(\"Test:func()\");\n  }\n  public static void main(String[] args) {\n    Bar obj = new Bar();\n    Test tObj = (Test)obj;\n    tObj.func();\n  }\n}",
+   options:["Bar:func()", "Test:func()", "コンパイルエラー", "実行時エラー"],
+   answer:3,
+   exp:"BarクラスもTestクラスも文法として誤りはないためコンパイルは成功する。ポイントとして12行目にあるobj変数はBar型でありtObj変数はTest型。これらのクラスは継承関係があるためコンパイルが成功する。しかしobj変数が参照しているのはBarのオブジェクトであり、12行目で異なる型にキャストしているため実行時エラーになる。もし11行目が `Bar obj = new Test();` であればコンパイル・実行ともに成功し、実行結果は Test:func() となる。（解説P378）"},
+  {id:"b55",
+   cat:"ポリモーフィズム",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Bar {\n  String getStr() {\n    return \"Bar\";\n  }\n}\nclass Test extends Bar {\n  String getStr() {\n    return \"Test\";\n  }\n  public static void main(String[] args) {\n    Bar obj = new Test();\n    Test t = (Test)obj;\n    System.out.println(t.getStr());\n  }\n}",
+   options:["Bar", "Test", "コンパイルエラー", "実行時エラー"],
+   answer:1,
+   exp:"BarクラスもTestクラスも文法として誤りはないためコンパイルは成功する。TestクラスはBarクラスのサブクラスであるため11行目も問題ない。12行目でTest型で宣言した変数にobjをキャストして代入しているが、もともとobjが参照しているのはTestのオブジェクトであるため代入が成功し、13行目の実行結果は Test となる。（解説P379）"},
+  {id:"b56",
+   cat:"ポリモーフィズム",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"class Automobile {\n  public void drive() { System.out.print(\"go forward \"); }\n}\nclass Ferrari extends Automobile {\n  public void drive() { System.out.print(\"go fast \"); }\n}\npublic class Test {\n  public static void main(String[] args) {\n    Automobile[] autos = { new Automobile(), new Ferrari() };\n    for (int x = 0; x < autos.length; x++)\n      autos[x].drive();\n  }\n}",
+   options:["go fast go fast", "go fast go forward", "go forward go fast", "go forward go forward", "5 行目でコンパイルエラーが発生する", "9 行目でコンパイルエラーが発生する", "11 行目でコンパイルエラーが発生する"],
+   answer:2,
+   exp:"FerrariクラスはAutomobileクラスを継承しdrive()メソッドをオーバーライドしている。したがって9行目のようにAutomobile型で宣言した配列で2つのオブジェクトを扱うことは可能であり、11行目でdrive()メソッドを呼び出すと各クラスで実装した処理が実行される。（解説P379）"},
+  {id:"b57",
+   cat:"インタフェース",
+   src:"練習問題",
+   prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
+   code:"interface Book {\n  void getName();\n}\nclass Java implements Book {\n  public void getName () { System.out.print(\"Java \"); }\n}\nclass Linux {\n  public void getName () { System.out.print(\"Linux \"); }\n}\npublic class Test {\n  public static void main(String[] args) {\n    Book[] books = { new Java(), new Linux() };\n    for (int x = 0; x < books.length; x++)\n      books[x].getName();\n  }\n}",
+   options:["コンパイルエラー", "実行時エラー", "Java Java", "Linux Linux", "Java Linux"],
+   answer:0,
+   exp:"問題56の類似問題。JavaクラスはBookインタフェースを実装しているが、**Linuxクラスは Book インタフェースを実装していない**。したがって12行目でコンパイルエラーとなる。（解説P379）"},
+  {id:"b59",
+   cat:"パッケージ",
+   src:"練習問題",
+   prompt:"次の要件を満たす Manager クラスの宣言コードで正しいものは次のどれですか。（要件：Manager クラスは com.prj.view パッケージに属する／com.prj.controller パッケージに属する各クラスを利用したい）",
+   code:"",
+   options:["import com.prj.*; / public class Manager { }", "package com.prj.*; / import com.prj.controller; / public class Manager { }", "package com.prj.view; / import com.prj.controller; / public class Manager { }", "package com.prj.view; / import com.prj.controller.*; / public class Manager { }", "package com.prj.view.*; / import com.prj.controller.*; / public class Manager { }"],
+   answer:3,
+   exp:"Managerクラスは com.prj.view パッケージに属するとあるため `package com.prj.view;` が先頭に必要。また、Managerクラスは com.prj.controller パッケージに属する各クラスを利用したいとあるため、package宣言の次に `import com.prj.controller.*;` のコードが必要。なお、import文とpackage文の両方を記述する場合には package 文を先に書く。（解説P379〜380）"},
+  {id:"b60",
+   cat:"パッケージ",
+   src:"練習問題",
+   prompt:"i 変数の値を直接変更できるのは次のどれですか。",
+   code:"package pack;\nclass Test {\n  int i = 100;\n}",
+   options:["Test クラスを継承したすべてのサブクラス", "pack パッケージ内に含まれるすべてのクラス", "この Test クラスのみ", "すべてのクラス", "どのクラスからも直接変更はできない"],
+   answer:1,
+   exp:"アクセス修飾子を指定していない変数は、そのクラス内のメンバまたは同じパッケージ内に含まれるクラスから直接変更できる。パッケージ内に含まれるクラスを継承したサブクラスがTestクラスと異なるパッケージに属することもあるため、選択肢Aは誤り。（解説P380）"},
+];
+
+const BOOK_MULTI_Q = [
+  {id:"m1",
+   cat:"Javaの仕組み",
+   src:"練習問題",
+   multi:true,
+   prompt:"Java 仮想マシン（JVM）が行っていることとして正しい説明は次のどれですか。（3つ選択）",
+   code:"",
+   options:["バイトコードの解釈", ".class ファイルの実行", ".class ファイルのアセンブル", "ソースコードをコンパイルする", ".class ファイルのロード"],
+   answers:[0, 1, 4],
+   exp:"javaコマンドによりクラス（.class）ファイルを実行すると、JVMは指定されたクラスファイルの読み込み（ロード）を行う。そしてクラスファイル内に書かれたバイトコードを解釈し実行する。アセンブルもソースコードのコンパイルもJVMの仕事ではない。（解説P362）"},
+  {id:"m2",
+   cat:"ソースファイル",
+   src:"練習問題",
+   multi:true,
+   prompt:"Java のソースファイルに関する説明として正しいものは次のどれですか。（3つ選択）",
+   code:"",
+   options:["1つのソースファイル内で記述できる import 文は 1 行である", "import 文は、ソースファイル内でどの場所でも記述できる", "ソースファイル名は、public 指定されたクラス名と一致する必要がある", "1つのソースファイル内に、インタフェースとクラスの両方を含めることができる", "package 文は任意であるが、記述する際はソースファイルの先頭に記述する必要がある", "1つのソースファイル内に、定義できる final クラスは 1 つである"],
+   answers:[2, 3, 4],
+   exp:"import文は必要に応じて複数行記述できる（A誤り）。import文はソースファイルの先頭で記述する（B誤り）。publicクラスはソースファイル名と同じにするという制限がある（C正）。1つのソースファイル内に複数のインタフェース・複数のクラスを定義できる（D正）。package文によるパッケージ化は推奨されるが必須ではなく、書くならソースファイルの先頭（E正）。finalクラスも含め1つのソースファイル内に複数のクラスを定義できる（F誤り）。（解説P362）"},
+  {id:"m3",
+   cat:"型変換",
+   src:"練習問題",
+   multi:true,
+   prompt:"有効なコードは次のどれですか。（3つ選択）",
+   code:"",
+   options:["int j = 'A';", "int i = 10L;", "int num = 3.14;", "int flag = true;", "byte b = 10; int i = b;", "double d = 5.0; int n = (int)d;"],
+   answers:[0, 4, 5],
+   exp:"AとEは暗黙の型変換が行われるため代入可能。Fはキャストによる型変換が行われるため代入可能。Bはリテラルに L が付与されlong値として認識されるためint型の変数に代入できない。Cはdouble値をint型の変数に、Dはboolean値をint型の変数に代入しようとしているため代入できない。（解説P362）"},
+  {id:"m4",
+   cat:"型変換",
+   src:"練習問題",
+   multi:true,
+   prompt:"有効なコードは次のどれですか。（3つ選択）",
+   code:"",
+   options:["double num1 = 3.14;", "char num2 = \"80\";", "boolean num3 = \"true\";", "int num4 = 'x';", "float num5 = 0.1;", "String num6 = \"false\";"],
+   answers:[0, 3, 5],
+   exp:"AとFは変数で宣言したデータ型と代入値の型が一致しているため代入可能。Dは暗黙の型変換が行われるため代入可能。Bは代入値が \"\" で囲まれており、1文字であっても \"\" で囲まれると文字列（String型）と判断されchar型で扱うことはできない。Cも同様の理由で文字列をboolean型で扱えない。Eはfloat型の変数にfloat値を代入する場合、数に「F」もしくは「f」を付与する必要がある。（解説P363）"},
+  {id:"m5",
+   cat:"識別子",
+   src:"練習問題",
+   multi:true,
+   prompt:"クラス名として有効なものは次のどれですか。（2つ選択）",
+   code:"",
+   options:["class_bar", "$class_bar", "5class", "class-bar"],
+   answers:[0, 1],
+   exp:"選択肢A・Bにある「_」と「$」は識別子として使用可能。選択肢Dの「-」は使用できない。選択肢Cは数字が1文字目にあるため識別子として使えない（数字は2文字目以降であれば使用可能）。（解説P363）"},
+  {id:"m25",
+   cat:"ソースファイル",
+   src:"練習問題",
+   multi:true,
+   prompt:"クラスの説明として正しいものは次のどれですか。（3つ選択）",
+   code:"",
+   options:["main() メソッドが存在しないクラスは定義できない", "ソースファイルには、public クラスを含めなくても良い", "クラスは基本データ型である", "クラスは参照型である", "ソースファイルには、public クラスを 1 つだけ含めることができる", "すべてのクラスは、java コマンドで実行することができる"],
+   answers:[1, 3, 4],
+   exp:"main()メソッドをもたないクラスを定義することは可能（A誤り）。ソースファイルにpublicクラスを記述しなくてもコンパイル・実行ともに可能（B正）。クラスは参照型に含まれる（C誤り・D正）。ソースファイルにはpublicクラスを1つだけ含めることができ、その場合publicなクラス名とソースファイル名は同じにする必要がある（E正）。javaコマンドで実行可能なクラスはmain()メソッドをもつクラス（F誤り）。（解説P369）"},
+  {id:"m30",
+   cat:"クラス設計",
+   src:"練習問題",
+   multi:true,
+   prompt:"User クラスのコンストラクタ定義として正しいものは次のどれですか。（2つ選択）",
+   code:"",
+   options:["private User() {}", "public final User() {}", "private void User() {}", "public User(int id) {}", "private static User() {}"],
+   answers:[0, 3],
+   exp:"privateなコンストラクタ定義は可能（A正）。コンストラクタにfinal修飾子は付与できない（B誤り）。戻り値があるとメソッドとして判断されるためコンパイルは成功するがコンストラクタ定義とは判断されない（C誤り）。引数をもつpublicなコンストラクタ定義は可能（D正）。コンストラクタにstatic修飾子は付与できない（E誤り）。（解説P371）"},
+  {id:"m32",
+   cat:"オーバーロード",
+   src:"練習問題",
+   multi:true,
+   prompt:"メソッドのオーバーロードをするために、①に挿入するコードとして正しいものは次のどれですか。（2つ選択）",
+   code:"class User {\n  int method(int num) { return 1; }\n\n  [   ①   ]\n}",
+   options:["float method(int num) { return 1;}", "long method(int num) { return 1;}", "int method(char num) { return 1;}", "public int method(long num) { return 1;}", "public void method(int num) {}"],
+   answers:[2, 3],
+   exp:"オーバーロードをする際は引数の型・数・並びが異なっている必要がある。オーバーロードでは戻り値は無視されるため、同じであっても異なっていてもかまわない。A・B・Eは戻り値は異なるが引数の型と数が同じであるためオーバーロードとみなされず、問題文のメソッドと同じメソッドとして判断されコンパイルエラーになる。Cは引数がchar型、Dはlong型であるためオーバーロード。（解説P372）"},
+  {id:"m35",
+   cat:"カプセル化",
+   src:"練習問題",
+   multi:true,
+   prompt:"カプセル化を実現しているコードは次のどれですか。（3つ選択）",
+   code:"",
+   options:["private int id;", "public int id;", "private int getId() { return id; }", "public int getId() { return id; }", "private void setId(int id) { this.id = id; }", "public void setId(int id) { this.id = id; }"],
+   answers:[0, 3, 5],
+   exp:"カプセル化されたコードにおいて、実データである変数が他クラスからむやみに変更されることを防ぐため、一般的には変数は private 指定し、その変数にアクセスするメソッドは public 指定にすることが推奨されている。（解説P373）"},
+  {id:"m38",
+   cat:"継承",
+   src:"練習問題",
+   multi:true,
+   prompt:"スーパークラスの構成要素のうち、サブクラスが継承するものは次のどれですか。（2つ選択）",
+   code:"",
+   options:["public 修飾子が指定されたコンストラクタ", "private 修飾子が指定されたコンストラクタ", "final 修飾子のみ指定されたメソッド", "public 修飾子が指定されたインスタンスメソッド", "private 修飾子が指定されたインスタンスメソッド", "private 修飾子が指定された変数"],
+   answers:[2, 3],
+   exp:"継承時にサブクラスが引き継ぐのは、スーパークラスで定義した変数とメソッド。コンストラクタは引き継がれない。また private 修飾子が付与されたメンバは自クラス内のみ公開となり、サブクラスであってもアクセスできない。なお final 修飾子が付与されたメソッドはサブクラスでのオーバーライドが禁止となるが、サブクラスからアクセスは可能。（解説P373〜374）"},
+  {id:"m43",
+   cat:"オーバーロード",
+   src:"練習問題",
+   multi:true,
+   prompt:"メソッドのオーバーロードを行っているコードは次のどれですか。（3つ選択）",
+   code:"class ClassA {\n  long funcA(int num) { return 0; }\n  long funcB(int num, String str) { return 0; }\n}\nclass ClassB extends ClassA {\n  long funcA(int num) { return 0; }\n  int funcA(String str) { return 0; }\n  int funcA(long num) { return 0; }\n  public long funcB(int num, String str) { return 0; }\n  public long funcB(String str, int num) { return 0; }\n}",
+   options:["6 行目", "7 行目", "8 行目", "9 行目", "10 行目"],
+   answers:[1, 2, 4],
+   exp:"この出題は継承関係のあるオーバーロードを問うている。ClassAを継承したClassBクラスでは5つのメソッドを定義しており、このコードはすべてコンパイルは成功する。オーバーロードとしてみなされるのは7行目（選択肢B）、8行目（選択肢C）、10行目（選択肢E）。6行目（選択肢A）と9行目（選択肢D）はオーバーライドとしてみなされる。（解説P375〜376）"},
+  {id:"m45",
+   cat:"継承",
+   src:"練習問題",
+   multi:true,
+   prompt:"ClassA の構成要素のうち、ClassB が継承するものは次のどれですか。（2つ選択）",
+   code:"class ClassA {\n  private String msg;\n  int num;\n  ClassA(){  }\n  ClassA(String msg, int num) {\n    this.msg = msg;\n    this.num = num;\n  }\n  public void show() {\n    System.out.println(msg + \" : \" + num);\n  }\n}\nclass ClassB extends ClassA {\n}",
+   options:["コンストラクタ", "str 変数", "num 変数", "show() メソッド"],
+   answers:[2, 3],
+   exp:"継承時にサブクラスが引き継ぐのは、スーパークラスで定義した変数とメソッド。コンストラクタは引き継がれない。また private 修飾子が付与されたメンバは自クラス内のみ公開となりサブクラスであってもアクセスできない（msgはprivateなので対象外）。なお選択肢Bの str 変数はClassAに存在しない。（解説P376）"},
+  {id:"m58",
+   cat:"パッケージ",
+   src:"練習問題",
+   multi:true,
+   prompt:"com.example.city.Metropolitan クラスを利用する際の正しい import 文は次のどれですか。（2つ選択）",
+   code:"",
+   options:["import com.*;", "import com.example.*;", "import com.example.city.Metropolitan;", "import com.example.city.Met*;", "static import com.example.city.Metropolitan;", "import static com.example.city.Metropolitan;", "import com.example.city.*;"],
+   answers:[2, 6],
+   exp:"import文では import キーワードに続き、インポートしたいクラス名をパッケージ名から記述する。また、クラス名の代わりに「*」（アスタリスク）を使用することで、指定されたパッケージに属するすべてのクラスをインポートできる。（解説P379）"},
+];
+
+const EXTRA_QUESTIONS = [];
+
+const QUESTIONS = (function(){
+  var all=[...BOOK_QUESTIONS,...BOOK_MULTI_Q,...EXTRA_QUESTIONS];
+  var no=function(q){return parseInt(String(q.id).replace(/^\D+/,''),10)||0;};
+  return all.slice().sort(function(a,b){return no(a)-no(b);});
+})();
+
+const ADVICE = {
+ "Javaの仕組み": "JVMの役割（ロード→バイトコードの解釈→実行）とコンパイラの役割を切り分けて覚える。",
+ "ソースファイル": "publicクラスは1ソースに1つでファイル名と一致。package文は先頭、import文はその次。",
+ "型変換": "暗黙の型変換が効くのは情報が失われない方向だけ。リテラルのL・F・fと \"\" の有無に注意。",
+ "識別子": "識別子に使えるのは英数字と _ と $。先頭に数字は不可、- は不可。",
+ "演算子": "前置(++x)は先に加算、後置(x++)は後で加算。複合代入は右辺を先に評価する。",
+ "条件分岐": "switchのbreak忘れはフォールスルー。if条件式はboolean値でなければならない。",
+ "参照型": "== は参照先の同一性を比較する。null代入は変数宣言だけでオブジェクトは作られない。",
+ "繰り返し": "do-whileは必ず1回実行。continueは以降をスキップ。到達不能コードはコンパイルエラー。",
+ "配列": "要素のデフォルト値と、要素外アクセス（実行時のArrayIndexOutOfBoundsException）を区別する。",
+ "クラス設計": "コンストラクタは戻り値を書かない・final/staticは付けられない。ローカル変数とフィールドの優先順位に注意。",
+ "オーバーロード": "引数の型・数・並びが違えばオーバーロード。戻り値の違いだけでは成立しない。",
+ "カプセル化": "変数はprivate、アクセス用メソッドはpublicが基本形。finalで定数化。",
+ "static": "staticメソッドからは非staticなメンバに触れない。逆（インスタンス→static）は可能。",
+ "継承": "引き継ぐのは変数とメソッド。コンストラクタとprivateメンバは引き継がれない。",
+ "オーバーライド": "名前と引数リストが同じ／戻り値は同じ型かサブクラス型／アクセス修飾子は同じか広く。",
+ "抽象クラス": "抽象クラスはインスタンス化できない。抽象メソッドは具象クラスで必ず実装する。",
+ "インタフェース": "変数は暗黙的に public static final。実装はクラス、インタフェース同士はextendsで多重継承可。",
+ "ポリモーフィズム": "呼ばれるメソッドは実際のオブジェクトで決まる。ダウンキャストは実行時に失敗しうる。",
+ "パッケージ": "package文→import文の順。修飾子なしのメンバは同じパッケージからのみアクセス可。"
+};
+
+const FIGS = {};
+const TRACE = {};
+
+/* ============================================================
+   ▲▲▲ 差し替えここまで（この下はエンジン：全科目共通・変更不要） ▲▲▲
+   ============================================================ */
+
+const LETTERS=['A','B','C','D','E','F','G'];
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{perCat:{},log:[]}}catch(e){return{perCat:{},log:[]}}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+let queue=QUESTIONS.map((_,i)=>i);   // 出題順（インデックス）
+let pos=0;                            // queue内の現在位置
+let sessCorrect=0, sessDone=0;
+let answered=false;
+
+const stage=document.getElementById('stage');
+const pbar=document.getElementById('pbar');
+const scoreEl=document.getElementById('score');
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function renderFigure(q){
+  const f=FIGS[q.id]; if(!f) return '';
+  const lines=q.code.split('\n');
+  let rows='';
+  lines.forEach((ln,idx)=>{
+    const n=idx+1, an=f.lines[n], t=an?an[0]:'';
+    rows+=`<div class="figline ${t}"><span class="fno">${n}</span><span class="fcode">${esc(ln)||' '}</span></div>`;
+    if(an) rows+=`<div class="annorow ${t}"><span class="anno">${esc(an[1])}</span></div>`;
+  });
+  const out=f.out?`<div class="figout">▸ ${esc(f.out)}</div>`:'';
+  return `<div class="figure reveal"><div class="fig-label">図解 — プログラムの流れ</div><div class="figbox">${rows}</div>${out}</div>`;
+}
+
+// 問題文のコードを、行番号つきの注釈可能ブロックとして描画（回答前は注釈なし）
+function codeBlockHtml(q){
+  if(!q.code) return '';
+  const lines=q.code.split('\n');
+  const rows=lines.map((ln,i)=>`<div class="figline" data-ln="${i+1}"><span class="fno">${i+1}</span><span class="fcode">${esc(ln)||' '}</span></div>`).join('');
+  return `<div class="figbox qcode" id="qcode">${rows}</div>`;
+}
+
+// 回答後、問題文のコードに直接ハイライト＋連結線＋結果を差し込む
+function revealFigure(q){
+  const f=FIGS[q.id]; const box=document.getElementById('qcode');
+  if(!f||!box) return;
+  Object.keys(f.lines).sort((a,b)=>a-b).forEach(n=>{
+    const t=f.lines[n][0], txt=f.lines[n][1];
+    const line=box.querySelector('.figline[data-ln="'+n+'"]');
+    if(!line) return;
+    line.classList.add(t,'reveal');
+    const ar=document.createElement('div'); ar.className='annorow '+t+' reveal';
+    ar.innerHTML='<span class="anno">'+esc(txt)+'</span>';
+    line.after(ar);
+  });
+  if(f.out){
+    const o=document.createElement('div'); o.className='figout qfigout reveal';
+    o.textContent='▸ '+f.out; box.after(o);
+  }
+}
+
+function renderTrace(q){
+  const t=TRACE[q.id]; if(!t) return '';
+  const head=t.cols.map(c=>`<th>${esc(c)}</th>`).join('');
+  const body=t.rows.map((r,ri)=>{
+    const tds=r.map((c,ci)=>{
+      const st=ci===r.length-1?' class="st"':'';
+      let cell;
+      if(c==='null') cell='<span class="nul">null</span>';
+      else if(c==='') cell='<span class="nul">·</span>';
+      else cell=esc(c);
+      return `<td${st}>${cell}</td>`;
+    }).join('');
+    return `<tr class="${(t.hot!=null&&ri===t.hot)?'hot':''}">${tds}</tr>`;
+  }).join('');
+  return `<div class="trace reveal"><details class="tdet"><summary>変数の変化を追う（トレース）</summary><div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></details></div>`;
+}
+
+let selected=new Set();
+// 横向き2カラムの幅を「選択肢の文字量」と「コードの横幅」に応じて自動調整する
+// 選択肢が短ければ左(コード)を広く、選択肢が長ければ右(選択肢)を広く。
+// インラインstyleではなくCSS変数 --gtc を渡すことで、900px以下のメディアクエリ(1カラム)を壊さない
+function qcolStyle(q){
+  if(!q.code) return '';                                   // コード無しは .nocode の中央1カラムに任せる
+  const w=s=>{let n=0;for(const ch of String(s)){n+=ch.charCodeAt(0)>0xff?2:1;}return n;}; // 全角=2,半角=1
+  const optW=Math.max(1,...(q.options||['']).map(o=>Math.max(1,...String(o).split('\n').map(w)))); // 選択肢の最長行
+  const codeW=Math.max(1,...q.code.split('\n').map(w));    // コードの最長行
+  let l=1,r=1;
+  if(optW<=16){l=1.8;r=1;}          // 選択肢がとても短い(記号/単語)→コードを大きく
+  else if(optW<=26){l=1.4;r=1;}     // やや短い
+  else if(optW>=60){l=1;r=1.6;}     // とても長い(文章/コード)→右を大きく
+  else if(optW>=42){l=1;r=1.3;}     // やや長い
+  if(codeW>=64)l+=0.35;             // コードが横に長い場合は左に加算
+  return ` style="--gtc:minmax(0,${l}fr) minmax(0,${r}fr)"`;
+}
+function renderQuestion(){
+  answered=false; selected=new Set();
+  const q=QUESTIONS[queue[pos]];
+  pbar.style.width=(pos/queue.length*100)+'%';
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  stage.innerHTML=`
+    <div class="card reveal">
+      <div class="eyebrow">
+        <span class="cat">${esc(q.cat)}</span>
+        <span class="qnum">${pos+1} / ${queue.length}</span>
+      </div>
+      <div class="prompt">${esc(q.prompt)} ${q.multi?'<span class="multi-tag">複数選択</span>':''}</div>
+      <div class="qcols${q.code?'':' nocode'}"${qcolStyle(q)}>
+        <div class="qcol-l">${codeBlockHtml(q)}</div>
+        <div class="qcol-r">
+          <div class="opts" id="opts"></div>
+          <div id="after"></div>
+        </div>
+      </div>
+    </div>`;
+  const opts=document.getElementById('opts');
+  const order=shuffle(q.options.map((_,i)=>i));   // 毎回シャッフル
+  q._order=order;
+  order.forEach((origIdx,dispIdx)=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.type='button';
+    b.innerHTML=`<span class="key">${LETTERS[dispIdx]}</span><span class="txt">${esc(q.options[origIdx])}</span><span class="mark"></span>`;
+    b.onclick=()=> q.multi ? toggleSel(dispIdx,b) : choose(dispIdx);
+    opts.appendChild(b);
+  });
+  if(q.multi){
+    const bar=document.createElement('div'); bar.className='actions'; bar.id='mbar';
+    bar.innerHTML=`<button class="btn primary" type="button" id="submitBtn" onclick="submitMulti()" disabled>確定する（${q.answers.length}個選ぶ）</button>`;
+    opts.after(bar);
+  }
+}
+
+function toggleSel(dispIdx,btn){
+  if(answered) return;
+  if(selected.has(dispIdx)){selected.delete(dispIdx);btn.classList.remove('sel');}
+  else{selected.add(dispIdx);btn.classList.add('sel');}
+  const sb=document.getElementById('submitBtn'); if(sb) sb.disabled = selected.size===0;
+}
+
+function submitMulti(){
+  if(answered) return; answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=new Set(q.answers.map(a=>q._order.indexOf(a)));
+  const correct = selected.size===correctDisp.size && [...selected].every(x=>correctDisp.has(x));
+  document.querySelectorAll('#opts .opt').forEach((b,bi)=>{
+    b.disabled=true; b.classList.remove('sel');
+    const isC=correctDisp.has(bi), isS=selected.has(bi);
+    if(isC){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(isS&&!isC){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  const mbar=document.getElementById('mbar'); if(mbar) mbar.remove();
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  const answerLetters=[...correctDisp].sort((a,b)=>a-b).map(i=>LETTERS[i]).join('・');
+  const last=pos===queue.length-1;
+  document.getElementById('after').innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${answerLetters}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function choose(i){
+  if(answered) return;
+  answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=q._order.indexOf(q.answer);   // シャッフル後の正解位置
+  const correct=i===correctDisp;
+  const btns=document.querySelectorAll('#opts .opt');
+  btns.forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===correctDisp){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(bi===i&&!correct){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  // 記録（累積・端末保存）
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+
+  const after=document.getElementById('after');
+  const last=pos===queue.length-1;
+  after.innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${LETTERS[correctDisp]}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function next(){
+  if(pos<queue.length-1){pos++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+  else showResults();
+}
+
+function showResults(){
+  pbar.style.width='100%';
+  const s=load();
+  const cats=Object.keys(ADVICE);
+  let totA=0,totC=0;
+  cats.forEach(c=>{const d=s.perCat[c];if(d){totA+=d.a;totC+=d.c;}});
+  const pct=totA?Math.round(totC/totA*100):0;
+  const weak=cats.filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+
+  let barsHtml=cats.map(c=>{
+    const d=s.perCat[c]||{a:0,c:0};
+    const p=d.a?Math.round(d.c/d.a*100):0;
+    const isWeak=d.a>0&&p<70;
+    const col=d.a===0?'var(--border)':(p<50?'var(--ng)':p<70?'var(--accent)':'var(--ok)');
+    return `<div class="bar-row">
+      <div class="bar-top"><span>${esc(c)}${isWeak?'<span class="weak-badge">要復習</span>':''}</span>
+      <span class="n">${d.a?p+'% ('+d.c+'/'+d.a+')':'未回答'}</span></div>
+      <div class="bar-track"><i style="width:${d.a?p:0}%;background:${col}"></i></div></div>`;
+  }).join('');
+
+  let msg = totA===0?'まだ回答がありません。':
+    pct>=80?'かなり good。取りこぼした分野だけ詰めれば合格圏です。':
+    pct>=60?'あと一歩。下の「要復習」分野を重点的に。':
+    '基礎の詰め直しから。要復習の分野を1つずつ潰しましょう。';
+
+  let adviceHtml = weak.length
+    ? weak.map(c=>`<div class="advice"><div class="a-cat">${esc(c)} <span class="weak-badge">要復習</span></div><div class="a-txt">${esc(ADVICE[c])}</div></div>`).join('')
+    : (totA?'<div class="empty">要復習の分野はありません。全分野70%以上。この調子！</div>':'<div class="empty">問題を解くと、ここに弱点分野と対策が出ます。</div>');
+
+  stage.innerHTML=`
+   <div class="card reveal">
+     <div class="res-head">
+       <div class="ring" style="--p:${pct}"><div class="num"><b>${pct}%</b><span>累計正答率</span></div></div>
+       <div class="res-sum"><h2>成績サマリー</h2><p>${msg}</p>
+         <p style="margin-top:6px">累計 ${totC} / ${totA} 問正解</p></div>
+     </div>
+     <div class="sec-label">分野別の正答率</div>
+     <div class="bars">${barsHtml}</div>
+     <div class="sec-label">重点対策（要復習の分野）</div>
+     ${adviceHtml}
+     <div class="actions">
+       <button class="btn ghost" type="button" onclick="resetAll()">記録をリセット</button>
+       ${weak.length?'<button class="btn" type="button" onclick="retryWeak()">要復習だけ再挑戦</button>':''}
+       <button class="btn primary" type="button" onclick="restart()">もう一度：全問</button>
+     </div>
+   </div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){queue=QUESTIONS.map((_,i)=>i);pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+function retryWeak(){
+  const s=load();
+  const weak=Object.keys(ADVICE).filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+  const idx=QUESTIONS.map((q,i)=>i).filter(i=>weak.includes(QUESTIONS[i].cat));
+  queue=idx.length?idx:QUESTIONS.map((_,i)=>i);
+  pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(){save({perCat:{},log:[]});showResults();}
+
+renderQuestion();
+</script>
+
+<!-- cbt-nav-added -->
+<style>
+  /* ===== 問題選択画面（後付け・既存レイアウトは変更しない） ===== */
+
+  /* 各問題ページに出るのはこのボタンだけ。左下に固定 */
+  .cbtopen{position:fixed;left:14px;bottom:14px;z-index:60;
+    font:600 13px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:12px 18px;cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.18), 0 8px 22px rgba(0,0,0,.14)}
+  .cbtopen:hover{filter:brightness(1.06)}
+  .cbtopen:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* 問題選択画面（全画面オーバーレイ） */
+  .cbtscreen{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+    padding:16px;background:rgba(10,12,16,.55)}
+  .cbtscreen[hidden]{display:none}
+  .cbtpanel{width:min(860px,100%);max-height:min(86vh,760px);display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .cbtpanel-head{display:flex;align-items:center;gap:12px;padding:14px 16px;
+    border-bottom:1px solid var(--border);background:var(--surface-2)}
+  .cbtpanel-head h2{font:600 15px/1.3 var(--sans);color:var(--ink);margin:0}
+  .cbtcount{font:400 12px/1 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums}
+  .cbtclose{margin-left:auto;font:500 13px/1 var(--sans);color:var(--muted);
+    background:var(--surface);border:1px solid var(--border);border-radius:999px;
+    padding:8px 14px;cursor:pointer}
+  .cbtclose:hover{color:var(--ink);border-color:var(--ink)}
+  .cbtfilters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+  .cbtchip{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:7px 12px;cursor:pointer}
+  .cbtchip.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtbody{padding:12px 16px;overflow:auto;flex:1}
+  .cbtgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+  .cbtq{font:600 14px/1 var(--mono);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:10px;padding:12px 0;cursor:pointer;
+    font-variant-numeric:tabular-nums;position:relative}
+  .cbtq:hover{border-color:var(--accent);color:var(--accent)}
+  .cbtq.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .cbtq.ng{background:var(--ng-soft);border-color:var(--ng);color:var(--ng)}
+  .cbtq.fl::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent)}
+  .cbtq.cur{outline:2px solid var(--accent);outline-offset:1px}
+  .cbtempty{font:400 13px/1.6 var(--sans);color:var(--muted);padding:10px 2px}
+  .cbtfoot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    padding:12px 16px;border-top:1px solid var(--border);background:var(--surface-2)}
+  .cbtlegend{font:400 11.5px/1.6 var(--sans);color:var(--faint);
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .cbtlegend i{display:inline-block;width:11px;height:11px;border-radius:3px;
+    border:1px solid var(--border);margin-right:5px;vertical-align:-1px}
+  .cbtlegend i.ok{background:var(--ok-soft);border-color:var(--ok)}
+  .cbtlegend i.ng{background:var(--ng-soft);border-color:var(--ng)}
+  .cbtlegend i.fl{background:var(--accent)}
+  .cbtrun{font:600 12.5px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:9px 16px;cursor:pointer}
+  .cbtrun[disabled]{opacity:.45;cursor:default}
+
+  /* 問題カード右上の「後で見直す」 */
+  .cbtflag{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:6px 11px;cursor:pointer;margin-left:auto}
+  .cbtflag.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtprev{font:400 12px/1 var(--sans);color:var(--muted);margin-left:8px}
+
+  /* 左下のボタンが最下部の内容に重ならないよう余白を足す */
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  @media (max-width:640px){
+    .cbtopen{left:10px;bottom:10px;padding:11px 16px}
+    .cbtgrid{grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+    .cbtscreen{padding:10px}
+  }
+</style>
+<script>
+(function(){
+  // エンジンが読み込まれていない画面（雛形の説明ページ等）では何もしない
+  if(typeof QUESTIONS==='undefined' || typeof renderQuestion!=='function') return;
+  var stage=document.getElementById('stage');
+  if(!stage || !QUESTIONS.length) return;
+
+  // --- 進捗の保存（科目ごとに別キー。既存の成績データとは混ぜない） ---
+  var CKEY=(typeof KEY!=='undefined'?KEY:'quiz')+'_cbt';
+  var st={};
+  try{ st=JSON.parse(localStorage.getItem(CKEY))||{}; }catch(e){ st={}; }
+  function persist(){ try{ localStorage.setItem(CKEY,JSON.stringify(st)); }catch(e){} }
+
+  var filter='all';
+
+  // --- 左下のボタン（各問題ページに出るのはこれだけ） ---
+  var openBtn=document.createElement('button');
+  openBtn.type='button';
+  openBtn.className='cbtopen';
+  openBtn.textContent='問題選択画面';
+  document.body.appendChild(openBtn);
+
+  // --- 問題選択画面（全画面オーバーレイ） ---
+  var scr=document.createElement('div');
+  scr.className='cbtscreen';
+  scr.hidden=true;
+  scr.innerHTML=
+    '<div class="cbtpanel" role="dialog" aria-modal="true" aria-label="問題選択画面">'
+   +  '<div class="cbtpanel-head">'
+   +    '<h2>問題を選ぶ</h2><span class="cbtcount" id="cbtCount"></span>'
+   +    '<button type="button" class="cbtclose" id="cbtClose">閉じる</button>'
+   +  '</div>'
+   +  '<div class="cbtfilters">'
+   +    '<button type="button" class="cbtchip on" data-f="all">すべて</button>'
+   +    '<button type="button" class="cbtchip" data-f="todo">未解答</button>'
+   +    '<button type="button" class="cbtchip" data-f="ng">間違えた</button>'
+   +    '<button type="button" class="cbtchip" data-f="flag">見直し</button>'
+   +  '</div>'
+   +  '<div class="cbtbody"><div class="cbtgrid" id="cbtGrid"></div></div>'
+   +  '<div class="cbtfoot">'
+   +    '<div class="cbtlegend">'
+   +      '<span><i></i>未解答</span><span><i class="ok"></i>正解</span>'
+   +      '<span><i class="ng"></i>不正解</span><span><i class="fl"></i>見直し</span>'
+   +    '</div>'
+   +    '<button type="button" class="cbtrun" id="cbtRun">この絞り込みだけを順に解く</button>'
+   +  '</div>'
+   +'</div>';
+  document.body.appendChild(scr);
+
+  var grid=document.getElementById('cbtGrid');
+  var runBtn=document.getElementById('cbtRun');
+  var countEl=document.getElementById('cbtCount');
+  var closeBtn=document.getElementById('cbtClose');
+
+  function openScreen(){ scr.hidden=false; paint(); closeBtn.focus(); }
+  function closeScreen(){ scr.hidden=true; openBtn.focus(); }
+  openBtn.onclick=openScreen;
+  closeBtn.onclick=closeScreen;
+  scr.addEventListener('click',function(e){ if(e.target===scr) closeScreen(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !scr.hidden) closeScreen(); });
+
+  scr.querySelectorAll('.cbtchip').forEach(function(c){
+    c.onclick=function(){
+      filter=c.dataset.f;
+      scr.querySelectorAll('.cbtchip').forEach(function(x){ x.classList.toggle('on', x===c); });
+      paint();
+    };
+  });
+
+  // 現在の絞り込みに合致する問題インデックス
+  function picked(){
+    var out=[];
+    QUESTIONS.forEach(function(q,i){
+      var s=st[q.id]||{};
+      if(filter==='todo' && s.r) return;
+      if(filter==='ng'   && s.r!=='ng') return;
+      if(filter==='flag' && !s.f) return;
+      out.push(i);
+    });
+    return out;
+  }
+
+  function paint(){
+    if(scr.hidden) return;
+    var list=picked();
+    var done=QUESTIONS.filter(function(q){ return (st[q.id]||{}).r; }).length;
+    countEl.textContent='解答済み '+done+' / '+QUESTIONS.length;
+    grid.innerHTML='';
+    if(!list.length){
+      grid.innerHTML='<div class="cbtempty">該当する問題はありません。</div>';
+      runBtn.disabled=true;
+      return;
+    }
+    runBtn.disabled=false;
+    list.forEach(function(i){
+      var q=QUESTIONS[i], s=st[q.id]||{};
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='cbtq'+(s.r==='ok'?' ok':s.r==='ng'?' ng':'')+(s.f?' fl':'')
+                 +(queue[pos]===i?' cur':'');
+      b.textContent=String(q.id).replace(/^\D+/,'')||String(i+1);
+      b.title=(q.cat||'')+(s.r?(s.r==='ok'?'／前回○':'／前回×'):'');
+      b.onclick=function(){ jump(i); };
+      grid.appendChild(b);
+    });
+  }
+
+  // 任意の問題へジャンプ（出題キューに無ければ全問キューに戻してから移動）
+  function jump(i){
+    var at=queue.indexOf(i);
+    if(at<0){ queue=QUESTIONS.map(function(_,k){return k;}); at=i; }
+    pos=at;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  runBtn.onclick=function(){
+    var list=picked();
+    if(!list.length) return;
+    queue=list; pos=0;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  function toggleFlag(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].f=!st[q.id].f;
+    persist(); decorate(); paint();
+  }
+
+  // 問題カードに「後で見直す」ボタンと前回結果を差し込む
+  function decorate(){
+    var eb=document.querySelector('#stage .eyebrow');
+    if(!eb) return;
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var s=st[q.id]||{};
+    var old=eb.querySelector('.cbtflag'); if(old) old.remove();
+    var oldp=eb.querySelector('.cbtprev'); if(oldp) oldp.remove();
+    if(s.r){
+      var p=document.createElement('span');
+      p.className='cbtprev';
+      p.textContent = s.r==='ok' ? '前回：○正解' : '前回：×不正解';
+      eb.appendChild(p);
+    }
+    var f=document.createElement('button');
+    f.type='button';
+    f.className='cbtflag'+(s.f?' on':'');
+    f.textContent = s.f ? '見直しに登録済み' : '後で見直す';
+    f.onclick=toggleFlag;
+    eb.appendChild(f);
+  }
+
+  // 解答結果を拾って保存する（正解/不正解の判定は既存エンジンの表示を読む）
+  function record(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var v=document.querySelector('#after .verdict'); if(!v) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].r = v.classList.contains('ok') ? 'ok' : 'ng';
+    persist(); paint();
+  }
+
+  // --- 既存関数をラップ（中身は書き換えない） ---
+  var _render=renderQuestion;
+  renderQuestion=function(){ _render.apply(this,arguments); decorate(); paint(); };
+
+  if(typeof choose==='function'){
+    var _choose=choose;
+    choose=function(){ _choose.apply(this,arguments); record(); };
+  }
+  if(typeof submitMulti==='function'){
+    var _submit=submitMulti;
+    submitMulti=function(){ _submit.apply(this,arguments); record(); };
+  }
+
+  decorate();
+})();
+</script>
+
+<!-- back-to-index (jinji) -->
+<style>
+.appshome{position:fixed;right:14px;z-index:9999;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  font:600 13px/1 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  color:#16232b;background:#ffffff;border:1px solid rgba(0,0,0,.16);border-radius:999px;
+  padding:11px 16px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.16),0 8px 20px rgba(0,0,0,.10)}
+.appshome:hover{filter:brightness(.97)}
+.appshome:focus-visible{outline:2px solid #136b5b;outline-offset:2px}
+@media (prefers-color-scheme:dark){
+  .appshome{color:#e9eef1;background:#1d242b;border-color:rgba(255,255,255,.18);
+    box-shadow:0 2px 6px rgba(0,0,0,.45)}}
+@media (max-width:520px){.appshome{right:10px;padding:10px 14px;font-size:12.5px}}
+</style>
+<a class="appshome" href="../">&#8592; アプリ一覧</a>
+<script>
+if('serviceWorker' in navigator){addEventListener('load',function(){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+</script>
+</body></html>

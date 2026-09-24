@@ -1,0 +1,930 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+
+
+
+
+
+<meta name="format-detection" content="telephone=no">
+
+<style>
+  /* iPhoneのノッチ・ホームインジケータを避ける（既存レイアウトは変更しない） */
+  body{
+    padding-left:max(0px,env(safe-area-inset-left));
+    padding-right:max(0px,env(safe-area-inset-right));
+    padding-bottom:max(0px,env(safe-area-inset-bottom));
+    -webkit-text-size-adjust:100%;
+  }
+  /* ホーム画面から開いた時に文字選択でズレるのを防ぐ（入力欄は除く） */
+  @media (display-mode:standalone){
+    body{-webkit-touch-callout:none}
+    input,textarea{-webkit-user-select:text}
+  }
+</style>
+<!-- viewport: pwa側で指定 --><title>LPIC Level1 演習コンソール（101試験）</title><!-- pwa-standalone (jinji) -->
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LPIC Level1（">
+<meta name="theme-color" content="#F7F5F1">
+<link rel="apple-touch-icon" href="../icon-192.png">
+<link rel="icon" href="../icon-192.png">
+<style>
+@media (display-mode:standalone){body{padding-top:env(safe-area-inset-top)}}
+</style>
+</head><body>
+<meta charset="utf-8">
+<title>LPIC Level1 演習コンソール（101試験）</title>
+<style>
+  :root{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+    --radius:14px; --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+      --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+      --accent:#E4A24A; --accent-soft:#3A2F1E;
+      --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+      --code-bg:#0F1318; --code-ink:#CDD3C6;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#F7F5F1; --surface:#FFFFFF; --surface-2:#FBF9F5; --border:#E7E1D7;
+    --ink:#23262B; --muted:#6B7280; --faint:#9AA3AF;
+    --accent:#C9761B; --accent-soft:#F4E4CE;
+    --ok:#2E9E6B; --ok-soft:#DCF2E7; --ng:#D9534A; --ng-soft:#FBE3E1;
+    --code-bg:#F3EEE6; --code-ink:#33372E;
+    --shadow:0 1px 2px rgba(30,25,15,.05), 0 8px 24px rgba(30,25,15,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#14171C; --surface:#1B1F26; --surface-2:#20252D; --border:#2C323C;
+    --ink:#E7E9EC; --muted:#9AA3AF; --faint:#6B7280;
+    --accent:#E4A24A; --accent-soft:#3A2F1E;
+    --ok:#48B98A; --ok-soft:#173026; --ng:#E5766D; --ng-soft:#331E1C;
+    --code-bg:#0F1318; --code-ink:#CDD3C6;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;margin:0}
+  .wrap{max-width:660px;margin:0 auto;padding:20px 18px 64px}
+  .topbar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px);padding:14px 0 12px;margin-bottom:18px;border-bottom:1px solid var(--border)}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand h1{font-size:16px;margin:0;font-weight:650;letter-spacing:.01em}
+  .brand .tag{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;
+    letter-spacing:.14em;font-weight:600}
+  .meta{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .progress{flex:1;height:7px;background:var(--border);border-radius:99px;overflow:hidden}
+  .progress>i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;
+    transition:width .35s ease}
+  .score{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+    white-space:nowrap}
+  .score b{color:var(--ink)}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 20px}
+  .eyebrow{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .cat{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--accent);font-weight:650}
+  .src{font-size:11px;color:var(--faint)}
+  .qnum{font-family:var(--mono);font-size:12px;color:var(--faint)}
+  .prompt{font-size:16.5px;font-weight:600;margin:2px 0 14px;text-wrap:balance}
+  pre.code{background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:15.5px;
+    line-height:1.65;padding:14px 15px;border-radius:10px;border:1px solid var(--border);
+    overflow-x:auto;margin:0 0 18px;white-space:pre;tab-size:2}
+
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{display:flex;gap:11px;align-items:flex-start;text-align:left;width:100%;cursor:pointer;
+    background:var(--surface-2);border:1.5px solid var(--border);border-radius:11px;
+    padding:13px 14px;color:var(--ink);font-family:inherit;font-size:15px;line-height:1.5;
+    transition:border-color .15s,background .15s,transform .05s}
+  .opt:hover:not(:disabled){border-color:var(--accent)}
+  .opt:active:not(:disabled){transform:translateY(1px)}
+  .opt:disabled{cursor:default}
+  .opt .key{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--muted);
+    border:1.5px solid var(--border);border-radius:7px;min-width:26px;height:26px;display:flex;
+    align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;transition:.15s}
+  .opt .txt{flex:1;padding-top:1px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .opt .mark{font-size:18px;line-height:1.3;flex:0 0 auto;opacity:0}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.correct .key{border-color:var(--ok);background:var(--ok);color:#fff}
+  .opt.correct .mark{opacity:1;color:var(--ok)}
+  .opt.wrong{border-color:var(--ng);background:var(--ng-soft)}
+  .opt.wrong .key{border-color:var(--ng);background:var(--ng);color:#fff}
+  .opt.wrong .mark{opacity:1;color:var(--ng)}
+  .opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+  .opt.sel .key{border-color:var(--accent);background:var(--accent);color:#fff}
+  .multi-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;
+    color:var(--accent);border:1px solid var(--accent);border-radius:5px;padding:1px 6px;
+    vertical-align:2px;white-space:nowrap}
+
+  .verdict{display:flex;align-items:center;gap:8px;margin:16px 0 4px;font-weight:700;font-size:15px}
+  .verdict.ok{color:var(--ok)} .verdict.ng{color:var(--ng)}
+  .exp{background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:8px;padding:13px 15px;font-size:14px;color:var(--ink);margin-top:6px}
+  .exp code{font-family:var(--mono);font-size:12.5px;background:var(--code-bg);padding:1px 5px;
+    border-radius:4px;color:var(--code-ink)}
+  .exp b{color:var(--ink)}
+  /* AI質問欄 */
+  .askbox{margin-top:16px;border-top:1px dashed var(--border);padding-top:14px}
+  .ask-head{font-size:13px;font-weight:650;color:var(--muted);margin-bottom:8px}
+  .ask-q{width:100%;box-sizing:border-box;background:var(--surface-2);border:1.5px solid var(--border);border-radius:9px;padding:10px 12px;font-family:inherit;font-size:14px;color:var(--ink);resize:vertical}
+  .ask-q:focus{outline:none;border-color:var(--accent)}
+  .ask-row{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap}
+  .ask-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13.5px;font-weight:650;cursor:pointer}
+  .ask-btn:hover{filter:brightness(1.05)}
+  .ask-chip{background:var(--surface-2);color:var(--ink);border:1px solid var(--border);border-radius:99px;padding:7px 13px;font-size:12.5px;cursor:pointer}
+  .ask-chip:hover{border-color:var(--accent);color:var(--accent)}
+  .ask-hint{font-size:12px;color:var(--muted)}
+  .ask-a{display:none;margin-top:12px;background:var(--surface-2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;padding:12px 14px;font-size:14px;line-height:1.7;color:var(--ink);white-space:pre-wrap}
+  .reveal{animation:rise .28s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.reveal{animation:none}.progress>i{transition:none}}
+
+  /* 図解（コード注釈） */
+  .figure{margin-top:14px}
+  .fig-label{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin-bottom:6px;font-weight:650}
+  .figbox{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:8px 0;
+    overflow-x:auto;font-family:var(--mono);font-size:15.5px;line-height:1.3}
+  .figline{display:flex;gap:10px;padding:0 12px;white-space:pre;min-width:max-content}
+  .figline .fno{color:var(--faint);min-width:1.5em;text-align:right;flex:0 0 auto;user-select:none}
+  .figline .fcode{color:var(--code-ink)}
+  .figline.err{background:var(--ng-soft);box-shadow:inset 3px 0 0 var(--ng)}
+  .figline.info{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+  .figline.ok{background:var(--ok-soft);box-shadow:inset 3px 0 0 var(--ok)}
+  .figline.mute{box-shadow:inset 3px 0 0 var(--border)}
+  .figline.mute .fcode{color:var(--faint)}
+  /* 連結線つき注釈：該当行から L字の線＋矢印で枝分かれ */
+  .annorow{position:relative;padding:3px 12px 9px 42px;min-width:max-content}
+  .annorow::before{content:"";position:absolute;left:5px;top:-4px;width:17px;height:16px;
+    border-left:2px solid currentColor;border-bottom:2px solid currentColor;border-bottom-left-radius:8px;opacity:.9}
+  .annorow::after{content:"";position:absolute;left:20px;top:7px;width:0;height:0;
+    border:5px solid transparent;border-left:7px solid currentColor;opacity:.9}
+  .annorow.err{color:var(--ng)}
+  .annorow.info{color:var(--accent)}
+  .annorow.ok{color:var(--ok)}
+  .annorow.mute{color:var(--faint)}
+  .annorow .anno{font-family:var(--sans);font-size:12.5px;line-height:1.5;white-space:normal;max-width:46ch;display:block}
+  .annorow.ok .anno{font-weight:600}
+  .figout{margin-top:9px;font-family:var(--mono);font-size:12.5px;color:var(--ink);font-weight:700}
+  .figbox.qcode{margin:0 0 16px;font-size:15.5px}
+  .qfigout{margin:8px 2px 16px}
+  /* 変数トレース表（クリックで開閉） */
+  .trace{margin-top:14px}
+  .trace details{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .trace summary{cursor:pointer;list-style:none;padding:9px 13px;font-family:var(--mono);font-size:11px;
+    text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:650;
+    background:var(--surface-2);display:flex;align-items:center;gap:8px;user-select:none}
+  .trace summary::-webkit-details-marker{display:none}
+  .trace summary::before{content:"▸";color:var(--accent)}
+  .trace details[open] summary::before{content:"▾"}
+  .trace summary:hover{color:var(--ink)}
+  .trace summary:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+  .tscroll{overflow-x:auto;border-top:1px solid var(--border)}
+  .trace table{border-collapse:collapse;width:100%;font-size:12.5px}
+  .trace th,.trace td{border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+    padding:6px 10px;text-align:left;white-space:normal;vertical-align:top;overflow-wrap:anywhere}
+  .trace th{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;
+    color:var(--muted);background:var(--surface-2);white-space:nowrap}
+  .trace td{font-family:var(--mono);color:var(--code-ink);font-variant-numeric:tabular-nums}
+  .trace td.st{font-family:var(--sans);color:var(--ink)}
+  .trace tr.hot td{background:var(--ng-soft)}
+  .trace .nul{color:var(--faint)}
+  .trace tbody tr:last-child td{border-bottom:none}
+  .trace th:last-child,.trace td:last-child{border-right:none}
+
+  .actions{display:flex;gap:10px;margin-top:18px}
+  .btn{font-family:inherit;font-size:14.5px;font-weight:600;border-radius:10px;padding:11px 18px;
+    cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--ink);
+    transition:.15s;flex:0 0 auto}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;margin-left:auto}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn.ghost{color:var(--muted)}
+
+  /* results */
+  .res-head{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .ring{--p:0;width:104px;height:104px;border-radius:50%;flex:0 0 auto;
+    background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--border) 0);
+    display:grid;place-items:center;position:relative}
+  .ring::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--surface)}
+  .ring .num{position:relative;z-index:1;text-align:center}
+  .ring .num b{font-size:26px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .ring .num span{display:block;font-size:11px;color:var(--muted)}
+  .res-sum h2{margin:0 0 4px;font-size:18px}
+  .res-sum p{margin:0;color:var(--muted);font-size:13.5px}
+  .sec-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--faint);margin:22px 0 10px;font-weight:650}
+  .bars{display:flex;flex-direction:column;gap:11px}
+  .bar-row .bar-top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px}
+  .bar-row .bar-top .n{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+  .bar-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+  .bar-track>i{display:block;height:100%;border-radius:99px}
+  .weak-badge{font-size:10.5px;font-family:var(--mono);color:var(--ng);border:1px solid var(--ng);
+    border-radius:5px;padding:0 5px;margin-left:7px;vertical-align:1px}
+  .advice{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+    margin-top:10px}
+  .advice .a-cat{font-weight:650;font-size:14px;margin-bottom:3px;display:flex;align-items:center}
+  .advice .a-txt{font-size:13.5px;color:var(--muted)}
+  .advice+.advice{margin-top:8px}
+  .empty{color:var(--muted);font-size:13.5px;padding:6px 0}
+  .footer{margin-top:26px;text-align:center;color:var(--faint);font-size:11.5px;line-height:1.7}
+  .footer .warn{color:var(--muted)}
+  a.link{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+  a.link:hover{border-color:var(--accent)}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <h1>LPIC Level1 演習コンソール</h1>
+      <span class="tag">101試験 / 57問</span>
+    </div>
+    <div class="meta">
+      <div class="progress"><i id="pbar"></i></div>
+      <div class="score" id="score">0 / 0</div>
+    </div>
+  </div>
+  <div id="stage"></div>
+  <div class="footer">
+    成績はこの端末のブラウザ内にのみ保存されます（localStorage）。<br>
+    <span class="warn">LPIC Level1 101試験。図解＋各問に質問欄。記述式3問除外。正解・解説は解答ページ準拠。</span>
+  </div>
+</div>
+
+<script>
+const BOOK_QUESTIONS = [
+  {id:'b2',cat:'ファイル操作・検索',src:'LPIC101模試',prompt:'圧縮された tar ファイルである file.tar.gz を解凍することなく、格納されているファイル名を一覧を表示するコマンドラインはどれですか？ 1つ選択してください。',code:'',options:['tar xvf file.tar.gz','gzip -dc file.tar.gz | tar -tvf -','tar zxf file.tar.gz','gzip -dc file.tar.gz | tar -xvf -'],answer:1,exp:'問題文では、「file.tar.gzを解凍しない」旨の記載があるため、選択肢A、選択肢Cは誤りです。いずれもtarコマンドに対し、「x」オプションを使用しているため、展開されます。また、選択肢B、選択肢Dは、gzipコマンドの「-d」により解凍、「-c」により結果を標準出力に書き出しますが、元ファイルを変更しません。そして、「|」によりtarコマンドに出力結果が渡されますが、選択肢Dは「x」を使用しているので展開されるのに対し、選択肢Bは「t」を使用しているので表示のみです。'},
+  {id:'b3',cat:'テキスト処理・リダイレクト',src:'LPIC101模試',prompt:'bash を使用している場合に、ls コマンドの標準出力と標準エラー出力をファイル data に格納するコマンドラインはどれですか？ 1つ選択してください。',code:'',options:['ls data','ls 2> data','ls >& data','ls < stdout > data','ls data 2> /dev/null'],answer:2,exp:'コマンドを実行した結果の標準出力、標準エラー出力の両方をファイルに格納するには、選択肢Cのように記述します。なお、「>&」は「&>」としても同様の結果を得ることができます。また、類似問題の対策として、ファイルに追記する場合は「>>」を使用することも押さえておきましょう。'},
+  {id:'b5',cat:'テキスト処理・リダイレクト',src:'LPIC101模試',prompt:'以下のとおり、mylist ファイルがあります。1列目と7列目を取り出し表示するコマンドラインとして適切なものはどれですか？ 1つ選択してください。',code:'michiko:x:500:500::/home/michiko:/bin/bash\nhana:x:501:501:hana:/home/hana:/bin/bash',options:['cat mylist ? split 1,7','cat mylist > cut 1,7','cut -d : -f 1,7 mylist','cut -d 1,7 mylist','split -d : -show 1,7 mylist','split -p 1,7 mylist'],answer:2,exp:'ファイル内の行中の特定部分のみ取り出すにはcutコマンドを使用します。問題文のmylistファイル内のフィールドは：（コロン）で区切られているため、「-d」オプションを使用して区切り文字の指定を行います。また、取り出す列の指定は「-f」オプションで指定します。'},
+  {id:'b6',cat:'ユーザ・グループ管理',src:'LPIC101模試',prompt:'ユーザ yuko が以下のコマンドを実行したときの出力結果はどれですか？ 1つ選択してください。',code:'$ echo \'yuko ${USER}\'',options:['yuko yuko','yuko ${USER}','\'yuko ${USER}\'','\'yuko yuko\''],answer:1,exp:'問題文の実行例では、「yuko ${USER}」がシングルクォート（\'）で囲まれているため、全体が文字列リテラルと認識されます。したがって、選択肢Bの結果となります。もし、ダブルクォートで（"）で囲まれている場合は、変数が展開されます。'},
+  {id:'b8',cat:'テキスト処理・リダイレクト',src:'LPIC101模試',prompt:'ファイル fileA には以下が記載されています。以下のコマンドを実行した際の結果として、適切なものはどれですか？ 1つ選択してください。',code:'ABCabc\n\n$ sed \'s/[ABC][abc]/xx/\' fileA',options:['ABCabc','xxxxxx','xxxx','ABxxbc'],answer:3,exp:'sedコマンドのパターン部分は、[ABC]のいずれかの文字、[abc]のいずれかの文字という意味になるため、例えば「Aa」「Ab」……といった組み合わせが考えられます。そのうち「Ca」の組み合わせが該当するので、「xx」に置換されます。したがって、実行結果は選択肢Dです。'},
+  {id:'b10',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'xargs コマンドの使用目的として適切なものはどれですか？ 1つ選択してください。',code:'',options:['X サーバの起動パラメータを設定する','シェルスクリプトを実行する','シェルスクリプトを基にコマンドラインを構成する','標準入力からコマンドラインを構築する'],answer:3,exp:'xargsコマンドは、標準入力から受け取ったデータを引数として、他のコマンドを実行する際に使用します。標準入力から空白または改行で区切られた文字列群を読み込み、その文字列群を引数に指定したコマンドを実行します。'},
+  {id:'b11',cat:'ユーザ・グループ管理',src:'LPIC101模試',prompt:'passwd コマンドの第5セクションのマニュアルを表示するコマンドとして適切なものはどれですか？ 1つ選択してください。',code:'',options:['man -section 5 passwd','man (5) passwd','man --c 5 passwd','man 5 passwd'],answer:3,exp:'特定のセクションを指定する場合は、manコマンドの後に数字でセクションを指定します。'},
+  {id:'b12',cat:'テキスト処理・リダイレクト',src:'LPIC101模試',prompt:'大文字1文字を表す正規表現として、適切なものはどれですか？ 1つ選択してください。',code:'',options:['[A-Z]','[AZ]','.','?'],answer:0,exp:'[ ]による文字グループは、選択肢Aのように[A-Z]と指定すると大文字AからZまでのいずれかを表します。また、選択肢Bのように[AZ]と指定すると大文字AもしくはZのいずれかを表します。選択肢Cの「.」は、任意の文字（大文字、小文字いずれも含む）を表し、選択肢Dの「?」は、直前の文字が0回もしくは1回の繰り返しに一致することを表します。'},
+  {id:'b13',cat:'総合',src:'LPIC101模試',prompt:'vi エディタで編集中の内容を file.txt というファイル名で保存して終了する際のキー入力として適切なものはどれですか？ 1つ選択してください。',code:'',options:[':q file.txt',':quit file.txt','ZZ file.txt',':wq! file.txt'],answer:3,exp:'選択肢Aの「:q」と選択肢Bの「:quit」は保存せずに終了することを意味します。また、選択肢Cの「ZZ」は保存と終了を同時に行うことは可能ですが、「ZZ」実行時にファイル名の指定はできません。したがって、問題文の指示としては選択肢Dが正しいです。'},
+  {id:'b16',cat:'テキスト処理・リダイレクト',src:'LPIC101模試',prompt:'foo.log には、yyyy-MM-dd HH:mm:ss の書式でログが記述されています。11:00〜11:59を除く行を検索し表示するものとして、適切なものはどれですか？ 1つ選択してください。',code:'2019-01-11 09:10:23 log data\n2019-04-23 14:52:05 log data\n2019-04-23 11:02:05 log data\n2019-04-25 09:41:46 log data\n2019-10-10 11:27:05 log data',options:['grep -Ev \'11:[0-9]+:[0-9]+\' foo.log','grep -Ev \'11:[0-5][09]:[0-5][09]\' foo.log','grep \'11:[0-5]+:[0-5]+\' foo.log','grep -Ev \'11:[09]+:[09]+\' foo.log','grep -Ev \'11:[0-5]*:[0-5]*\' foo.log'],answer:0,exp:'以下の実行例を確認してください。①は、foo.logの内容を表示しています。②の「+」は拡張正規表現であり「直前の文字が1回以上の繰り返しに一致」を表します。拡張正規表現を指定する-Eオプション、条件に一致しない行を検索するには、-vオプションも使用しているため、目的の結果を得ています。③は、[0-5]で0から5のいずれか、[09]で0もしくは9という条件になります。-Evにより②と同じく条件に一致しない行を検索するため、全行が表示されます。④は、-Evオプションを使用しておらず、また[0-5]+と指定しているため、分、秒ともに0から5のいずれかという条件となり、検索することができません。⑤は[09]で0もしくは9という条件の指定、⑥は、[0-5]で0から5という条件の指定で、いずれも前述の説明と同様の理由から目的の結果を得ることができません。'},
+  {id:'b17',cat:'総合',src:'LPIC101模試',prompt:'vi のコマンドモードで、カーソル位置から上方向に向かって文字列の検索を行うのは、どれですか？ 1つ選択してください。',code:'',options:['?','/','r','F'],answer:0,exp:'現在のカーソル位置からファイルの先頭に向かって検索するには「?文字列」とします。また、現在のカーソル位置からファイルの末尾に向かって検索するには「/文字列」とします。'},
+  {id:'b18',cat:'総合',src:'LPIC101模試',prompt:'vi エディタで編集をしている際、dd や yy を複数行まとめて行いたい場合の説明として、適切なものはどれですか？ 1つ選択してください。',code:'',options:['vi では、dd や yy 実行時に、複数行をまとめて行うことはできない',':set repeat 2 と指定する',': repeat yy と指定する','2yy のように、コマンドの前に数字を指定する'],answer:3,exp:'「行数yy」によりカーソル行を含めて指定した行数をコピーし、pで貼り付けることができます。また、「行数dd」によりカーソル行を含めて指定した行数を削除できます。したがって選択肢Dは正しいです。「:set repeat 3」あるいは「:repeat 3 yy」といった繰り返し操作の指定はないので、選択肢Bと選択肢Cは誤りです。'},
+  {id:'b19',cat:'テキスト処理・リダイレクト',src:'LPIC101模試',prompt:'「grep -v」コマンドを実行した際、適切なものはどれですか？ 1つ選択してください。',code:'',options:['冗長フラッグがセットされるため、出力される情報が増える','バージョン番号を表示する','マッチングを逆にして、指定した文字列を含まない行だけを表示する','複数行のマッチングを可能にする'],answer:2,exp:'grepコマンドに、-vオプションを使用すると条件に一致しない行を検索します。なお、egrepコマンドでも同様の処理を行います。また-V（大文字）の場合は、バージョンを表示します。'},
+  {id:'b20',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'init のプロセスID として適切なものはどれですか？ 1つ選択してください。',code:'',options:['0','1','-1','起動するたびに異なる','現在のランレベル'],answer:1,exp:'システムが起動すると最初にinitプロセスが生成されます。したがって、initプロセスのPIDは1です。'},
+  {id:'b21',cat:'プロセス・ジョブ管理',src:'LPIC101模試',prompt:'watch コマンドの説明として適切なものはどれですか？ 1つ選択してください。',code:'',options:['あるプロセスを監視する','指定されたコマンドを繰り返し実行し、その結果を表示する','プログラムのタイマー設定を行う','システムの稼働時間を表示する'],answer:1,exp:'watchコマンドは指定されたコマンドを繰り返し実行し、その結果を表示します。これにより、プログラムの出力の経時変化を監視できます。デフォルトでは2秒おきに実行されますが、時間の間隔を変えたい場合は、-nまたは--intervalを指定します。watchコマンドは中断（[Ctrl]+[c]）されるまで実行を続けます。'},
+  {id:'b22',cat:'プロセス・ジョブ管理',src:'LPIC101模試',prompt:'nice コマンドで優先度を変更する際、明示的に優先度を指定しなかった場合、デフォルトで設定される値はいくつですか？ 1つ選択してください。',code:'',options:['0','10','19','20'],answer:1,exp:'niceコマンドはオプションで数値を指定しないと、デフォルト（0）+10の優先度を付与します。なお、優先度にマイナス値を指定可能なのは、root権限を持つユーザのみです。'},
+  {id:'b23',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'「コマンド &」と実行した際の説明として適切なものはどれですか？ 1つ選択してください。',code:'',options:['バックグラウンドで実行される','フォアグラウンドで実行される','PID が1で実行される','デーモンプロセスとして実行される'],answer:0,exp:'「&」を付けてコマンドを実行すると、バックグラウンドジョブとして実行されます。また、「bg %ジョブID」とすると、指定したジョブをバックグラウンドに移行し、「fg %ジョブID」とすると、指定したジョブをフォアグラウンドに移行します。'},
+  {id:'b25',cat:'ディスク・ファイルシステム',src:'LPIC101模試',prompt:'「mkfs /dev/sda2」と実行した際に作成されるファイルシステムの種類はどれですか？ 1つ選択してください。',code:'',options:['vfat','xfs','ext2','ext3','ext4'],answer:2,exp:'mkfsコマンドをファイルシステムの種類の指定をせずに実行した場合は、ext2ファイルシステムを作成します。ファイルシステムタイプを指定する場合は、-tオプションを使用します。'},
+  {id:'b27',cat:'ディスク・ファイルシステム',src:'LPIC101模試',prompt:'ext4 ファイルシステムについて、ファイルシステムをチェックする時間間隔を設定するコマンドとオプションの組み合わせとして、適切なものはどれですか？ 1つ選択してください。',code:'',options:['tune2fs -n 20','tune2fs -d 20','tune2fs -c 20','tune2fs -i 20','tune2fs -day 20'],answer:3,exp:'tune2fsコマンドは、ext2/ext3/ext4ファイルシステムのパラメータを調整するコマンドです。ファイルシステムをチェックする時間間隔設定には、-iオプションを使用します。数値のみ、もしくは末尾にdを付けると「日」と解釈され、m、wはそれぞれ「月」「週」と解釈されます。'},
+  {id:'b28',cat:'ディスク・ファイルシステム',src:'LPIC101模試',prompt:'Linux スワップパーティションのパーティションタイプはどれですか？ 1つ選択してください。',code:'',options:['82','83','8e','fd'],answer:0,exp:'パーティションタイプは多数あり、それぞれに数値が割り当てられています。例えば、82はLinuxスワップパーティション、83はLinuxデータパーティション、8eはLinux LVMパーティションです。fdisk実行中に使用できるサブコマンドで「l」により、パーティションのタイプを一覧で表示できます。'},
+  {id:'b30',cat:'ディスク・ファイルシステム',src:'LPIC101模試',prompt:'xfs ファイルシステムを検査、修復するコマンドは、どれですか？ 1つ選択してください。',code:'',options:['e2fsck','fsck','xfs --repair','xfs_repair'],answer:3,exp:'xfsファイルシステムの修復には、xfs_repairコマンドを使用します。なお、ext2、ext3、ext4ファイルシステムの場合は、fsck（e2fsck）コマンドを使用します。'},
+  {id:'b31',cat:'ユーザ・グループ管理',src:'LPIC101模試',prompt:'mount --bind の実行時の説明として適切なものはどれですか？',code:'',options:['通常マウントされているファイルシステムを永続的にマウントする','ユーザがマウントできるファイルシステムをすべてのユーザのホームディレクトリにマウントする','/etc/fstab で userbind と設定されたすべてのファイルシステムを現在のディレクトリにマウントする','指定したディレクトリを別のディレクトリにマウントする'],answer:3,exp:'mountは、通常はデバイスファイル名を指定してマウントします。mountコマンドに「--bind」オプションを使用することで、ディレクトリをマウントできます。'},
+  {id:'b32',cat:'総合',src:'LPIC101模試',prompt:'64bit の PC を使用している際、一般的な共有ライブラリの配置場所として、適切なものはどれですか？',code:'',options:['/etc/lib64','~/.lib64','/lib64','/var/lib64','~/lib64'],answer:2,exp:'64bit用の共有ライブラリは、/lib64や/usr/lib64に配置されます。よって選択肢Cが正しいです。/lib64には、/binや/sbinなどに置かれたコマンドやプログラムが利用する共有ライブラリが配置されます。/usr/lib64にユーザが使用する共有ライブラリが配置されます。'},
+  {id:'b33',cat:'ディスク・ファイルシステム',src:'LPIC101模試',prompt:'/etc/fstab でファイルシステムをラベルで指定できるようにするオプションとして適切なものはどれですか？',code:'',options:['HOME','UID','LABEL','NAME','ID'],answer:2,exp:'デバイスファイル名にラベルの指定がされている場合、/etc/fstabファイルでそのラベル名を使用してマウントの設定を記述できます。/etc/fstabファイルでは「LABEL=ラベル名」と記述するため、選択肢Cが正しいです。'},
+  {id:'b34',cat:'ユーザ・グループ管理',src:'LPIC101模試',prompt:'新しいディレクトリを作成したとき、所有者は読み取り、書き込み、実行ができ、所有グループは読み取り、実行ができ、その他のユーザはアクセスが禁止されるような umask 値として適切なものはどれですか？',code:'',options:['0700','0640','0002','0027'],answer:3,exp:'問題文により、ディレクトリのパーミッションを「rwx rwx rwx」から「rwx r-x ---」とする必要があります。所有者は変更がなく、所有グループは書き込み権、その他のグループは全権限が削除される必要があります。したがってumask値は、選択肢Dの0027が正しいです。'},
+  {id:'b35',cat:'ユーザ・グループ管理',src:'LPIC101模試',prompt:'ハードリンクを利用するときに考慮すべきことは何ですか？',code:'',options:['異なるパーティションへのリンクは作成できない','ext4 などの従来のファイルシステムがハードリンクをサポートしていないように、ハードリンクはすべての Linux システムで利用できるとは限らない','ハードリンクは固有のパーミッション、ACL を持つため、意図しない開示が起こり得る','root 以外のユーザがリンクを作成する必要がある場合、suln をインストールし構成しなければならない','リンク元が更新されるとコピーが作成され、領域を消費する'],answer:0,exp:'ハードリンクは、異なるパーティションへ作成することはできないため、選択肢Aが正しいです。なお、ハードリンクはext2/ext3/ext4の他、xfsやbtrfsといったファイルシステムでもサポートされています。'},
+  {id:'b36',cat:'ユーザ・グループ管理',src:'LPIC101模試',prompt:'fileA ファイルの所有者を ryo、所有グループは engineer に変更するコマンドラインはどれですか？',code:'',options:['chown ryo+engineer fileA','chown -user ryo -group engineer fileA','chown ryo/engineer fileA','chown -u ryo -g engineer fileA','chown ryo:engineer fileA'],answer:4,exp:'chownコマンドは、指定されたファイルの所有者とグループを変更します。このコマンドを実行できるのはrootユーザのみです。所有者とグループを一緒に変更する場合は、「変更後の所有者名:変更後のグループ名」と指定します。なお、区切りはコロン「:」もしくはドット「.」を指定してください。'},
+  {id:'b38',cat:'ファイル操作・検索',src:'LPIC101模試',prompt:'次のコマンドラインを実行し、カレントディレクトリ内にあるファイルのみを削除します。なお、空白を含むファイル名も存在します。下線に入る適切なオプションはどれですか？',code:'$ find . -type f ___________ | xargs -0 rm',options:['-ignore-space','-print0','-none','-nospace','-0'],answer:1,exp:'findコマンド実行時に-print0を付与します。これによりファイルの区切りに空白や改行ではなく、ヌル文字が埋め込まれます。また、xargsの-0オプションは、標準入力からの文字列に対して、空白ではなくヌル文字を区切りとして読み込みます。'},
+  {id:'b40',cat:'パーミッション・所有権',src:'LPIC101模試',prompt:'SUID を設定するパーミッションとして適切なものはどれですか？',code:'',options:['2775','u-s','4775','g+s','0775+s'],answer:2,exp:'SUIDは、どのユーザが実行しても、実効ユーザIDがファイルの所有者IDとなります。SUIDはパーミッションに「4000」もしくは所有者に「s」を付与します。'},
+  {id:'b42',cat:'パッケージ管理',src:'LPIC101模試',prompt:'カレントディレクトリ以下にある、すべての RPM パッケージをインストールする場合、適切なものはどれですか？',code:'',options:['zypper add *.rpm','zypper get *.rpm','zypper install *.rpm','zypper patch *.rpm'],answer:2,exp:'zypperコマンドを使用して、RPM形式パッケージの管理が可能です。パッケージのインストールには、installを指定します。また、インストール対象のパッケージは、機能名による指定や、rpmパッケージファイル名による指定などが可能です。したがって選択肢Cが正しいです。'},
+  {id:'b45',cat:'パッケージ管理',src:'LPIC101模試',prompt:'Debian 系システムで、必要であれば不要なパッケージは削除し、可能な限りシステムを最新の状態にアップグレードするコマンドラインとして適切なものはどれですか？',code:'',options:['apt-get install','apt-get update','apt-get dist-upgrade','apt-get full-upgrade','apt-get upgrade'],answer:2,exp:'アップグレードを行うサブコマンドとして「dist-upgrade」と「upgrade」があります。「dist-upgrade」は、必要であれば不要なパッケージは削除し、最新の状態にアップグレードします。「upgrade」は、現在インストール中のパッケージに新しいバージョンがあれば更新しますが、現在インストール中のパッケージの削除は行いません。'},
+  {id:'b46',cat:'パッケージ管理',src:'LPIC101模試',prompt:'Debian システムでパッケージを削除しますが、再インストールする場合に利用する構成ファイルは残しておきたいと思います。実行するコマンドはどれですか？',code:'',options:['dpkg -c','dpkg -P','dpkg -r','dpkg -E','dpkg -G'],answer:2,exp:'アンインストールに関するオプションとして、「-P」と「-r」があります。「-P」は「--purge」と同等で、設定ファイルも含め完全にパッケージを削除します。「-r」は「--remove」と同等でパッケージは削除しますが、設定ファイルは残したままとなります。問題文から選択肢Cが正しいです。'},
+  {id:'b47',cat:'パッケージ管理',src:'LPIC101模試',prompt:'インストール済みの rpm パッケージをすべて表示するコマンドラインとして適切なものはどれですか？',code:'',options:['yum --query -installed','yum --query --all','rpm --query --list','rpm --query --all','rpm --query --installed'],answer:3,exp:'rpmパッケージに関する情報を調査し表示するには、rpmコマンドに「-q(--query)」オプションを使用します。また、問題文では、インストール済みのパッケージをすべて表示するとあるため、「-a(--all)」オプションをあわせて使用します。なお、yumコマンドに「--query」や「--all」というオプションはありません。'},
+  {id:'b48',cat:'ユーザ・グループ管理',src:'LPIC101模試',prompt:'yum コマンドで、グループ名を指定してパッケージのインストールを行うコマンドラインとして適切なものはどれですか？',code:'',options:['yum groupinstall "group_name"','yum collection "group_name"','yum -group install "group_name"','yum grouplist "group_name"'],answer:0,exp:'グループ名を指定してパッケージのインストールを行うには「yum groupinstall パッケージグループ名」とします。パッケージグループを一覧表示するには「yum grouplist」と指定します。また、特定のグループに含まれているパッケージを一覧表示するには「yum group info パッケージグループ名」とします。'},
+  {id:'b49',cat:'プロセス・ジョブ管理',src:'LPIC101模試',prompt:'コマンドのパスやエイリアスを表示するコマンドとして適切なものはどれですか？',code:'',options:['find','file','ps','type'],answer:3,exp:'type コマンドは、指定したコマンドがバイナリなのかエイリアスなのか等の情報を表示します。\n実行例:\n$ type ls\nls は `ls --color=auto\' のエイリアスです\n$ type mkfs\nmkfs は /usr/sbin/mkfs です'},
+  {id:'b50',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'カーネルモジュールに障害があり、ネットワークインタフェースカード（NIC）が使用不可になりました。起動の際にこの NIC を無効にして起動させる方法として、適切なものはどれですか？',code:'',options:['modprobe -r に続けて問題の原因であるモジュールを指定する','modinfo -k に続けて問題の原因であるモジュールを指定する','/etc/modprobe.d/blacklist.conf ファイルに、問題の原因であるモジュールの blacklist 行を記述する','問題の原因であるモジュールのあるディレクトリ以下をすべて削除し、再コンパイルして修復する','カーネルのバージョンを上げる'],answer:2,exp:'/etc/modprobe.d/ ディレクトリの下の *.conf ファイルの記述により、モジュールに対する設定ができます。特定のモジュールを読み込まないようにするには、blacklist コマンドの引数にモジュール名を指定します。したがって、選択肢Cが正しいです。「modprobe -r モジュール名」により指定したモジュールを取り外すことができますが、再起動するとまた組み込まれるので、この問題の主旨に合いません。したがって、選択肢Aは誤りです。「modinfo モジュール名」（-k はカーネルバージョンの指定）でモジュールの情報を表示できますが、問題解決にはならないので、選択肢Bは誤りです。選択肢D、選択肢Eの手順では問題を解決できないので、誤りです。'},
+  {id:'b51',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'UEFI ファームウェアの説明として適切なものはどれですか？',code:'',options:['GPT メタデータの特定領域に保存されている','特定のファイルシステムを読み取る','パーティションを読み取り解釈できる','ファイルシステムを /boot ディレクトリ以下に保存する'],answer:1,exp:'UEFI ファームウェアは PC のマザーボード内に格納されており、OS をブートするときは UEFI が管理する NVRAM のブートエントリに設定された優先順位に従って、EFI System Partition に格納されている vfat ファイルシステム内のブートローダを起動します。例えば、NVRAM の 1 番目のブートエントリが「\\EFI\\centos\\shim.efi」の場合は、/boot/efi/EFI/centos/shim.efi を起動します。したがって、選択肢 B が正しいです。UEFI ファームウェアは GPT ではなく、PC のマザーボード内に格納されているので、選択肢 A は誤りです。UEFI ファームウェアは EFI System Partition を特定しますが、ディスクのパーティション情報全体を読み取るわけではないので、選択肢 C は誤りです。UEFI ファームウェアは /boot あるいはその他のディレクトリにファイルシステムを保存する機能はないので、選択肢 D は誤りです。'},
+  {id:'b52',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'SysV init を使用したシステムで最初にカーネルが生成するユーザプロセスはどれですか？',code:'',options:['/sbin/init','/etc/init','/usr/sbin/sshd','/usr/sbin/httpd'],answer:0,exp:'システム起動シーケンスの中で、カーネルは自身の初期化の最終段階で 1 番目のユーザプロセスである init（プロセス ID は 1）を生成します。実行されるプログラムは /sbin/init です。'},
+  {id:'b54',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'SysV init システムの init プロセスのプロセス ID はいくつですか？',code:'',options:['0','1','-1','値は固定されていない'],answer:1,exp:'システムが起動すると最初に init プロセスが生成されます。したがって、init プロセスの PID は 1 です。'},
+  {id:'b55',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'Linux システムにおいて電源管理デーモンとして起動時に実行されるものとして適切なものはどれですか？',code:'',options:['/usr/sbin/inet.d','/usr/sbin/betteryd','/usr/sbin/acpid','/usr/sbin/powerd'],answer:2,exp:'acpid は、ACPI に関するイベントが発生すると、応じたプログラムを実行するデーモンです。以下は、CentOS6 での実行例です。ランレベル 2、3、5 では自動起動の設定になっています。また、acpid の完全パスは /usr/sbin/acpid です。\n実行例:\n$ chkconfig --list | grep acpid\nacpid           0:off   1:off   2:on    3:on    4:on    5:on\n6:off\n$ ps -ef | grep acpid\nroot          20      2  0 17:19 ?        00:00:00 [kacpid]\nroot        1684      1  0 17:20 ?        00:00:00 /usr/sbin/acpid\n68          1751   1697  0 17:20 ?        00:00:00 hald-addon-acpi:\nlistening on acpid socket /var/run/acpid.socket\nyuko        2392   2364  0 17:22 pts/0    00:00:00 grep acpid'},
+  {id:'b57',cat:'総合',src:'LPIC101模試',prompt:'ldd コマンドの説明として適切なものはどれですか？',code:'',options:['ライブラリのキャッシュを更新する','シンボリックリンクファイルを作成する','コマンドの共有ライブラリを表示する','共有ライブラリを更新・修復する','動的リンクファイルを静的ファイルに変換する'],answer:2,exp:'ldd コマンドは共有ライブラリへの依存関係を表示します。引数にはコマンドのファイルパスを指定します。'},
+  {id:'b58',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'1つ目のハードディスクの1番目パーティションに GRUB をインストールするコマンドラインとして適切なものはどれですか？',code:'',options:['grub-install /dev/sda1','grub-install /dev/sda','grub-install /dev/sda0','grub-install /dev/sd'],answer:0,exp:'「grub-install /dev/sda」は 1 台目のハードディスクの先頭（MBR）に GRUB をインストールするコマンドなので、選択肢 B は誤りです。/dev/sda0 というデバイス名は存在しないので、選択肢 C は誤りです。/dev/sd?? というデバイス名は存在しないので、選択肢 D は誤りです。/dev/sda1 は 1 台目のハードディスクの 1 番目のパーティションのデバイス名なので、選択肢 A は正しいです。通常、GRUB を 1 台目のディスクの先頭（MBR）にインストールあるいは再インストールするには「grub-install /dev/sda」としますが、選択肢 A のように、特定のパーティションに GRUB をインストールすることも可能です。例えば、Microsoft Windows が /dev/sda2 にインストールされていて、/dev/sda1 に Linux をインストールした場合、「grub-install /dev/sda1」として、/dev/sda1 の先頭に GRUB をインストールします。これにより、MBR に書き込まれた Windows のブートローダ NTLDR から GRUB を呼び出し、GRUB から Linux をブートできます。'},
+  {id:'b59',cat:'起動・systemd・サービス',src:'LPIC101模試',prompt:'システム起動時に、ブートローダと Linux カーネルは読み込めましたが、起動シーケンス中にハングアップしました。レスキュー CD を用いてブートしましたが、このエラーの根本原因の究明として参考となるアプローチはどれですか？',code:'',options:['コンピュータのハードディスク上の /var/log 以下のファイルにエラーがあるか調査する','コンピュータのハードディスク上の /proc/kmsg ファイルにエラーがあるか調査する','レスキュー CD をブートできたので、システムでリブートを試みる','chroot コマンドでファイルシステムを変更し、ハードディスク上で dmesg コマンドを実行する','レスキュー CD 上で dmesg コマンドを実行し、ファイルシステムを確認する'],answer:0,exp:'問題文の内容から、起動シーケンスの init 以降に問題があると思われます。起動時にハングアップするまでのメッセージの確認と、ハードディスク上の /var/log 以下にエラーがあるか調査します。したがって、選択肢 A が正しいです。レスキュー CD を用いてブートしたときの dmesg は、ハードディスクから起動してハングアップしたときのメッセージとは異なるので参考になりません。したがって、選択肢 D と E は誤りです。/proc 以下はレスキュー CD から起動しているカーネルが提供する情報なので参考になりません。したがって、選択肢 B は誤りです。選択肢 C は原因究明や問題解決を行っていないので誤りです。'}
+];
+
+const BOOK_MULTI_Q = [
+  {id:'m1',cat:'シェル・スクリプト',src:'LPIC101模試',multi:true,prompt:'サブシェルを作成せずに Bash シェルでスクリプトを実行するものとして、適切なものはどれですか？ 2つ選択してください。',code:'',options:['/bin/bash /home/yuko/foo.sh','run /home/yuko/foo.sh','. /home/yuko/foo.sh','./home/yuko/foo.sh','source /home/yuko/foo.sh'],answers:[2,4],exp:'シェルについては101試験、102試験いずれの試験範囲にも含まれています。シェルスクリプト（この問題では、foo.sh）の実行方法はいくつかあり、詳細な解説は、102-1章を参照してください。選択肢Cと選択肢Eにより、自身のシェルの内部でスクリプトを実行します。選択肢Aは、実行時に指定された/bin/bashにより子シェル（サブシェル）でインタープリターとしてBashが起動し、スクリプトを実行します。選択肢Dは、シェルスクリプトの1行目の「#!」に書かれたコマンド（例：/bin/bash）により子シェル（サブシェル）でインタープリターとしてBashが起動し、スクリプトを実行します。'},
+  {id:'m4',cat:'テキスト処理・リダイレクト',src:'LPIC101模試',multi:true,prompt:'bash を使用している場合に、リダイレクトとして使用可能な記号はどれですか？ 2つ選択してください。',code:'',options:['<','#>','%>','>>>','2>&1'],answers:[0,4],exp:'選択肢Aは、標準入力のリダイレクトです。選択肢Eは、標準出力と標準エラー出力の両方の出力先変更の際に使用します。'},
+  {id:'m7',cat:'テキスト処理・リダイレクト',src:'LPIC101模試',multi:true,prompt:'iノード番号を表示するコマンドとして適切なものはどれですか？ 2つ選択してください。',code:'',options:['ls','ln','cat','cp','stat'],answers:[0,4],exp:'選択肢Aのlsコマンドに「-i」オプションを使用することでiノード番号を表示します。また、statコマンドは、ファイルやファイルシステムの情報を表示します。「-c」オプションでフォーマットを指定して表示したいものを明示できます。'},
+  {id:'m9',cat:'ファイル操作・検索',src:'LPIC101模試',multi:true,prompt:'操作を誤って、\\fileA という名前のファイルをホームディレクトリの下に作成してしまいました。このファイルを削除するコマンドとして適切なものはどれですか？ 2つ選択してください。',code:'',options:['rm ~/\'\\fileA\'','rm "~/\\fileA"','rm \'~/\\fileA\'','rm ~/\\\\fileA','rm ~/\\fileA'],answers:[0,3],exp:'ホームディレクトリ以下を表すには「~/」とします。またファイル名に「\\」が含まれています。「\\」を文字として扱いたい場合は、選択肢Aのように、「\\」でエスケープします。またシングルクォートで囲むことで、クォート中の文字は単に文字として認識されるため、\'\\fileA\'のように、バックスラッシュを含めたファイル名のファイルを削除できます。したがって、選択肢A、Dが正しいです。'},
+  {id:'m14',cat:'総合',src:'LPIC101模試',multi:true,prompt:'vi コマンドで複数行のコピーや削除を行う操作のうち、正しいものはどれですか？ 2つ選択してください。',code:'',options:['「:set repeat 3」の後に「yy」とすると3行コピーされ、「dd」で3行削除される','「:repeat 3 yy」とすると3行コピーされ、「:repeat 3 dd」で3行削除される','「yyp」実行後に「3.」とすると最後の「p」を実行した行の貼り付けが3回行われ、「dd」実行後に「3.」とすると3行削除される','「3yy」すると3行コピーされ、その後「p」とすると3行貼り付けられ、「3dd」とすると3行削除される'],answers:[2,3],exp:'「回数.」により、直前に実行したコマンドを指定した回数繰り返すことができます。したがって選択肢Cは正しいです。「行数yy」によりカーソル行を含めて指定した行数をコピーし、pで貼り付けることができます。「行数dd」によりカーソル行を含めて指定した行数を削除できます。したがって選択肢Dは正しいです。「:set repeat 3」あるいは「:repeat 3 yy」、「:repeat 3 dd」という繰り返し操作の指定はないので、選択肢Aと選択肢Bは誤りです。'},
+  {id:'m15',cat:'テキスト処理・リダイレクト',src:'LPIC101模試',multi:true,prompt:'以下のファイルがあります。これらのファイル名にマッチする正規表現として適切なものはどれですか？ 2つ選択してください。',code:'logS0\nlogS1\nlogS2',options:['find . -type f | grep -e \'logS[1-5]\'','find . -type f | grep -e \'log?[012]\'','find . -type f | grep -e \'log.[012]\'','find . -type f | grep -e \'log*[0-2]\'','find . -type f | grep -e \'logS*\''],answers:[2,4],exp:'以下の実行例を確認してください。この例（①）では、問題文で掲載されたファイル名は網掛けで掲載しています。その他のファイル名は参考として掲載しています。②は選択肢Aです。[ ]による文字グループを使用していますが、0が含まれていないため、logS0が検索できません。③は「?」を使用していますが、拡張正規表現で使用されるため、④のように-Eオプションを使用するか、⑤のように「\\?」とする必要があります。なお、いずれの場合でも、「?」は「直前の文字が0回もしくは1回の繰り返しに一致」を表すため、該当するのはlog1のみです。なお、⑥のように「\\?」を「S\\?」とすることで目的のファイルが検索できます。⑦の「.」は「任意の文字に一致」を表すため、目的のファイルを検索できます。⑧の「*」は「直前の文字が0回以上の繰り返しに一致」を表すため、「log」の「g」が0回以上繰り返されているものを検索します。したがって、該当するのは、logg1とlog1です。⑨は「logS*」とあるため、「S」が0回以上繰り返されているものを検索します。'},
+  {id:'m29',cat:'ディスク・ファイルシステム',src:'LPIC101模試',multi:true,prompt:'LVM の説明として適切なものはどれですか？ 3つ選択してください。',code:'',options:['ファイルシステムを動的に作成、削除できる','ファイルシステムを拡張できる','ファイルシステムを暗号化する機能がある','RAID の機能がある','スナップショットがとれる'],answers:[0,1,4],exp:'LVMは複数のディスクパーティションからなるボリュームグループ（VG）の領域から、パーティションの制限を受けない伸縮可能な論理ボリューム（LV）を構成します。この特徴により、動的に任意のサイズのストレージ領域を持つ仮想マシン（VMインスタンス）を生成できるため、LVMはクラウドのストレージ領域として広く利用されています。したがって、選択肢AとBは正解です。LVMは暗号化ブロックデバイスLUKSや暗号化ファイルシステムeCryptfsなどと組み合わせて使用できます。しかしLVM自体には暗号化機能はないので、選択肢Cは誤りです。LVMはRAIDで構成されたディスク上にボリュームグループ（VG）を作成できます。しかしLVM自体にはRAID機能はないので選択肢Dは誤りです。LVMにはスナップショットの機能があります。したがって、選択肢Eは正解です。'},
+  {id:'m39',cat:'ユーザ・グループ管理',src:'LPIC101模試',multi:true,prompt:'一般ユーザがあるファイルのパーミッションを変更しようとしましたが、できませんでした。考えられる理由として適切なものはどれですか？',code:'',options:['そのファイルの所有者は別のユーザであり、所有ユーザしかパーミッションを変更できないから','そのファイルは、所有者が root であり、かつ、SUID が設定されており、root 権限を持つユーザしかパーミッションの変更ができないから','パーミッションに固定値が設定されており、シンボリックリンクであるためパーミッションの変更ができないから','そのファイルはハードリンクであり、パーミッションの変更はできないから','そのファイルが格納されているディレクトリにはスティッキービットが付いており、root しかパーミッションの変更ができないから'],answers:[0,1],exp:'一般ユーザは、自分が所有者であるファイルであれば、パーミッションを変更できます。他の人が所有するファイルのパーミッションは変更できません。したがって選択肢Aは正しいです。また、選択肢Bのようにrootが所有するファイルは、SUIDの設定有無に関係なく一般ユーザがパーミッションを変更することはできません。したがって選択肢Bは正しいです。パーミッション変更の有無と、リンクの種類は関係がないため、選択肢C、Dは誤りです。スティッキービットは、特定のディレクトリに対しアクセス権が許可されていてもファイルの削除は行えないよう保護する設定です。スティッキービットが付与されたディレクトリ以下に保存したファイルも、所有者であればパーミッションの変更は可能です。したがって選択肢Eは誤りです。'},
+  {id:'m41',cat:'ファイル操作・検索',src:'LPIC101模試',multi:true,prompt:'コマンドの完全パスを表示できるコマンドはどれですか？',code:'',options:['which','whatis','locate','ls','lsattr'],answers:[0,2],exp:'whichコマンドは、指定されたコマンドの完全パスを表示します。また、locateコマンドは、指定されたファイル名（コマンド）を基にデータベースを参照して検索します。その結果、完全パスを表示します。したがって、選択肢A、Cが正しいです。なお、選択肢Bのwhatisコマンドは、manコマンドと同様にマニュアルページを表示します。選択肢Dのlsコマンドは、ディレクトリの内容をリスト表示します。選択肢Eのlsattrは、ext2/ext3/ext4ファイルシステム上にあるファイルの属性を表示します。したがって、選択肢B、D、Eは誤りです。'},
+  {id:'m43',cat:'起動・systemd・サービス',src:'LPIC101模試',multi:true,prompt:'yum の説明として、適切なものはどれですか？',code:'',options:['yum.conf の設定が適用されるのは yumd を再起動したときである','/etc/yum.repos.d 以下の設定ファイルでは、$releasever や $basearch などの変数を利用できる','/etc/yum.repos.d 以下にファイルがある場合、/etc/yum.conf は無視される','/etc/yum.repos.d 以下には、複数のリポジトリ設定ファイルを分割保存できる','yum confupdate を実行した後、/etc/yum.conf の内容が適用される'],answers:[1,3],exp:'yum.confファイルを変更した場合は、修正後、保存することで、yumコマンド実行時にすぐに適用されます。したがって、選択肢A、Eは誤りです。/etc/yum.confファイルは、yum全体に対する設定ファイルです。また、/etc/yum.repos.d以下のファイルは、リポジトリごとの設定ファイルです。したがって選択肢Cは誤りです。/etc/yum.repos.d以下にはbaseリポジトリ用のCentOS-Base.repoや、crリポジトリ用のCentOS-CR.repoなど各設定ファイルを配置するため選択肢Dは正しいです。リポジトリ設定ファイル内では、$releasever（リリース番号）や$basearch（アーキテクチャ名）を使用しているため、選択肢Bは正しいです。'},
+  {id:'m44',cat:'パーミッション・所有権',src:'LPIC101模試',multi:true,prompt:'仮想マシンをクローンした際に変更すべきものとして、適切なものはどれですか？',code:'',options:['/root/. のパーミッション','マシン ID','ssh ホストキー','ファイルシステムスキーム'],answers:[1,2],exp:'仮想環境では、作成した仮想マシンを基にクローン（複製）を作成できます。注意する点として、クローンは単純な複製となるため、クローンした仮想マシンは、ホスト名、IPアドレス、マシンID、sshホストキーなどを変更する必要があります。'},
+  {id:'m53',cat:'起動・systemd・サービス',src:'LPIC101模試',multi:true,prompt:'BIOS の説明として適切なものはどれですか？',code:'',options:['PC の電源を入れた後、BIOS が起動しブートプロセスが実行される','PC のセカンダリストレージがあるとき、ハードウェアドライバをロードする','BIOS の設定画面から BIOS プログラムの一部を実行できる','BIOS は /boot ディレクトリの下の Linux カーネル vmlinuz を読み込んで起動する'],answers:[0,2],exp:'PC の電源を投入すると、BIOS は設定されたデバイスの優先順位に従ってディスクの先頭ブロックにある MBR（Master Boot Record）内のブートローダを検索し、最初に検知したデバイスのブートローダを起動します。したがって、選択肢 A は正しいです。BIOS は設定画面からメモリテストなどの診断プログラムを実行できます。したがって、選択肢 C は正しいです。ハードウェアドライバをロードするのはカーネルの機能であり、BIOS にその機能はないので、選択肢 B は誤りです。BIOS は MBR 内のブートローダをロードしますが、カーネルをロードする機能はないので、選択肢 D は誤りです。'},
+  {id:'m56',cat:'ディスク・ファイルシステム',src:'LPIC101模試',multi:true,prompt:'GPT と MBR の違いの説明として適切なものはどれですか？',code:'',options:['GPT は、128 個のパーティションを構成可能であり、MBR のプライマリパーティションは 4 個までである','GPT は、64 個のパーティションを構成可能であり、MBR のプライマリパーティションは 16 個までである','GPT の最大パーティションサイズは 9.4ZB であり、MBR の最大パーティションサイズは 2.2TB までである','GPT の最大パーティションサイズは 128ZB であり、MBR の最大パーティションサイズは 2TB までである','GPT、MBR ともにプライマリプライマリパーティションサイズは、4096 GB である'],answers:[0,2],exp:'MBR は基本パーティションを 4 個、GPT はパーティションを 128 個利用できます。また、最大パーティションサイズとして、MBR は 2.2TB（2TiB）、GPT は 9.4ZB（8ZiB）です。したがって、選択肢 A、C が正しいです。'},
+  {id:'m60',cat:'起動・systemd・サービス',src:'LPIC101模試',multi:true,prompt:'/etc/fstab に書かれてない、かつ、systemd でも認識していないファイルシステムを手動でマウントした際の説明として、適切なものはどれですか？',code:'',options:['systemctl mount コマンドを実行することで手動でマウントできる','systemd は自動でマウントユニットを生成するため、systemctl mountsync を利用できる','systemd マウントユニットを作成するため、マウントポイントを変更?? 用できる','systemd は自動的にマウントユニットを作成し、マウントポイントを変更せず監視する','systemd はディスクデータを開くため、systemctl umount で手動でアンマウントしなければならない'],answers:[1,3],exp:'mount コマンドの実行によりファイルシステムを手動でマウントした場合、systemd は自動的にマウントポイントのパスの「/」を「-」に変換し、サフィックスの .mount を付けたマウントユニットを作成して、このマウントポイントを監視、管理します。umount コマンドにより手動でアンマウントすると、systemd はこのマウントユニットを自動的に削除します。したがって、選択肢 B と D は正しいです。（※解答記号はページ下端で切れており未表示。正誤は解説本文に基づく）'}
+];
+
+const EXTRA_QUESTIONS = [];
+
+const QUESTIONS = (function(){var all=[...BOOK_QUESTIONS,...BOOK_MULTI_Q,...EXTRA_QUESTIONS];var no=function(q){return parseInt(String(q.id).replace(/^\D+/,''),10)||0;};return all.slice().sort(function(a,b){return no(a)-no(b);});})();
+
+const ADVICE = {
+  'シェル・スクリプト':'bashの変数・エイリアス・環境変数・スクリプト実行方法(source/./ 等)を手を動かして確認。',
+  'テキスト処理・リダイレクト':'grep/sed/awk/cut/sort と リダイレクト(>,>>,2>,&>)・パイプを実機で確認。',
+  'ディスク・ファイルシステム':'mount/fstab・fdisk・mkfs・fsck・df/du・inode・LVM を整理する。',
+  'パッケージ管理':'rpm/yum(dnf) と dpkg/apt、zypper の問い合わせ・導入・削除オプションを確認。',
+  'パーミッション・所有権':'ls -l の読み方、chmod(数値/記号)・chown・umask・SUID/SGID を整理する。',
+  'ファイル操作・検索':'find/ls/cp/mv/rm と tar・gzip の主要オプション、locate/updatedb を整理する。',
+  'プロセス・ジョブ管理':'ps/top/kill/nice/renice とジョブ制御(bg/fg/&)・シグナルを整理する。',
+  'ユーザ・グループ管理':'useradd/passwd と /etc/passwd・shadow・group、権限昇格(su/sudo)を確認。',
+  '総合':'間違えた問題の解説を読み、関連コマンドとオプションを重点的に復習する。',
+  '起動・systemd・サービス':'systemd(systemctl/target/journalctl)・init・ブート順序・GRUB を確認。'
+};
+
+const FIGS = {"b5": {"lines": {"1": ["info", "「:」区切りで1列目michiko・7列目/bin/bash"], "2": ["info", "同じく「:」区切り、1列目hana・7列目/bin/bash"]}, "out": "結果：cut -d : -f 1,7 mylist で1列目と7列目を取り出す"}, "b6": {"lines": {"1": ["ok", "シングルクォート内は変数展開されず文字列のまま"]}, "out": "結果：yuko ${USER}（'で囲まれ ${USER} は展開されない）"}, "b8": {"lines": {"1": ["info", "ABCabcの3-4文字目「Ca」がパターンに一致"], "3": ["ok", "[ABC][abc]は大文字1+小文字1に一致、Caをxxに置換"]}, "out": "結果：ABxxbc（Ca が xx に置換される）"}, "m15": {"lines": {"1": ["ok", "log.[012]は「.」でS、[012]で0に一致し検索可"], "2": ["info", "3ファイルとも log+任意1字+数字 の形式"], "3": ["ok", "logS*は「S*」でSが0回以上、logS2にも一致"]}, "out": "結果：log.[012] と logS* が3ファイルすべてに一致"}, "b16": {"lines": {"1": ["ok", "09:10:23は11時台でないので表示される"], "3": ["err", "11:02:05は11時台のため -v で除外される"], "5": ["err", "11:27:05も11時台のため -v で除外される"]}, "out": "結果：11時台の3・5行目を除外し1・2・4行目を表示"}, "b38": {"lines": {"1": ["ok", "下線は-print0、区切りをヌル文字にしxargs -0と対応"]}, "out": "結果：-print0（ヌル区切りで空白入りファイル名に対応）"}};
+
+const TRACE = {};
+
+const KEY='lpic101QuizV1';
+const LETTERS=['A','B','C','D','E','F','G'];
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{perCat:{},log:[]}}catch(e){return{perCat:{},log:[]}}}
+function save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+let queue=QUESTIONS.map((_,i)=>i);   // 出題順（インデックス）
+let pos=0;                            // queue内の現在位置
+let sessCorrect=0, sessDone=0;
+let answered=false;
+
+const stage=document.getElementById('stage');
+const pbar=document.getElementById('pbar');
+const scoreEl=document.getElementById('score');
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function renderFigure(q){
+  const f=FIGS[q.id]; if(!f) return '';
+  const lines=q.code.split('\n');
+  let rows='';
+  lines.forEach((ln,idx)=>{
+    const n=idx+1, an=f.lines[n], t=an?an[0]:'';
+    rows+=`<div class="figline ${t}"><span class="fno">${n}</span><span class="fcode">${esc(ln)||' '}</span></div>`;
+    if(an) rows+=`<div class="annorow ${t}"><span class="anno">${esc(an[1])}</span></div>`;
+  });
+  const out=f.out?`<div class="figout">▸ ${esc(f.out)}</div>`:'';
+  return `<div class="figure reveal"><div class="fig-label">図解 — プログラムの流れ</div><div class="figbox">${rows}</div>${out}</div>`;
+}
+
+// 問題文のコードを、行番号つきの注釈可能ブロックとして描画（回答前は注釈なし）
+function codeBlockHtml(q){
+  if(!q.code) return '';
+  const lines=q.code.split('\n');
+  const rows=lines.map((ln,i)=>`<div class="figline" data-ln="${i+1}"><span class="fno">${i+1}</span><span class="fcode">${esc(ln)||' '}</span></div>`).join('');
+  return `<div class="figbox qcode" id="qcode">${rows}</div>`;
+}
+
+// 回答後、問題文のコードに直接ハイライト＋連結線＋結果を差し込む
+function revealFigure(q){
+  const f=FIGS[q.id]; const box=document.getElementById('qcode');
+  if(!f||!box) return;
+  Object.keys(f.lines).sort((a,b)=>a-b).forEach(n=>{
+    const t=f.lines[n][0], txt=f.lines[n][1];
+    const line=box.querySelector('.figline[data-ln="'+n+'"]');
+    if(!line) return;
+    line.classList.add(t,'reveal');
+    const ar=document.createElement('div'); ar.className='annorow '+t+' reveal';
+    ar.innerHTML='<span class="anno">'+esc(txt)+'</span>';
+    line.after(ar);
+  });
+  if(f.out){
+    const o=document.createElement('div'); o.className='figout qfigout reveal';
+    o.textContent='▸ '+f.out; box.after(o);
+  }
+}
+
+function renderTrace(q){
+  const t=TRACE[q.id]; if(!t) return '';
+  const head=t.cols.map(c=>`<th>${esc(c)}</th>`).join('');
+  const body=t.rows.map((r,ri)=>{
+    const tds=r.map((c,ci)=>{
+      const st=ci===r.length-1?' class="st"':'';
+      let cell;
+      if(c==='null') cell='<span class="nul">null</span>';
+      else if(c==='') cell='<span class="nul">·</span>';
+      else cell=esc(c);
+      return `<td${st}>${cell}</td>`;
+    }).join('');
+    return `<tr class="${(t.hot!=null&&ri===t.hot)?'hot':''}">${tds}</tr>`;
+  }).join('');
+  return `<div class="trace reveal"><details class="tdet"><summary>変数の変化を追う（トレース）</summary><div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></details></div>`;
+}
+
+let selected=new Set();
+// 質問への自動応答：事前生成データ(FIGS行注釈 / 公式解説 exp / 詳細 detail)から質問に応じた解説を返す
+function _codeLine(q,n){ return ((q.code||'').split('\n')[n-1]||'').trim(); }
+function _stripTags(s){ return String(s||'').replace(/<[^>]+>/g,''); }
+function _askLineExplain(q,n){
+  const d=q.detail&&q.detail.lines&&q.detail.lines[n];
+  const f=(typeof FIGS!=='undefined')?FIGS[q.id]:null;
+  const fg=f&&f.lines&&f.lines[n]?f.lines[n][1]:null;
+  const note=d||fg;
+  if(!note) return null;
+  return n+'行目「'+_codeLine(q,n)+'」\n→ '+note;
+}
+function _askFlow(q){
+  const cl=(q.code||'').split('\n');
+  if(q.detail&&q.detail.lines){
+    let s='【コードの流れ（行ごと）】\n';
+    cl.forEach((ln,i)=>{ const t=ln.trim(); if(!t) return; const nt=q.detail.lines[i+1]; s+=(i+1)+'行目：'+t+(nt?'\n　→ '+nt:'')+'\n'; });
+    if(q.detail.out) s+='\n'+q.detail.out;
+    return s;
+  }
+  const f=(typeof FIGS!=='undefined')?FIGS[q.id]:null;
+  if(f&&f.lines){
+    let s='【コードの流れ（要点）】\n';
+    Object.keys(f.lines).sort((a,b)=>a-b).forEach(n=>{ s+=n+'行目：'+_codeLine(q,+n)+'\n　→ '+f.lines[n][1]+'\n'; });
+    if(f.out) s+='\n'+f.out;
+    return s;
+  }
+  return '';
+}
+function _askAnswer(q){
+  const a=q.multi?(q.answers||[]).map(i=>LETTERS[i]+'．'+q.options[i]).join('\n'):(LETTERS[q.answer]+'．'+q.options[q.answer]);
+  return '【正解】\n'+a+'\n\n【解説】\n'+(_stripTags(q.exp)||'解説は登録されていません。');
+}
+function answerAsk(mode){
+  const q=QUESTIONS[queue[pos]];
+  const qa=document.getElementById('askq'), out=document.getElementById('aska'), hint=document.getElementById('askhint');
+  const flow=_askFlow(q), ansd=_askAnswer(q);
+  if(hint)hint.textContent=''; out.style.display='block';
+  let res;
+  if(mode==='flow'){ res=flow||('この問題はコード図解が未登録です。\n\n'+ansd); }
+  else if(mode==='answer'){ res=ansd; }
+  else {
+    const text=((qa&&qa.value)||'').trim();
+    if(!text){ if(hint)hint.textContent='質問を入力するか、ボタンを押してください'; out.style.display='none'; return; }
+    const lm=text.match(/(\d+)\s*行/);
+    const le=lm?_askLineExplain(q,+lm[1]):null;
+    if(le){ res=le; }
+    else if(/流れ|動き|何をし|全体|説明|どう動|処理|順番|意味/.test(text)){ res=flow||ansd; }
+    else if(/なぜ|理由|どうして|正解|選択肢|違|間違|合っ|出力|結果/.test(text)){ res=ansd; }
+    else { res=(flow?flow+'\n\n':'')+ansd; }
+  }
+  out.textContent=res;
+}
+function renderQuestion(){
+  answered=false; selected=new Set();
+  const q=QUESTIONS[queue[pos]];
+  pbar.style.width=(pos/queue.length*100)+'%';
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  stage.innerHTML=`
+    <div class="card reveal">
+      <div class="eyebrow">
+        <span class="cat">${esc(q.cat)}</span>
+        <span class="qnum">${pos+1} / ${queue.length}</span>
+      </div>
+      <div class="prompt">${esc(q.prompt)} ${q.multi?'<span class="multi-tag">複数選択</span>':''}</div>
+      ${codeBlockHtml(q)}
+      <div class="opts" id="opts"></div>
+      <div id="after"></div>
+      <div class="askbox">
+        <div class="ask-head">💬 このコードについて質問する（自動で解説を表示）</div>
+        <textarea class="ask-q" id="askq" rows="2" placeholder="例：3行目は何をしている？／なぜこの結果になる？"></textarea>
+        <div class="ask-row"><button class="ask-btn" type="button" onclick="answerAsk('free')">質問する</button><button class="ask-chip" type="button" onclick="answerAsk('flow')">コードの流れ</button><button class="ask-chip" type="button" onclick="answerAsk('answer')">正解と解説</button><span class="ask-hint" id="askhint"></span></div>
+        <div class="ask-a" id="aska"></div>
+      </div>
+    </div>`;
+  const opts=document.getElementById('opts');
+  const order=shuffle(q.options.map((_,i)=>i));   // 毎回シャッフル
+  q._order=order;
+  order.forEach((origIdx,dispIdx)=>{
+    const b=document.createElement('button');
+    b.className='opt'; b.type='button';
+    b.innerHTML=`<span class="key">${LETTERS[dispIdx]}</span><span class="txt">${esc(q.options[origIdx])}</span><span class="mark"></span>`;
+    b.onclick=()=> q.multi ? toggleSel(dispIdx,b) : choose(dispIdx);
+    opts.appendChild(b);
+  });
+  if(q.multi){
+    const bar=document.createElement('div'); bar.className='actions'; bar.id='mbar';
+    bar.innerHTML=`<button class="btn primary" type="button" id="submitBtn" onclick="submitMulti()" disabled>確定する（${q.answers.length}個選ぶ）</button>`;
+    opts.after(bar);
+  }
+}
+
+function toggleSel(dispIdx,btn){
+  if(answered) return;
+  if(selected.has(dispIdx)){selected.delete(dispIdx);btn.classList.remove('sel');}
+  else{selected.add(dispIdx);btn.classList.add('sel');}
+  const sb=document.getElementById('submitBtn'); if(sb) sb.disabled = selected.size===0;
+}
+
+function submitMulti(){
+  if(answered) return; answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=new Set(q.answers.map(a=>q._order.indexOf(a)));
+  const correct = selected.size===correctDisp.size && [...selected].every(x=>correctDisp.has(x));
+  document.querySelectorAll('#opts .opt').forEach((b,bi)=>{
+    b.disabled=true; b.classList.remove('sel');
+    const isC=correctDisp.has(bi), isS=selected.has(bi);
+    if(isC){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(isS&&!isC){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  const mbar=document.getElementById('mbar'); if(mbar) mbar.remove();
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+  const answerLetters=[...correctDisp].sort((a,b)=>a-b).map(i=>LETTERS[i]).join('・');
+  const last=pos===queue.length-1;
+  document.getElementById('after').innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${answerLetters}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function choose(i){
+  if(answered) return;
+  answered=true;
+  const q=QUESTIONS[queue[pos]];
+  const correctDisp=q._order.indexOf(q.answer);   // シャッフル後の正解位置
+  const correct=i===correctDisp;
+  const btns=document.querySelectorAll('#opts .opt');
+  btns.forEach((b,bi)=>{
+    b.disabled=true;
+    if(bi===correctDisp){b.classList.add('correct');b.querySelector('.mark').textContent='○';}
+    if(bi===i&&!correct){b.classList.add('wrong');b.querySelector('.mark').textContent='×';}
+  });
+  // 記録（累積・端末保存）
+  const s=load();
+  s.perCat[q.cat]=s.perCat[q.cat]||{a:0,c:0};
+  s.perCat[q.cat].a++; if(correct)s.perCat[q.cat].c++;
+  s.log.push({id:q.id,cat:q.cat,correct,t:Date.now()});
+  save(s);
+  sessDone++; if(correct)sessCorrect++;
+  scoreEl.innerHTML='<b>'+sessCorrect+'</b> / '+sessDone+' 正解';
+
+  const after=document.getElementById('after');
+  const last=pos===queue.length-1;
+  after.innerHTML=`
+    <div class="verdict ${correct?'ok':'ng'} reveal">${correct?'○ 正解':'× 不正解'} <span style="font-weight:500;color:var(--muted);font-size:13px">正解は ${LETTERS[correctDisp]}</span></div>
+    <div class="exp reveal">${q.exp}</div>
+    ${renderTrace(q)}
+    <div class="actions">
+      <button class="btn ghost" type="button" onclick="showResults()">成績を見る</button>
+      <button class="btn primary" type="button" onclick="next()">${last?'結果へ →':'次の問題 →'}</button>
+    </div>`;
+  revealFigure(q);
+}
+
+function next(){
+  if(pos<queue.length-1){pos++;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+  else showResults();
+}
+
+function showResults(){
+  pbar.style.width='100%';
+  const s=load();
+  const cats=Object.keys(ADVICE);
+  let totA=0,totC=0;
+  cats.forEach(c=>{const d=s.perCat[c];if(d){totA+=d.a;totC+=d.c;}});
+  const pct=totA?Math.round(totC/totA*100):0;
+  const weak=cats.filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+
+  let barsHtml=cats.map(c=>{
+    const d=s.perCat[c]||{a:0,c:0};
+    const p=d.a?Math.round(d.c/d.a*100):0;
+    const isWeak=d.a>0&&p<70;
+    const col=d.a===0?'var(--border)':(p<50?'var(--ng)':p<70?'var(--accent)':'var(--ok)');
+    return `<div class="bar-row">
+      <div class="bar-top"><span>${esc(c)}${isWeak?'<span class="weak-badge">要復習</span>':''}</span>
+      <span class="n">${d.a?p+'% ('+d.c+'/'+d.a+')':'未回答'}</span></div>
+      <div class="bar-track"><i style="width:${d.a?p:0}%;background:${col}"></i></div></div>`;
+  }).join('');
+
+  let msg = totA===0?'まだ回答がありません。':
+    pct>=80?'かなり good。取りこぼした分野だけ詰めれば合格圏です。':
+    pct>=60?'あと一歩。下の「要復習」分野を重点的に。':
+    '基礎の詰め直しから。要復習の分野を1つずつ潰しましょう。';
+
+  let adviceHtml = weak.length
+    ? weak.map(c=>`<div class="advice"><div class="a-cat">${esc(c)} <span class="weak-badge">要復習</span></div><div class="a-txt">${esc(ADVICE[c])}</div></div>`).join('')
+    : (totA?'<div class="empty">要復習の分野はありません。全分野70%以上。この調子！</div>':'<div class="empty">問題を解くと、ここに弱点分野と対策が出ます。</div>');
+
+  stage.innerHTML=`
+   <div class="card reveal">
+     <div class="res-head">
+       <div class="ring" style="--p:${pct}"><div class="num"><b>${pct}%</b><span>累計正答率</span></div></div>
+       <div class="res-sum"><h2>成績サマリー</h2><p>${msg}</p>
+         <p style="margin-top:6px">累計 ${totC} / ${totA} 問正解</p></div>
+     </div>
+     <div class="sec-label">分野別の正答率</div>
+     <div class="bars">${barsHtml}</div>
+     <div class="sec-label">重点対策（要復習の分野）</div>
+     ${adviceHtml}
+     <div class="actions">
+       <button class="btn ghost" type="button" onclick="resetAll()">記録をリセット</button>
+       ${weak.length?'<button class="btn" type="button" onclick="retryWeak()">要復習だけ再挑戦</button>':''}
+       <button class="btn primary" type="button" onclick="restart()">もう一度：全問</button>
+     </div>
+   </div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){queue=QUESTIONS.map((_,i)=>i);pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});}
+function retryWeak(){
+  const s=load();
+  const weak=Object.keys(ADVICE).filter(c=>{const d=s.perCat[c];return d&&d.a>0&&(d.c/d.a)<0.7;});
+  const idx=QUESTIONS.map((q,i)=>i).filter(i=>weak.includes(QUESTIONS[i].cat));
+  queue=idx.length?idx:QUESTIONS.map((_,i)=>i);
+  pos=0;sessCorrect=0;sessDone=0;renderQuestion();window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetAll(){save({perCat:{},log:[]});showResults();}
+
+renderQuestion();
+</script>
+
+<!-- cbt-nav-added -->
+<style>
+  /* ===== 問題選択画面（後付け・既存レイアウトは変更しない） ===== */
+
+  /* 各問題ページに出るのはこのボタンだけ。左下に固定 */
+  .cbtopen{position:fixed;left:14px;bottom:14px;z-index:60;
+    font:600 13px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:12px 18px;cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,.18), 0 8px 22px rgba(0,0,0,.14)}
+  .cbtopen:hover{filter:brightness(1.06)}
+  .cbtopen:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  /* 問題選択画面（全画面オーバーレイ） */
+  .cbtscreen{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center;
+    padding:16px;background:rgba(10,12,16,.55)}
+  .cbtscreen[hidden]{display:none}
+  .cbtpanel{width:min(860px,100%);max-height:min(86vh,760px);display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    box-shadow:var(--shadow);overflow:hidden}
+  .cbtpanel-head{display:flex;align-items:center;gap:12px;padding:14px 16px;
+    border-bottom:1px solid var(--border);background:var(--surface-2)}
+  .cbtpanel-head h2{font:600 15px/1.3 var(--sans);color:var(--ink);margin:0}
+  .cbtcount{font:400 12px/1 var(--sans);color:var(--muted);font-variant-numeric:tabular-nums}
+  .cbtclose{margin-left:auto;font:500 13px/1 var(--sans);color:var(--muted);
+    background:var(--surface);border:1px solid var(--border);border-radius:999px;
+    padding:8px 14px;cursor:pointer}
+  .cbtclose:hover{color:var(--ink);border-color:var(--ink)}
+  .cbtfilters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px 0}
+  .cbtchip{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:7px 12px;cursor:pointer}
+  .cbtchip.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtbody{padding:12px 16px;overflow:auto;flex:1}
+  .cbtgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+  .cbtq{font:600 14px/1 var(--mono);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:10px;padding:12px 0;cursor:pointer;
+    font-variant-numeric:tabular-nums;position:relative}
+  .cbtq:hover{border-color:var(--accent);color:var(--accent)}
+  .cbtq.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+  .cbtq.ng{background:var(--ng-soft);border-color:var(--ng);color:var(--ng)}
+  .cbtq.fl::after{content:"";position:absolute;top:4px;right:4px;width:7px;height:7px;
+    border-radius:50%;background:var(--accent)}
+  .cbtq.cur{outline:2px solid var(--accent);outline-offset:1px}
+  .cbtempty{font:400 13px/1.6 var(--sans);color:var(--muted);padding:10px 2px}
+  .cbtfoot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    padding:12px 16px;border-top:1px solid var(--border);background:var(--surface-2)}
+  .cbtlegend{font:400 11.5px/1.6 var(--sans);color:var(--faint);
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .cbtlegend i{display:inline-block;width:11px;height:11px;border-radius:3px;
+    border:1px solid var(--border);margin-right:5px;vertical-align:-1px}
+  .cbtlegend i.ok{background:var(--ok-soft);border-color:var(--ok)}
+  .cbtlegend i.ng{background:var(--ng-soft);border-color:var(--ng)}
+  .cbtlegend i.fl{background:var(--accent)}
+  .cbtrun{font:600 12.5px/1 var(--sans);color:var(--surface);background:var(--accent);
+    border:0;border-radius:999px;padding:9px 16px;cursor:pointer}
+  .cbtrun[disabled]{opacity:.45;cursor:default}
+
+  /* 問題カード右上の「後で見直す」 */
+  .cbtflag{font:500 12px/1 var(--sans);color:var(--muted);background:var(--surface);
+    border:1px solid var(--border);border-radius:999px;padding:6px 11px;cursor:pointer;margin-left:auto}
+  .cbtflag.on{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
+  .cbtprev{font:400 12px/1 var(--sans);color:var(--muted);margin-left:8px}
+
+  /* 左下のボタンが最下部の内容に重ならないよう余白を足す */
+  body{padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+  @media (max-width:640px){
+    .cbtopen{left:10px;bottom:10px;padding:11px 16px}
+    .cbtgrid{grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px}
+    .cbtscreen{padding:10px}
+  }
+</style>
+<script>
+(function(){
+  // エンジンが読み込まれていない画面（雛形の説明ページ等）では何もしない
+  if(typeof QUESTIONS==='undefined' || typeof renderQuestion!=='function') return;
+  var stage=document.getElementById('stage');
+  if(!stage || !QUESTIONS.length) return;
+
+  // --- 進捗の保存（科目ごとに別キー。既存の成績データとは混ぜない） ---
+  var CKEY=(typeof KEY!=='undefined'?KEY:'quiz')+'_cbt';
+  var st={};
+  try{ st=JSON.parse(localStorage.getItem(CKEY))||{}; }catch(e){ st={}; }
+  function persist(){ try{ localStorage.setItem(CKEY,JSON.stringify(st)); }catch(e){} }
+
+  var filter='all';
+
+  // --- 左下のボタン（各問題ページに出るのはこれだけ） ---
+  var openBtn=document.createElement('button');
+  openBtn.type='button';
+  openBtn.className='cbtopen';
+  openBtn.textContent='問題選択画面';
+  document.body.appendChild(openBtn);
+
+  // --- 問題選択画面（全画面オーバーレイ） ---
+  var scr=document.createElement('div');
+  scr.className='cbtscreen';
+  scr.hidden=true;
+  scr.innerHTML=
+    '<div class="cbtpanel" role="dialog" aria-modal="true" aria-label="問題選択画面">'
+   +  '<div class="cbtpanel-head">'
+   +    '<h2>問題を選ぶ</h2><span class="cbtcount" id="cbtCount"></span>'
+   +    '<button type="button" class="cbtclose" id="cbtClose">閉じる</button>'
+   +  '</div>'
+   +  '<div class="cbtfilters">'
+   +    '<button type="button" class="cbtchip on" data-f="all">すべて</button>'
+   +    '<button type="button" class="cbtchip" data-f="todo">未解答</button>'
+   +    '<button type="button" class="cbtchip" data-f="ng">間違えた</button>'
+   +    '<button type="button" class="cbtchip" data-f="flag">見直し</button>'
+   +  '</div>'
+   +  '<div class="cbtbody"><div class="cbtgrid" id="cbtGrid"></div></div>'
+   +  '<div class="cbtfoot">'
+   +    '<div class="cbtlegend">'
+   +      '<span><i></i>未解答</span><span><i class="ok"></i>正解</span>'
+   +      '<span><i class="ng"></i>不正解</span><span><i class="fl"></i>見直し</span>'
+   +    '</div>'
+   +    '<button type="button" class="cbtrun" id="cbtRun">この絞り込みだけを順に解く</button>'
+   +  '</div>'
+   +'</div>';
+  document.body.appendChild(scr);
+
+  var grid=document.getElementById('cbtGrid');
+  var runBtn=document.getElementById('cbtRun');
+  var countEl=document.getElementById('cbtCount');
+  var closeBtn=document.getElementById('cbtClose');
+
+  function openScreen(){ scr.hidden=false; paint(); closeBtn.focus(); }
+  function closeScreen(){ scr.hidden=true; openBtn.focus(); }
+  openBtn.onclick=openScreen;
+  closeBtn.onclick=closeScreen;
+  scr.addEventListener('click',function(e){ if(e.target===scr) closeScreen(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && !scr.hidden) closeScreen(); });
+
+  scr.querySelectorAll('.cbtchip').forEach(function(c){
+    c.onclick=function(){
+      filter=c.dataset.f;
+      scr.querySelectorAll('.cbtchip').forEach(function(x){ x.classList.toggle('on', x===c); });
+      paint();
+    };
+  });
+
+  // 現在の絞り込みに合致する問題インデックス
+  function picked(){
+    var out=[];
+    QUESTIONS.forEach(function(q,i){
+      var s=st[q.id]||{};
+      if(filter==='todo' && s.r) return;
+      if(filter==='ng'   && s.r!=='ng') return;
+      if(filter==='flag' && !s.f) return;
+      out.push(i);
+    });
+    return out;
+  }
+
+  function paint(){
+    if(scr.hidden) return;
+    var list=picked();
+    var done=QUESTIONS.filter(function(q){ return (st[q.id]||{}).r; }).length;
+    countEl.textContent='解答済み '+done+' / '+QUESTIONS.length;
+    grid.innerHTML='';
+    if(!list.length){
+      grid.innerHTML='<div class="cbtempty">該当する問題はありません。</div>';
+      runBtn.disabled=true;
+      return;
+    }
+    runBtn.disabled=false;
+    list.forEach(function(i){
+      var q=QUESTIONS[i], s=st[q.id]||{};
+      var b=document.createElement('button');
+      b.type='button';
+      b.className='cbtq'+(s.r==='ok'?' ok':s.r==='ng'?' ng':'')+(s.f?' fl':'')
+                 +(queue[pos]===i?' cur':'');
+      b.textContent=String(q.id).replace(/^\D+/,'')||String(i+1);
+      b.title=(q.cat||'')+(s.r?(s.r==='ok'?'／前回○':'／前回×'):'');
+      b.onclick=function(){ jump(i); };
+      grid.appendChild(b);
+    });
+  }
+
+  // 任意の問題へジャンプ（出題キューに無ければ全問キューに戻してから移動）
+  function jump(i){
+    var at=queue.indexOf(i);
+    if(at<0){ queue=QUESTIONS.map(function(_,k){return k;}); at=i; }
+    pos=at;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  runBtn.onclick=function(){
+    var list=picked();
+    if(!list.length) return;
+    queue=list; pos=0;
+    closeScreen();
+    renderQuestion();
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+
+  function toggleFlag(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].f=!st[q.id].f;
+    persist(); decorate(); paint();
+  }
+
+  // 問題カードに「後で見直す」ボタンと前回結果を差し込む
+  function decorate(){
+    var eb=document.querySelector('#stage .eyebrow');
+    if(!eb) return;
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var s=st[q.id]||{};
+    var old=eb.querySelector('.cbtflag'); if(old) old.remove();
+    var oldp=eb.querySelector('.cbtprev'); if(oldp) oldp.remove();
+    if(s.r){
+      var p=document.createElement('span');
+      p.className='cbtprev';
+      p.textContent = s.r==='ok' ? '前回：○正解' : '前回：×不正解';
+      eb.appendChild(p);
+    }
+    var f=document.createElement('button');
+    f.type='button';
+    f.className='cbtflag'+(s.f?' on':'');
+    f.textContent = s.f ? '見直しに登録済み' : '後で見直す';
+    f.onclick=toggleFlag;
+    eb.appendChild(f);
+  }
+
+  // 解答結果を拾って保存する（正解/不正解の判定は既存エンジンの表示を読む）
+  function record(){
+    var q=QUESTIONS[queue[pos]]; if(!q) return;
+    var v=document.querySelector('#after .verdict'); if(!v) return;
+    st[q.id]=st[q.id]||{};
+    st[q.id].r = v.classList.contains('ok') ? 'ok' : 'ng';
+    persist(); paint();
+  }
+
+  // --- 既存関数をラップ（中身は書き換えない） ---
+  var _render=renderQuestion;
+  renderQuestion=function(){ _render.apply(this,arguments); decorate(); paint(); };
+
+  if(typeof choose==='function'){
+    var _choose=choose;
+    choose=function(){ _choose.apply(this,arguments); record(); };
+  }
+  if(typeof submitMulti==='function'){
+    var _submit=submitMulti;
+    submitMulti=function(){ _submit.apply(this,arguments); record(); };
+  }
+
+  decorate();
+})();
+</script>
+<!-- back-to-index (jinji) -->
+<style>
+.appshome{position:fixed;right:14px;z-index:9999;
+  bottom:calc(14px + env(safe-area-inset-bottom));
+  font:600 13px/1 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+  color:#16232b;background:#ffffff;border:1px solid rgba(0,0,0,.16);border-radius:999px;
+  padding:11px 16px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,.16),0 8px 20px rgba(0,0,0,.10)}
+.appshome:hover{filter:brightness(.97)}
+.appshome:focus-visible{outline:2px solid #136b5b;outline-offset:2px}
+@media (prefers-color-scheme:dark){
+  .appshome{color:#e9eef1;background:#1d242b;border-color:rgba(255,255,255,.18);
+    box-shadow:0 2px 6px rgba(0,0,0,.45)}}
+@media (max-width:520px){.appshome{right:10px;padding:10px 14px;font-size:12.5px}}
+</style>
+<a class="appshome" href="../">&#8592; アプリ一覧</a>
+<script>
+if('serviceWorker' in navigator){addEventListener('load',function(){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});});}
+</script>
+</body></html>
