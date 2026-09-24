@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="演習アプリ">
+<meta name="theme-color" content="#136b5b">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>演習アプリ</title>
+<style>
+  :root{
+    --bg:#eef1f2; --card:#ffffff; --ink:#131a1e; --sub:#5d6d75; --line:#dae1e4;
+    --accent:#136b5b; --accent-soft:#e2efec; --shadow:0 1px 2px rgba(16,32,38,.07);
+    --c-cert:#8a5a1f; --c-lang:#136b5b; --c-des:#2a5a92; --c-infra:#6a3d8f; --c-biz:#95502f;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0d1316; --card:#161f24; --ink:#e6edf1; --sub:#8fa2ab; --line:#25323a;
+      --accent:#4cc0a5; --accent-soft:#12312b; --shadow:none;
+      --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4;
+      --c-infra:#b489e0; --c-biz:#e0916b;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0d1316; --card:#161f24; --ink:#e6edf1; --sub:#8fa2ab; --line:#25323a;
+    --accent:#4cc0a5; --accent-soft:#12312b; --shadow:none;
+    --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4; --c-infra:#b489e0; --c-biz:#e0916b;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",-apple-system,system-ui,sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased; -webkit-text-size-adjust:100%;
+    padding:0 0 calc(40px + env(safe-area-inset-bottom));
+  }
+  .wrap{max-width:1400px;margin:0 auto;padding:0 12px}
+
+  header{padding:max(20px,env(safe-area-inset-top)) 0 10px}
+  /* ホーム画面から起動したときは時計の下に潜らせない */
+  @media (display-mode:standalone){
+    header{padding-top:calc(14px + env(safe-area-inset-top))}
+  }
+  h1{font-size:24px;font-weight:800;letter-spacing:.01em;margin:0 0 4px;text-wrap:balance}
+  .lede{color:var(--sub);font-size:13.5px;margin:0;font-variant-numeric:tabular-nums}
+
+  .searchbar{
+    position:sticky; top:0; z-index:10; padding:10px 0 12px;
+    background:linear-gradient(var(--bg) 76%, transparent);
+  }
+  #q{
+    width:100%; padding:12px 14px; font-size:16px; color:var(--ink);
+    background:var(--card); border:1px solid var(--line); border-radius:10px;
+    font-family:inherit; box-shadow:var(--shadow);
+  }
+  #q:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:transparent}
+  #q::placeholder{color:var(--sub)}
+
+  section{margin:20px 0 0}
+  .sechead{
+    display:flex; align-items:baseline; gap:10px;
+    padding:0 2px 8px; border-bottom:1px solid var(--line); margin-bottom:12px;
+  }
+  h2{font-size:15px;font-weight:700;margin:0;letter-spacing:.04em}
+  .count{font-size:12px;color:var(--sub);font-variant-numeric:tabular-nums}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px}
+  a.app{
+    display:flex; align-items:center; gap:11px; text-decoration:none; color:inherit;
+    background:var(--card); border:1px solid var(--line); border-left:3px solid var(--hue);
+    border-radius:9px; padding:12px 13px; box-shadow:var(--shadow);
+    transition:transform .12s ease, border-color .12s ease;
+  }
+  a.app:hover{transform:translateY(-1px);border-color:var(--hue)}
+  a.app:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .ico{font-size:19px;line-height:1;flex:none;width:24px;text-align:center}
+  .meta{display:block;min-width:0;flex:1}
+  .name{display:block;font-size:14.5px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
+  .qn{display:block;font-size:11.5px;color:var(--sub);font-variant-numeric:tabular-nums;margin-top:1px}
+  /* このサイト内に置いてあるアプリ（＝アプリの中で開く）の印 */
+  .here{display:inline-block;margin-left:6px;padding:1px 5px;border-radius:4px;
+    background:var(--accent-soft);color:var(--accent);font-size:10px;font-weight:700;
+    vertical-align:1px;letter-spacing:.03em}
+
+  .empty{display:none;padding:26px 4px;color:var(--sub);font-size:14px}
+  footer{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);
+    color:var(--sub);font-size:12px}
+  footer b{color:var(--ink);font-weight:600}
+  @media (prefers-reduced-motion:reduce){a.app{transition:none}a.app:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>演習アプリ</h1>
+    <p class="lede">37アプリ・1,315問／自作の問題集をまとめた入口</p>
+  </header>
+
+  <div class="searchbar">
+    <input id="q" type="search" placeholder="アプリ名で絞り込む（例：Java、Linux、簿記）"
+           autocomplete="off" aria-label="アプリ名で絞り込む">
+  </div>
+
+  <section data-cat data-hue="--c-cert">
+    <div class="sechead"><h2>資格対策</h2><span class="count"></span></div>
+    <div class="grid">
+      <a class="app" href="./java-silver/"><span class="ico">☕</span><span class="meta"><span class="name">Java Silver<span class="here">このアプリ内</span></span><span class="qn">80問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/96fb7594-d395-4965-b43a-6d8f1fb706ed"><span class="ico">☕</span><span class="meta"><span class="name">Java Silver 総仕上げ問題②</span><span class="qn">77問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/121dfd52-c5d7-41af-98ef-4c7aa888c26c"><span class="ico">☕</span><span class="meta"><span class="name">Java Bronze</span><span class="qn">60問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/8c962dc4-0ce7-4788-ab2b-7fe38e35fca4"><span class="ico">☕</span><span class="meta"><span class="name">Java Bronze 練習問題</span><span class="qn">60問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/3a487ba0-aac4-47e3-a2a7-663971c01c40"><span class="ico">🐧</span><span class="meta"><span class="name">LPIC Level1（101試験）</span><span class="qn">57問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/883c7ce4-33c2-40bc-a69f-979ac8602b1c"><span class="ico">🐧</span><span class="meta"><span class="name">LPIC Level1（102試験）</span><span class="qn">51問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/93048652-b8c2-4d2e-8b1c-780cfece8c28"><span class="ico">🧮</span><span class="meta"><span class="name">日商簿記2級</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/c3558d6f-eac7-4426-b457-70a5a9b788f1"><span class="ico">🧮</span><span class="meta"><span class="name">日商簿記3級（選択式）</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/9b4ca05e-9da8-459d-9a96-4fe580f171a5"><span class="ico">📝</span><span class="meta"><span class="name">SPI・一般常識</span><span class="qn">30問</span></span></a>
+    </div>
+  </section>
+
+  <section data-cat data-hue="--c-lang">
+    <div class="sechead"><h2>言語・フレームワーク</h2><span class="count"></span></div>
+    <div class="grid">
+      <a class="app" href="https://claude.ai/code/artifact/2d7ae110-f6e2-486b-b41c-8057249cbd96"><span class="ico">☕</span><span class="meta"><span class="name">Java Silver応用</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/102c4d64-6daf-4f5b-8573-38add41dcebd"><span class="ico">☕</span><span class="meta"><span class="name">Java Silver原作</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/7412463b-5fb6-4357-b796-5148df8936f3"><span class="ico">☕</span><span class="meta"><span class="name">モダンJava</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/1f8c0cb7-0549-4531-93f5-224fbe8191da"><span class="ico">🍃</span><span class="meta"><span class="name">Spring Boot基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/1d031f27-f2cc-41f8-b23a-6bacab1b2f76"><span class="ico">🐍</span><span class="meta"><span class="name">Python基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/29193240-2572-4728-a800-b2980a6fd646"><span class="ico">📜</span><span class="meta"><span class="name">JavaScript基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/10e29d47-c077-4a0f-9d33-1c5dbeb11fb1"><span class="ico">🔷</span><span class="meta"><span class="name">TypeScript基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/a025c009-b197-4ca1-92ab-a57b8f90d681"><span class="ico">🎨</span><span class="meta"><span class="name">HTML・CSS基礎</span><span class="qn">30問</span></span></a>
+    </div>
+  </section>
+
+  <section data-cat data-hue="--c-des">
+    <div class="sechead"><h2>設計・データ</h2><span class="count"></span></div>
+    <div class="grid">
+      <a class="app" href="https://claude.ai/code/artifact/a681e973-7c30-4836-b4f3-c964bfdd3c88"><span class="ico">🧩</span><span class="meta"><span class="name">オブジェクト指向設計</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/dc692f7c-1cf6-4f31-9c24-147998355f32"><span class="ico">🔢</span><span class="meta"><span class="name">アルゴリズム基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/acd71657-33b0-443c-82a7-cc3d0e57b7ba"><span class="ico">🗂️</span><span class="meta"><span class="name">データベース設計</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/ca9b97fc-e7c6-4cfe-abb6-faf10a8be003"><span class="ico">🗄️</span><span class="meta"><span class="name">SQL基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/cdb43f3f-0129-45ea-abc7-a7cd6dfd0b38"><span class="ico">🔌</span><span class="meta"><span class="name">REST API設計</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/fa1a876c-0850-47bd-8a2c-7178d54df699"><span class="ico">🔍</span><span class="meta"><span class="name">正規表現</span><span class="qn">30問</span></span></a>
+    </div>
+  </section>
+
+  <section data-cat data-hue="--c-infra">
+    <div class="sechead"><h2>インフラ・運用</h2><span class="count"></span></div>
+    <div class="grid">
+      <a class="app" href="https://claude.ai/code/artifact/9940f1dd-d401-44fa-b9a9-f8d1999d0def"><span class="ico">🐧</span><span class="meta"><span class="name">Linuxコマンド</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/b96d7eb1-5b87-48fa-896b-d39255a667b2"><span class="ico">💻</span><span class="meta"><span class="name">シェルスクリプト</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/8333f97a-6888-4ee5-97fb-b9f2790125de"><span class="ico">🐳</span><span class="meta"><span class="name">Docker基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/9e659cb7-35b9-43e1-9e7a-ac30cb8b8ada"><span class="ico">☸️</span><span class="meta"><span class="name">Kubernetes基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/8b39694b-3a79-46b0-a780-0f3ad15288a8"><span class="ico">☁️</span><span class="meta"><span class="name">クラウド基礎（AWS中心）</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/de913b62-e9ce-4e3f-9932-1528fe595fef"><span class="ico">🌿</span><span class="meta"><span class="name">Gitコマンド応用</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/c9b3684a-6181-4812-8cdd-5f5909b5ccad"><span class="ico">🔄</span><span class="meta"><span class="name">CI/CD基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/b07d21dc-c8cb-4f4e-a73a-c527e7514e48"><span class="ico">🌐</span><span class="meta"><span class="name">ネットワーク応用</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/9a80b310-4889-44ea-b608-695c9bfe81ca"><span class="ico">🔐</span><span class="meta"><span class="name">セキュリティ基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/c6d9844c-a0ad-4a20-97ee-2102e472d937"><span class="ico">🌍</span><span class="meta"><span class="name">HTTP・Web基礎</span><span class="qn">30問</span></span></a>
+    </div>
+  </section>
+
+  <section data-cat data-hue="--c-biz">
+    <div class="sechead"><h2>仕事の基礎</h2><span class="count"></span></div>
+    <div class="grid">
+      <a class="app" href="https://claude.ai/code/artifact/c5ac914e-5b13-4e5d-8c5b-e063c9ea72c0"><span class="ico">🧪</span><span class="meta"><span class="name">テスト基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/72f48804-63ac-4049-9c23-05561e9c2e76"><span class="ico">📋</span><span class="meta"><span class="name">プロジェクト管理基礎</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/79c3bf22-afac-4aa7-86d1-e75baeb27eb0"><span class="ico">📊</span><span class="meta"><span class="name">Excel関数</span><span class="qn">30問</span></span></a>
+      <a class="app" href="https://claude.ai/code/artifact/92b4f321-137b-491e-977e-d3e5099bf7ab"><span class="ico">✉️</span><span class="meta"><span class="name">ビジネス文書・敬語</span><span class="qn">30問</span></span></a>
+    </div>
+  </section>
+
+  <p class="empty" id="empty">該当するアプリがありません。</p>
+
+  <footer>
+    <b>このアプリ内</b>の印が付いたものは、このアプリの中でそのまま開きます（全画面・オフライン可）。
+    印の無いものは claude.ai で開くので、ブラウザに切り替わります。<br>
+    各アプリには<b>問題選択画面</b>があります（画面左下のボタン）。番号でジャンプでき、
+    未解答・正解・不正解・見直しが色分けされます。解答状況は端末に保存されるので、
+    途中でやめても続きから再開できます。
+  </footer>
+</div>
+
+<script>
+  // カテゴリごとの色をカードへ渡す
+  document.querySelectorAll('section[data-cat]').forEach(function (sec) {
+    var hue = 'var(' + sec.dataset.hue + ')';
+    sec.querySelectorAll('a.app').forEach(function (a) { a.style.setProperty('--hue', hue); });
+    sec.querySelector('.count').textContent = sec.querySelectorAll('a.app').length + 'アプリ';
+  });
+
+  // 37個あるので、名前での絞り込みを付ける
+  var q = document.getElementById('q');
+  var empty = document.getElementById('empty');
+  q.addEventListener('input', function () {
+    var t = q.value.trim().toLowerCase();
+    var shown = 0;
+    document.querySelectorAll('section[data-cat]').forEach(function (sec) {
+      var hit = 0;
+      sec.querySelectorAll('a.app').forEach(function (a) {
+        var ok = !t || a.querySelector('.name').textContent.toLowerCase().indexOf(t) !== -1;
+        a.style.display = ok ? '' : 'none';
+        if (ok) hit++;
+      });
+      sec.style.display = hit ? '' : 'none';
+      shown += hit;
+    });
+    empty.style.display = shown ? 'none' : 'block';
+  });
+
+  // オフラインで開けるようにする
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js').catch(function () {});
+    });
+  }
+</script>
+</body>
+</html>
