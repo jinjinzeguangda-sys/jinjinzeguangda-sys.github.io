@@ -1,6 +1,6 @@
 // このアプリ1本ぶんのキャッシュ。CACHE名は index.html の md5 から作る
 // （名前を上げないと端末に古い版が残り続ける）
-const CACHE = 'app-linux-2d68b23f';
+const CACHE = 'app-linux-f9066803';
 const ASSETS = ['./', './index.html', './manifest.webmanifest'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
