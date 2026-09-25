@@ -8,10 +8,11 @@ const MINE = new Set(['/hub/', '/hub/index.html', '/hub/manifest.webmanifest',
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
+const STALE = /^hub-index-[0-9a-f]{8}$/;   // ★接頭辞だけだと java-bronze が java-bronze-drill を消す（2026-09-25 実測）
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(ks => Promise.all(
-      ks.filter(k => k.startsWith('hub-index-') && k !== CACHE).map(k => caches.delete(k))
+      ks.filter(k => STALE.test(k) && k !== CACHE).map(k => caches.delete(k))
     )).then(() => self.clients.claim())
   );
 });

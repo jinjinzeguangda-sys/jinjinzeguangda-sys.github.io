@@ -5,9 +5,10 @@ const ASSETS = ['./', './index.html', './manifest.webmanifest'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
+const STALE = /^app-javascript-[0-9a-f]{8}$/;   // ★接頭辞だけだと java-bronze が java-bronze-drill を消す（2026-09-25 実測）
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(ks =>
-    Promise.all(ks.filter(k => k !== CACHE && k.startsWith('app-javascript-')).map(k => caches.delete(k)))
+    Promise.all(ks.filter(k => k !== CACHE && STALE.test(k)).map(k => caches.delete(k)))
   ).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
