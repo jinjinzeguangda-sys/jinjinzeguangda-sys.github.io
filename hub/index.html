@@ -31,6 +31,10 @@
     --accent:#4cc0a5; --accent-soft:#12312b; --shadow:none;
     --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4; --c-infra:#b489e0; --c-biz:#e0916b;
   }
+  /* 「中」＝暗いテーマのまま、背景として塗られるトークンだけ明度 +8%。
+     色相・彩度は固定。文字色・アクセント・正誤の色は1ビットも変えていない。
+     上げ幅はこのファイルの実測で決めた（本文 12.6:1 / 補足 4.8:1 / アクセント 5.7:1） */
+  :root[data-theme="dim"]{ --bg:#1C2930; --card:#25353D; --ink:#e6edf1; --sub:#8fa2ab; --line:#354753; --accent:#4cc0a5; --accent-soft:#1D4F45; --shadow:none; --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4; --c-infra:#b489e0; --c-biz:#e0916b; }
 
   *{box-sizing:border-box}
   body{
@@ -46,16 +50,16 @@
   @media (display-mode:standalone){
     header{padding-top:calc(14px + env(safe-area-inset-top))}
   }
-  /* 明るさ切り替えボタン（2026-09-28）。hub の既存トークンだけで組む */
-  header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-  .hgroup{min-width:0}
-  .themebtn{appearance:none;-webkit-appearance:none;flex:0 0 auto;margin-top:2px;
-    padding:5px 11px;border:1px solid var(--line);border-radius:9px;
-    background:var(--card);color:var(--sub);cursor:pointer;
-    font:inherit;font-size:12px;line-height:1.2;white-space:nowrap;
-    transition:color .15s ease,border-color .15s ease}
-  .themebtn:hover{color:var(--accent);border-color:var(--accent)}
-  .themebtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* 明るさの切り替え 暗い/中/明るい（2026-09-28）。既存トークンだけで組む */
+  .themeseg{display:inline-flex;flex:0 0 auto;margin-top:2px;border:1px solid var(--line);
+    border-radius:9px;overflow:hidden;background:var(--card)}
+  .themeseg button{appearance:none;-webkit-appearance:none;border:0;padding:5px 9px;
+    background:transparent;color:var(--sub);cursor:pointer;font:inherit;font-size:12px;line-height:1.2;
+    white-space:nowrap;transition:color .15s ease,background .15s ease}
+  .themeseg button + button{border-left:1px solid var(--line)}
+  .themeseg button:hover{color:var(--accent)}
+  .themeseg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+  .themeseg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
   h1{font-size:24px;font-weight:800;letter-spacing:.01em;margin:0 0 4px;text-wrap:balance}
   .lede{color:var(--sub);font-size:13.5px;margin:0;font-variant-numeric:tabular-nums}
 
@@ -103,35 +107,39 @@
   footer b{color:var(--ink);font-weight:600}
   @media (prefers-reduced-motion:reduce){a.app{transition:none}a.app:hover{transform:none}}
 </style>
-<script id="jinji-theme-boot">
-// 明るい/暗いの切り替え。配色は既存のトークンをそのまま使う（1色も足していない）。
+<script id="jinji-theme-boot-v2">
+// 明るさの切り替え（暗い / 中 / 明るい）。配色は既存のトークンだけを使う。
 // 保存が無いときは data-theme を当てない＝OSの設定に従う（従来どおりの見え方）。
-// ★hub は theme-color がアクセントの緑なので、ここでは書き換えない。
 (function(){
-  var KEY='jinji_theme';
+  var KEY='jinji_theme', OK={dark:1,dim:1,light:1}, TC=null;
   function saved(){ try{ var t=localStorage.getItem(KEY);
-    return (t==='light'||t==='dark')?t:null; }catch(e){ return null; } }
+    return OK[t]?t:null; }catch(e){ return null; } }
   function osDark(){ try{ return matchMedia('(prefers-color-scheme:dark)').matches; }
     catch(e){ return false; } }
   function current(){ return saved() || (osDark()?'dark':'light'); }
+  // ★描画前に当てる（body より前で走らせているので切り替えのちらつきが出ない）
   var s=saved(); if(s) document.documentElement.setAttribute('data-theme', s);
   function paint(t){
-    var b=document.getElementById('themebtn');
-    if(b){ b.textContent = (t==='dark') ? '明るく' : '暗く';
-           b.title = (t==='dark') ? '明るい表示に切り替える' : '暗い表示に切り替える';
-           b.setAttribute('aria-label', b.title); }
+    if(TC){ var m=document.querySelector('meta[name="theme-color"]');
+      if(m) m.setAttribute('content', TC[t]||TC.dark); }
+    var g=document.getElementById('themeseg'); if(!g) return;
+    var bs=g.querySelectorAll('button');
+    for(var i=0;i<bs.length;i++)
+      bs[i].setAttribute('aria-pressed', bs[i].dataset.themeSet===t ? 'true':'false');
   }
   function init(){
     paint(current());
-    var b=document.getElementById('themebtn');
-    if(b) b.addEventListener('click', function(){
-      var next = (current()==='dark') ? 'light' : 'dark';
-      try{ localStorage.setItem(KEY, next); }catch(e){}
-      document.documentElement.setAttribute('data-theme', next);
-      paint(next);
+    var g=document.getElementById('themeseg'); if(!g) return;
+    g.addEventListener('click', function(e){
+      var b=e.target.closest('button[data-theme-set]'); if(!b) return;
+      var t=b.dataset.themeSet;
+      try{ localStorage.setItem(KEY, t); }catch(err){}
+      document.documentElement.setAttribute('data-theme', t);
+      paint(t);
     });
+    // 保存していない人は、OS側が切り替わったら表示も追従させる
     try{ matchMedia('(prefers-color-scheme:dark)').addEventListener('change', function(){
-      if(!saved()) paint(current()); }); }catch(e){}
+      if(!saved()) paint(current()); }); }catch(err){}
   }
   if(document.readyState==='loading')
     document.addEventListener('DOMContentLoaded', init);
@@ -147,8 +155,11 @@
       <h1>演習アプリ</h1>
       <p class="lede">37アプリ・1,315問／自作の問題集をまとめた入口</p>
     </div>
-    <button class="themebtn" id="themebtn" type="button"
-            title="明るさを切り替える" aria-label="明るさを切り替える">明るく</button>
+    <div class="themeseg" id="themeseg" role="group" aria-label="画面の明るさ">
+      <button type="button" data-theme-set="dark" title="暗い（いまと同じ）">暗</button>
+      <button type="button" data-theme-set="dim" title="中（画面の明るさを上げた状態）">中</button>
+      <button type="button" data-theme-set="light" title="明るい">明</button>
+    </div>
   </header>
 
   <div class="searchbar">
