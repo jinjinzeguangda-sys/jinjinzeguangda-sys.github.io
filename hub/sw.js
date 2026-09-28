@@ -1,6 +1,6 @@
 // 目的: 入口ページ(/hub/)をオフラインでも開けるようにする。
 // ★消してよいのは自分の接頭辞のキャッシュだけ。絞らないと同居する37アプリの分まで消える。
-const CACHE = 'hub-index-8b31050f';
+const CACHE = 'hub-index-466bbbd1';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 const MINE = new Set(['/hub/', '/hub/index.html', '/hub/manifest.webmanifest',
                       '/hub/icon-192.png', '/hub/icon-512.png']);

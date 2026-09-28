@@ -31,10 +31,14 @@
     --accent:#4cc0a5; --accent-soft:#12312b; --shadow:none;
     --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4; --c-infra:#b489e0; --c-biz:#e0916b;
   }
-  /* 「中」＝暗いテーマのまま、背景として塗られるトークンだけ明度 +8%。
-     色相・彩度は固定。文字色・アクセント・正誤の色は1ビットも変えていない。
-     上げ幅はこのファイルの実測で決めた（本文 12.6:1 / 補足 4.8:1 / アクセント 5.7:1） */
-  :root[data-theme="dim"]{ --bg:#1C2930; --card:#25353D; --ink:#e6edf1; --sub:#8fa2ab; --line:#354753; --accent:#4cc0a5; --accent-soft:#1D4F45; --shadow:none; --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4; --c-infra:#b489e0; --c-biz:#e0916b; }
+  /* 「中（すこし明るい）」＝暗いテーマのまま、背景として塗られる 4色の明度を +10%。
+     色相・彩度は固定／前景は 補足 +1% だけ補正。
+     コントラスト比の実測: 本文 11.7:1 / 補足 4.6:1 / アクセント 5.3:1 */
+  :root[data-theme="dim"]{ --bg:#202F36; --card:#293A44; --ink:#e6edf1; --sub:#92A4AD; --line:#394D59; --accent:#4cc0a5; --accent-soft:#20564C; --shadow:none; --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4; --c-infra:#b489e0; --c-biz:#e0916b; }
+  /* 「明るい」＝暗いテーマのまま、背景として塗られる 4色の明度を +20%。
+     色相・彩度は固定／前景は 補足 +16% だけ補正。
+     コントラスト比の実測: 本文 7.9:1 / 補足 4.6:1 / アクセント 3.5:1 */
+  :root[data-theme="bright"]{ --bg:#334A56; --card:#3D5663; --ink:#e6edf1; --sub:#BEC9CE; --line:#4D6878; --accent:#4cc0a5; --accent-soft:#2D7C6C; --shadow:none; --c-cert:#d9a45c; --c-lang:#4cc0a5; --c-des:#78aae4; --c-infra:#b489e0; --c-biz:#e0916b; }
 
   *{box-sizing:border-box}
   body{
@@ -107,20 +111,21 @@
   footer b{color:var(--ink);font-weight:600}
   @media (prefers-reduced-motion:reduce){a.app{transition:none}a.app:hover{transform:none}}
 </style>
-<script id="jinji-theme-boot-v2">
-// 明るさの切り替え（暗い / 中 / 明るい）。配色は既存のトークンだけを使う。
+<script id="jinji-theme-boot-v3">
+// 明るさの切り替え（暗い / 中 / 明るい）。3段階とも同じ配色で、明るさだけが違う。
 // 保存が無いときは data-theme を当てない＝OSの設定に従う（従来どおりの見え方）。
 (function(){
-  var KEY='jinji_theme', OK={dark:1,dim:1,light:1}, TC=null;
+  var KEY='jinji_theme', OK={dark:1,dim:1,bright:1}, TC=null;
   function saved(){ try{ var t=localStorage.getItem(KEY);
     return OK[t]?t:null; }catch(e){ return null; } }
   function osDark(){ try{ return matchMedia('(prefers-color-scheme:dark)').matches; }
     catch(e){ return false; } }
-  function current(){ return saved() || (osDark()?'dark':'light'); }
+  // OSがライトで未保存のときは null＝どのボタンも押されていない状態にする
+  function current(){ return saved() || (osDark()?'dark':null); }
   // ★描画前に当てる（body より前で走らせているので切り替えのちらつきが出ない）
   var s=saved(); if(s) document.documentElement.setAttribute('data-theme', s);
   function paint(t){
-    if(TC){ var m=document.querySelector('meta[name="theme-color"]');
+    if(TC&&t){ var m=document.querySelector('meta[name="theme-color"]');
       if(m) m.setAttribute('content', TC[t]||TC.dark); }
     var g=document.getElementById('themeseg'); if(!g) return;
     var bs=g.querySelectorAll('button');
@@ -157,8 +162,8 @@
     </div>
     <div class="themeseg" id="themeseg" role="group" aria-label="画面の明るさ">
       <button type="button" data-theme-set="dark" title="暗い（いまと同じ）">暗</button>
-      <button type="button" data-theme-set="dim" title="中（画面の明るさを上げた状態）">中</button>
-      <button type="button" data-theme-set="light" title="明るい">明</button>
+      <button type="button" data-theme-set="dim" title="中（すこし明るい）">中</button>
+      <button type="button" data-theme-set="bright" title="明るい">明</button>
     </div>
   </header>
 
