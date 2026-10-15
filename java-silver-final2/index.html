@@ -396,10 +396,10 @@ const BOOK_QUESTIONS = [
    cat:"例外処理",
    src:"総仕上げ問題②",
    prompt:"次のプログラムの空欄に入るコードとして、正しいものを選びなさい。",
-   code:"import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        try {\n            test(0);\n        ［空欄］\n    }\n    private static void test(int num) throws IOException,\n                IndexOutOfBoundsException {\n        if (num < 10) {\n            throw new FileNotFoundException();\n        } else {\n            throw new IndexOutOfBoundsException();\n        }\n    }\n}",
+   code:"import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        try {\n            test(0);\n        } ［空欄］\n    }\n    private static void test(int num) throws IOException,\n                IndexOutOfBoundsException {\n        if (num < 10) {\n            throw new FileNotFoundException();\n        } else {\n            throw new IndexOutOfBoundsException();\n        }\n    }\n}",
    options:["catch (FileNotFoundException e) { } / catch (IndexOutOfBoundsException e) { }", "catch (IndexOutOfBoundsException e) { } / catch (FileNotFoundException e) { }", "catch (FileNotFoundException | IOException e) { }", "catch (IOException e) { }", "catch (FileNotFoundException | IndexOutOfBoundsException e) { }"],
    answer:3,
-   exp:"検査例外と非検査例外の違いの問題。FileNotFoundExceptionはIOExceptionのサブクラスなので、IOExceptionをキャッチするだけでコンパイルできる。throwsで宣言しているIndexOutOfBoundsExceptionはRuntimeExceptionのサブクラス（非検査例外）なのでキャッチしなくてもよい。なおFileNotFoundExceptionの参照をスローしている一方、throwsではスーパークラスのIOExceptionをスローすると宣言しているため、FileNotFoundException型では例外をキャッチできない。（解説P554）"},
+   exp:"検査例外と非検査例外の違いの問題。FileNotFoundExceptionはIOExceptionのサブクラスなので、IOExceptionをキャッチするだけでコンパイルできる。throwsで宣言しているIndexOutOfBoundsExceptionはRuntimeExceptionのサブクラス（非検査例外）なのでキャッチしなくてもよい。A・Eがコンパイルエラーになるのは、FileNotFoundExceptionだけを捕まえても、throwsが宣言しているIOException（検査例外）が未処理のまま残るため。Cがエラーになるのは、マルチキャッチ（|）には親子関係にある型を並べられないため（FileNotFoundExceptionはIOExceptionのサブクラス）。（解説P554）"},
   {id:"b3",
    cat:"型変換",
    src:"総仕上げ問題②",
@@ -421,7 +421,7 @@ const BOOK_QUESTIONS = [
    src:"総仕上げ問題②",
    prompt:"次のプログラムを確認し、Bクラスの空欄への記述に関する説明として、正しいものを選びなさい。",
    code:"package ex06.a;\n\npublic class A {\n    String a = \"A\";\n    protected String b = \"B\";\n    public String c = \"C\";\n}\n\npackage ex06.b;\n\nimport ex06.a.A;\n\npublic class B extends A {\n    public void test() {\n        ［空欄］\n    }\n}",
-   options:["「new B().b;」と「new B().c;」の両方でコンパイルエラーが発生する", "「new B().b;」のみでコンパイルエラーが発生する", "「new B().a;」のみでコンパイルエラーが発生する", "「new B().a;」と「new B().b;」の両方でコンパイルエラーが発生する"],
+   options:["「String s = new B().b;」と「String s = new B().c;」の両方でコンパイルエラーが発生する", "「String s = new B().b;」のみでコンパイルエラーが発生する", "「String s = new B().a;」のみでコンパイルエラーが発生する", "「String s = new B().a;」と「String s = new B().b;」の両方でコンパイルエラーが発生する"],
    answer:2,
    exp:"継承関係にあるとき、サブクラスからアクセスできるスーパークラスのメンバはpublicかprotected。アクセス修飾子なし（デフォルト）は継承関係の有無にかかわらず同じパッケージからしかアクセスできない。AとBは異なるパッケージなので、修飾子なしのフィールドaだけがエラーになる。（解説P556）"},
   {id:"b7",
@@ -455,7 +455,7 @@ const BOOK_QUESTIONS = [
    code:"public class Main {\n    private static int num;\n    static {\n        num = 10;\n    }\n    static {\n        num = 20;\n    }\n    static void test(int num) {\n        num = num * num;\n    }\n    public static void main(String[] args) {\n        test(num);\n        System.out.println(num);\n    }\n}",
    options:["10が表示される", "20が表示される", "100が表示される", "400が表示される", "コンパイルエラーが発生する"],
    answer:1,
-   exp:"staticなフィールドはインスタンスを生成しなくても利用できるため、コンストラクタで初期化できない。代わりにstatic初期化子を使う。static初期化子は複数定義でき、上から順に実行されるので2番目の20で上書きされる。testメソッドのnumは引数として宣言したローカル変数なのでフィールドの値は変わらない。（解説P559〜560）"},
+   exp:"staticなフィールドはインスタンスを生成しなくても利用できる。文法上はコンストラクタで代入することもできるが、それだとインスタンスを作るまで実行されないため、クラスのロード時に1度だけ走るstatic初期化子を使う（代入そのものができないのは static final のときだけ）。static初期化子は複数定義でき、上から順に実行されるので2番目の20で上書きされる。testメソッドのnumは引数として宣言したローカル変数なのでフィールドの値は変わらない。（解説P559〜560）"},
   {id:"b13",
    cat:"アクセス修飾子",
    src:"総仕上げ問題②",
@@ -468,7 +468,7 @@ const BOOK_QUESTIONS = [
    cat:"継承",
    src:"総仕上げ問題②",
    prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
-   code:"public class A {\n    private Collection collection;\n    public void set(Collection collection) {\n        this.collection = collection;\n        System.out.println(\"A\");\n    }\n}\n\npublic class B extends A {\n    public void set(Collection collection) {\n        super.set(collection);\n        System.out.println(\"B\");\n    }\n}\n\npublic class C extends B {\n    @Override\n    public void set(Collection collection) {\n        super.super.set(collection);\n        System.out.println(\"C\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new C().set(List.of(1, 2, 3));\n    }\n}",
+   code:"import java.util.*;\n\npublic class A {\n    private Collection collection;\n    public void set(Collection collection) {\n        this.collection = collection;\n        System.out.println(\"A\");\n    }\n}\n\npublic class B extends A {\n    public void set(Collection collection) {\n        super.set(collection);\n        System.out.println(\"B\");\n    }\n}\n\npublic class C extends B {\n    @Override\n    public void set(Collection collection) {\n        super.super.set(collection);\n        System.out.println(\"C\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        new C().set(List.of(1, 2, 3));\n    }\n}",
    options:["「A」「B」「C」と表示される", "「A」「B」と表示される", "「A」と表示される", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
    answer:3,
    exp:"サブクラスからアクセスできるのは1つ上のスーパークラスだけで、2つ以上上のスーパークラスにアクセスする方法はない。Cクラスの「super.super」は不正なのでコンパイルエラーになる。（解説P561）"},
@@ -487,7 +487,7 @@ const BOOK_QUESTIONS = [
    code:"package ex16;\n\nimport java.util.*;\n\npublic class Sample {\n    private List<String> list = List.of(\"A\", \"B\", \"C\");\n    public List<String> getList() {\n        return list;\n    }\n}\n\npackage ex16;\n\npublic class Main {\n    public static void main(String[] args) {\n        Sample s = new Sample();\n        for (String str : s.getList()) {\n            System.out.println(str);\n        }\n    }\n}",
    options:["2つのクラスは同じパッケージに属するので、Mainクラスでjava.util.Listをインポートする必要はない", "java.util.Listのみがインポートされる", "コンパイルするには、Mainクラスでjava.util.Listをインポートしなければいけない", "java.utilパッケージのすべてのクラスやインタフェースがSampleクラスにインポートされる"],
    answer:3,
-   exp:"インポート宣言は、利用するクラスの各ソースファイルに記述する。java.util.Listを使っているのはSampleクラスであってMainクラスではないので、Mainではインポート不要。アスタリスク「*」を使うとパッケージ内のすべてのクラスやインタフェースがインポートされる。（解説P561〜562）"},
+   exp:"インポート宣言は、利用するクラスの各ソースファイルに記述する。java.util.Listを使っているのはSampleクラスであってMainクラスではないので、Mainではインポート不要。アスタリスク「*」を使うとパッケージ内のすべてのクラスやインタフェースがインポートされる。選択肢Aは「Mainではインポート不要」という結論こそ合っていますが、理由が誤りです。同じパッケージだからではなく、MainがListという型名をどこにも書いていないからです（Main側に List<String> と書くと、同じパッケージでもインポートなしではコンパイルエラーになります）。（解説P561〜562）"},
   {id:"b18",
    cat:"アクセス修飾子",
    src:"総仕上げ問題②",
@@ -495,7 +495,7 @@ const BOOK_QUESTIONS = [
    code:"public class Sample {\n    static String header = \"A:\";\n    private String value = \"B\";\n    public static String getValue() {\n        return new Sample().value;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Sample s = new Sample();\n        ［空欄］\n    }\n}",
    options:["System.out.println(Sample.getValue + s.header);", "System.out.println(Sample.header + Sample.value);", "System.out.println(new Sample().header + new Sample().value);", "System.out.println(s.header + Sample.value);", "System.out.println(Sample.header + Sample.getValue());", "System.out.println(s.header + s.value);"],
    answer:4,
-   exp:"valueはprivateなのでほかのクラスからアクセスできない（B・C・Dは誤り）。値の取得にはpublicで公開されたgetValueメソッドを使う。Aはカッコがないためフィールドへのアクセスとみなされ、そのようなフィールドは存在しないのでコンパイルエラー。headerとgetValueはstaticなので「クラス名.フィールド名」「クラス名.メソッド名」で記述する。（解説P563）"},
+   exp:"valueはprivateなのでほかのクラスからアクセスできない（B・C・D・Fは誤り。Fもs.valueを使っています）。値の取得にはpublicで公開されたgetValueメソッドを使う。Aはカッコがないためフィールドへのアクセスとみなされ、そのようなフィールドは存在しないのでコンパイルエラー。headerとgetValueはstaticなので「クラス名.フィールド名」「クラス名.メソッド名」で記述する。（解説P563）"},
   {id:"b19",
    cat:"演算子",
    src:"総仕上げ問題②",
@@ -503,7 +503,7 @@ const BOOK_QUESTIONS = [
    code:"public class Main {\n    public static void main(String[] args) {\n        int a = 10;\n        int b = 20;\n        int c = b += a / 5;\n        System.out.println(a + b + c);\n    }\n}",
    options:["52が表示される", "54が表示される", "38が表示される", "46が表示される"],
    answer:1,
-   exp:"5行目は右端から評価される。まず a / 5 で 10/5=2。次に b += 2 で b は 20+2=22。最後に c = b で c も 22。よって 10 + 22 + 22 = 54。（解説P563〜564）"},
+   exp:"5行目は代入演算子が右結合なので c = (b += (a / 5)) と解釈される（オペランドの評価自体は左から右）。まず a / 5 で 10/5=2。次に b += 2 で b は 20+2=22。最後に c = b で c も 22。よって 10 + 22 + 22 = 54。（解説P563〜564）"},
   {id:"b20",
    cat:"配列",
    src:"総仕上げ問題②",
@@ -527,7 +527,7 @@ const BOOK_QUESTIONS = [
    code:"",
    options:["classes", "jdk.base", "java.se", "java.base"],
    answer:3,
-   exp:"Java SEの基本的なAPIが含まれるモジュールは java.base モジュール。classesやjdk.baseというモジュールは存在しない。java.seモジュールにはJava SEで提供されるAPIが含まれるが、基本的なAPIであるjava.langパッケージは含まれていない。（解説P565）"},
+   exp:"Java SEの基本的なAPIが含まれるモジュールは java.base モジュール。classesやjdk.baseというモジュールは存在しない。java.seは自分ではパッケージを1つも持たない集約モジュールで、java.baseなどをrequires transitiveでまとめているだけ（java --describe-module java.se の exports は0件）。したがってjava.langを提供しているのはjava.baseの方。（解説P565）"},
   {id:"b23",
    cat:"継承",
    src:"総仕上げ問題②",
@@ -543,7 +543,7 @@ const BOOK_QUESTIONS = [
    code:"",
    options:["public", "public、protected", "public、protected、デフォルト", "制限はない"],
    answer:0,
-   exp:"オーバーライドのルールは、シグニチャが同じ／戻り値型は同じ型かサブクラス型／アクセス修飾子は同じか、より緩くする／throwsで宣言する例外はスローする例外と同じ型かサブクラス型であること。publicより緩い修飾子はないのでpublicのみ。（解説P566〜567）"},
+   exp:"オーバーライドのルールは、シグニチャが同じ／戻り値型は同じ型かサブクラス型／アクセス修飾子は同じか、より緩くする／throwsで宣言する検査例外はオーバーライド元が宣言しているものと同じ型かそのサブクラス型（あるいは何も宣言しない）であること。publicより緩い修飾子はないのでpublicのみ。（解説P566〜567）"},
   {id:"b25",
    cat:"アクセス修飾子",
    src:"総仕上げ問題②",
@@ -559,7 +559,7 @@ const BOOK_QUESTIONS = [
    code:"public class Main {\n    int num;\n    private static void test() {\n        num++;\n        System.out.println(num);\n    }\n    public static void main(String[] args) {\n        Main.test();\n        Main.test();\n    }\n}",
    options:["「1」「2」と表示される", "1が2回表示される", "testメソッドでコンパイルエラーが発生する", "mainメソッドでコンパイルエラーが発生する", "実行時に例外がスローされる"],
    answer:2,
-   exp:"staticで修飾されたメソッドからは、staticで修飾されたもの以外にアクセスできない。staticなmainからstaticなtestを呼ぶのは問題ないが、test内でstaticでないnumフィールドをインクリメントしている4行目でコンパイルエラーになる。（解説P567）"},
+   exp:"staticで修飾されたメソッドからは、staticで修飾されたもの以外にアクセスできない。staticなmainからstaticなtestを呼ぶのは問題ないが、test内でstaticでないnumフィールドを参照している4行目と5行目の両方でコンパイルエラーになる（実測でエラー2個）。（解説P567）"},
   {id:"b27",
    cat:"文字列",
    src:"総仕上げ問題②",
@@ -573,14 +573,14 @@ const BOOK_QUESTIONS = [
    src:"総仕上げ問題②",
    prompt:"次のプログラムを実行して、1、2、3と順に表示したい。空欄に入るコードとして、正しいものを選びなさい。",
    code:"import java.util.List;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> list = List.of(1, 2, 3);\n        ［空欄］\n    }\n}",
-   options:["list.forEach(() -> System.out.println(x));", "list.forEach((x) -> System.out.println(x));", "list.forEach((x) -> { return x });", "list.forEach(list);"],
+   options:["list.forEach(() -> System.out.println(x));", "list.forEach((x) -> System.out.println(x));", "list.forEach((x) -> { return x; });", "list.forEach(list);"],
    answer:1,
    exp:"ListインタフェースのforEachはConsumer型のラムダ式を受け取る。Consumerは引数を消費して処理をするインタフェースで戻り値を返さない。Aは引数を受け取っておらず誤り、Cは戻り値を返しており誤り、DはConsumer型ではないので誤り。（解説P568）"},
   {id:"b29",
    cat:"クラス設計",
    src:"総仕上げ問題②",
    prompt:"次のプログラムの説明として、正しいものを選びなさい。",
-   code:"public class Sample {\n    private final int num;\n    public Sample(String str) {\n        this(Integer.parseInt(str));\n    }\n\n    public Sample(int num) {\n        this.num = num;\n    }\n    public Sample() {}\n    public int getNum() {\n        return this.num;\n    }\n}",
+   code:"public class Sample {\n    private final int num;\n    public Sample(String str) {\n        this(Integer.parseInt(str));\n    }\n    public Sample(int num) {\n        this.num = num;\n    }\n    public Sample() {}\n    public int getNum() {\n        return this.num;\n    }\n}",
    options:["2行目でコンパイルエラーが発生する", "4行目でコンパイルエラーが発生する", "6行目でコンパイルエラーが発生する", "9行目でコンパイルエラーが発生する"],
    answer:3,
    exp:"finalで修飾されたフィールドは定数として扱われ、一度設定した値は変更できないため、コンストラクタで必ず初期化する必要がある。3つあるコンストラクタのうち9行目の引数なしコンストラクタだけがnumを初期化していないのでコンパイルエラーになる。（解説P568）"},
@@ -683,7 +683,7 @@ const BOOK_QUESTIONS = [
   {id:"b42",
    cat:"例外処理",
    src:"総仕上げ問題②",
-   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。",
+   prompt:"次のプログラムをコンパイルし、実行したときの結果として、正しいものを選びなさい。（SampleクラスとMainクラスは別ファイルとします）",
    code:"public class Sample implements AutoCloseable {\n    @Override\n    public void close() throws Exception {\n        System.out.println(\"C\");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        try (Sample s = new Sample()) {\n            throw new Exception();\n        } catch (Exception e) {\n            System.out.println(\"A\");\n        } finally {\n            System.out.println(\"B\");\n        }\n    }\n}",
    options:["「A」「B」「C」と表示される", "「A」「C」「B」と表示される", "「C」「A」「B」と表示される", "コンパイルエラーが発生する"],
    answer:2,
@@ -709,7 +709,7 @@ const BOOK_QUESTIONS = [
    src:"総仕上げ問題②",
    prompt:"次のAクラスを継承したサブクラスに定義できるメソッドとして、正しいものを選びなさい。",
    code:"public class A {\n    public Number test() {\n        return 100;\n    }\n}",
-   options:["@Override public Integer test() { return 0; }", "@Override public Number test(int num) { return num; }", "@Override public void test() { // do something }", "public Number test() throws Exception { return 0; }"],
+   options:["@Override public Integer test() { return 0; }", "@Override public Number test(int num) { return num; }", "@Override public void test() { /* do something */ }", "public Number test() throws Exception { return 0; }"],
    answer:0,
    exp:"オーバーライドのルールは、シグニチャが同じ／戻り値型は同じ型かサブクラス型／アクセス修飾子は同じかより緩く／throwsで宣言する例外は同じ型かサブクラス型。IntegerはNumberのサブクラスなので戻り値型として使える。Bは引数が違うのでオーバーロード、Cは戻り値をvoidにしており不可、Dはスーパークラスにない例外をスローしている。（解説P579）"},
   {id:"b49",
@@ -751,7 +751,7 @@ const BOOK_QUESTIONS = [
    code:"public class Main {\n    public static void main(String[] args) {\n        int a = 4;\n        int b = 8;\n        int c = b += a / 2;\n        System.out.println(a + \", \" + b + \", \" + c);\n    }\n}",
    options:["「4, 10, 8」と表示される", "「4, 10, 10」と表示される", "「4, 10, 6」と表示される", "「4, 12, 6」と表示される"],
    answer:1,
-   exp:"右端から順に評価する。a / 2 は 4/2=2。次に b += 2 で b は 8+2=10。最後に c = b で c も 10。a は 4 のまま変わらない。（解説P585）"},
+   exp:"代入演算子（= や +=）は右結合なので c = (b += (a / 2)) と解釈される。評価そのものは左のオペランドから行われる。a / 2 は 4/2=2。次に b += 2 で b は 8+2=10。最後に c = b で c も 10。a は 4 のまま変わらない。（解説P585）"},
   {id:"b57",
    cat:"インポート",
    src:"総仕上げ問題②",
@@ -783,7 +783,7 @@ const BOOK_QUESTIONS = [
    code:"package sample;\npublic class A {\n    // ...\n}\n\npackage sample.sub;\npublic class B {\n    // ...\n}",
    options:["String val = sample.A.getVal();", "import sample.*;", "import sample.sub.*;", "String val = A.getVal();"],
    answer:0,
-   exp:"異なるパッケージに属しているクラスを利用するには、インポート宣言をするか完全修飾クラス名で記述する。sample.subのBからsampleのAへアクセスするにはsampleパッケージをインポートする必要があり、sample.subをインポートしている選択肢Cは誤り。完全修飾クラス名で書いている選択肢Aが正解。（解説P587）"},
+   exp:"異なるパッケージに属しているクラスを利用するには、インポート宣言をするか完全修飾クラス名で記述する。sample.subのBからsampleのAへアクセスするにはsampleパッケージをインポートする必要があり、sample.subをインポートしている選択肢Cは誤り。完全修飾クラス名で書いている選択肢Aが正解（Aクラスにはpublic staticなgetVal()があるものとする）。選択肢Bはインポート宣言そのもので、クラスの中に書く「アクセスのコード」ではない（import文はクラス宣言より前にしか書けない）ため誤り。選択肢Dはインポートしていないので単純名Aを解決できず誤り。（解説P587）"},
   {id:"b61",
    cat:"繰り返し",
    src:"総仕上げ問題②",
@@ -815,7 +815,7 @@ const BOOK_QUESTIONS = [
    code:"public class Sample {\n    public static void main(String[] args) {\n        int a = 2;\n        int b = 1;\n        if (a++ > ++b) {\n            System.out.print(\"A \");\n        } else {\n            System.out.print(\"B \");\n        }\n        System.out.println(a + \":\" + b);\n    }\n}",
    options:["「A 2:1」と表示される", "「A 3:2」と表示される", "「B 2:1」と表示される", "「B 3:2」と表示される"],
    answer:3,
-   exp:"インクリメントは前置なら加算してから左右オペランドの処理、後置なら処理してから加算される。bは前置なので先に2になり、aは後置なのでこの時点では2。2 > 2 はfalseなのでelseが実行され「B 」を表示。条件の評価が終わったタイミングでaも3になるので「B 3:2」。（解説P591）"},
+   exp:"インクリメントは前置なら加算してから左右オペランドの処理、後置なら処理してから加算される。bは前置なので先に2になり、aは後置なのでこの時点では2。2 > 2 はfalseなのでelseが実行され「B 」を表示。a++は加算前の値2を返した直後にaが3になる（条件の評価が終わるのを待つわけではない）ので「B 3:2」。（解説P591）"},
   {id:"b69",
    cat:"繰り返し",
    src:"総仕上げ問題②",
@@ -867,7 +867,7 @@ const BOOK_QUESTIONS = [
   {id:"b77",
    cat:"例外処理",
    src:"総仕上げ問題②",
-   prompt:"次のプログラムの説明として、正しいものを選びなさい。",
+   prompt:"次のプログラムの説明として、正しいものを選びなさい。（3つのクラスはそれぞれ別ファイルとします）",
    code:"public class SampleException extends Exception {}\n\npublic class SubSampleException extends SampleException {}\n\npublic class Sample {\n    public void test(int num) throws SampleException {\n        if (num < 10) {\n            throw new SubSampleException();\n        }\n    }\n}",
    options:["testメソッドでは、SampleExceptionクラスか、そのサブクラスであればスローできる", "SampleExceptionは非検査例外である", "SampleExceptionはプログラムで対処しきれないときに使う例外である", "testメソッドでは、SampleExceptionしかスローできないためコンパイルエラーが発生する"],
    answer:0,
@@ -879,7 +879,7 @@ const BOOK_QUESTIONS = [
    code:"public class Main {\n    public static void main(String[] args) {\n        sample();\n        int a = b;\n        int b = num;\n    }\n    private static void sample() {\n        System.out.println(num);\n    }\n    static int num;\n}",
    options:["3行目", "4行目", "5行目", "8行目"],
    answer:1,
-   exp:"メソッド内に記述したコードは1行目から順に実行されるため、ローカル変数を使うには、それを使っている行よりも上の行で宣言しておく必要がある。4行目で変数bを使っているが宣言は5行目なのでコンパイルエラー。フィールドやメソッドはランダムにアクセスされるので宣言の順番は関係ない。（解説P598）"},
+   exp:"ローカル変数の有効範囲（スコープ）は宣言した位置から始まるため、使う行より上で宣言しておく必要がある（実行の順番ではなく、コンパイル時の規則）。4行目で変数bを使っているが宣言は5行目なのでコンパイルエラー。フィールドやメソッドはランダムにアクセスされるので宣言の順番は関係ない。（解説P598）"},
   {id:"b79",
    cat:"配列",
    src:"総仕上げ問題②",
@@ -887,7 +887,7 @@ const BOOK_QUESTIONS = [
    code:"public class Main {\n    public static void main(String[] args) {\n        int[] array = {2, 3, 4};\n        int[] array2 = array.clone();\n        array2[0] = 5;\n        for (int i : array) {\n            System.out.println(i);\n        }\n    }\n}",
    options:["「2」「3」「4」と表示される", "「5」「3」「4」と表示される", "コンパイルエラーが発生する", "実行時に例外がスローされる"],
    answer:0,
-   exp:"cloneメソッドを使うと同じ値を持った配列インスタンスが複製される。array2の要素を変更してもarrayには影響しない。cloneはObjectクラスに定義されているメソッドですべてのインスタンスが持っているのでコンパイルエラーにもならない。（解説P598）"},
+   exp:"cloneメソッドを使うと同じ値を持った配列インスタンスが複製される。array2の要素を変更してもarrayには影響しない。Object.clone()はprotectedなのでnew Object().clone()は呼べないが、配列はpublicなclone()を持つため、この呼び出しはコンパイルできる。（解説P598）"},
   {id:"b80",
    cat:"繰り返し",
    src:"総仕上げ問題②",
@@ -913,7 +913,7 @@ const BOOK_MULTI_Q = [
    src:"総仕上げ問題②",
    multi:true,
    prompt:"次のプログラムの説明として、正しいものを選びなさい。（3つ選択）",
-   code:"public class Trash {\n    List<String> list = new ArrayList<>();\n    protected Trash(String val) {\n        add(val);\n    }\n    public boolean test(String val) {\n        return true;\n    }\n    public void delete(String val) {\n        list.remove(val);\n    }\n    public final void add(String val) {\n        list.add(val);\n    }\n}\n\npublic class CacheTrash extends Trash {\n    private String tmp = null;\n    public CacheTrash() {\n        super(null);\n    }\n    public boolean test(String val) {\n        return list.contains(val);\n    }\n    public void delete(String val) {\n        this.tmp = val;\n    }\n    public void flush() {\n        super.delete(tmp);\n    }\n}",
+   code:"import java.util.*;\n\npublic class Trash {\n    List<String> list = new ArrayList<>();\n    protected Trash(String val) {\n        add(val);\n    }\n    public boolean test(String val) {\n        return true;\n    }\n    public void delete(String val) {\n        list.remove(val);\n    }\n    public final void add(String val) {\n        list.add(val);\n    }\n}\n\npublic class CacheTrash extends Trash {\n    private String tmp = null;\n    public CacheTrash() {\n        super(null);\n    }\n    public boolean test(String val) {\n        return list.contains(val);\n    }\n    public void delete(String val) {\n        this.tmp = val;\n    }\n    public void flush() {\n        super.delete(tmp);\n    }\n}",
    options:["CacheTrashクラスのtestメソッドは常にtrueを戻す", "CacheTrashクラスのdeleteメソッドは、Trashクラスのdeleteメソッドを呼び出す", "CacheTrashクラスのaddメソッドは、引数をlistに追加する", "Trashクラスのlistは、Trashクラスのすべてのサブクラスで参照できる", "CacheTrashクラスのflushメソッドは、Trashクラスのdeleteメソッドを呼び出す", "CacheTrashクラスのコンストラクタは、nullをlistに追加する"],
    answers:[2, 4, 5],
    exp:"CacheTrashのtestはcontainsの結果を返すので常にtrueではない（A誤り）。CacheTrashのdeleteはフィールドに代入するだけでスーパークラスのdeleteを呼んでいない（B誤り）。addはスーパークラスTrashに定義があり引数をlistに追加する（C正）。listはアクセス修飾子なし＝同じパッケージ内だけなので、パッケージが異なればサブクラスでもアクセスできない（D誤り）。flushはsuper.deleteを呼んでいる（E正）。コンストラクタはsuper(null)→add(null)でlistにnullを追加する（F正）。（解説P555〜556）"},
@@ -952,14 +952,14 @@ const BOOK_MULTI_Q = [
    code:"",
    options:["module-info.javaは、module-path内のどこにでも配置できる", "java.baseをエクスポートすると、すべてのコアパッケージがエクスポートされる", "利用するモジュールは、module-info.java内で宣言されていなければならない", "デフォルトで、モジュールは、モジュールが動作するディレクトリ内にはアクセスができる", "module-info.javaは空にはできない"],
    answers:[2, 3],
-   exp:"module-info.javaはモジュールのルートディレクトリに配置する（A誤り）。java.baseはJavaの基本的なクラス群がまとめられたモジュールで、どのモジュールにも自動的に組み込まれるためexportsで宣言する必要はない（B誤り）。利用するモジュールはrequiresで宣言する（C正）。モジュールに含まれるプログラムはモジュール内のディレクトリにアクセス可能（D正）。何も利用せず何も公開しないモジュールならmodule-info.javaを空にできる（E誤り）。（解説P576）"},
+   exp:"module-info.javaはモジュールのルートディレクトリに配置する（A誤り）。java.baseはJavaの基本的なクラス群がまとめられたモジュールで、どのモジュールにも自動的に組み込まれるためexportsで宣言する必要はない（B誤り）。利用するモジュールはrequiresで宣言する（C正。ただしjava.baseだけは自動で読み込まれるので宣言は不要）。モジュールに含まれるプログラムはモジュール内のディレクトリにアクセス可能（D正）。何も利用せず何も公開しないモジュールなら module 名前 {} と書けるので「空にはできない」は誤り（E誤り）。ただしファイル自体を0バイトにするとモジュール宣言が無く、モジュールになりません。（解説P576）"},
   {id:"m45",
    cat:"抽象クラス",
    src:"総仕上げ問題②",
    multi:true,
    prompt:"次のプログラムの「// insert code here」に入るコードとして、正しいものを選びなさい。（3つ選択）",
    code:"public abstract class Item {\n    int num;\n    // insert code here\n}",
-   options:["public void print();", "public int calculate() { return num * 2; }", "public abstract int getNum() { return num; }", "public abstract int test();", "public static void sample() { // some codes }"],
+   options:["public void print();", "public int calculate() { return num * 2; }", "public abstract int getNum() { return num; }", "public abstract int test();", "public static void sample() { /* some codes */ }"],
    answers:[1, 3, 4],
    exp:"抽象クラスには実装を持たない抽象メソッドと実装を持つ具象メソッドの両方を定義できる。Aは中カッコがなく抽象メソッドの形だがabstractが付いていないのでコンパイルエラー。Cはabstractで修飾されているのに実装を持つのでコンパイルエラー。B・D・Eは正しい。（解説P578）"},
   {id:"m48",
@@ -997,7 +997,7 @@ const BOOK_MULTI_Q = [
    code:"",
    options:["public String methodA();", "final void methodB();", "public void methodC() { System.out.println(\"C\"); }", "public int d;", "public abstract void methodE();", "private abstract void methodF();", "final void methodG() { System.out.println(\"G\"); }"],
    answers:[0, 4],
-   exp:"インタフェースには、publicなメンバの定義／抽象メソッド／デフォルトメソッドとstaticメソッドとしての実装／private具象メソッド／定数（フィールドは不可）を書ける。Aは実装を持たない抽象メソッドの宣言で暗黙的にabstractと解釈される。Bはfinalで抽象メソッドを宣言しており不可。C・Gは具象メソッドなので不可。Dはインスタンス変数なので不可。Fは抽象メソッドをprivateにできない。（解説P583〜584）"},
+   exp:"インタフェースには、publicなメンバの定義／抽象メソッド／デフォルトメソッドとstaticメソッドとしての実装／private具象メソッド／定数（フィールドは不可）を書ける。Aは実装を持たない抽象メソッドの宣言で暗黙的にabstractと解釈される。Bはfinalで抽象メソッドを宣言しており不可。C・Gは具象メソッドなので不可。Dはインタフェースのフィールドが暗黙でpublic static finalになるため、初期化しないとコンパイルエラー（public int d = 1; なら書ける）。Fは抽象メソッドをprivateにできない。（解説P583〜584）"},
   {id:"m63",
    cat:"繰り返し",
    src:"総仕上げ問題②",
@@ -1006,7 +1006,7 @@ const BOOK_MULTI_Q = [
    code:"public class Main {\n    public static void main(String[] args) {\n        int[] array = {1, 2, 3, 4, 5};\n        int x = array.length;\n        ［空欄］\n    }\n}",
    options:["while( 0 <= x ) { System.out.println(array[x]); x--; }", "do { x--; System.out.println(array[x]); } while( 0 <= x );", "do { System.out.println(array[x]); x--; } while( 0 <= x );", "while (0 < x) { x--; System.out.println(array[x]); }", "while (0 < x) { System.out.println(array[--x]); }"],
    answers:[3, 4],
-   exp:"xには要素数5が入っている。A・Cは最初にarray[5]を取り出すため要素外アクセスでArrayIndexOutOfBoundsExceptionになる。Bはxが0のときさらにデクリメントして-1になり例外。DとEは実は同じコードで、xが5〜1の間デクリメントしてから添字の値を表示するので5,4,3,2,1の順に出力される。（解説P589）"},
+   exp:"xには要素数5が入っている。A・Cは最初にarray[5]を取り出すため要素外アクセスでArrayIndexOutOfBoundsExceptionになる。Bはxが0のときさらにデクリメントして-1になり例外。DとEは実は同じコードで、xが5〜1の間デクリメントしてから添字の値を表示するので5,4,3,2,1の順に出力される。なおprintlnなので実際は1行に1文字ずつ表示されます（問題文の「54321」は5→4→3→2→1の順という意味）。（解説P589）"},
   {id:"m71",
    cat:"例外処理",
    src:"総仕上げ問題②",
@@ -2234,6 +2234,11 @@ document.addEventListener('keydown',function(e){
   //   ★倍率 mul() は clamp の**後**に掛かるので、「ゆっくり」で逃げると短い問題まで間延びする。
   //   直すべきは上限の側。新しい値は式が全問を覆う最小値（794字→38,930ms / 解説517字→26,065ms）。
   //   下げたぶんは1問も無い＝短い問題の待ち時間は1ミリも変わっていない。
+  // ★2026-10-15 解説の上限を 27000→30000 に上げた。これも実測が理由:
+  //   java-bronze の空だった解説13問を drill から移植し、b44 に JEP 513 の注記を足した結果、
+  //   最長の解説が 517字→575字（28,675ms）になり、旧上限 27,000ms を 1,675ms 超えた。
+  //   全38本1,315問を数えて張り付いたのは この1問だけ。30000 は全問を覆う最小の切りの良い値で、
+  //   次に長い解説は java-bronze b26 の 517字＝26,065ms ＝ 27,000ms 未満の問題は1ミリも変わらない。
   function msFor(chars, base, lo, hi){
     var raw = base + chars * 45;
     return Math.round(Math.min(hi, Math.max(lo, raw)) * mul());
@@ -2422,7 +2427,7 @@ document.addEventListener('keydown',function(e){
     try { window.scrollTo(0, 0); } catch(e){}   // 新しい問題は必ず最上部から（送る量を決める基準にもなる）
     schedule(msFor(textLen(document.querySelector('.qcard')), 3200, 5000, 40000), function(){
       autoReveal();
-      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 27000), function(){
+      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 30000), function(){
         if (pos >= queue.length - 1) { onePassDone(); }
         else if (typeof next === 'function') next();
       });
@@ -2444,7 +2449,7 @@ document.addEventListener('keydown',function(e){
     persist(); paintUI(); wakeOn();
     // いまの問題がもう答え済みなら次から、まだなら この問題から
     if (typeof answered !== 'undefined' && answered) {
-      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 27000), function(){
+      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 30000), function(){
         if (pos >= queue.length - 1) onePassDone(); else next();
       });
     } else {

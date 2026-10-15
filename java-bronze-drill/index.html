@@ -477,7 +477,7 @@ const BOOK_QUESTIONS = [
    cat:"繰り返し",
    src:"練習問題",
    prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
-   code:"class Test {\n  public static void main(String[] args) {\n    int num = 0;\n    do {\n      num++;\n      if(num % 2 == 0){\n        num++;\n      } System.out.print(num + \" \");\n    }while(num <= 10);\n  }\n}",
+   code:"class Test {\n  public static void main(String[] args) {\n    int num = 0;\n    do {\n      num++;\n      if(num % 2 == 0)\n        num++;\n      System.out.print(num + \" \");\n    }while(num <= 10);\n  }\n}",
    options:["2 4 6 8 10", "2 4 6 8 10 12", "1 3 5 7 9", "1 3 5 7 9 11"],
    answer:3,
    exp:"9行目のwhile条件式では num変数が10を超えたらfalseを返す。6行目のif条件式は num変数値を2で割り余りが0のときtrueを返す。if文に {} を記述していないため条件式がtrueのときのみ7行目が実行される。8行目はif条件に関係なく実行される文。結果は 1 3 5 7 9 11 となる。（解説P367）"},
@@ -556,7 +556,7 @@ const BOOK_QUESTIONS = [
   {id:"b27",
    cat:"クラス設計",
    src:"練習問題",
-   prompt:"実行する際は `>java Fruit lemon grape` とします。実行した結果として正しいものは次のどれですか。",
+   prompt:"実行する際は 「>java Fruit lemon grape」 とします。実行した結果として正しいものは次のどれですか。",
    code:"public class Fruit {\n  String kind = \"orange\";\n  public static void main(String[] args) {\n    String kind = args[1];\n    Fruit obj = new Fruit();\n    System.out.println(obj.kind);\n  }\n}",
    options:["lemon", "grape", "orange", "null", "実行時エラー"],
    answer:2,
@@ -576,11 +576,11 @@ const BOOK_QUESTIONS = [
    code:"class Test {\n  boolean flag;\n  public static void main(String[] args) {\n    Test obj = new Test();\n    if([   ①   ]) {\n      System.out.print(\"OK\");\n    } else {\n      System.out.print(\"NG\");\n    }\n  }\n}",
    options:["obj.flag.equals(\"true\")", "obj.flag == \"true\"", "obj.flag", "obj.flag = \"true\"", "obj.flag.equals(true)"],
    answer:2,
-   exp:"obj.flag により false が返るため、if文の条件式に使用することが可能（flagはインスタンス変数なのでデフォルト値 false で初期化されている）。Aは基本データ型のbooleanにequals()等のメソッドが無い。Bは基本データ型と参照型を == で比較できない。Dは基本データ型の変数に参照型データを = で代入できない。（解説P371）"},
+   exp:"obj.flag により false が返るため、if文の条件式に使用することが可能（flagはインスタンス変数なのでデフォルト値 false で初期化されている）。Aは基本データ型のbooleanにequals()等のメソッドが無い。Bはboolean型（基本データ型）の変数とString型の値を == で比較できない。Dは基本データ型の変数に参照型データを = で代入できない。（解説P371）"},
   {id:"b31",
    cat:"オーバーロード",
    src:"練習問題",
-   prompt:"実行する際は `>java Test w x y z` とします。コンパイル、実行した結果として正しいものは次のどれですか。",
+   prompt:"実行する際は 「>java Test w x y z」 とします。コンパイル、実行した結果として正しいものは次のどれですか。",
    code:"class Test {\n  public static void main(String[] args) {\n    System.out.print(\"data : \" + args[2] + args[3]);\n  }\n  public static void main(char[] args) {\n    System.out.print(\"data = \" + args[0] + args[1]);\n  }\n}",
    options:["コンパイルエラー", "実行時エラー", "data : xy", "data : yz", "data = xy", "data = yz"],
    answer:3,
@@ -621,7 +621,7 @@ const BOOK_QUESTIONS = [
    cat:"継承",
    src:"練習問題",
    prompt:"コンパイル、実行した結果として正しいものは次のどれですか。",
-   code:"class Foo {\n  Foo() { System.out.print(\"Foo() \"); }\n  Foo(String s) { System.out.print(\"Foo(String s) \"); }\n}\nclass Test extends Foo{\n  Test() { System.out.print(\"Test()\"); }\n  Test(String s) { System.out.print(\"Test(String s)\"); }\n  public static void main(String[] args) {\n    Test obj = new Test(\"test\");\n  }\n}",
+   code:"class Foo {\n  Foo() { System.out.print(\"Foo()  \"); }\n  Foo(String s) { System.out.print(\"Foo(String s)  \"); }\n}\nclass Test extends Foo{\n  Test() { System.out.print(\"Test()\"); }\n  Test(String s) { System.out.print(\"Test(String s)\"); }\n  public static void main(String[] args) {\n    Test obj = new Test(\"test\");\n  }\n}",
    options:["Test(String s)  Foo(String s)", "Test(String s)  Foo()", "Foo(String s)  Test(String s)", "Foo()  Test(String s)"],
    answer:3,
    exp:"各クラスのコンストラクタでは this() や super() によるコンストラクタ呼び出しのコードがない。したがって暗黙で super() が追加される。これにより Test(\"test\") が呼ばれると7行目に制御が移り、暗黙で追加された super() により2行目に制御が移る。よって実行結果は 2行目→7行目 の順となる。（解説P374）"},
@@ -648,15 +648,15 @@ const BOOK_QUESTIONS = [
    code:"class A {\n  void show() {\n    System.out.print(\"X \");\n  }\n}\nclass B {\n  public void show() {\n    System.out.print(\"Y \");\n  }\n}\nclass Test{\n  public static void main(String[] args) {\n    A obj = new B();\n    obj.show();\n  }\n}",
    options:["X", "Y", "X Y", "コンパイルエラー", "実行時エラー"],
    answer:3,
-   exp:"AクラスとBクラスは継承関係がない。したがって13行目の = 演算子で左辺と右辺に互換性がないためコンパイルエラー。もし6行目のBクラスの宣言が `class B extends A{` のようにAクラスのサブクラスであれば、コンパイル・実行ともに成功し実行結果はYとなる。（解説P375）"},
+   exp:"AクラスとBクラスは継承関係がない。したがって13行目の = 演算子で左辺と右辺に互換性がないためコンパイルエラー。もし6行目のBクラスの宣言が 「class B extends A{」 のようにAクラスのサブクラスであれば、コンパイル・実行ともに成功し実行結果はYとなる。（解説P375）"},
   {id:"b44",
    cat:"継承",
    src:"練習問題",
-   prompt:"コンパイル、実行が成功し `Hi : Text` の出力結果をえるために、①に挿入するコードとして正しいものは次のどれですか。",
+   prompt:"コンパイル、実行が成功し 「Hi : Text」 の出力結果をえるために、①に挿入するコードとして正しいものは次のどれですか。",
    code:"class ClassA {\n  String msg;\n  ClassA(String msg) {\n    this.msg = msg;\n  }\n}\nclass ClassB extends ClassA {\n  private String type;\n  ClassB(String msg, String type) {\n    [   ①   ]\n  }\n  public static void main(String[] args) {\n    ClassB obj = new ClassB(\"Hi\", \"Text\");\n    System.out.println(obj.msg + \" : \" + obj.type);\n  }\n}",
    options:["super(msg); / this.type = type;", "this.type = type; / super(msg);", "this.type = type; / super.msg = msg;", "super.msg = msg; / this.type = type;", "this.type = type; / ClassA.msg = msg;"],
    answer:0,
-   exp:"ClassAのmsg変数およびClassBのtype変数にはインスタンス化時に引数で渡すHiとTextが代入される必要がある。ClassAでは引数をもつコンストラクタのみ定義されているので、サブクラスであるClassBでは明示的にこのコンストラクタを呼ぶ必要がある。選択肢Bはsuper()の呼び出しが2行目に記述されているため誤り。選択肢C・Dはスーパークラスのコンストラクタ呼び出しコードがないため、暗黙でsuper()が追加されるがClassAには引数をもたないコンストラクタがないためコンパイルエラー。選択肢Eの ClassA.msg はstatic変数へアクセスするときの記述のためコンパイルエラー。（解説P376）"},
+   exp:"ClassAのmsg変数およびClassBのtype変数にはインスタンス化時に引数で渡すHiとTextが代入される必要がある。ClassAでは引数をもつコンストラクタのみ定義されているので、サブクラスであるClassBでは明示的にこのコンストラクタを呼ぶ必要がある。選択肢Bはsuper()の呼び出しが2行目に記述されているため誤り。選択肢C・Dはスーパークラスのコンストラクタ呼び出しコードがないため、暗黙でsuper()が追加されるがClassAには引数をもたないコンストラクタがないためコンパイルエラー。選択肢Eの ClassA.msg はstatic変数へアクセスするときの記述のためコンパイルエラー。※Java 25以降はコンストラクタ本体の緩和（JEP 513）により super() の前に文を書けるため選択肢Bもコンパイル・実行できる。Java SE 11〜21 では選択肢Aが正解。（解説P376）"},
   {id:"b46",
    cat:"抽象クラス",
    src:"練習問題",
@@ -664,7 +664,7 @@ const BOOK_QUESTIONS = [
    code:"class A {\n  int func(int x , int y){\n    return x / y;\n  }\n}\nclass B {\n  int func(int x , int y) {\n    return (int)(Math.PI * x * y);\n  }\n}\nclass Test {\n  public static void main(String[] args) {\n    A a = new A();\n    System.out.print(a.func(10, 2) + \" \");\n    B b = new B();\n    System.out.print(b.func(10, 10));\n  }\n}",
    options:["A クラス内の定義内容に問題がありコンパイルエラーとなる", "B クラス内の定義内容に問題がありコンパイルエラーとなる", "14 行目でコンパイルエラーとなる", "16 行目でコンパイルエラーとなる", "5 314 と出力する", "5 314.1592653589793 と出力する"],
    answer:4,
-   exp:"14行目により2行目が実行され5が出力される。8行目ではJavaライブラリで提供されているMathクラスのPI定数（円周率）を使用している。16行目により7行目が実行され 3.14 * 10 * 10 の演算が行われる。その結果は 314.1592653589793 となるが、int型にキャストしているため実行結果は 314 となる。（解説P376）"},
+   exp:"14行目により2行目が実行され5が出力される。8行目ではJavaライブラリで提供されているMathクラスのPI定数（円周率）を使用している。16行目により7行目が実行され Math.PI * 10 * 10 の演算が行われる。その結果は 314.1592653589793 となるが、int型にキャストしているため実行結果は 314 となる。（解説P376）"},
   {id:"b47",
    cat:"抽象クラス",
    src:"練習問題",
@@ -728,7 +728,7 @@ const BOOK_QUESTIONS = [
    code:"class Bar {\n  void func() {\n    System.out.println(\"Bar:func()\");\n  }\n}\nclass Test extends Bar {\n  void func() {\n    System.out.println(\"Test:func()\");\n  }\n  public static void main(String[] args) {\n    Bar obj = new Bar();\n    Test tObj = (Test)obj;\n    tObj.func();\n  }\n}",
    options:["Bar:func()", "Test:func()", "コンパイルエラー", "実行時エラー"],
    answer:3,
-   exp:"BarクラスもTestクラスも文法として誤りはないためコンパイルは成功する。ポイントとして12行目にあるobj変数はBar型でありtObj変数はTest型。これらのクラスは継承関係があるためコンパイルが成功する。しかしobj変数が参照しているのはBarのオブジェクトであり、12行目で異なる型にキャストしているため実行時エラーになる。もし11行目が `Bar obj = new Test();` であればコンパイル・実行ともに成功し、実行結果は Test:func() となる。（解説P378）"},
+   exp:"BarクラスもTestクラスも文法として誤りはないためコンパイルは成功する。ポイントとして12行目にあるobj変数はBar型でありtObj変数はTest型。これらのクラスは継承関係があるためコンパイルが成功する。しかしobj変数が参照しているのはBarのオブジェクトであり、12行目で異なる型にキャストしているため実行時エラーになる。もし11行目が 「Bar obj = new Test();」 であればコンパイル・実行ともに成功し、実行結果は Test:func() となる。（解説P378）"},
   {id:"b55",
    cat:"ポリモーフィズム",
    src:"練習問題",
@@ -752,7 +752,7 @@ const BOOK_QUESTIONS = [
    code:"interface Book {\n  void getName();\n}\nclass Java implements Book {\n  public void getName () { System.out.print(\"Java \"); }\n}\nclass Linux {\n  public void getName () { System.out.print(\"Linux \"); }\n}\npublic class Test {\n  public static void main(String[] args) {\n    Book[] books = { new Java(), new Linux() };\n    for (int x = 0; x < books.length; x++)\n      books[x].getName();\n  }\n}",
    options:["コンパイルエラー", "実行時エラー", "Java Java", "Linux Linux", "Java Linux"],
    answer:0,
-   exp:"問題56の類似問題。JavaクラスはBookインタフェースを実装しているが、**Linuxクラスは Book インタフェースを実装していない**。したがって12行目でコンパイルエラーとなる。（解説P379）"},
+   exp:"問題56の類似問題。JavaクラスはBookインタフェースを実装しているが、Linuxクラスは Book インタフェースを実装していない。したがって12行目でコンパイルエラーとなる。（解説P379）"},
   {id:"b59",
    cat:"パッケージ",
    src:"練習問題",
@@ -760,12 +760,12 @@ const BOOK_QUESTIONS = [
    code:"",
    options:["import com.prj.*; / public class Manager { }", "package com.prj.*; / import com.prj.controller; / public class Manager { }", "package com.prj.view; / import com.prj.controller; / public class Manager { }", "package com.prj.view; / import com.prj.controller.*; / public class Manager { }", "package com.prj.view.*; / import com.prj.controller.*; / public class Manager { }"],
    answer:3,
-   exp:"Managerクラスは com.prj.view パッケージに属するとあるため `package com.prj.view;` が先頭に必要。また、Managerクラスは com.prj.controller パッケージに属する各クラスを利用したいとあるため、package宣言の次に `import com.prj.controller.*;` のコードが必要。なお、import文とpackage文の両方を記述する場合には package 文を先に書く。（解説P379〜380）"},
+   exp:"Managerクラスは com.prj.view パッケージに属するとあるため 「package com.prj.view;」 が先頭に必要。また、Managerクラスは com.prj.controller パッケージに属する各クラスを利用したいとあるため、package宣言の次に 「import com.prj.controller.*;」 のコードが必要。なお、import文とpackage文の両方を記述する場合には package 文を先に書く。（解説P379〜380）"},
   {id:"b60",
    cat:"パッケージ",
    src:"練習問題",
    prompt:"i 変数の値を直接変更できるのは次のどれですか。",
-   code:"package pack;\nclass Test {\n  int i = 100;\n}",
+   code:"package pack;\npublic class Test {\n  int i = 100;\n}",
    options:["Test クラスを継承したすべてのサブクラス", "pack パッケージ内に含まれるすべてのクラス", "この Test クラスのみ", "すべてのクラス", "どのクラスからも直接変更はできない"],
    answer:1,
    exp:"アクセス修飾子を指定していない変数は、そのクラス内のメンバまたは同じパッケージ内に含まれるクラスから直接変更できる。パッケージ内に含まれるクラスを継承したサブクラスがTestクラスと異なるパッケージに属することもあるため、選択肢Aは誤り。（解説P380）"},
@@ -877,9 +877,9 @@ const BOOK_MULTI_Q = [
    multi:true,
    prompt:"ClassA の構成要素のうち、ClassB が継承するものは次のどれですか。（2つ選択）",
    code:"class ClassA {\n  private String msg;\n  int num;\n  ClassA(){  }\n  ClassA(String msg, int num) {\n    this.msg = msg;\n    this.num = num;\n  }\n  public void show() {\n    System.out.println(msg + \" : \" + num);\n  }\n}\nclass ClassB extends ClassA {\n}",
-   options:["コンストラクタ", "str 変数", "num 変数", "show() メソッド"],
+   options:["コンストラクタ", "msg 変数", "num 変数", "show() メソッド"],
    answers:[2, 3],
-   exp:"継承時にサブクラスが引き継ぐのは、スーパークラスで定義した変数とメソッド。コンストラクタは引き継がれない。また private 修飾子が付与されたメンバは自クラス内のみ公開となりサブクラスであってもアクセスできない（msgはprivateなので対象外）。なお選択肢Bの str 変数はClassAに存在しない。（解説P376）"},
+   exp:"継承時にサブクラスが引き継ぐのは、スーパークラスで定義した変数とメソッド。コンストラクタは引き継がれない。また private 修飾子が付与されたメンバは自クラス内のみ公開となりサブクラスであってもアクセスできない。選択肢Bの msg 変数は private なのでサブクラスからはアクセスできず、引き継がれない。（解説P376）"},
   {id:"m58",
    cat:"パッケージ",
    src:"練習問題",
@@ -2092,6 +2092,11 @@ document.addEventListener('keydown',function(e){
   //   ★倍率 mul() は clamp の**後**に掛かるので、「ゆっくり」で逃げると短い問題まで間延びする。
   //   直すべきは上限の側。新しい値は式が全問を覆う最小値（794字→38,930ms / 解説517字→26,065ms）。
   //   下げたぶんは1問も無い＝短い問題の待ち時間は1ミリも変わっていない。
+  // ★2026-10-15 解説の上限を 27000→30000 に上げた。これも実測が理由:
+  //   java-bronze の空だった解説13問を drill から移植し、b44 に JEP 513 の注記を足した結果、
+  //   最長の解説が 517字→575字（28,675ms）になり、旧上限 27,000ms を 1,675ms 超えた。
+  //   全38本1,315問を数えて張り付いたのは この1問だけ。30000 は全問を覆う最小の切りの良い値で、
+  //   次に長い解説は java-bronze b26 の 517字＝26,065ms ＝ 27,000ms 未満の問題は1ミリも変わらない。
   function msFor(chars, base, lo, hi){
     var raw = base + chars * 45;
     return Math.round(Math.min(hi, Math.max(lo, raw)) * mul());
@@ -2280,7 +2285,7 @@ document.addEventListener('keydown',function(e){
     try { window.scrollTo(0, 0); } catch(e){}   // 新しい問題は必ず最上部から（送る量を決める基準にもなる）
     schedule(msFor(textLen(document.querySelector('.qcard')), 3200, 5000, 40000), function(){
       autoReveal();
-      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 27000), function(){
+      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 30000), function(){
         if (pos >= queue.length - 1) { onePassDone(); }
         else if (typeof next === 'function') next();
       });
@@ -2302,7 +2307,7 @@ document.addEventListener('keydown',function(e){
     persist(); paintUI(); wakeOn();
     // いまの問題がもう答え済みなら次から、まだなら この問題から
     if (typeof answered !== 'undefined' && answered) {
-      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 27000), function(){
+      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 30000), function(){
         if (pos >= queue.length - 1) onePassDone(); else next();
       });
     } else {

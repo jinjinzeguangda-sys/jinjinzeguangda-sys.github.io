@@ -390,8 +390,8 @@ const KEY='javaSilverOriginalQuizV1';
 const BOOK_QUESTIONS = [
   {"id": "b1", "cat": "データ型", "src": "オリジナル", "prompt": "クラスのインスタンス変数(フィールド)として宣言した int を初期化しなかった場合の初期値はどれか。", "code": "", "options": ["1", "0", "null", "コンパイルエラー"], "answer": 1, "exp": "フィールドの int は明示的に初期化しなくても既定値 0 になる。一方メソッド内のローカル変数には既定値が無く、未初期化のまま使うとコンパイルエラーになる点に注意。"},
   {"id": "b2", "cat": "データ型", "src": "オリジナル", "prompt": "long 型のリテラルであることを明示する接尾辞はどれか。", "code": "", "options": ["D", "F", "L または l", "long"], "answer": 2, "exp": "long リテラルには接尾辞 L(小文字 l も可)を付ける。可読性のため大文字 L が推奨される。int の範囲を超える値を接尾辞なしで書くとコンパイルエラーになる。"},
-  {"id": "b3", "cat": "データ型", "src": "オリジナル", "prompt": "Java の char 型が保持するものとして正しいものはどれか。", "code": "", "options": ["16ビットのUnicode文字1つ", "符号付き8ビットの整数", "任意長の文字列", "真偽値(true/false)"], "answer": 0, "exp": "char は16ビットでUnicodeの1文字を表す。内部的には0〜65535の整数として扱え数値演算もできる。文字列は String、真偽値は boolean で表す。"},
-  {"id": "b4", "cat": "データ型", "src": "オリジナル", "prompt": "暗黙の型変換(拡大変換)についての説明として正しいものはどれか。", "code": "", "options": ["double から int へは暗黙に代入できる", "long から int へは暗黙に代入できる", "boolean は int に暗黙変換される", "int から long への代入は暗黙に行われる"], "answer": 3, "exp": "小さい型から大きい型への拡大変換(int→long→float→double 等)は暗黙に行われる。逆方向の縮小変換は情報が失われる恐れがあり明示的キャストが必要。boolean は数値型に変換できない。"},
+  {"id": "b3", "cat": "データ型", "src": "オリジナル", "prompt": "Java の char 型が保持するものとして正しいものはどれか。", "code": "", "options": ["16ビットのUnicode文字1つ", "符号付き8ビットの整数", "任意長の文字列", "真偽値(true/false)"], "answer": 0, "exp": "char は16ビットでUnicodeの1文字を表す。内部的には0〜65535の整数として扱え数値演算もできる。文字列は String、真偽値は boolean で表す。正確には1つのcharはUTF-16のコード単位1つであり、絵文字などの補助文字(U+10000以上)は2つのchar(サロゲートペア)で表す。"},
+  {"id": "b4", "cat": "データ型", "src": "オリジナル", "prompt": "暗黙の型変換(拡大変換)についての説明として正しいものはどれか。", "code": "", "options": ["double から int へは暗黙に代入できる", "long から int へは暗黙に代入できる", "boolean は int に暗黙変換される", "int から long への代入は暗黙に行われる"], "answer": 3, "exp": "小さい型から大きい型への拡大変換(int→long→float→double 等)は暗黙に行われる。逆方向の縮小変換は情報が失われる恐れがあり明示的キャストが必要(ただし byte b = 10; のように定数式で値が範囲内に収まる場合はキャスト不要)。boolean は数値型に変換できない。"},
   {"id": "b5", "cat": "データ型", "src": "オリジナル", "prompt": "接尾辞のない小数リテラル 3.14 の型はどれか。", "code": "3.14", "options": ["float", "double", "long", "decimal"], "answer": 1, "exp": "接尾辞のない小数リテラルは double として扱われる。float にするには接尾辞 f を付けて 3.14f と書く。decimal という基本型は Java に存在しない。"},
   {"id": "b6", "cat": "演算子", "src": "オリジナル", "prompt": "式 7 % 3 の結果はどれか。", "code": "7 % 3", "options": ["3", "2", "1", "0"], "answer": 2, "exp": "% は剰余(割った余り)を求める演算子。7 を 3 で割ると商2・余り1なので結果は 1 になる。"},
   {"id": "b7", "cat": "演算子", "src": "オリジナル", "prompt": "次のコードの実行後、a と b の値の組み合わせはどれか。", "code": "int a=5; int b=a++;", "options": ["a=6, b=5", "a=6, b=6", "a=5, b=6", "a=5, b=5"], "answer": 0, "exp": "後置インクリメント a++ は今の値を評価してから1増やす。よって b には増加前の5が入り、その後 a が6になる。前置 ++a なら先に増えて b=6 となる。"},
@@ -407,11 +407,11 @@ const BOOK_QUESTIONS = [
   {"id": "b17", "cat": "配列", "src": "オリジナル", "prompt": "次のコードを実行するとどうなるか。", "code": "int[] a = new int[3]; a[3] = 1;", "options": ["コンパイルエラーになる", "null が返る", "配列が自動で拡張される", "実行時に ArrayIndexOutOfBoundsException が発生する"], "answer": 3, "exp": "長さ3の配列の有効な添字は0〜2。範囲外の a[3] にアクセスすると実行時に ArrayIndexOutOfBoundsException が投げられる。配列長は固定で自動拡張されない。"},
   {"id": "b18", "cat": "配列", "src": "オリジナル", "prompt": "次の2次元配列で a.length と a[0].length の値はそれぞれどれか。", "code": "int[][] a = new int[2][3];", "options": ["3 と 2", "6 と 6", "2 と 3", "2 と 2"], "answer": 2, "exp": "a は長さ2の配列で、各要素が長さ3の配列を指す。よって a.length は2、a[0].length は3になる。"},
   {"id": "b19", "cat": "クラス・継承", "src": "オリジナル", "prompt": "コンストラクタの説明として正しいものはどれか。", "code": "", "options": ["void を返すメソッドである", "クラス名と同名で戻り値の型を書かず、new 時に呼ばれる", "1クラスに1つしか定義できない", "必ず static である"], "answer": 1, "exp": "コンストラクタはクラス名と同名・戻り値型を書かない特別なもので、インスタンス生成(new)時に呼ばれる。引数違いで複数定義(オーバーロード)できる。"},
-  {"id": "b20", "cat": "クラス・継承", "src": "オリジナル", "prompt": "サブクラスから親クラスのコンストラクタを呼び出すために使うものはどれか。", "code": "", "options": ["super(...)", "this(...)", "parent(...)", "base(...)"], "answer": 0, "exp": "親クラスのコンストラクタは super(...) で呼ぶ。子コンストラクタの先頭で明示しない場合、暗黙に引数なしの super() が呼ばれる。this(...) は同一クラスの別コンストラクタ呼び出し。"},
+  {"id": "b20", "cat": "クラス・継承", "src": "オリジナル", "prompt": "サブクラスから親クラスのコンストラクタを呼び出すために使うものはどれか。", "code": "", "options": ["super(...)", "this(...)", "parent(...)", "base(...)"], "answer": 0, "exp": "親クラスのコンストラクタは super(...) で呼ぶ。子コンストラクタの先頭で明示しない場合、暗黙に引数なしの super() が呼ばれる。this(...) は同一クラスの別コンストラクタ呼び出し。ただし子コンストラクタの先頭が this(...) の場合、そのコンストラクタには暗黙の super() は挿入されない(最後に辿り着いたコンストラクタで親が呼ばれる)。"},
   {"id": "b21", "cat": "クラス・継承", "src": "オリジナル", "prompt": "メソッドのオーバーライドの条件として正しいものはどれか。", "code": "", "options": ["引数の型を自由に変えてよい", "戻り値を無関係な型に変えてよい", "メソッド名を変える", "親と同じシグネチャ(名前と引数)で再定義する"], "answer": 3, "exp": "オーバーライドは親メソッドと同じ名前・引数リストで再定義すること。アクセス修飾子は同等以上に広げる必要があり、戻り値はサブ型(共変)までは許される。"},
   {"id": "b22", "cat": "クラス・継承", "src": "オリジナル", "prompt": "同一クラス内で引数の型や個数が異なる同名メソッドを複数定義することを何というか。", "code": "", "options": ["オーバーライド", "カプセル化", "オーバーロード", "継承"], "answer": 2, "exp": "引数の型・個数・並びが異なる同名メソッドを複数定義することをオーバーロードという。戻り値の型だけを変えても区別できないためオーバーロードにはならない。"},
   {"id": "b23", "cat": "クラス・継承", "src": "オリジナル", "prompt": "abstract(抽象)メソッドの説明として正しいものはどれか。", "code": "", "options": ["本体を持たず、サブクラスに実装を強制する", "必ず実装本体を持つ", "private として宣言できる", "final と必ず併用する"], "answer": 0, "exp": "abstract メソッドは本体を持たず具象サブクラスでの実装を義務づける。abstract クラスは new できない。private や final は継承・実装させない意味になり abstract と両立しない。"},
-  {"id": "b24", "cat": "例外", "src": "オリジナル", "prompt": "try 文の finally ブロックの説明として正しいものはどれか。", "code": "", "options": ["例外が起きた時だけ実行される", "例外の有無に関わらず原則必ず実行される", "正常終了時のみ実行される", "省略が許されない"], "answer": 1, "exp": "finally は try を抜ける際、例外の有無に関わらず実行される。リソースの解放処理などに使う。finally ブロック自体は省略可能。"},
+  {"id": "b24", "cat": "例外", "src": "オリジナル", "prompt": "try 文の finally ブロックの説明として正しいものはどれか。", "code": "", "options": ["例外が起きた時だけ実行される", "例外の有無に関わらず原則必ず実行される", "正常終了時のみ実行される", "省略が許されない"], "answer": 1, "exp": "finally は try を抜ける際、例外の有無に関わらず実行される。リソースの解放処理などに使う。finally ブロック自体は省略可能だが、catch も try-with-resources のリソース宣言も無い try 文では省略できない(try 単独は書けない)。"},
   {"id": "b25", "cat": "例外", "src": "オリジナル", "prompt": "検査例外(チェック例外)の説明として正しいものはどれか。", "code": "", "options": ["宣言も捕捉も不要で自由に無視できる", "必ず RuntimeException を継承する", "実行時例外の別名である", "catch するか throws で宣言しないとコンパイルできない"], "answer": 3, "exp": "検査例外(例 IOException)は catch するか throws で呼び出し元への伝播を宣言しないとコンパイルが通らない。RuntimeException 系(非検査例外)にはこの制約がない。"},
   {"id": "b26", "cat": "例外", "src": "オリジナル", "prompt": "catch や throw の対象にできる、例外階層の頂点となるクラスはどれか。", "code": "", "options": ["Object のみ", "Exception", "Throwable", "Error"], "answer": 2, "exp": "catch/throw できるのは Throwable とそのサブクラスだけで、例外階層の頂点は Throwable。その下に Exception(主に回復可能)と Error(重大障害)が分かれる。"},
   {"id": "b27", "cat": "例外", "src": "オリジナル", "prompt": "複数の catch を書くとき、親クラスの例外型を子クラスより先に書くとどうなるか。", "code": "", "options": ["子クラスの catch が到達不能となりコンパイルエラーになる", "問題なく順に評価される", "実行時に例外が二重発生する", "警告が出るだけで動作する"], "answer": 0, "exp": "catch は上から順に評価される。親例外型を子より先に書くと子の catch には決して到達できず、到達不能コードとしてコンパイルエラーになる。狭い(子)例外から順に書く。"},
@@ -1614,6 +1614,11 @@ document.addEventListener('keydown',function(e){
   //   ★倍率 mul() は clamp の**後**に掛かるので、「ゆっくり」で逃げると短い問題まで間延びする。
   //   直すべきは上限の側。新しい値は式が全問を覆う最小値（794字→38,930ms / 解説517字→26,065ms）。
   //   下げたぶんは1問も無い＝短い問題の待ち時間は1ミリも変わっていない。
+  // ★2026-10-15 解説の上限を 27000→30000 に上げた。これも実測が理由:
+  //   java-bronze の空だった解説13問を drill から移植し、b44 に JEP 513 の注記を足した結果、
+  //   最長の解説が 517字→575字（28,675ms）になり、旧上限 27,000ms を 1,675ms 超えた。
+  //   全38本1,315問を数えて張り付いたのは この1問だけ。30000 は全問を覆う最小の切りの良い値で、
+  //   次に長い解説は java-bronze b26 の 517字＝26,065ms ＝ 27,000ms 未満の問題は1ミリも変わらない。
   function msFor(chars, base, lo, hi){
     var raw = base + chars * 45;
     return Math.round(Math.min(hi, Math.max(lo, raw)) * mul());
@@ -1802,7 +1807,7 @@ document.addEventListener('keydown',function(e){
     try { window.scrollTo(0, 0); } catch(e){}   // 新しい問題は必ず最上部から（送る量を決める基準にもなる）
     schedule(msFor(textLen(document.querySelector('.qcard')), 3200, 5000, 40000), function(){
       autoReveal();
-      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 27000), function(){
+      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 30000), function(){
         if (pos >= queue.length - 1) { onePassDone(); }
         else if (typeof next === 'function') next();
       });
@@ -1824,7 +1829,7 @@ document.addEventListener('keydown',function(e){
     persist(); paintUI(); wakeOn();
     // いまの問題がもう答え済みなら次から、まだなら この問題から
     if (typeof answered !== 'undefined' && answered) {
-      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 27000), function(){
+      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 30000), function(){
         if (pos >= queue.length - 1) onePassDone(); else next();
       });
     } else {

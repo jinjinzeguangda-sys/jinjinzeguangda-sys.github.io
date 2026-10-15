@@ -1664,6 +1664,11 @@ document.addEventListener('keydown',function(e){
   //   ★倍率 mul() は clamp の**後**に掛かるので、「ゆっくり」で逃げると短い問題まで間延びする。
   //   直すべきは上限の側。新しい値は式が全問を覆う最小値（794字→38,930ms / 解説517字→26,065ms）。
   //   下げたぶんは1問も無い＝短い問題の待ち時間は1ミリも変わっていない。
+  // ★2026-10-15 解説の上限を 27000→30000 に上げた。これも実測が理由:
+  //   java-bronze の空だった解説13問を drill から移植し、b44 に JEP 513 の注記を足した結果、
+  //   最長の解説が 517字→575字（28,675ms）になり、旧上限 27,000ms を 1,675ms 超えた。
+  //   全38本1,315問を数えて張り付いたのは この1問だけ。30000 は全問を覆う最小の切りの良い値で、
+  //   次に長い解説は java-bronze b26 の 517字＝26,065ms ＝ 27,000ms 未満の問題は1ミリも変わらない。
   function msFor(chars, base, lo, hi){
     var raw = base + chars * 45;
     return Math.round(Math.min(hi, Math.max(lo, raw)) * mul());
@@ -1852,7 +1857,7 @@ document.addEventListener('keydown',function(e){
     try { window.scrollTo(0, 0); } catch(e){}   // 新しい問題は必ず最上部から（送る量を決める基準にもなる）
     schedule(msFor(textLen(document.querySelector('.qcard')), 3200, 5000, 40000), function(){
       autoReveal();
-      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 27000), function(){
+      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 30000), function(){
         if (pos >= queue.length - 1) { onePassDone(); }
         else if (typeof next === 'function') next();
       });
@@ -1874,7 +1879,7 @@ document.addEventListener('keydown',function(e){
     persist(); paintUI(); wakeOn();
     // いまの問題がもう答え済みなら次から、まだなら この問題から
     if (typeof answered !== 'undefined' && answered) {
-      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 27000), function(){
+      schedule(msFor(textLen(document.getElementById('after')), 2800, 5000, 30000), function(){
         if (pos >= queue.length - 1) onePassDone(); else next();
       });
     } else {
