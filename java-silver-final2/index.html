@@ -399,7 +399,7 @@ const BOOK_QUESTIONS = [
    code:"import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        try {\n            test(0);\n        } ［空欄］\n    }\n    private static void test(int num) throws IOException,\n                IndexOutOfBoundsException {\n        if (num < 10) {\n            throw new FileNotFoundException();\n        } else {\n            throw new IndexOutOfBoundsException();\n        }\n    }\n}",
    options:["catch (FileNotFoundException e) { } / catch (IndexOutOfBoundsException e) { }", "catch (IndexOutOfBoundsException e) { } / catch (FileNotFoundException e) { }", "catch (FileNotFoundException | IOException e) { }", "catch (IOException e) { }", "catch (FileNotFoundException | IndexOutOfBoundsException e) { }"],
    answer:3,
-   exp:"検査例外と非検査例外の違いの問題。FileNotFoundExceptionはIOExceptionのサブクラスなので、IOExceptionをキャッチするだけでコンパイルできる。throwsで宣言しているIndexOutOfBoundsExceptionはRuntimeExceptionのサブクラス（非検査例外）なのでキャッチしなくてもよい。A・Eがコンパイルエラーになるのは、FileNotFoundExceptionだけを捕まえても、throwsが宣言しているIOException（検査例外）が未処理のまま残るため。Cがエラーになるのは、マルチキャッチ（|）には親子関係にある型を並べられないため（FileNotFoundExceptionはIOExceptionのサブクラス）。（解説P554）"},
+   exp:"検査例外と非検査例外の違いの問題。FileNotFoundExceptionはIOExceptionのサブクラスなので、IOExceptionをキャッチするだけでコンパイルできる。throwsで宣言しているIndexOutOfBoundsExceptionはRuntimeExceptionのサブクラス（非検査例外）なのでキャッチしなくてもよい。A・B・Eがコンパイルエラーになるのは、FileNotFoundExceptionだけを捕まえても、throwsが宣言しているIOException（検査例外）が未処理のまま残るため（BはAとcatchの順を入れ替えただけなので理由も同じ。実測でA・B・Eとも「例外IOExceptionは報告されません」の同じエラー）。Cがエラーになるのは、マルチキャッチ（|）には親子関係にある型を並べられないため（FileNotFoundExceptionはIOExceptionのサブクラス）。（解説P554）"},
   {id:"b3",
    cat:"型変換",
    src:"総仕上げ問題②",
