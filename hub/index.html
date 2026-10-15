@@ -127,6 +127,9 @@
 // 保存が無いときは data-theme を当てない＝OSの設定に従う（従来どおりの見え方）。
 (function(){
   var KEY='jinji_theme', OK={dark:1,dim:1,bright:1}, TC=null;
+  // ★2026-10-15: 暗い/中/明るい の切替UIは撤去済み。dim/bright は戻せない状態なので1回だけ捨てる
+  try{ var _stale=localStorage.getItem(KEY);
+       if(_stale==='dim'||_stale==='bright') localStorage.removeItem(KEY); }catch(e){}
   function saved(){ try{ var t=localStorage.getItem(KEY);
     return OK[t]?t:null; }catch(e){ return null; } }
   function osDark(){ try{ return matchMedia('(prefers-color-scheme:dark)').matches; }

@@ -1,0 +1,7 @@
+# 目的: 作業中に取ったバックアップを公開リポジトリに入れないため。
+#   ★2026-10-15 に追加。deploy_site.sh は `git add -A` なので、
+#     これが無いと index.html.bak_* 109個がそのまま公開されていた
+#     （拡張子が .bak_YYYYMMDD_HHMMSS なので text/plain で配られる）。
+#   repo(java-silver)側の .gitignore と同じ扱いに揃えた。
+.DS_Store
+index.html.bak*
