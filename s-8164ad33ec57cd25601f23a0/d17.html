@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eBay 決まったこと 17</title>
+<style>
+  :root { color-scheme:light; --bg:#fbfbf9; --fg:#1d2230; --muted:#5d6475; --line:#cfd2da; --accent:#1f5fbf; --hover:#f0f2f7; --card:#ffffff; --sb:#b9bfcc; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  /* スクロールバー（目次・本文・入力欄）も配色に合わせる。2026-11-02 本人「スクロールバーだけ色が違っててダサい」 */
+  html, .toc, textarea { scrollbar-color:var(--sb) transparent; }
+  .toc { scrollbar-width:thin; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:19px; line-height:1.8; }
+  main { flex:1 1 0; min-width:0; max-width:860px; margin:0 auto; padding:28px 16px 56px; }
+  h1 { font-size:26px; margin:0 0 2px; }
+  h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
+  .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
+  p { margin:0 0 8px; }
+  .k { color:var(--muted); }
+  .j { font-weight:700; }
+  a.card { display:block; color:inherit; text-decoration:none; padding:16px 10px; border-top:1px solid var(--line); }
+  a.card:hover, a.card:focus-visible { background:var(--hover); outline:none; }
+  a.card:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .more { color:var(--accent); font-size:16px; margin:0; }
+  .qbadge { color:var(--accent); font-size:16px; font-weight:700; margin:0 0 2px; }
+  main li a, main p a:not(.back) { color:var(--accent); }
+  a.back { color:var(--accent); text-decoration:none; font-size:16px; }
+  a.back:hover { text-decoration:underline; }
+  .head { padding:14px 0 6px; border-top:1px solid var(--line); margin-top:10px; }
+  table { border-collapse:collapse; width:100%; margin:8px 0 14px; font-size:17px; line-height:1.6; }
+  th, td { border:1px solid var(--line); padding:8px 12px; text-align:left; vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  td.n { white-space:nowrap; font-variant-numeric:tabular-nums; }
+  ul, ol { margin:4px 0 12px; padding-left:1.3em; }
+  li { margin:2px 0; }
+  .note { color:var(--muted); font-size:16px; }
+  details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
+  details code { font-size:14px; word-break:break-all; }
+  blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
+  blockquote p { margin:2px 0; }
+  .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
+  .q label { display:block; padding:5px 0; cursor:pointer; }
+  .q input[type=radio], .q input[type=checkbox] { width:1.1em; height:1.1em; margin-right:8px; vertical-align:-0.1em; accent-color:var(--accent); }
+  .q textarea, #qout { width:100%; min-height:4.2em; margin-top:8px; padding:8px 10px; font:inherit; font-size:17px; line-height:1.6;
+    color:var(--fg); background:var(--bg); border:1px solid var(--line); }
+  .q textarea:focus-visible, #qout:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .rec { color:var(--accent); font-size:15px; }
+  button.copybtn { font:inherit; font-size:17px; padding:8px 18px; color:var(--bg); background:var(--accent); border:0; cursor:pointer; }
+  button.copybtn:hover { filter:brightness(1.1); }
+  .qstat { color:var(--muted); font-size:15px; }
+  #qout { display:none; min-height:9em; }
+  /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
+  html { scroll-behavior:auto; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
+  .wrap { max-width:1240px; margin:0 auto; display:flex; align-items:flex-start; }
+  .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
+    border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
+  .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
+  .toc ol { list-style:none; margin:0; padding:0; }
+  .toc li { margin:0; }
+  .toc a { display:flex; gap:8px; padding:6px 8px; color:var(--fg); text-decoration:none; border-left:3px solid transparent; }
+  .toc a:hover, .toc a:focus-visible { background:var(--hover); outline:none; }
+  .toc a:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .toc a[aria-current="page"] { border-left-color:var(--accent); background:var(--hover); font-weight:700; }
+  .toc .tn { flex:0 0 1.7em; color:var(--muted); font-variant-numeric:tabular-nums; text-align:right; }
+  .toc .tt { overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  a.card:target { background:var(--hover); box-shadow:inset 4px 0 0 var(--accent); }
+  a.card, #tail { scroll-margin-top:12px; }
+  @media (max-width: 960px) {
+    .wrap { display:block; }
+    .toc { position:static; width:auto; height:auto; border-right:0; border-bottom:1px solid var(--line); padding:12px 12px; }
+  }
+  @media print {
+    @page { size:A4; margin:14mm; }
+    body { font-size:14px; line-height:1.6; background:#fff; color:#000; }
+    .toc { display:none; } .wrap { display:block; }
+    main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
+    a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="目次">
+<p class="th">目次</p>
+<ol>
+<li><a href="index.html"><span class="tn">≡</span><span class="tt">一覧（トップ）</span></a></li>
+<li><a href="d1.html" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
+<li><a href="d2.html" title="書き込み後の読み戻しはしない。確認は、全部終わってから一括"><span class="tn">2</span><span class="tt">✅ 書き込み後の読み戻しはしない。確認は、全部終わってから一括</span></a></li>
+<li><a href="d3.html" title="全部終わったら自動出品を再開"><span class="tn">3</span><span class="tt">✅ 全部終わったら自動出品を再開</span></a></li>
+<li><a href="d4.html" title="電池が減っても自動出品を止めない"><span class="tn">4</span><span class="tt">✅ 電池が減っても自動出品を止めない</span></a></li>
+<li><a href="d5.html" title="「ホビー商品でない」では除外しない"><span class="tn">5</span><span class="tt">✅ 「ホビー商品でない」では除外しない</span></a></li>
+<li><a href="d6.html" title="ホビーサーチに載っていないだけでは落とさない"><span class="tn">6</span><span class="tt">✅ ホビーサーチに載っていないだけでは落とさない</span></a></li>
+<li><a href="d7.html" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
+<li><a href="d8.html" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
+<li><a href="d9.html" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
+<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">⏳ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="d11.html" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
+<li><a href="d12.html" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
+<li><a href="d13.html" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
+<li><a href="d14.html" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
+<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">❓ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="d16.html" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
+<li><a href="d17.html" aria-current="page" title="Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）"><span class="tn">17</span><span class="tt">⏳ Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）</span></a></li>
+<li><a href="index.html#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
+</ol>
+</nav>
+<script>(function(){var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}})();</script>
+<main>
+<p><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）</b></p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 開発は停止中（今の形は使える）</span></p>
+  <p><span class="k">実際:</span> 「Macで作る→父が重さを入れる→点検→父がZonosに取り込む」で回せます。品名（Item Name）の書き方だけが決まっていません。直近30日の注文は1日3.9件（11/1時点）で、開発を再開する目安『1日100商品』の約4%です。</p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「ItemPriceはAmazonで仕入れた時の値段を入れる様にして　今回は6989じゃなくて1500」</p><p class="note">本人の発言・2026-10-31（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
+<blockquote><p>「もし発送する商品のNoteから値段を拾えるなら（全ての商品で同じ書き方をしているはず）同じやり方でItemPriceを入力する様にして。　1,500円は、駿河屋の商品代でした。780円は送料と読んでいます　←あってる」</p><p class="note">本人の発言・2026-10-31（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
+<blockquote><p>「基本的にNoteに書いてある値段（送料は無視）で書いて」</p><p class="note">本人の発言・2026-10-31（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
+<blockquote><p>「エラー消えた！　毎回これでお願い」</p><p class="note">本人の発言・2026-10-31（Weight Unit に g を入れたら取り込みのエラーが消えた直後）（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
+<blockquote><p>「Item Price: 優先順位は　 1. eBay注文の My note にある商品代（送料は無視）2.それよりもPrepayの写真から出て来た価格が安い場合」</p><p class="note">本人の発言・2026-11-01（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
+<blockquote><p>「ItemNameは商品名そのままじゃない方がいいらしい。だけど、具体的な定義は決まってないので、そこを決めることも今後やる」</p><p class="note">本人の発言・2026-11-01（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
+<blockquote><p>「なぜcsvの開発を途中で止めたか →現状発送が1週間に数十個、手動でも1商品1分ほどで終わる 開発に何日もかかるため、開発コストに対する効果が見合わない →1日100商品ほど売れるようになれば効果が見込めるので、まずはcsvを作るよりも受注を増やすの優先という判断をした」</p><p class="note">本人の発言・2026-11-01 10:2x（本人が貼った文章。ALWAYS_RULES・memoryに原文で記録。会話記録では未照合）</p></blockquote>
+<blockquote><p>「1いいえ 2後でもう一度教えて 3今のままで 4はい 5はい」</p><p class="note">本人の発言・2026-11-01（Claudeが出した5つの質問への返事。番号はClaudeの質問の番号）（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
+<p><span class="k">（解釈）</span> （解釈）10/31の『元の商品名そのまま載せてよ、なんで勝手に変えるの？』を受けて、品名は台帳の題名そのままにしました。11/1の『商品名そのままじゃない方がいいらしい』で、それを暫定へ戻しています。11/1の5つの返事は、①一般則（note の✔の店を優先）は変えず、1件だけ安い方の値段で個別に出す ②予約品1件は保留で、次にCSVを作る日にClaudeから聞き直す ③Prepayの写真価格の渡し方は今のまま（口頭でClaudeへ） ④Prepayは『note より安いときだけ採る』で確定 ⑤再開資料を父のフォルダにも置く、と理解しています（確信度 中〜高）。『開発を止めた』の範囲は文中に無く、最終形Bとこれ以上の自動化と読んでいます（確信度 中・範囲は確かめていません）。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>作り直すとき（Mac・どのフォルダでも可）: eBayに<b>ログイン済みのChromeを開いておく</b>（My note をそこから取るため）。朝04:05の注文の取り込みが終わった後に作ると、最新の注文まで入ります。Claudeへの頼み方の例: 「<code>~/.local/share/jinji_maintenance/carryover/zonos/RESUME_zonos_csv_要件_20261101.md</code> を読んで、今日の注文のZonos用CSVを作って」。</li>
+<li>流れ: ①Claudeが My note を取り、CSVと「重さ入力シート」を作る → ②<b>父が重さを入れる</b>（1個あたりグラム）→ ③Claudeが重さを取り込んで最終CSVを作り、<b>点検</b>する（★NGが1つでもあればZonosに上げない）→ ④<b>父がZonosに取り込む</b>。注文の作成・支払い・ラベルは父か本人です。</li>
+<li>開発を再開するのは、本人が「やって」と言った時だけです。再開の目安は『1日100商品ほど売れる』こと（11/1時点は1日3.9件）。それまで、ClaudeからCSVの追加開発は提案しません。ただし、関税の誤申告につながる誤り（HSの取り違えなど）は別枠で直します。</li>
+<li>最初にやる3つ（最終形Bにするとき）: ①父のPCで新版の自己試験を通す（<code>python -I memo_to_zonos_csv.py --selftest</code>）②父のClaudeに重さ入力シートとCSVを作らせて1件試す ③注文の取り込みと発送メモの作成を父のPCへ移す（<b>Mac側の自動実行は止める＝本人の了承が要る</b>。両方で回すと競合コピーができます）。</li>
+<li>次にCSVを作る日に、Claudeから2つ聞き直します: 予約品1件（Amazon価格しか無い）をどうするか／品名（Item Name）の書き方の定義。</li>
+</ol>
+
+<h2>何の話か</h2>
+<ul>
+<li>日本郵便で米国へ送る荷物は、<b>2026-10-15 から Zonos で関税の事前登録が必要</b>になりました。</li>
+<li>父は「大口」（CSVをまとめて取り込む方式）を選びました。CSVは<b>Mac（Claude）が作ります</b>。本人と父がやるのは「重さを入れること」と「Zonosでの取り込み・支払い」だけです。注文の作成・支払い・ラベルはClaudeはやりません。</li>
+</ul>
+<h2>いま、CSVに入れているもの</h2>
+<table>
+<tr><th>項目</th><th>何を入れるか</th><th>どこから取るか</th><th>決めた日</th></tr>
+<tr><td>品名（Item Name）</td><td>eBayの英語の商品名をそのまま。<b>ただし仮</b>（何を書くかは未決）</td><td>売上台帳</td><td>10/31・11/1</td></tr>
+<tr><td>重さ（Item Weight）</td><td>1個あたりのグラムの数字。<b>父が全部の注文に入れる</b></td><td>「重さ入力シート」（Claudeが作って父に渡す）</td><td>―</td></tr>
+<tr><td>重さの単位（Weight Unit）</td><td><b>毎回 <code>g</code></b>。空欄だと、Zonosが全行を拒否します</td><td>道具が全行に書く</td><td>10/31</td></tr>
+<tr><td>値段（Item Price）</td><td>仕入れた時の<b>商品代</b>（送料は入れない）。下の「値段の決め方」</td><td>eBay注文の My note</td><td>10/31・11/1</td></tr>
+<tr><td>関税の番号（HS）</td><td>プラモ・フィギュア＝<code>9503.00</code>（関税12.5%）／CD・Blu-ray・ゲーム＝<code>8523.49</code>（関税0）</td><td>日本郵便ツールの発送メモ（自動）</td><td>―</td></tr>
+<tr><td>箱の大きさと重さ（Carton の列）</td><td><b>毎回すべて空欄</b>。一部だけ入れると、Zonosが取り込みを拒否します</td><td>道具が全行を空にする</td><td>―</td></tr>
+<tr><td>氏名・住所・電話</td><td>自動で入る</td><td>発送メモ・住所録</td><td>―</td></tr>
+</table>
+<h2>値段（Item Price）の決め方</h2>
+<ul>
+<li>基本は、<b>eBay注文の My note に書いてある商品代（送料は無視）</b>です。<br>例: note が「駿河屋 1,500円＋送料780円」なら、Item Price は <b>1,500円</b>（送料の780円は入れません）。</li>
+<li>Prepay アプリの写真から出た価格が、<b>note の商品代より安いときだけ</b>、そちらを使います（同額・高いときは note）。</li>
+<li>優先順位（道具の中）: 注文ごとの個別指定 ＞ note ＞ 台帳の仕入れ値 ＞ 売値の換算。</li>
+<li>note から値段が読めないとき（Amazon価格だけ・買った店が2つ以上・店名が辞書に無い・個数2以上）は、<b>数字を作らず空欄にして理由を付けます</b>。点検（audit）が ★NG にして、Zonosに上げさせません。</li>
+<li>10/31は「Amazonで仕入れた時の値段」と指示があり、同日に「note の値段（送料は無視）」へ広がりました。後者が現在の形です。</li>
+</ul>
+<h2>なぜ、いま開発を止めているか（本人の判断）</h2>
+<ul>
+<li>発送は<b>1週間に数十個</b>で、手動でも<b>1商品1分</b>ほどで終わる。一方、開発には何日もかかるため、効果が見合わない。</li>
+<li><b>1日100商品ほど</b>売れるようになれば効果が見込める。まずはCSVより受注を増やす。</li>
+<li>Claudeの実測（11/1・売上台帳734件）: 直近8週の注文は週に23〜37件、直近30日は1日平均3.9件＝目安の約4%です。注文の件数であって、商品の個数ではありません（「1商品1分」「開発に何日も」は本人の見積りで、未検証）。</li>
+<li>止めた範囲は、「父のPCで完結する形（最終形B）」と「これ以上の自動化」と読んでいます（確信度 中・範囲は確かめていません）。Mac側の道具は動いていて、毎回使えます。</li>
+</ul>
+<h2>決まっていないこと・確認が要ること</h2>
+<table>
+<tr><th>何が</th><th>状態</th></tr>
+<tr><td>品名（Item Name）に何を書くか</td><td><b>未決</b>。「商品名そのままではない方がいいらしい」が、定義はこれから決める。いまは暫定で、台帳の題名をそのまま入れています</td></tr>
+<tr><td>予約品で、Amazon価格しか無い1件</td><td>保留（空欄のまま）。次にCSVを作る日に、Claudeから聞き直します</td></tr>
+<tr><td>申告額と実際の取引額</td><td>仕入れ値は売値の換算より低くなる傾向があり、申告額が買い手の支払額より低くなります。この扱いが問題ないか、父・税理士に確認します（未確認・Claudeは『賛成できません』の立場・確信度 中）</td></tr>
+<tr><td>CD・映像の実際の関税</td><td>ゲームディスク1件は、HS 8523.49 で関税¥0と確認済みです。音楽CD・映像の実請求は未確認で、出るたびにZonosの請求で確かめます</td></tr>
+<tr><td>父のPCでCSVを作る形（最終形B）</td><td>止めています。足りないもの: ①売上台帳などの材料が古い（Macから父のOneDriveへ上りが止まっていた期間があったため）②新しい道具を父のPCで未実行（Windowsで動くか未確認）③My note が父のPC単体で取れるか未検証（ログイン済みのChromeが要る）④父のClaudeへの短い依頼文が未作成</td></tr>
+</table>
+<details><summary>技術メモ・注意（クリックで開く）</summary>
+<ul>
+<li><b>CSVを Calc で保存しない。</b><code>9503.00</code> が <code>9503</code> に変わります。Zonosには元のファイルをそのまま上げます。</li>
+<li>買い手の氏名・住所が入ったCSVは、父の共有フォルダに置きません。</li>
+<li>「準備完了／0エラー」は書式の検査だけです。関税の番号や値段が合っているかは見ていません。</li>
+<li>note の読み方: <code>✔店名 価格＋送料</code> の✔は買った店、<code>×</code> は買えなかった店、<code>A to B</code> は値段が変わった（現在値は B）。✔があればその店の商品代。✔が無ければ、×を除いた店の商品代の最安。Amazon価格・JAN・題名の数字は拾いません。店名の辞書は6店（駿河屋・YS Joshin・バリQ・桃太郎王国・あみあみ・BM）で、新しい店が出たら足します。</li>
+<li>note の取り方: 父/本人がログイン済みのChromeで、eBayの注文詳細から読みます。eBay APIでは取れませんでした。</li>
+<li>HSの判定は、記録物（CD・映像・ゲーム）を出品側と日本郵便側で食い違わせないことが肝心です。食い違うと、関税12.5%を払うか、キットを8523.49（関税0）で申告する誤りになります。</li>
+<li>生成器: <code>~/.local/share/jinji_maintenance/carryover/zonos/memo_to_zonos_csv.py</code>（点検は同じフォルダの <code>audit_zonos_csv.py</code>）。再開用の詳しい資料は同じフォルダの <code>RESUME_zonos_csv_要件_20261101.md</code>（かんたん版もあります）。</li>
+<li>出所: 再開資料・本人の原文記録は2026-11-01 11:38までです。それ以降の更新は、確認した範囲ではありません。</li>
+</ul>
+</details>
+
+<p style="margin-top:28px"><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+</main>
+</div>
+</body>
+</html>
