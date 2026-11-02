@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eBay 決まったこと 4</title>
+<style>
+  :root { color-scheme:light; --bg:#fbfbf9; --fg:#1d2230; --muted:#5d6475; --line:#cfd2da; --accent:#1f5fbf; --hover:#f0f2f7; --card:#ffffff; --sb:#b9bfcc; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  /* スクロールバー（目次・本文・入力欄）も配色に合わせる。2026-11-02 本人「スクロールバーだけ色が違っててダサい」 */
+  html, .toc, textarea { scrollbar-color:var(--sb) transparent; }
+  .toc { scrollbar-width:thin; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:19px; line-height:1.8; }
+  main { flex:1 1 0; min-width:0; max-width:860px; margin:0 auto; padding:28px 16px 56px; }
+  h1 { font-size:26px; margin:0 0 2px; }
+  h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
+  .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
+  p { margin:0 0 8px; }
+  .k { color:var(--muted); }
+  .j { font-weight:700; }
+  a.card { display:block; color:inherit; text-decoration:none; padding:16px 10px; border-top:1px solid var(--line); }
+  a.card:hover, a.card:focus-visible { background:var(--hover); outline:none; }
+  a.card:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .more { color:var(--accent); font-size:16px; margin:0; }
+  .qbadge { color:var(--accent); font-size:16px; font-weight:700; margin:0 0 2px; }
+  main li a, main p a:not(.back) { color:var(--accent); }
+  a.back { color:var(--accent); text-decoration:none; font-size:16px; }
+  a.back:hover { text-decoration:underline; }
+  .head { padding:14px 0 6px; border-top:1px solid var(--line); margin-top:10px; }
+  table { border-collapse:collapse; width:100%; margin:8px 0 14px; font-size:17px; line-height:1.6; }
+  th, td { border:1px solid var(--line); padding:8px 12px; text-align:left; vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  td.n { white-space:nowrap; font-variant-numeric:tabular-nums; }
+  ul, ol { margin:4px 0 12px; padding-left:1.3em; }
+  li { margin:2px 0; }
+  .note { color:var(--muted); font-size:16px; }
+  details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
+  details code { font-size:14px; word-break:break-all; }
+  blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
+  blockquote p { margin:2px 0; }
+  .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
+  .q label { display:block; padding:5px 0; cursor:pointer; }
+  .q input[type=radio], .q input[type=checkbox] { width:1.1em; height:1.1em; margin-right:8px; vertical-align:-0.1em; accent-color:var(--accent); }
+  .q textarea, #qout { width:100%; min-height:4.2em; margin-top:8px; padding:8px 10px; font:inherit; font-size:17px; line-height:1.6;
+    color:var(--fg); background:var(--bg); border:1px solid var(--line); }
+  .q textarea:focus-visible, #qout:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .rec { color:var(--accent); font-size:15px; }
+  button.copybtn { font:inherit; font-size:17px; padding:8px 18px; color:var(--bg); background:var(--accent); border:0; cursor:pointer; }
+  button.copybtn:hover { filter:brightness(1.1); }
+  .qstat { color:var(--muted); font-size:15px; }
+  #qout { display:none; min-height:9em; }
+  /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
+  html { scroll-behavior:auto; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
+  .wrap { max-width:1240px; margin:0 auto; display:flex; align-items:flex-start; }
+  .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
+    border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
+  .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
+  .toc ol { list-style:none; margin:0; padding:0; }
+  .toc li { margin:0; }
+  .toc a { display:flex; gap:8px; padding:6px 8px; color:var(--fg); text-decoration:none; border-left:3px solid transparent; }
+  .toc a:hover, .toc a:focus-visible { background:var(--hover); outline:none; }
+  .toc a:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .toc a[aria-current="page"] { border-left-color:var(--accent); background:var(--hover); font-weight:700; }
+  .toc .tn { flex:0 0 1.7em; color:var(--muted); font-variant-numeric:tabular-nums; text-align:right; }
+  .toc .tt { overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  a.card:target { background:var(--hover); box-shadow:inset 4px 0 0 var(--accent); }
+  a.card, #tail { scroll-margin-top:12px; }
+  @media (max-width: 960px) {
+    .wrap { display:block; }
+    .toc { position:static; width:auto; height:auto; border-right:0; border-bottom:1px solid var(--line); padding:12px 12px; }
+  }
+  @media print {
+    @page { size:A4; margin:14mm; }
+    body { font-size:14px; line-height:1.6; background:#fff; color:#000; }
+    .toc { display:none; } .wrap { display:block; }
+    main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
+    a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="目次">
+<p class="th">目次</p>
+<ol>
+<li><a href="index.html"><span class="tn">≡</span><span class="tt">一覧（トップ）</span></a></li>
+<li><a href="d1.html" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
+<li><a href="d2.html" title="書き込み後の読み戻しはしない。確認は、全部終わってから一括"><span class="tn">2</span><span class="tt">✅ 書き込み後の読み戻しはしない。確認は、全部終わってから一括</span></a></li>
+<li><a href="d3.html" title="全部終わったら自動出品を再開"><span class="tn">3</span><span class="tt">✅ 全部終わったら自動出品を再開</span></a></li>
+<li><a href="d4.html" aria-current="page" title="電池が減っても自動出品を止めない"><span class="tn">4</span><span class="tt">✅ 電池が減っても自動出品を止めない</span></a></li>
+<li><a href="d5.html" title="「ホビー商品でない」では除外しない"><span class="tn">5</span><span class="tt">✅ 「ホビー商品でない」では除外しない</span></a></li>
+<li><a href="d6.html" title="ホビーサーチに載っていないだけでは落とさない"><span class="tn">6</span><span class="tt">✅ ホビーサーチに載っていないだけでは落とさない</span></a></li>
+<li><a href="d7.html" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
+<li><a href="d8.html" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
+<li><a href="d9.html" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
+<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">⏳ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="d11.html" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
+<li><a href="d12.html" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
+<li><a href="d13.html" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
+<li><a href="d14.html" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
+<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">❓ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="d16.html" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
+<li><a href="index.html#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
+</ol>
+</nav>
+<script>(function(){var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}})();</script>
+<main>
+<p><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>電池が減っても自動出品を止めない</b></p>
+  <p><span class="k">判定:</span> <span class="j">✅ 適用済み</span></p>
+  <p><span class="k">実際:</span> 今朝10:30の実機で、動くことを確認しました。電源が急に落ちた場合は、直近15分ぶんの収集を失います。</p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「じゃあ今日やったこととしては、説明文の修正→カテゴリ分けで33%offの適応を優先して行う。それが全数終わったら読み取りでの確認と自動出品を再開。　　自動出品が再開する際にはDVDなど検索ワードを増やして検索する・充電の低下でも自動出品が中止しない様に対策をした。　　ということかな？」</p><p class="note">本人の発言・2026-11-02 14:51（本人の理解の確認。質問の形）</p></blockquote>
+<p><span class="k">（解釈）</span> 電池が減っても自動出品を止めたくない＝出品数を落としたくない、と理解しています（確信度 高）。DVD・Blu-ray の語を『どちらに足すか』は、本人の発言だけでは断定できません（項目7の質問）。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>動作は確認済みです（11/2 10:30 の実際の出品で、書き出しに約53秒）。15分ごとに書き出す仕組みなので、電源が急に切れた日に失われるのは直近15分ぶんまでです。</li>
+<li>元に戻したいとき（Macのターミナル）: <code>~/.venvs/ebay/bin/python3 -P ~/.local/share/jinji_maintenance/carryover/battery_rule/apply_battery_rule.py --revert</code>。CD・ゲームの語を後ろに回した変更は、同じフォルダの <code>apply_media_kw_last.py --revert</code>。状態の確認は、どちらも <code>--check</code>。</li>
+<li>注意（未確認）: 戻す機能は「直前の控え」に戻します。あとに入れた変更（再開ゲートなど）まで消えないか、実行の前に <code>--check</code> と、道具の戻す処理の中身を見て確かめます。適用前の控えは <code>~/.local/share/jinji_maintenance/bak/run_ebay_auto.sh.bak_20261102_002804_preBatteryRule</code>。</li>
+</ol>
+
+<h2>前はどうだったか</h2>
+<p>電池が減ると、その日の収集を止めて、再開しませんでした。以前の測定では、電源につながっていた日は1日あたり213件、電池の日は83件でした（1日あたりの出品数と読んでいます・確信度 中）。</p>
+<h2>いまはどうか</h2>
+<ul>
+<li>電池で動いているときは、<b>15分ごとに、溜めた分を出品</b>します（小分け出品）。止めません。</li>
+<li>11/2 00:28 に適用。今朝10:30の実機で動作を確認しました。小分けの出品1回は、約53秒でした。</li>
+<li>同時に、CD・ゲームの検索語を後ろへ回しました（先頭で時間を食わないように）。</li>
+</ul>
+<h2>弱点</h2>
+<p>電源が急に落ちると、直近15分ぶんの収集を失います。</p>
+<details><summary>技術メモ</summary>
+<p>パッチ <code>~/.local/share/jinji_maintenance/carryover/…/apply_battery_rule.py</code>（試験39/39）、<code>…/apply_media_kw_last.py</code>。どちらも本人が 11/2 00:28 に適用。</p>
+</details>
+
+<p style="margin-top:28px"><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+</main>
+</div>
+</body>
+</html>

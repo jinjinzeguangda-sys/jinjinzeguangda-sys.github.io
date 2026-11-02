@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eBay 決まったこと 1</title>
+<style>
+  :root { color-scheme:light; --bg:#fbfbf9; --fg:#1d2230; --muted:#5d6475; --line:#cfd2da; --accent:#1f5fbf; --hover:#f0f2f7; --card:#ffffff; --sb:#b9bfcc; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  /* スクロールバー（目次・本文・入力欄）も配色に合わせる。2026-11-02 本人「スクロールバーだけ色が違っててダサい」 */
+  html, .toc, textarea { scrollbar-color:var(--sb) transparent; }
+  .toc { scrollbar-width:thin; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:19px; line-height:1.8; }
+  main { flex:1 1 0; min-width:0; max-width:860px; margin:0 auto; padding:28px 16px 56px; }
+  h1 { font-size:26px; margin:0 0 2px; }
+  h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
+  .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
+  p { margin:0 0 8px; }
+  .k { color:var(--muted); }
+  .j { font-weight:700; }
+  a.card { display:block; color:inherit; text-decoration:none; padding:16px 10px; border-top:1px solid var(--line); }
+  a.card:hover, a.card:focus-visible { background:var(--hover); outline:none; }
+  a.card:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .more { color:var(--accent); font-size:16px; margin:0; }
+  .qbadge { color:var(--accent); font-size:16px; font-weight:700; margin:0 0 2px; }
+  main li a, main p a:not(.back) { color:var(--accent); }
+  a.back { color:var(--accent); text-decoration:none; font-size:16px; }
+  a.back:hover { text-decoration:underline; }
+  .head { padding:14px 0 6px; border-top:1px solid var(--line); margin-top:10px; }
+  table { border-collapse:collapse; width:100%; margin:8px 0 14px; font-size:17px; line-height:1.6; }
+  th, td { border:1px solid var(--line); padding:8px 12px; text-align:left; vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  td.n { white-space:nowrap; font-variant-numeric:tabular-nums; }
+  ul, ol { margin:4px 0 12px; padding-left:1.3em; }
+  li { margin:2px 0; }
+  .note { color:var(--muted); font-size:16px; }
+  details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
+  details code { font-size:14px; word-break:break-all; }
+  blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
+  blockquote p { margin:2px 0; }
+  .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
+  .q label { display:block; padding:5px 0; cursor:pointer; }
+  .q input[type=radio], .q input[type=checkbox] { width:1.1em; height:1.1em; margin-right:8px; vertical-align:-0.1em; accent-color:var(--accent); }
+  .q textarea, #qout { width:100%; min-height:4.2em; margin-top:8px; padding:8px 10px; font:inherit; font-size:17px; line-height:1.6;
+    color:var(--fg); background:var(--bg); border:1px solid var(--line); }
+  .q textarea:focus-visible, #qout:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .rec { color:var(--accent); font-size:15px; }
+  button.copybtn { font:inherit; font-size:17px; padding:8px 18px; color:var(--bg); background:var(--accent); border:0; cursor:pointer; }
+  button.copybtn:hover { filter:brightness(1.1); }
+  .qstat { color:var(--muted); font-size:15px; }
+  #qout { display:none; min-height:9em; }
+  /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
+  html { scroll-behavior:auto; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
+  .wrap { max-width:1240px; margin:0 auto; display:flex; align-items:flex-start; }
+  .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
+    border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
+  .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
+  .toc ol { list-style:none; margin:0; padding:0; }
+  .toc li { margin:0; }
+  .toc a { display:flex; gap:8px; padding:6px 8px; color:var(--fg); text-decoration:none; border-left:3px solid transparent; }
+  .toc a:hover, .toc a:focus-visible { background:var(--hover); outline:none; }
+  .toc a:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .toc a[aria-current="page"] { border-left-color:var(--accent); background:var(--hover); font-weight:700; }
+  .toc .tn { flex:0 0 1.7em; color:var(--muted); font-variant-numeric:tabular-nums; text-align:right; }
+  .toc .tt { overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  a.card:target { background:var(--hover); box-shadow:inset 4px 0 0 var(--accent); }
+  a.card, #tail { scroll-margin-top:12px; }
+  @media (max-width: 960px) {
+    .wrap { display:block; }
+    .toc { position:static; width:auto; height:auto; border-right:0; border-bottom:1px solid var(--line); padding:12px 12px; }
+  }
+  @media print {
+    @page { size:A4; margin:14mm; }
+    body { font-size:14px; line-height:1.6; background:#fff; color:#000; }
+    .toc { display:none; } .wrap { display:block; }
+    main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
+    a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="目次">
+<p class="th">目次</p>
+<ol>
+<li><a href="index.html"><span class="tn">≡</span><span class="tt">一覧（トップ）</span></a></li>
+<li><a href="d1.html" aria-current="page" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
+<li><a href="d2.html" title="書き込み後の読み戻しはしない。確認は、全部終わってから一括"><span class="tn">2</span><span class="tt">✅ 書き込み後の読み戻しはしない。確認は、全部終わってから一括</span></a></li>
+<li><a href="d3.html" title="全部終わったら自動出品を再開"><span class="tn">3</span><span class="tt">✅ 全部終わったら自動出品を再開</span></a></li>
+<li><a href="d4.html" title="電池が減っても自動出品を止めない"><span class="tn">4</span><span class="tt">✅ 電池が減っても自動出品を止めない</span></a></li>
+<li><a href="d5.html" title="「ホビー商品でない」では除外しない"><span class="tn">5</span><span class="tt">✅ 「ホビー商品でない」では除外しない</span></a></li>
+<li><a href="d6.html" title="ホビーサーチに載っていないだけでは落とさない"><span class="tn">6</span><span class="tt">✅ ホビーサーチに載っていないだけでは落とさない</span></a></li>
+<li><a href="d7.html" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
+<li><a href="d8.html" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
+<li><a href="d9.html" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
+<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">⏳ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="d11.html" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
+<li><a href="d12.html" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
+<li><a href="d13.html" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
+<li><a href="d14.html" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
+<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">❓ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="d16.html" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
+<li><a href="index.html#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
+</ol>
+</nav>
+<script>(function(){var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}})();</script>
+<main>
+<p><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>説明文の修正 → カテゴリ分けで33%off、を優先</b></p>
+  <p><span class="k">判定:</span> <span class="j">✅ 実施中</span></p>
+  <p><span class="k">実際:</span> 説明文は 7,870 / 9,949 口が済み(20:13時点)。18:57に二重出品の古い側3口が続けて失敗して運転役が止まり、原因を直して19:05に再開しました。20:12に1日の上限(518)に当たって止まりました(想定どおり)。次の枠は11/3(火)17時ごろの見込みで、残りは約2,080口です。全部終わる見込みは11/3(火)の夜〜11/4(水)です(確信度 低〜中)。33%セールは11/14までです。</p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「どちらかというと自動出品よりも説明文修正の方を優先して対応してほしい」</p><p class="note">本人の発言・2026-11-02 12:19</p></blockquote>
+<blockquote><p>「1日に修正できる数が限られてるのであれば、まず説明文の修正を1日の上限まで行って、その後に修正した商品をカテゴリ分けする様にしてほしい」</p><p class="note">本人の発言・2026-11-02 13:55</p></blockquote>
+<blockquote><p>「あ、並行カテゴリ付けの方が効率いいならそうして」</p><p class="note">本人の発言・2026-11-02 13:57</p></blockquote>
+<blockquote><p>「じゃあ今日やったこととしては、説明文の修正→カテゴリ分けで33%offの適応を優先して行う。それが全数終わったら読み取りでの確認と自動出品を再開。」</p><p class="note">本人の発言・2026-11-02 14:51（この発言の前半）</p></blockquote>
+<p><span class="k">（解釈）</span> 優先の順番は「説明文を書く → カテゴリを付ける → 33%セールに入れる → 読み戻しの確認は最後」と理解しています。説明文の修正は自動出品より優先で、日中も回してよい、という扱いです。（並べ方はClaudeの整理。本人の原文は上の引用です）</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>状況を見る（Macのターミナル・どのフォルダでも可）: <code>tail -n 8 ~/.local/share/jinji_maintenance/logo_fix/nightly/daily_cycle.log</code> と <code>tail -n 4 ~/.local/share/jinji_maintenance/logo_fix/nightly/quota_wait.log</code>。</li>
+<li>「完了印」（<code>~/.local/share/jinji_maintenance/logo_fix/nightly/daily_cycle_done.txt</code>）が出たら、全部終わりです。「停止印」（<code>…/daily_cycle_stopped.txt</code>）が出たら、想定外で止まっているので、原因を調べます。</li>
+<li>電源やネットが切れて運転役・待機役が落ちていたら、Claudeが起動し直します。差し替えは「済み記録」、カテゴリ付けは「既に在れば飛ばす」ので、重複しません: <code>caffeinate -i bash ~/.local/share/jinji_maintenance/logo_fix/daily_cycle.sh</code> と <code>bash ~/.local/share/jinji_maintenance/logo_fix/verify_after_all_done.sh</code>。</li>
+<li>目標は、11/14 23:55 の33%セール終了まで。次のセールは未予定なので、それ以降はセールに入れる機会がありません。</li>
+<li>写真が500px未満の出品（書き込みが25002で失敗する）は、本人の手で直す399件の仲間です。Claudeは触りません。</li>
+<li>「想定外の理由で止まった」が出たら、停止印の中の文言と最新の束ログ（<code>…/nightly/chunk_*.log</code>）の失敗の行を読みます。その口だけの事情なら「❓未評価」に分類して再起動、systemic（全部が落ちる・通信・権限）なら止めたままにします。完了通知の終了コード0は「正常終了」を意味しません。</li>
+<li>二重出品の古い側の一覧: <code>~/.local/share/jinji_maintenance/carryover/dup_listings/dup_map_20261102.tsv</code>（読み取りのみで作成）。実際の数は <code>grep -c "二重出品の片方" ~/.local/share/jinji_maintenance/logo_fix/nightly/chunk_*.log</code> で出ます。整理（古い側の終了）は、本人の判断・本人の手です。</li>
+</ol>
+
+<h2>いまの数字</h2>
+<table>
+<tr><th>項目</th><th>数字</th><th>メモ</th></tr>
+<tr><td>説明文を直した口数</td><td class="n">7,870 / 9,949</td><td>20:13時点（済み記録の行数。「すでに新ロゴ」「写真が小さくて未評価」の口も含みます）。17:31時点は5,275、13:34時点は5,046でした。再開後（19:05〜20:12）は67分で約1,180口（1時間に約1,050口）でした</td></tr>
+<tr><td>18:57の停止</td><td class="n">19:05に再開</td><td>同じSKUで出品が2つ生きている「二重出品」の古い側3口が続けて失敗し、安全装置が運転役を止めました。この3口は書き込まれていません（別の出品のoffer（在庫APIの注文書）を書き換えないよう、自分で断っています）。この型の失敗は「その口だけの事情」として数えるように直し、試験は127件すべて合格しました。<a href="d1.html#dup">詳細は下の「二重出品」</a></td></tr>
+<tr><td>上限 518</td><td class="n">17:12に解除→20:12に再び到達</td><td>13:34から止まっていました。5分ごとの様子見で、16:55は上限のまま、17:12は使えました。上限は毎日17:00ごろに戻るようです（確信度 中）。昨日の分は、約1,780件を直したところで上限に当たりました</td></tr>
+<tr><td>今日の電源断</td><td class="n">17:04に復旧</td><td>16:55〜17:04に電源が切れ、運転役と待機役が止まっていました。17:12に起動し直し、記録は無傷（差し替え5,046行・カテゴリ4,280行・壊れ行0）でした</td></tr>
+<tr><td>カテゴリを付けた口数</td><td class="n">約4,360 / 4,904</td><td>記録は4,386行（重複を除くと約4,360口・17:31時点）。差し替えと並行して増えています。付けられる口の4,904は、前回の値のまま測り直していません</td></tr>
+<tr><td>33%セール</td><td class="n">11/14 23:55 終了</td><td>動いているセールが2本。次のセールは今のところ予定がありません</td></tr>
+<tr><td>全部終わる見込み</td><td class="n">11/3(火)夜〜11/4(水)</td><td>確信度 低〜中。20:12に上限(518)へ当たり、累計7,870口。残り約2,080口を、次の枠（11/3 17時ごろ）で進めます。今日の17:12〜20:12は約2,600口進んだので、1つの枠で終わる可能性もあります（以前の見込みは1日約1,800件でした）。横で動くカテゴリ付けも同じ枠を使うので、前後します</td></tr>
+</table>
+<h2>なぜこの順番か</h2>
+<ul>
+<li>説明文 → カテゴリ → 33%セール、の順です。<b>すでにセールに入った出品は、説明文を書き換えられません</b>（eBayが25019というエラーで弾きます）。だから説明文を先に直します。</li>
+<li>セールの印が付くまでに、最大12時間ほどかかります。抜き取りで確認すると、印が付いていた口は、昨夜に直した分が 6/6、今朝の分が 5/5、13:30以降の分が 0/4でした。13:30以降の分は、まだ時間が経っていないためと読んでいます（解釈）。</li>
+</ul>
+<h2>自動で回っているもの</h2>
+<ul>
+<li><b>運転役</b>: 14:04に起動。「呼び出し枠の回復を待つ → 差し替える → 追い付く」を日ごとに繰り返します。期限は11/5 14:04。全部終わると「完了印」のファイルを作ります。</li>
+<li><b>待機役</b>: 完了印が出るまで待ち、出たら確認を自動で始めます（次の項目を見てください）。</li>
+</ul>
+<h2 id="dup">二重出品の古い側（18:57の停止の原因）</h2>
+<p>失敗した3口は、同じ商品が2つの出品で並んでいる片方でした。3組とも、題名が同じで価格は3セント以内の差、どちらも在庫2で売り出し中、説明文の先頭画像はどちらも旧ロゴのままです（19:06にeBayの買い手向けの画面で確認）。</p>
+<table>
+<tr><th>商品（題名の先頭）</th><th>古い側（書けなかった）</th><th>offerの持ち主</th><th>価格</th></tr>
+<tr><td>KOTOBUKIYA Swimsuit Ver. 160mm</td><td>278133578427</td><td>287393613101</td><td>$68.02 と $67.99</td></tr>
+<tr><td>PIT-ROAD 1/700 WARSHIP V Limited Edition</td><td>278133594292</td><td>287393613440</td><td>$31.00 と $30.99</td></tr>
+<tr><td>HASEGAWA 1/72 GUNDAM Me262A-1a</td><td>278133624960</td><td>287393613400</td><td>$35.01 と $34.99</td></tr>
+</table>
+<ul>
+<li><b>広がりは小さい</b>: 説明文の対象表で同じSKUが2口以上に付くのは217SKU（延べ465口）ですが、offerの持ち主が分かって「古い側」と言えるのは<b>9口だけ</b>（失敗済み3・すでに新ロゴ3・未処理3）。残る208SKUはofferが引けず、Trading経由で書けています（195口が成功）。</li>
+<li><b>持ち主側（2873936…）は対象表に入っています</b>。順番が来れば普通に新ロゴになります。書けないのは古い側だけです。</li>
+<li><b>古い側の説明文は旧ロゴのまま残ります</b>（在庫APIの経路では書けないため）。解決の選択肢は(A)二重出品を整理する（古い側を終了。eBayへの書き込みは、本人の手で）、(B)古い側1口でTrading経由の書き込みを試す（未検証）、(C)当面そのまま。急がなくてよい件です。</li>
+<li>この件は、記録にある既知の欠陥（システムは「いまeBayに何が出ているか」を知らず、同じ商品を複数出してしまう）が、説明文の差し替えと交差したものです。</li>
+</ul>
+<h2>注意</h2>
+<p>11/3の18時ごろに電源が切れる可能性があります。電源やネットが途切れたら、運転役と待機役を起動し直す必要があります（Claudeが見て、やります）。実際に11/2の17:04に電源が切れ、17:12に起動し直しました。電池駆動になると、差し替えは安全のため自動で止まります（電源をつないだままにしてください）。</p>
+<details><summary>技術メモ</summary>
+<p>運転役 <code>~/.local/share/jinji_maintenance/logo_fix/daily_cycle.sh</code> ／ 待機役 <code>…/logo_fix/verify_after_all_done.sh</code> ／ 完了印 <code>…/logo_fix/nightly/daily_cycle_done.txt</code> ／ 枠の様子見ログ <code>…/logo_fix/nightly/quota_wait.log</code></p>
+</details>
+
+<p style="margin-top:28px"><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+</main>
+</div>
+</body>
+</html>

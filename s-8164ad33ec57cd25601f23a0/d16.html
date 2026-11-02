@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eBay 決まったこと 16</title>
+<style>
+  :root { color-scheme:light; --bg:#fbfbf9; --fg:#1d2230; --muted:#5d6475; --line:#cfd2da; --accent:#1f5fbf; --hover:#f0f2f7; --card:#ffffff; --sb:#b9bfcc; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  /* スクロールバー（目次・本文・入力欄）も配色に合わせる。2026-11-02 本人「スクロールバーだけ色が違っててダサい」 */
+  html, .toc, textarea { scrollbar-color:var(--sb) transparent; }
+  .toc { scrollbar-width:thin; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:19px; line-height:1.8; }
+  main { flex:1 1 0; min-width:0; max-width:860px; margin:0 auto; padding:28px 16px 56px; }
+  h1 { font-size:26px; margin:0 0 2px; }
+  h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
+  .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
+  p { margin:0 0 8px; }
+  .k { color:var(--muted); }
+  .j { font-weight:700; }
+  a.card { display:block; color:inherit; text-decoration:none; padding:16px 10px; border-top:1px solid var(--line); }
+  a.card:hover, a.card:focus-visible { background:var(--hover); outline:none; }
+  a.card:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .more { color:var(--accent); font-size:16px; margin:0; }
+  .qbadge { color:var(--accent); font-size:16px; font-weight:700; margin:0 0 2px; }
+  main li a, main p a:not(.back) { color:var(--accent); }
+  a.back { color:var(--accent); text-decoration:none; font-size:16px; }
+  a.back:hover { text-decoration:underline; }
+  .head { padding:14px 0 6px; border-top:1px solid var(--line); margin-top:10px; }
+  table { border-collapse:collapse; width:100%; margin:8px 0 14px; font-size:17px; line-height:1.6; }
+  th, td { border:1px solid var(--line); padding:8px 12px; text-align:left; vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  td.n { white-space:nowrap; font-variant-numeric:tabular-nums; }
+  ul, ol { margin:4px 0 12px; padding-left:1.3em; }
+  li { margin:2px 0; }
+  .note { color:var(--muted); font-size:16px; }
+  details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
+  details code { font-size:14px; word-break:break-all; }
+  blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
+  blockquote p { margin:2px 0; }
+  .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
+  .q label { display:block; padding:5px 0; cursor:pointer; }
+  .q input[type=radio], .q input[type=checkbox] { width:1.1em; height:1.1em; margin-right:8px; vertical-align:-0.1em; accent-color:var(--accent); }
+  .q textarea, #qout { width:100%; min-height:4.2em; margin-top:8px; padding:8px 10px; font:inherit; font-size:17px; line-height:1.6;
+    color:var(--fg); background:var(--bg); border:1px solid var(--line); }
+  .q textarea:focus-visible, #qout:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .rec { color:var(--accent); font-size:15px; }
+  button.copybtn { font:inherit; font-size:17px; padding:8px 18px; color:var(--bg); background:var(--accent); border:0; cursor:pointer; }
+  button.copybtn:hover { filter:brightness(1.1); }
+  .qstat { color:var(--muted); font-size:15px; }
+  #qout { display:none; min-height:9em; }
+  /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
+  html { scroll-behavior:auto; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
+  .wrap { max-width:1240px; margin:0 auto; display:flex; align-items:flex-start; }
+  .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
+    border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
+  .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
+  .toc ol { list-style:none; margin:0; padding:0; }
+  .toc li { margin:0; }
+  .toc a { display:flex; gap:8px; padding:6px 8px; color:var(--fg); text-decoration:none; border-left:3px solid transparent; }
+  .toc a:hover, .toc a:focus-visible { background:var(--hover); outline:none; }
+  .toc a:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .toc a[aria-current="page"] { border-left-color:var(--accent); background:var(--hover); font-weight:700; }
+  .toc .tn { flex:0 0 1.7em; color:var(--muted); font-variant-numeric:tabular-nums; text-align:right; }
+  .toc .tt { overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  a.card:target { background:var(--hover); box-shadow:inset 4px 0 0 var(--accent); }
+  a.card, #tail { scroll-margin-top:12px; }
+  @media (max-width: 960px) {
+    .wrap { display:block; }
+    .toc { position:static; width:auto; height:auto; border-right:0; border-bottom:1px solid var(--line); padding:12px 12px; }
+  }
+  @media print {
+    @page { size:A4; margin:14mm; }
+    body { font-size:14px; line-height:1.6; background:#fff; color:#000; }
+    .toc { display:none; } .wrap { display:block; }
+    main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
+    a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="目次">
+<p class="th">目次</p>
+<ol>
+<li><a href="index.html"><span class="tn">≡</span><span class="tt">一覧（トップ）</span></a></li>
+<li><a href="d1.html" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
+<li><a href="d2.html" title="書き込み後の読み戻しはしない。確認は、全部終わってから一括"><span class="tn">2</span><span class="tt">✅ 書き込み後の読み戻しはしない。確認は、全部終わってから一括</span></a></li>
+<li><a href="d3.html" title="全部終わったら自動出品を再開"><span class="tn">3</span><span class="tt">✅ 全部終わったら自動出品を再開</span></a></li>
+<li><a href="d4.html" title="電池が減っても自動出品を止めない"><span class="tn">4</span><span class="tt">✅ 電池が減っても自動出品を止めない</span></a></li>
+<li><a href="d5.html" title="「ホビー商品でない」では除外しない"><span class="tn">5</span><span class="tt">✅ 「ホビー商品でない」では除外しない</span></a></li>
+<li><a href="d6.html" title="ホビーサーチに載っていないだけでは落とさない"><span class="tn">6</span><span class="tt">✅ ホビーサーチに載っていないだけでは落とさない</span></a></li>
+<li><a href="d7.html" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
+<li><a href="d8.html" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
+<li><a href="d9.html" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
+<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">⏳ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="d11.html" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
+<li><a href="d12.html" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
+<li><a href="d13.html" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
+<li><a href="d14.html" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
+<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">❓ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="d16.html" aria-current="page" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
+<li><a href="index.html#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
+</ol>
+</nav>
+<script>(function(){var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}})();</script>
+<main>
+<p><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>自動出品の累計：検索した数・出品した数・出品しなかった理由と数</b></p>
+  <p><span class="k">判定:</span> <span class="j">✅ 集計済み</span></p>
+  <p><span class="k">実際:</span> 8/16〜11/2に検索で見つかった異なる商品は、少なくとも15,596。うち出品できたのは6,100、出品できていないのは9,496（最多は在庫切れの3,273）です。同じ商品が毎日また出てくるため、延べ回数で数えると検索結果は392,408件で、そのうち92%は出品済み・掲載中・見送り済みの再登場でした。</p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「今までの累計で、自動出品の検索した数とそのうち実際に出品した数、出品してないものはその理由と数をこの資料には書いてある？」</p><p class="note">本人の発言・2026-11-02 20:27</p></blockquote>
+<p><span class="k">（解釈）</span> （解釈）これは『今後こうしたい』ではなく、資料に載っているかの質問です。答えは『前の資料には無かった』で、数えて項目16として足しました。『検索した数』は、延べ回数と異なる商品の2通りの読み方があるため、両方を載せています（確信度 中）。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>数字を作り直す（Macのターミナル・どのフォルダでも可）: <code>~/.venvs/ebay/bin/python3 -P ~/.local/share/jinji_maintenance/reports/funnel_cumulative.py --refresh</code> → <code>~/.venvs/ebay/bin/python3 -P ~/.local/share/jinji_maintenance/reports/build_kimetakoto_pages.py</code>（資料が作り直されます）。OneDrive上のファイルは、時間の上限つきで写してから読みます。</li>
+<li>出せていない商品の対策の進み具合: 在庫切れ・予約は<a href="d9.html">項目9</a>、JANなしは<a href="d15.html">項目15</a>、写真は<a href="d14.html">項目14</a>（適用済み）。梱包サイズ・重さが取れない商品は、対策の方針をまだ決めていません（本人に聞く）。</li>
+<li>見送り台帳は、写真不足を外した後の現在の台帳が8,801商品です。この項目の「出品できていない」は、外す前の控え（9,821商品）から数えています。</li>
+</ol>
+
+<h2>先に答え</h2>
+<p>前の資料（項目1〜15）には、この累計の表はありませんでした。ログと台帳から数え直したのが、この項目です。数え方が2通りあるので、両方を載せます。</p>
+<h2>数え方1: 異なる商品で数える（2026-08-16〜11-02）</h2>
+<table>
+<tr><th>区分</th><th>商品数</th><th>割合</th><th>メモ</th></tr>
+<tr><td><b>検索で見つかった異なる商品（下限）</b></td><td class="n">15,596</td><td class="n">100%</td><td>出品済み＋見送り台帳の合算。8/16より前から出している商品が毎日また検索に出る分は数えていないため、「少なくとも」です</td></tr>
+<tr><td><b>出品できた</b></td><td class="n">6,100</td><td class="n">39%</td><td>出品履歴で、最初の出品日が8/16以降の商品</td></tr>
+<tr><td><b>出品できていない</b></td><td class="n">9,496</td><td class="n">61%</td><td>下の表が理由の内訳。見送り台帳に一度載ったあと、後で出せたものが325商品（見送り9,821商品の約3.3%）</td></tr>
+</table>
+<h3>出品できていない9,496商品の理由と数</h3>
+<table>
+<tr><th>理由</th><th>商品数</th><th>割合</th><th>今の扱い</th></tr>
+<tr><td>在庫切れ（Amazonで買えない）</td><td class="n">3,273</td><td class="n">21%</td><td>在庫が戻ったら出す方針（<a href="d9.html">項目9</a>）</td></tr>
+<tr><td>JAN（バーコード番号）が取れない</td><td class="n">1,305</td><td class="n">8%</td><td>別の取り先で取れるか確認中（<a href="d15.html">項目15</a>）。取れたら出すが、取れないものは出さない方針</td></tr>
+<tr><td>予約（発売前）</td><td class="n">1,279</td><td class="n">8%</td><td>発売日の当日に出す方針（<a href="d9.html">項目9</a>）</td></tr>
+<tr><td>梱包サイズ・重さが取れない</td><td class="n">1,273</td><td class="n">8%</td><td>対策は未着手</td></tr>
+<tr><td>写真が足りない</td><td class="n">999</td><td class="n">6%</td><td>本日20:18に「1枚でOK」にして台帳から外した。次の自動出品で改めて判定される（<a href="d14.html">項目14</a>）。いまは見送りではない</td></tr>
+<tr><td>仕入れ値が高い等（価格）</td><td class="n">949</td><td class="n">6%</td><td>仕入れ値が上限を超えるなど</td></tr>
+<tr><td>ブランドが分からない</td><td class="n">236</td><td class="n">2%</td><td></td></tr>
+<tr><td>ホビー商品ではない</td><td class="n">141</td><td class="n">1%</td><td>本日15:05にこの判定を外した（<a href="d5.html">項目5</a>）</td></tr>
+<tr><td>その他</td><td class="n">41</td><td class="n">0%</td><td></td></tr>
+</table>
+<p class="note">このうち「写真が足りない」999商品は、本日「1枚でOK」にして台帳から外したので、次の自動出品で改めて判定されます。外した分を除くと、いまも出せていないのは8,497商品です。</p>
+<h2>数え方2: 延べ回数で数える（2026-08-18〜11-02の自動出品ログ）</h2>
+<p>自動出品は毎日、キーワードごとに検索します。同じ商品が毎日また出てくるので、延べ回数は異なる商品の数よりずっと大きくなります。</p>
+<table>
+<tr><th>段</th><th>延べ件数</th><th>割合</th></tr>
+<tr><td><b>検索で出てきた商品（キーワード×走行の延べ）</b></td><td class="n">392,408</td><td class="n">100%</td></tr>
+<tr><td>　出品済みなので除外</td><td class="n">184,985</td><td class="n">47%</td></tr>
+<tr><td>　いまeBayに出ているので除外</td><td class="n">24,662</td><td class="n">6%</td></tr>
+<tr><td>　見送り済み（不合格の台帳）なので除外</td><td class="n">151,800</td><td class="n">39%</td></tr>
+<tr><td><b>残った候補</b></td><td class="n">30,961</td><td class="n">8%</td></tr>
+<tr><td>　採用（1回の本数の上限の中で選んだ）</td><td class="n">22,372</td><td class="n">6%</td></tr>
+<tr><td>　上限に届かず見送り</td><td class="n">8,589</td><td class="n">2%</td></tr>
+</table>
+<p class="note">段の合計は検索結果に一致しています（検算済み）。</p>
+<h3>採用のあと（8/18〜）</h3>
+<table>
+<tr><th>段</th><th>件数</th></tr>
+<tr><td>出品用のCSVを作る処理に入った（ホビーサーチ直接検索の分を含む）</td><td class="n">29,394</td></tr>
+<tr><td>　成功</td><td class="n">6,421</td></tr>
+<tr><td>　スキップ（出さなかった）</td><td class="n">22,973</td></tr>
+<tr><td><b>ログ上の「新規出品」</b></td><td class="n">5,099</td></tr>
+</table>
+<h3>スキップ22,973件の理由（ログのスキップ行22,326行を分類）</h3>
+<table>
+<tr><th>理由</th><th>延べ件数</th></tr>
+<tr><td>ホビー商品ではない(本・ゲーム等)</td><td class="n">3,804</td></tr>
+<tr><td>JANが取れない／誤取得で破棄</td><td class="n">3,641</td></tr>
+<tr><td>品切れ・在庫切れ</td><td class="n">3,618</td></tr>
+<tr><td>出品済み(自分が既に出している)</td><td class="n">3,461</td></tr>
+<tr><td>購入できないページ(カートもバイボックスも無い)</td><td class="n">3,321</td></tr>
+<tr><td>予約販売(発売前)</td><td class="n">2,574</td></tr>
+<tr><td>価格(仕入れが高すぎる等)</td><td class="n">1,268</td></tr>
+<tr><td>Amazonのページが読めない(ボット判定等)</td><td class="n">522</td></tr>
+<tr><td>写真が足りない</td><td class="n">10</td></tr>
+<tr><td>分類できなかった行</td><td class="n">107</td></tr>
+<tr><td>理由の行が残っていない分（スキップ件数との差）</td><td class="n">647</td></tr>
+</table>
+<h3>「見送り済み」で除外した151,800件の理由</h3>
+<table>
+<tr><th>理由</th><th>延べ件数</th></tr>
+<tr><td>ホビー判定で除外</td><td class="n">35,262</td></tr>
+<tr><td>在庫切れ</td><td class="n">27,759</td></tr>
+<tr><td>予約（発売前）</td><td class="n">24,751</td></tr>
+<tr><td>JANなし</td><td class="n">19,169</td></tr>
+<tr><td>価格</td><td class="n">12,314</td></tr>
+<tr><td>その他（写真不足を含む）</td><td class="n">5,794</td></tr>
+<tr><td>梱包サイズ・重さ</td><td class="n">3,960</td></tr>
+<tr><td>ブランド不明</td><td class="n">1,327</td></tr>
+<tr><td>内訳の行が残っていない分（未分類）</td><td class="n">21,464</td></tr>
+</table>
+<h2>読み方の注意</h2>
+<ul>
+<li><b>延べと異なる商品を混ぜないでください。</b>延べ392,408件の約92%は、すでに出した・いま出している・すでに見送った商品が、毎日また検索に出てきたものです。「392,408商品を検索した」ではありません。</li>
+<li>延べは8/18〜です。7/13〜8/17は、同じ形で絞り込みの過程が記録されていないため含みません。異なる商品の数は、見送り台帳の記録開始（8/16）からです。</li>
+<li>出品できた数は、ログ上の「新規出品」が5,099（8/18〜）、出品履歴では6,100（8/16〜）で、一致しません。差の約1,001は、期間の差（2日）、別ルート（記録物など）、ログに出ない出品を含むためと見ていますが、内訳は確かめていません（確信度 低）。</li>
+<li>「見つかった異なる商品」の15,596は下限です。見送り台帳に載った9,821商品のうち、後で出品できたのは325商品（約3.3%）だけで、台帳の見送りはほとんど戻ってきていません。</li>
+</ul>
+<details><summary>技術メモ</summary>
+<p>集計の道具: <code>~/.local/share/jinji_maintenance/reports/funnel_cumulative.py</code>（<code>--refresh</code> で、OneDrive上のログと出品履歴を時間の上限つきで写してから集計）。出力は <code>_funnel_cache/funnel_numbers.json</code>。この項目の数字は、手で書かずにこのファイルから読んでいます。</p>
+<p>元データ: 自動出品ログ <code>ebay_auto_log.txt</code>（[T202]行＝キーワードごとの絞り込み、[T1017]行＝見送り台帳の理由内訳、「完了! 成功」「新規出品」行、[SKIP]行）／出品履歴 <code>data/listing_history.json</code>／不合格台帳 <code>data/rejected_asins.json</code>（写真不足を外す前の控え <code>bak/rejected_asins.json.bak_20261102_201806_preImageFewRelease</code> を使用）。</p>
+<p>ログの[T202]行は3つの書式があり、古い書式（8/18〜の57行）は段の数が違うため段の集計に入れていません（この57行は延べに含まれません）。</p>
+<p>台帳の種別名: 在庫切れ=oos／予約=preorder／JANなし=no_upc／梱包=pkg_missing／価格=price／ブランド不明=brand_unknown／ホビー=hobby。見送り台帳は商品1つにつき1行で、同じ商品が複数回見送られた回数の合計は11,934回です。</p>
+</details>
+
+<p style="margin-top:28px"><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+</main>
+</div>
+</body>
+</html>
