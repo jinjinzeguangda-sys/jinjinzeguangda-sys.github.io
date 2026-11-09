@@ -118,6 +118,7 @@
      (0,3,0) が @media 内の (0,2,0) に勝ち、ダークOSで黒い文字が出る */
 @media (prefers-color-scheme:light){:root:not([data-theme])[data-ink="bright"]{--ink:#000206;--sub:#1B2B33;}}
 @media (prefers-color-scheme:dark){:root:not([data-theme])[data-ink="bright"]{--ink:#FEFFFF;--sub:#D1E4ED;}}
+:root[data-theme="light"][data-ink="bright"]{--ink:#000206;--sub:#1B2B33;}  /* アプリで選んだライト×文字を明るく（OSライトの規則と同じ値） */
 :root[data-theme="dark"][data-ink="bright"]{--ink:#FEFFFF;--sub:#D1E4ED;}
 :root[data-theme="dim"][data-ink="bright"]{--ink:#FEFFFF;--sub:#D4E6EF;}
 :root[data-theme="bright"][data-ink="bright"]{--ink:#FEFFFF;--sub:#FFFFFF;}
@@ -126,7 +127,7 @@
 // 明るさの切り替え（暗い / 中 / 明るい）。3段階とも同じ配色で、明るさだけが違う。
 // 保存が無いときは data-theme を当てない＝OSの設定に従う（従来どおりの見え方）。
 (function(){
-  var KEY='jinji_theme', OK={dark:1,dim:1,bright:1}, TC=null;
+  var KEY='jinji_theme', OK={light:1,dark:1,dim:1,bright:1}, TC=null;  // light: アプリで選んだライトを引き継ぐ（2026-11-09）
   // ★2026-10-15: 暗い/中/明るい の切替UIは撤去済み。dim/bright は戻せない状態なので1回だけ捨てる
   try{ var _stale=localStorage.getItem(KEY);
        if(_stale==='dim'||_stale==='bright') localStorage.removeItem(KEY); }catch(e){}
@@ -196,6 +197,11 @@
   else init();
 })();
 </script>
+<style id="jinji-mode-v1">/* ライト/ダーク引き継ぎ（hub, 2026-11-09）。配色は足さない。ブラウザ部品（スクロールバー・検索欄）を選んだ側に合わせるだけ。
+   保存が無い人（data-theme 無し）には1つも当たらない＝いままでと同じ */
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"],:root[data-theme="dim"],:root[data-theme="bright"]{color-scheme:dark}
+</style>
 </head>
 <body>
 
