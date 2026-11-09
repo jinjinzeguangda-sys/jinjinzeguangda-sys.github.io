@@ -1,0 +1,1 @@
+PWAでない単独ページ（Service Worker も manifest も持たない）。verify_port.py / bump_site_sw.py はこの印があるディレクトリを別枠にする。
