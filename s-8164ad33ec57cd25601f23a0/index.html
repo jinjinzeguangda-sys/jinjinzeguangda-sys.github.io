@@ -18,7 +18,7 @@
   body { margin:0; background:var(--bg); color:var(--fg);
     font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
     font-size:19px; line-height:1.8; }
-  main { flex:1 1 0; min-width:0; max-width:860px; margin:0 auto; padding:28px 16px 56px; }
+  main { flex:1 1 0; min-width:0; max-width:1240px; margin:0; padding:28px 20px 56px; }  /* 2026-11-04 本人「左右の余白を減らせる？」: 860px中央寄せ→1240pxで目次の隣に寄せる */
   h1 { font-size:26px; margin:0 0 2px; }
   h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
   .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
@@ -43,6 +43,15 @@
   .note { color:var(--muted); font-size:16px; }
   details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
   details code { font-size:14px; word-break:break-all; }
+  /* 長い根拠を畳む部品（2026-11-04 本人「このページ情報多すぎて文章が読みづらいので、もっと読みやすくして」）。
+     技術メモ用の details は小さく薄いので、根拠用は本文と同じ大きさ・色にして、見出し(summary)だけ太くする */
+  details.ev { margin-top:10px; border-top:1px solid var(--line); padding-top:4px; color:var(--fg); font-size:inherit; }
+  details.ev > summary { cursor:pointer; font-weight:700; font-size:19px; padding:10px 0; }
+  details.ev > summary:hover { color:var(--accent); }
+  details.ev[open] > summary { margin-bottom:6px; }
+  details.ev code { font-size:15px; }
+  ul.lead { margin:8px 0 16px; }
+  ul.lead li { margin:8px 0; font-size:20px; line-height:1.7; }
   blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
   blockquote p { margin:2px 0; }
   .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
@@ -59,7 +68,7 @@
   /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
   html { scroll-behavior:auto; }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
-  .wrap { max-width:1240px; margin:0 auto; display:flex; align-items:flex-start; }
+  .wrap { max-width:1760px; margin:0 auto; display:flex; align-items:flex-start; }
   .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
     border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
   .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
@@ -84,12 +93,40 @@
     main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
     a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
   }
+
+  /* 目次の表示切替（⌘B） */
+  html.toc-hidden .toc { display:none; }
+  html.toc-hidden main { margin:0 auto; padding-top:56px; }
+  .tocbtn { display:none; position:fixed; top:10px; left:10px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  html.toc-hidden .tocbtn { display:block; }
+  .tocbtn:hover { background:var(--hover); }
+  .tocbtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .toc .th .hint { font-weight:400; letter-spacing:0; }
+  @media print { .tocbtn { display:none !important; } }
+
+  /* 表示の切替（ライト／ダーク） */
+  .themebtn { position:fixed; top:10px; right:14px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  .themebtn:hover { background:var(--hover); }
+  .themebtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  @media print { .themebtn { display:none !important; } }
+
+  /* 見出しの開閉 */
+  .sec-h { cursor:pointer; }
+  .sec-h::before { content:"\25BE"; display:inline-block; width:1.1em; color:var(--accent); font-size:.85em; }
+  .sec-h[aria-expanded="false"]::before { content:"\25B8"; }
+  .sec-h:hover { color:var(--accent); }
+  .sec-h:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .sec-body[hidden] { display:none; }
+  @media print { .sec-body[hidden] { display:block !important; } .sec-h::before { content:none !important; } }
 </style>
+<script>try{var v=localStorage.getItem('dd:theme');if(v==='light'||v==='dark'){document.documentElement.setAttribute('data-theme',v);}}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
 <nav class="toc" aria-label="目次">
-<p class="th">目次</p>
+<p class="th">目次 <span class="hint">（⌘B で隠す）</span></p>
 <ol>
 <li><a href="#item-1" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
 <li><a href="#item-2" title="書き込み後の読み戻しはしない。確認は、全部終わってから一括"><span class="tn">2</span><span class="tt">✅ 書き込み後の読み戻しはしない。確認は、全部終わってから一括</span></a></li>
@@ -100,36 +137,42 @@
 <li><a href="#item-7" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
 <li><a href="#item-8" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
 <li><a href="#item-9" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
-<li><a href="#item-10" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">⏳ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="#item-10" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">✅ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
 <li><a href="#item-11" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
 <li><a href="#item-12" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
 <li><a href="#item-13" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
 <li><a href="#item-14" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
-<li><a href="#item-15" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">❓ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="#item-15" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">⏳ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
 <li><a href="#item-16" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
 <li><a href="#item-17" title="Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）"><span class="tn">17</span><span class="tt">⏳ Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）</span></a></li>
+<li><a href="#item-18" title="価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）"><span class="tn">18</span><span class="tt">⏳ 価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）</span></a></li>
+<li><a href="#item-19" title="価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）"><span class="tn">19</span><span class="tt">⏳ 価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）</span></a></li>
 <li><a href="#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
 </ol>
 </nav>
+<button type="button" id="tocbtn" class="tocbtn" aria-label="目次を表示（⌘B）">☰ 目次（⌘B）</button>
+<script>(function(){var KEY='dd:toc-hidden',h=document.documentElement;function get(){try{return localStorage.getItem(KEY)==='1';}catch(e){return false;}}function put(v){try{localStorage.setItem(KEY,v?'1':'0');}catch(e){}}function apply(v){if(v){h.classList.add('toc-hidden');}else{h.classList.remove('toc-hidden');var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}}var b=document.getElementById('tocbtn');if(b){b.setAttribute('aria-expanded',v?'false':'true');}}function toggle(){var v=!h.classList.contains('toc-hidden');apply(v);put(v);}apply(get());document.addEventListener('keydown',function(e){if(e.metaKey&&!e.ctrlKey&&!e.altKey&&!e.shiftKey&&(e.key==='b'||e.key==='B'||e.code==='KeyB')){e.preventDefault();toggle();}});var b=document.getElementById('tocbtn');if(b){b.addEventListener('click',toggle);}})();</script>
+<button type="button" id="themebtn" class="themebtn" aria-label="表示をライトとダークで切り替える"></button>
+<script>(function(){var KEY='dd:theme',h=document.documentElement;function sys(){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}}function cur(){return h.getAttribute('data-theme')||sys();}function label(){var b=document.getElementById('themebtn');if(b){b.textContent=(cur()==='dark')?'\u2600 ライト表示にする':'\u263E ダーク表示にする';}}label();var b=document.getElementById('themebtn');if(b){b.addEventListener('click',function(){var n=(cur()==='dark')?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem(KEY,n);}catch(e){}label();});}try{var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener){mq.addEventListener('change',label);}}catch(e){}})();</script>
 <main>
 <h1>eBay 決まったこと</h1>
-<p class="asof">11月2日(月) 22時台の時点（共有版）　／　✅ 10　⏳ 6　❓ 1　（気になった所を押すと詳細が開きます）</p>
+<p class="asof">11月4日(水) 14時40分ごろの時点（項目16の数字だけ 11月2日の測定のまま）（共有版）　／　✅ 11　⏳ 8　❓ 0　（気になった所を押すと詳細が開きます）</p>
 <a class="card" id="item-1" href="d1.html">
   <p><span class="k">決めたこと:</span> 説明文の修正 → カテゴリ分けで33%off、を優先</p>
-  <p><span class="k">判定:</span> <span class="j">✅ 実施中</span></p>
-  <p><span class="k">実際:</span> 説明文は 7,870 / 9,949 口が済み(20:13時点)。18:57に二重出品の古い側3口が続けて失敗して運転役が止まり、原因を直して19:05に再開しました。20:12に1日の上限(518)に当たって止まりました(想定どおり)。次の枠は11/3(火)17時ごろの見込みで、残りは約2,080口です。全部終わる見込みは11/3(火)の夜〜11/4(水)です(確信度 低〜中)。33%セールは11/14までです。</p>
+  <p><span class="k">判定:</span> <span class="j">✅ 説明文は完了(11/4 03:04)・カテゴリ分けも済み</span></p>
+  <p><span class="k">実際:</span> 説明文の差し替えは11/4 03:04に終わりました（9,949口のうち書けた9,062・変更なし367・未処理503・失敗17）。カテゴリ分けは4,500口が済み。読み戻しの確認は3,685口が一致・不一致0で、残り1,027口は今日の上限で止まっています。33%セールは11/14の深夜までです。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-2" href="d2.html">
   <p><span class="k">決めたこと:</span> 書き込み後の読み戻しはしない。確認は、全部終わってから一括</p>
-  <p><span class="k">判定:</span> <span class="j">✅ 実施中</span></p>
-  <p><span class="k">実際:</span> 読み戻しをやめて、スピード重視にしました。確認は、書き込みとカテゴリ分けが終わったら自動で始まります。</p>
+  <p><span class="k">判定:</span> <span class="j">✅ 実施中（今日の上限で一時停止）</span></p>
+  <p><span class="k">実際:</span> 書き込みとカテゴリ分けが終わったので、読み戻しの確認が11/4 03:04から始まりました。3,685口が一致・不一致0・終了済み0。残り1,027口は、1日の上限(3,800)に達して今日は止まっています。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-3" href="d3.html">
   <p><span class="k">決めたこと:</span> 全部終わったら自動出品を再開</p>
-  <p><span class="k">判定:</span> <span class="j">✅ 適用済み(15:13)</span></p>
-  <p><span class="k">実際:</span> 明日10:30は見送ります。説明文とカテゴリ分けが終わったら、自動で再開します。</p>
+  <p><span class="k">判定:</span> <span class="j">✅ 価格監視を01:00に前倒し（11/4 14:18 適用済み）</span></p>
+  <p><span class="k">実際:</span> 本人に任されたので、待ちの案ではなく『価格監視の起動を05:00→01:00に前倒し』にしました。9時の締切はそのままなので、1回に使える時間が4時間→8時間になります。今夜01:00が最初の走行です。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-4" href="d4.html">
@@ -152,26 +195,26 @@
 </a>
 <a class="card" id="item-7" href="d7.html">
   <p><span class="k">決めたこと:</span> DVD・ゲームは、別ルートで毎日自動で集める</p>
-  <p><span class="k">判定:</span> <span class="j">⏳ これから</span></p>
-  <p><span class="k">実際:</span> 毎日回す本体は未作成です。説明文とカテゴリ分けが終わってから始めます。</p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 着手できる状態（差し替えが終わった）</span></p>
+  <p><span class="k">実際:</span> 説明文とカテゴリ分けが終わった（11/4 03:04）ので、毎日回す本体を作り始められる状態です。まだ着手していません。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-8" href="d8.html">
   <p><span class="k">決めたこと:</span> 出していない過去の商品を、一段落したら出す</p>
-  <p><span class="k">判定:</span> <span class="j">⏳ 一段落してから</span></p>
-  <p><span class="k">実際:</span> 理由ごとに実測して、救える物から対策します。</p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 着手できる状態（差し替えが終わった）</span></p>
+  <p><span class="k">実際:</span> 説明文の差し替えが終わった（11/4 03:04）ので、取り掛かれる状態です。まだ着手していません。理由ごとに実測して、救える物から対策します。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-9" href="d9.html">
   <p><span class="k">決めたこと:</span> 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</p>
-  <p><span class="k">判定:</span> <span class="j">⏳ 作成中</span></p>
-  <p><span class="k">実際:</span> 予約の解除は今のまま「発売日の当日から」です(3日前倒しはやめました)。こちらから見に行く再確認の仕組みを作ります。他サイトは、検索ページがJANごとに別の中身を返すところまで確認できました(ホビーサーチ・あみあみ・楽天・Yahoo!)。在庫の読み取りはこれから試します。</p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 作成中（他サイトは、読める所が少ない）</span></p>
+  <p><span class="k">実際:</span> 『他サイトの確認』は『はい』（11/4 12:56）。『ホビーサーチ・駿河屋・楽天ブックスは見てないの？』への答え: いまは見ていません。ホビーサーチは11/2 20:37から403で閉め出され中、駿河屋は規約(robots.txt)が機械の読み取りを禁止、楽天ブックスは公式APIにアプリIDが要ります。在庫の数まで読めると確かめたのは tower.jp（CD・映像）だけです。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-10" href="d10.html">
   <p><span class="k">決めたこと:</span> 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</p>
-  <p><span class="k">判定:</span> <span class="j">⏳ 試運転から</span></p>
-  <p><span class="k">実際:</span> 安全装置は決まりました: Amazonと他サイトの両方で在庫なしを、別の日に2回確認してから／1日50件まで／理由つきで全部記録／Amazonに全部止められた日は何もしない。最初は対象の一覧を出すだけにして、見せてから有効にします。在庫が戻ったら数量も戻します。</p>
+  <p><span class="k">判定:</span> <span class="j">✅ 数え方を了承（実装はこれから）</span></p>
+  <p><span class="k">実際:</span> 『はい』＝Amazonの『在庫あり。』は2個以上、『残りN点』はN個、ほかの店の『在庫あり』は少なくとも1個。合計が2以上なら出品、0か1なら数量0（CD・映像・ゲームの高額品だけ）。コードへの組み込みは未着手です。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-11" href="d11.html">
@@ -182,14 +225,14 @@
 </a>
 <a class="card" id="item-12" href="d12.html">
   <p><span class="k">決めたこと:</span> 重さに応じて送料を変える仕組みは、まだ実装していない</p>
-  <p><span class="k">判定:</span> <span class="j">⏳ 差し替えの後</span></p>
-  <p><span class="k">実際:</span> 出品の送料設定は配送ポリシー1つに固定で、重さで切り替える処理はありません（本番コードで確認・確信度 高）。買い手が払う額は直近90日の中央値$20。持ち出しが出たのは348件中29件・合計−$60でした。既存の出品に反映するには約25,000件の書き換えが要り、説明文の差し替えと同じ1日の上限を取り合うため、差し替えが終わってから検討します。</p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 設計を始める（回答『はい』・読み取りだけ）</span></p>
+  <p><span class="k">実際:</span> 『設計を始める時期』は『はい』（11/4 12:56）。説明文の差し替えは終わったので、読み取りだけの設計に着手できる状態です。最初の数字（重さが測れている割合・実費で赤字になる件数の測り直し）は、まだ出していません。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-13" href="d13.html">
   <p><span class="k">決めたこと:</span> 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</p>
   <p><span class="k">判定:</span> <span class="j">✅ 適用済み(18:16)</span></p>
-  <p><span class="k">実際:</span> 標準ルートの防止と検索語の2つを、本人の端末で本番に適用しました（18:16）。映像・ゲーム・本は標準ルートで止まります。記録物の受け渡しは、まだ渡していません。</p>
+  <p><span class="k">実際:</span> 標準ルートの防止と検索語の2つを、本人の端末で本番に適用しました（18:16）。映像・ゲーム・本は標準ルートで止まります。記録物の受け渡しは、まだ渡していません。（11/4 13時: 差し替えが終わったので、受け渡しを実行できる状態です。まだ実行していません。）</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-14" href="d14.html">
@@ -200,8 +243,8 @@
 </a>
 <a class="card" id="item-15" href="d15.html">
   <p><span class="k">決めたこと:</span> JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</p>
-  <p><span class="k">判定:</span> <span class="j">❓ 確認中</span></p>
-  <p><span class="k">実際:</span> JANなしで見送った商品は、異なる数で約1,500（延べ回数では数千に見える）。ホビーサーチと楽天ブックスを試すと、JANが見つかる商品はあります。ただし、本番に近い長めの検索語では25件中24件が「該当なし」、短い語で拾った8件のうち明らかに同じ品は1件で、5件は別の品でした。「ほぼ全て出せる」はまだ確かめられていません（確信度 低〜中）。ホビーサーチの試作は、拒否(403)が続いて測定できませんでした。新しく分かったこと: 掲載中でJANがある6,230口のうち、同じJANを別の商品も使っているのが1,957口（31.4%）。題名が違う1,488口は、別の商品のJANが付いている疑いが強い（確信度 中）。楽天ブックスの品番突き合わせ（CD）は、JANなしのCD 51件のうち救えたのは1件でした。</p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 原因を調べ、直す案を作成中（B・Cとも承認済み）</span></p>
+  <p><span class="k">実際:</span> 『別商品でJANが被る』原因を調べました。8/19以降に出した口でも、すでに別の題名が使っているJANを付けたものが660口あります（『同じJANは最大2つまで』の上限は、同じ商品かを見ないため）。取得経路ごとの率はどれも似ていて、特定の1経路ではありません（確信度 中）。直す案を作成中です。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <a class="card" id="item-16" href="d16.html">
@@ -213,7 +256,19 @@
 <a class="card" id="item-17" href="d17.html">
   <p><span class="k">決めたこと:</span> Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）</p>
   <p><span class="k">判定:</span> <span class="j">⏳ 開発は停止中（今の形は使える）</span></p>
-  <p><span class="k">実際:</span> 「Macで作る→父が重さを入れる→点検→父がZonosに取り込む」で回せます。品名（Item Name）の書き方だけが決まっていません。直近30日の注文は1日3.9件（11/1時点）で、開発を再開する目安『1日100商品』の約4%です。</p>
+  <p><span class="k">実際:</span> 「Macで作る→父が重さを入れる→点検→父がZonosに取り込む」で回せます。品名（Item Name）の書き方だけが決まっていません。直近30日（10/5〜11/3）の注文は1日4.4件で、開発を再開する目安『1日100商品』の約4%です（直近7日は1日7.4件）。</p>
+  <p class="more">詳しく見る ›</p>
+</a>
+<a class="card" id="item-18" href="d18.html">
+  <p><span class="k">決めたこと:</span> 価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）</p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 昼の再実行が走行中・書き込みはこれから</span></p>
+  <p><span class="k">実際:</span> 11/4 05:00の価格監視は回線障害で、価格が取れたのは点検1,639件のうち214件だけでした。昼の再実行が走行中（14:00締切）。値上げの計画は160商品のうち、上げる46・据え置き114で、自動で上げてよい門を通ったのは24口、保留22口です。eBayには1口も書いていません。</p>
+  <p class="more">詳しく見る ›</p>
+</a>
+<a class="card" id="item-19" href="d19.html">
+  <p><span class="k">決めたこと:</span> 価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）</p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 下見の途中結果（セール前の値段が分からない）</span></p>
+  <p><span class="k">実際:</span> 下見の途中結果: 出品一覧（11/2取得）では『セール前の価格』が分からず、数字は幅で出ます。USDの2,021口のうち、セールかどうかに関係なく確実に15%以上ずれているのは381口（約19%）で、うち『確実に高すぎ(下げる側)』が259口・『確実に安すぎ(上げる側)』が55口です。残り1,640口は、セールに入っているかで答えが変わります。</p>
   <p class="more">詳しく見る ›</p>
 </a>
 <div id="tail">
@@ -223,5 +278,6 @@
 </div>
 </main>
 </div>
+<script>(function(){var main=document.querySelector('main');if(!main||!main.querySelectorAll){return;}var seq=0;var detail=!!main.querySelector('a.back');function lv(n){return(n&&n.nodeType===1&&/^H[23]$/.test(n.tagName))?+n.tagName.charAt(1):0;}function isBack(n){return n.nodeType===1&&n.tagName==='P'&&!!n.querySelector('a.back');}function setOpen(h,open){var b=document.getElementById(h.getAttribute('aria-controls'));if(!b){return;}if(open){b.removeAttribute('hidden');}else{b.setAttribute('hidden','');}h.setAttribute('aria-expanded',open?'true':'false');}function make(h,L){var n=h.nextSibling,has=false;while(n){var l=lv(n);if((l&&l<=L)||isBack(n)){break;}if(n.nodeType===1){has=true;}n=n.nextSibling;}if(!has){return;}var body=document.createElement('div');body.className='sec-body';body.id='sec-'+(++seq);n=h.nextSibling;while(n){var l2=lv(n);if((l2&&l2<=L)||isBack(n)){break;}var nx=n.nextSibling;body.appendChild(n);n=nx;}h.parentNode.insertBefore(body,h.nextSibling);h.className+=(h.className?' ':'')+'sec-h';h.setAttribute('tabindex','0');h.setAttribute('aria-controls',body.id);h.setAttribute('aria-expanded','true');h.setAttribute('title','クリックで表示／非表示');function tog(){setOpen(h,h.getAttribute('aria-expanded')!=='true');}h.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('a')){return;}tog();});h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();tog();}});if(detail&&!h.querySelector('.qstat')&&h.textContent.indexOf('決めてほしいこと')!==0){setOpen(h,false);}}[2,3].forEach(function(L){[].slice.call(main.querySelectorAll('h'+L)).forEach(function(h){make(h,L);});});function reveal(el){var p=el;while(p&&p!==main){if(p.classList&&p.classList.contains('sec-body')&&p.hasAttribute('hidden')){var h=document.querySelector('[aria-controls="'+p.id+'"]');if(h){setOpen(h,true);}}p=p.parentNode;}}function fromHash(){var id=location.hash.slice(1);if(!id){return;}var el=null;try{el=document.getElementById(decodeURIComponent(id));}catch(e){}if(el){reveal(el);if(el.scrollIntoView){el.scrollIntoView();}}}window.addEventListener('hashchange',fromHash);fromHash();})();</script>
 </body>
 </html>

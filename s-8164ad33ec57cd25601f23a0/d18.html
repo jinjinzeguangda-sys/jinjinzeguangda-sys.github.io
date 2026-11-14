@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eBay 決まったこと 18</title>
+<style>
+  :root { color-scheme:light; --bg:#fbfbf9; --fg:#1d2230; --muted:#5d6475; --line:#cfd2da; --accent:#1f5fbf; --hover:#f0f2f7; --card:#ffffff; --sb:#b9bfcc; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  /* スクロールバー（目次・本文・入力欄）も配色に合わせる。2026-11-02 本人「スクロールバーだけ色が違っててダサい」 */
+  html, .toc, textarea { scrollbar-color:var(--sb) transparent; }
+  .toc { scrollbar-width:thin; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:19px; line-height:1.8; }
+  main { flex:1 1 0; min-width:0; max-width:1240px; margin:0; padding:28px 20px 56px; }  /* 2026-11-04 本人「左右の余白を減らせる？」: 860px中央寄せ→1240pxで目次の隣に寄せる */
+  h1 { font-size:26px; margin:0 0 2px; }
+  h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
+  .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
+  p { margin:0 0 8px; }
+  .k { color:var(--muted); }
+  .j { font-weight:700; }
+  a.card { display:block; color:inherit; text-decoration:none; padding:16px 10px; border-top:1px solid var(--line); }
+  a.card:hover, a.card:focus-visible { background:var(--hover); outline:none; }
+  a.card:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .more { color:var(--accent); font-size:16px; margin:0; }
+  .qbadge { color:var(--accent); font-size:16px; font-weight:700; margin:0 0 2px; }
+  main li a, main p a:not(.back) { color:var(--accent); }
+  a.back { color:var(--accent); text-decoration:none; font-size:16px; }
+  a.back:hover { text-decoration:underline; }
+  .head { padding:14px 0 6px; border-top:1px solid var(--line); margin-top:10px; }
+  table { border-collapse:collapse; width:100%; margin:8px 0 14px; font-size:17px; line-height:1.6; }
+  th, td { border:1px solid var(--line); padding:8px 12px; text-align:left; vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  td.n { white-space:nowrap; font-variant-numeric:tabular-nums; }
+  ul, ol { margin:4px 0 12px; padding-left:1.3em; }
+  li { margin:2px 0; }
+  .note { color:var(--muted); font-size:16px; }
+  details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
+  details code { font-size:14px; word-break:break-all; }
+  /* 長い根拠を畳む部品（2026-11-04 本人「このページ情報多すぎて文章が読みづらいので、もっと読みやすくして」）。
+     技術メモ用の details は小さく薄いので、根拠用は本文と同じ大きさ・色にして、見出し(summary)だけ太くする */
+  details.ev { margin-top:10px; border-top:1px solid var(--line); padding-top:4px; color:var(--fg); font-size:inherit; }
+  details.ev > summary { cursor:pointer; font-weight:700; font-size:19px; padding:10px 0; }
+  details.ev > summary:hover { color:var(--accent); }
+  details.ev[open] > summary { margin-bottom:6px; }
+  details.ev code { font-size:15px; }
+  ul.lead { margin:8px 0 16px; }
+  ul.lead li { margin:8px 0; font-size:20px; line-height:1.7; }
+  blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
+  blockquote p { margin:2px 0; }
+  .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
+  .q label { display:block; padding:5px 0; cursor:pointer; }
+  .q input[type=radio], .q input[type=checkbox] { width:1.1em; height:1.1em; margin-right:8px; vertical-align:-0.1em; accent-color:var(--accent); }
+  .q textarea, #qout { width:100%; min-height:4.2em; margin-top:8px; padding:8px 10px; font:inherit; font-size:17px; line-height:1.6;
+    color:var(--fg); background:var(--bg); border:1px solid var(--line); }
+  .q textarea:focus-visible, #qout:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .rec { color:var(--accent); font-size:15px; }
+  button.copybtn { font:inherit; font-size:17px; padding:8px 18px; color:var(--bg); background:var(--accent); border:0; cursor:pointer; }
+  button.copybtn:hover { filter:brightness(1.1); }
+  .qstat { color:var(--muted); font-size:15px; }
+  #qout { display:none; min-height:9em; }
+  /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
+  html { scroll-behavior:auto; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
+  .wrap { max-width:1760px; margin:0 auto; display:flex; align-items:flex-start; }
+  .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
+    border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
+  .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
+  .toc ol { list-style:none; margin:0; padding:0; }
+  .toc li { margin:0; }
+  .toc a { display:flex; gap:8px; padding:6px 8px; color:var(--fg); text-decoration:none; border-left:3px solid transparent; }
+  .toc a:hover, .toc a:focus-visible { background:var(--hover); outline:none; }
+  .toc a:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .toc a[aria-current="page"] { border-left-color:var(--accent); background:var(--hover); font-weight:700; }
+  .toc .tn { flex:0 0 1.7em; color:var(--muted); font-variant-numeric:tabular-nums; text-align:right; }
+  .toc .tt { overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  a.card:target { background:var(--hover); box-shadow:inset 4px 0 0 var(--accent); }
+  a.card, #tail { scroll-margin-top:12px; }
+  @media (max-width: 960px) {
+    .wrap { display:block; }
+    .toc { position:static; width:auto; height:auto; border-right:0; border-bottom:1px solid var(--line); padding:12px 12px; }
+  }
+  @media print {
+    @page { size:A4; margin:14mm; }
+    body { font-size:14px; line-height:1.6; background:#fff; color:#000; }
+    .toc { display:none; } .wrap { display:block; }
+    main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
+    a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
+  }
+
+  /* 目次の表示切替（⌘B） */
+  html.toc-hidden .toc { display:none; }
+  html.toc-hidden main { margin:0 auto; padding-top:56px; }
+  .tocbtn { display:none; position:fixed; top:10px; left:10px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  html.toc-hidden .tocbtn { display:block; }
+  .tocbtn:hover { background:var(--hover); }
+  .tocbtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .toc .th .hint { font-weight:400; letter-spacing:0; }
+  @media print { .tocbtn { display:none !important; } }
+
+  /* 表示の切替（ライト／ダーク） */
+  .themebtn { position:fixed; top:10px; right:14px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  .themebtn:hover { background:var(--hover); }
+  .themebtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  @media print { .themebtn { display:none !important; } }
+
+  /* 見出しの開閉 */
+  .sec-h { cursor:pointer; }
+  .sec-h::before { content:"\25BE"; display:inline-block; width:1.1em; color:var(--accent); font-size:.85em; }
+  .sec-h[aria-expanded="false"]::before { content:"\25B8"; }
+  .sec-h:hover { color:var(--accent); }
+  .sec-h:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .sec-body[hidden] { display:none; }
+  @media print { .sec-body[hidden] { display:block !important; } .sec-h::before { content:none !important; } }
+</style>
+<script>try{var v=localStorage.getItem('dd:theme');if(v==='light'||v==='dark'){document.documentElement.setAttribute('data-theme',v);}}catch(e){}</script>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="目次">
+<p class="th">目次 <span class="hint">（⌘B で隠す）</span></p>
+<ol>
+<li><a href="index.html"><span class="tn">≡</span><span class="tt">一覧（トップ）</span></a></li>
+<li><a href="d1.html" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
+<li><a href="d2.html" title="書き込み後の読み戻しはしない。確認は、全部終わってから一括"><span class="tn">2</span><span class="tt">✅ 書き込み後の読み戻しはしない。確認は、全部終わってから一括</span></a></li>
+<li><a href="d3.html" title="全部終わったら自動出品を再開"><span class="tn">3</span><span class="tt">✅ 全部終わったら自動出品を再開</span></a></li>
+<li><a href="d4.html" title="電池が減っても自動出品を止めない"><span class="tn">4</span><span class="tt">✅ 電池が減っても自動出品を止めない</span></a></li>
+<li><a href="d5.html" title="「ホビー商品でない」では除外しない"><span class="tn">5</span><span class="tt">✅ 「ホビー商品でない」では除外しない</span></a></li>
+<li><a href="d6.html" title="ホビーサーチに載っていないだけでは落とさない"><span class="tn">6</span><span class="tt">✅ ホビーサーチに載っていないだけでは落とさない</span></a></li>
+<li><a href="d7.html" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
+<li><a href="d8.html" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
+<li><a href="d9.html" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
+<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">✅ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="d11.html" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
+<li><a href="d12.html" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
+<li><a href="d13.html" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
+<li><a href="d14.html" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
+<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">⏳ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="d16.html" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
+<li><a href="d17.html" title="Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）"><span class="tn">17</span><span class="tt">⏳ Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）</span></a></li>
+<li><a href="d18.html" aria-current="page" title="価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）"><span class="tn">18</span><span class="tt">⏳ 価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）</span></a></li>
+<li><a href="d19.html" title="価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）"><span class="tn">19</span><span class="tt">⏳ 価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）</span></a></li>
+<li><a href="index.html#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
+</ol>
+</nav>
+<script>(function(){var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}})();</script>
+<button type="button" id="tocbtn" class="tocbtn" aria-label="目次を表示（⌘B）">☰ 目次（⌘B）</button>
+<script>(function(){var KEY='dd:toc-hidden',h=document.documentElement;function get(){try{return localStorage.getItem(KEY)==='1';}catch(e){return false;}}function put(v){try{localStorage.setItem(KEY,v?'1':'0');}catch(e){}}function apply(v){if(v){h.classList.add('toc-hidden');}else{h.classList.remove('toc-hidden');var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}}var b=document.getElementById('tocbtn');if(b){b.setAttribute('aria-expanded',v?'false':'true');}}function toggle(){var v=!h.classList.contains('toc-hidden');apply(v);put(v);}apply(get());document.addEventListener('keydown',function(e){if(e.metaKey&&!e.ctrlKey&&!e.altKey&&!e.shiftKey&&(e.key==='b'||e.key==='B'||e.code==='KeyB')){e.preventDefault();toggle();}});var b=document.getElementById('tocbtn');if(b){b.addEventListener('click',toggle);}})();</script>
+<button type="button" id="themebtn" class="themebtn" aria-label="表示をライトとダークで切り替える"></button>
+<script>(function(){var KEY='dd:theme',h=document.documentElement;function sys(){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}}function cur(){return h.getAttribute('data-theme')||sys();}function label(){var b=document.getElementById('themebtn');if(b){b.textContent=(cur()==='dark')?'\u2600 ライト表示にする':'\u263E ダーク表示にする';}}label();var b=document.getElementById('themebtn');if(b){b.addEventListener('click',function(){var n=(cur()==='dark')?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem(KEY,n);}catch(e){}label();});}try{var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener){mq.addEventListener('change',label);}}catch(e){}})();</script>
+<main>
+<p><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）</b></p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 昼の再実行が走行中・書き込みはこれから</span></p>
+  <p><span class="k">実際:</span> 11/4 05:00の価格監視は回線障害で、価格が取れたのは点検1,639件のうち214件だけでした。昼の再実行が走行中（14:00締切）。値上げの計画は160商品のうち、上げる46・据え置き114で、自動で上げてよい門を通ったのは24口、保留22口です。eBayには1口も書いていません。</p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「これ値段おかしいまま売れてしまったので、類似の問題が他にもないか調査しておいて」</p><p class="note">本人の発言・2026-11-02 22:46（商品ページ https://www.ebay.com/itm/940019191143 のリンクと一緒に）（会話記録の『本人が入力した記録』で原文を照合済み）</p></blockquote>
+<blockquote><p>「いや、33%セールをする前の価格がおかしい」</p><p class="note">本人の発言・2026-11-03 06:32（Claudeの最初の説明『セールの影響』への訂正）（会話記録の『本人が入力した記録』で原文を照合済み）</p></blockquote>
+<blockquote><p>「1はい　2B」</p><p class="note">本人の発言・2026-11-03 06:33（Claudeが出した2つの質問への返事。番号はClaudeの質問の番号）（会話記録の『本人が入力した記録』で原文を照合済み）</p></blockquote>
+<blockquote><p>「B06XSV7WB5 これはもう売れちゃったからどうにかしなきゃ💦」</p><p class="note">本人の発言・2026-11-03 06:33（会話記録の『本人が入力した記録』で原文を照合済み）</p></blockquote>
+<blockquote><p>「価格監視が75日も動いてないなんて、酷いよ...😭」</p><p class="note">本人の発言・2026-11-03 06:34（会話記録の『本人が入力した記録』で原文を照合済み）</p></blockquote>
+<blockquote><p>「1A 2待つ 3価格を直す 4C　けど、今日の説明文修正を優先で。で、その後に価格監視をやって、それも終わってから初めて自動出品を開始する順番でよろしく」</p><p class="note">本人の発言・2026-11-03 06:47（Claudeが出した4つの質問への返事。番号はClaudeの質問の番号）（会話記録の『本人が入力した記録』で原文を照合済み）</p></blockquote>
+<blockquote><p>「この価格監視の件も資料に追加しておいて」</p><p class="note">本人の発言・2026-11-03 06:47（会話記録の『本人が入力した記録』で原文を照合済み）</p></blockquote>
+<blockquote><p>「Cで」</p><p class="note">本人の発言・2026-11-03 07時台（Claudeが出した質問「価格を直す対象と上げ幅」の選択肢C＝いまの計算式の価格まで戻す、への返事と読みました。会話記録では未照合＝直近の発言のため）</p></blockquote>
+<blockquote><p>「むしろ安い商品は多少(数百円)赤字でもいいから eBaymag復活のために沢山数を売りたい」</p><p class="note">本人の発言・2026-08-25（「価格を直す」の対象を決めるときの前提）（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
+<p><span class="k">（解釈）</span> 「3価格を直す」は、損益分岐を割っている商品を、数量0にするのではなく、価格を直す、と読みました（確信度 中）。「Cで」は、同じ時間帯に残っていた別の質問（項目15のJANの件にもC＝今後だけ直す、があります）ではなく、この「価格を直す」の質問への返事と読みました（確信度 中。違えばご指摘ください）。対象は「損益分岐を割っている160商品」と読みました（Claudeの解釈）。実際に上がるのは、式の価格が今の価格より高い44商品だけです。「4C」は、Amazon在庫なしを全部、価格監視が読んで『数量0の候補』にする、と読みました。数量0にする書き込みは、これまでどおり本人の端末で行う前提です（確信度 中）。仕事の順番「説明文 → 価格監視 → 自動出品」は、11/2に決めた順番（説明文 → カテゴリ → 33%セール → 読み戻し → 自動出品、項目1）に、『価格監視』が入った形と理解しています。『価格監視をやって』が、毎朝05:00の定例のことか、値付けの修正のことかは発言だけでは断定できません（Claudeは両方を指すと読んでいます・確信度 中）。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>昼の再実行は14:00に終わります。待機役が、終了後に健診を表示します。見るのは、取れた件数（SKIPを除く）と、昼の再実行が補った分です。</li>
+<li>値上げの計画（読み取りのみ・Macのターミナル）: <code>~/.local/share/jinji_maintenance/price_audit/price_fix_plan_auto_20261104.csv</code>（160商品）、自動で上げてよい門を通った <code>…/auto_raise_20261104_apply.csv</code>（24口）、保留 <code>…/auto_raise_20261104_hold.csv</code>（22口・理由つき）。</li>
+<li>書き込みは、本人の端末で、最初の1口から（<code>price_audit/price_raise_C_20261103.py</code> を <code>--apply --limit 1</code>。コマンドの全文はClaudeが出します）。セール中の口が25019で弾かれるかは、まだ未検証です。旗ファイル <code>price_audit/AUTO_APPLY_ENABLED</code> は、1口目の確認後に、本人が作ります（消せば止まります）。</li>
+<li>売れた1件（B06XSV7WB5）の残り3口を数量0にする入力: <code>~/.local/share/jinji_maintenance/price_audit/zero_input_*_20261103.csv</code>（3口版・93口版・790口版）。最初は3口版です。</li>
+<li>売れた注文（約−$12.5）は、駿河屋で買って発送します（購入・発送は人の手）。買ったら My note に✔を付けます。</li>
+<li>自動出品は、すでに11/4 10:30に再開しています（項目3）。順番の食い違いは、項目3の質問で決めます。</li>
+</ol>
+
+<h2>最新（11/4 13時ごろ）</h2>
+<ul class="lead">
+<li><b>今朝05:00の価格監視は、回線（テザリング）の障害で、ほぼ空振りでした。</b>点検1,639件のうち、価格が取れたのは <b>214件だけ</b>（取得失敗 1,425件＝87%。通常の日は23〜25%）。取れなかった分は『試行済み』に記録されないので、昼の再実行で取り直しています。</li>
+<li>昼の再実行: 09:50 に起動し、<b>14:00 締切</b>で走行中です。09:30以降の点検1,626件のうち、価格が取れたのは1,195件（73%）。ただし 12:40〜13:00 は取得失敗が約60%に増えました（その前の1時間は13〜17%）。同じ時間に自動出品の収集もAmazonに止められています（項目3）。14:00に終わると、待機役が健診を表示します。</li>
+<li>値上げの計画（読み取りだけ・11/4朝に自動の流れが作成）: 対象160商品 → <b>上げる46・据え置き114</b>。うち、自動で上げてよい門を通ったのが<b>24口</b>、保留が22口（理由つき）。eBayには<b>1口も書いていません</b>（書く許可の旗ファイルが無いため）。</li>
+<li>売れた1件（B06XSV7WB5）の数量0化（3口）は、入力ファイルを用意済みで、まだ実行していません（本人の端末で最初の1口から）。</li>
+<li>売れ行き: 11/2 は16件・11/3 は12件と、急に増えました（直近30日の平均は 4.4件/日・直近7日は 7.4件/日）。原因は未特定です。11/4〜11/6 の3日を見て、傾向か一過性かを判断します（毎日8件以上が続けば傾向）。</li>
+</ul>
+
+<details class="ev"><summary>これまでの経過（11/2〜11/3の記録・当時のまま）</summary>
+
+<h2>何の話か</h2>
+<ul>
+<li>11/2に、フランス向けに1件売れました（商品: B06XSV7WB5、HG サンダーボルト 陸戦型ガンダムS型）。値段がおかしいまま売れたので、原因と、同じ型の出品が他にもないかを調べました。</li>
+<li>最初、Claudeは「33%セールの影響」と説明しましたが、本人に<b>「セールをする前の価格がおかしい」</b>と訂正されました。調べ直すと、本人の言うとおりでした。</li>
+</ul>
+<h2>売れた1件で起きたこと</h2>
+<table>
+<tr><th>項目</th><th>出品したとき（8/6）</th><th>売れたとき（11/2）</th></tr>
+<tr><td>仕入れ値</td><td>¥4,379（Amazonの価格）</td><td><b>¥7,703</b>（駿河屋 ¥7,203＋¥500。注文の My note より）。Amazonは「現在お取り扱いできません」で、買えなくなっていた</td></tr>
+<tr><td>定価（33%セール前）</td><td>$68.99（古い計算式: (仕入れ$27.7＋送料$18)÷0.665）</td><td>同じ$68.99のまま</td></tr>
+<tr><td>33%セール後の値段</td><td>―</td><td>$46.22（フランスのミラー出品は€41.42）</td></tr>
+<tr><td>手取りの目安</td><td>―</td><td><b>約−$12.5</b>（手数料18.5%・送料$13.16の概算。確信度 中）</td></tr>
+</table>
+<ul>
+<li>実際の仕入れ値¥7,703に、いまの計算式（仕入れ÷100×1.4）を当てると、定価は<b>約$107.99</b>（セール後は約$72）になります（Claudeの計算・確信度 中）。つまり、<b>消えた仕入れ値（¥4,379）から作った定価が、そのまま残っていた</b>のが原因です。</li>
+<li>この注文のメモは、買う先（駿河屋）と値段を書いた段階で、購入済みの印（✔）はありません。購入済みかどうかは未確認です。</li>
+</ul>
+<h2>なぜ価格監視で止まらなかったか（確認できたこと）</h2>
+<ul>
+<li>価格監視は毎朝05:00に動き、Amazonから価格が取れない商品を「仕入れ元から取得できず」と飛ばします。これまでの累計は<b>34,390回</b>です。</li>
+<li>この商品を最後にAmazonで確認したのは<b>8/19（75日前）</b>です。9/18〜11/2に「在庫なし」と<b>27回</b>記録されていましたが、その記録（<code>unsourceable_live.jsonl</code>、9/8〜11/2で23,272行）を読んで何かをする仕組みは、どこにもありませんでした。記録するだけでした。</li>
+<li>予約品は10/23の件で数量0にする道具ができましたが、<b>「在庫なし」はその対象外</b>のままでした。今回の穴は、ここです。</li>
+<li>価格監視のコードには、同じ型の前例（B0H86YFQ9V が$57.99で売れて、仕入れ¥3,148の赤字）がコメントとして残っています。</li>
+</ul>
+<h2>他にも同じ問題があるか（標本25,000口の範囲なので、実際はこれ以上）</h2>
+<table>
+<tr><th>型</th><th>数</th><th>どういう状態か</th></tr>
+<tr><td>1. Amazon在庫なしのまま出品中</td><td><b>859商品・2,896口</b></td><td>在庫なしが30日以上続いているのが496商品。価格監視が28日以上見ていない／一度も見ていないのが663商品</td></tr>
+<tr><td>2. 出品時の仕入れ値でも、損益分岐を割っている</td><td><b>168商品</b>（うち8商品は$23.45／$20.32の帯＝本人が許容した帯。残り<b>160商品</b>）</td><td>160商品のうち40商品は、損益分岐より20%以上深く割れています。1個あたり概算$3以上の赤字は<b>24商品・93口</b></td></tr>
+<tr><td>3. 価格監視自身の赤字リスト</td><td>60件のうち、出品中は57件</td><td>リストにはあるが、直されていない</td></tr>
+<tr><td>4. ミラー（EUR・GBP・AUD・CAD）が、米国価格の換算より15%超安い</td><td>56口・12商品</td><td>ミラーの値段は米国の「セール後の値段」を換算したもの</td></tr>
+</table>
+<ul>
+<li>直近の注文メモ102行（11/3に Seller Hub で読みました）のうち、売値と実際の仕入れ値の両方が読めたのは72件。そのうち、<b>実際の仕入れ値で赤字だったのは5件（合計−$20）</b>で、今回の1件（−$12.5）が突出しています。</li>
+<li>出品時の仕入れ値と比べられた25件では、実際の仕入れ値が出品時の1.3倍を超えたのは3件、中央値は0.98倍でした。<b>「仕入れ値が大きくずれる」のは普通ではなく、今回は外れ値寄り</b>と見ています（標本が小さいので確信度 中）。</li>
+<li>一覧（eBayのリンク付き）: <code>~/.local/share/jinji_maintenance/price_audit/similar_20261102.html</code>（全件は同じ名前の <code>.tsv</code>）。</li>
+</ul>
+<h2>11/3の本人の返事と、いまの計画</h2>
+<table>
+<tr><th>何を聞いたか</th><th>本人の返事</th><th>いまの状態</th></tr>
+<tr><td>1. 売れた注文をどうするか</td><td>A（駿河屋で買って出荷）</td><td>購入・発送は人の手（父か本人）。損は約−$12.5</td></tr>
+<tr><td>2. 残り3口（米・豪・仏）の数量0</td><td>待つ（17:00ごろのスクリプト）</td><td>Trading APIの上限（518）が11/2 20:12に当たっており、今朝06:40に試しても止まりました。枠は11/3 17:00ごろ戻る見込みです（確信度 中）</td></tr>
+<tr><td>3. 損益分岐を割っている商品</td><td>「価格を直す」（数量0ではなく）。対象と上げ幅の質問には<b>「Cで」</b>（11/3 7時台）</td><td><b>C＝いまの計算式（仕入れ÷100×1.4）の価格まで戻す、に決まりました。</b>値段の表は作成済み（下の「Cで作った値段の表」）。書き込みは①説明文の差し替えが終わってから、本人の端末で</td></tr>
+<tr><td>4. Amazon在庫なしの商品</td><td>C（価格監視が全部読んで、数量0の候補にする）</td><td><b>候補を作る道具は、11/3 06:58に作りました</b>（試験34件合格）。実データで779商品・2,650口（標本の範囲）が候補に出ます。数量0にする書き込みは、これまでどおり本人の端末</td></tr>
+</table>
+<h2>Cで作った値段の表（読み取りのみ・まだ何も書き込んでいません）</h2>
+<p>「損益分岐を割っている」160商品に、いまの計算式（仕入れ÷100×1.4）の価格を当ててみました。<b>式の価格が今の価格より高い商品だけ上げます。下げる提案はしません。</b></p>
+<table>
+<tr><th>見方</th><th>結果</th></tr>
+<tr><td>上げる商品</td><td><b>44商品</b>（米国の出品47口）。上げ幅は中央値20%、最大185%。50%を超えるのが7商品、20〜50%が14商品、20%以下が23商品</td></tr>
+<tr><td>据え置く商品</td><td><b>116商品</b>。今の価格がすでに式の価格以上です。仕入れが安い商品（中央値1,273円）で、手取りは1個あたり−$2以内の小さな赤字のまま。本人の「安い商品は数百円の赤字でもいい」（8/25）の方針と合っています</td></tr>
+<tr><td>手取り（1個あたりの概算）</td><td>上げる44商品の合計が <b>−$148.5 → +$197.8</b>。大きな赤字（−$3以下）の20商品は<b>全部</b>上がる対象に入っています。上げても、まだ小さなマイナスが残るのは5商品（−$2以内）</td></tr>
+<tr><td>例</td><td>BANDAI MG ガンダム00 エクシア系（B08VGGFCLG）: 表示価格 $55.97 → $90.99（+62.6%）、手取り −$12.86 → +$6.26</td></tr>
+</table>
+<ul>
+<li><b>この表の弱点（Claudeの指摘）</b>: 仕入れ値は、価格監視が14日以内に取れた34商品を除くと、履歴の最後のAmazon価格（126商品）です。<b>最初に売れた B06XSV7WB5 の件は、仕入れ値が古いままだと式の価格でも見つかりません</b>（履歴の¥4,379だと式の価格は$61.99で、今の$68.99より低い。実際の仕入れは¥7,703）。値段を直す作業と、価格監視で現在の仕入れ値を取り直す作業は、別々に必要です。</li>
+<li>上げ幅が大きい商品は、売れ行きが落ちる可能性があります（Claudeの見立て・確信度 中）。最初の1口の結果を見てから広げます。</li>
+<li>この44商品には、ミラー（eBaymag）が<b>121口</b>付いています。米国の値段を上げたとき、ミラーの値段が追いかけて上がるかは未検証です。追いかけないと、今回売れた仏ミラーと同じ形（安いまま売れる）が残ります。ミラーには触りません（「ebaymagはもちろんそのままね」）。最初の1口を上げたあと、ミラーの値段が動くかを読み取りで確かめます。</li>
+</ul>
+<h2>仕事の順番（本人の指示）</h2>
+<table>
+<tr><th>順</th><th>仕事</th><th>いまの状態</th></tr>
+<tr><td>①</td><td>説明文の差し替え（今日の優先）</td><td>7,870 / 9,949口が済み（11/2 20:12時点）。残り約2,080口。Trading APIの上限で待機中で、次の枠は11/3 17:00ごろ</td></tr>
+<tr><td>②</td><td>価格監視（値付けの修正）</td><td>毎朝05:00の定例は、走らない日と、走っても全商品に届かない問題がありました（詳しくは項目19）。値付けの修正は①の後。①と同じ1日の枠を使うため</td></tr>
+<tr><td>③</td><td>自動出品の開始</td><td>保留中。①②が終わってから初めて開始します。以前の見込み（11/4夜〜11/5 10:30）は、②が入るぶん後ろにずれる見込みです（Claudeの見込み・確信度 低）</td></tr>
+</table>
+<h2>決まっていないこと・確認が要ること</h2>
+<ul>
+<li>「価格を直す」の<b>対象と上げ幅</b>は「C」に決まりました。決まっていないのは、<b>ミラーの値段が追いかけて上がるか</b>と、<b>仕入れ値が古い126商品の現在の仕入れ値</b>です（上の「この表の弱点」）。</li>
+<li>セールに入っている口は、在庫API（offer）で更新すると 25019 で弾かれた実績があります（説明文の件）。<b>値段の更新も同じ扱いになるかは未検証</b>です。Tradingの在庫更新で値段が書けるかも未検証です。</li>
+<li>ミラー（eBaymag）の数量を0にしても、eBaymag側で元に戻されないか。未検証です。</li>
+<li>「在庫なしを全部、候補にする」は、他の仕入れ先がある商品まで候補に入ります（Claudeの指摘）。候補は人が見て決める形のままにします。候補の779商品・2,650口は、1日の枠（518）に入りません。在庫なしが30〜59日続くのが529商品、14〜29日が149商品、14日未満が101商品です（継続日数の上限は、台帳が9/8に始まったことで48日になっています）。</li>
+</ul>
+<details><summary>技術メモ・注意（クリックで開く）</summary>
+<ul>
+<li>数量0にする道具: <code>~/.local/share/jinji_maintenance/preorder_fix/zero_preorder_qty_20261031.py</code>（入力は11列のCSV）。親の出品（在庫API）は <code>bulk_update_price_quantity</code>、ミラー・古い口は Trading の <code>ReviseInventoryStatus</code>。読み取り（GetItem）もTradingの枠を使うので、ドライランも上限に当たると止まります。</li>
+<li>在庫なしの候補（④C）: <code>~/.local/share/jinji_maintenance/carryover/zero_candidates_20261103.csv</code>（予約品24・高額1・在庫なし779商品）。作り直すコマンド（Macのターミナル・読み取りのみ）: <code>~/.venvs/ebay/bin/python3 -P ~/.local/share/jinji_maintenance/preorder_fix/daily_zero_candidates.py</code>。条件: 台帳の最新記録が「在庫なし」・直近14日・その後にAmazon価格が取れていない・出品中の口がある。在庫なしが長い順に並びます。陽性対照: 売れた B06XSV7WB5 が46日継続（28回）で入っています。</li>
+<li>入力CSVを3本用意済み（<code>~/.local/share/jinji_maintenance/price_audit/</code>）: <code>zero_input_B06XSV7WB5_20261103.csv</code>（3口）／<code>zero_input_loss3usd_20261103.csv</code>（概算赤字が1個$3以上＝24商品93口）／<code>zero_input_riskiest_20261103.csv</code>（183商品790口・危ない順）。作る道具は同じ場所の <code>build_zero_inputs_20261103.py</code>。読み込みの試験は通っています（3／93／790口・重複なし）。</li>
+<li>値段を書く道具: <code>~/.local/share/jinji_maintenance/price_audit/price_raise_C_20261103.py</code>（数量0化の道具と同じ作り。守り: Active・固定価格・Variationsなし・USD・現物の値段が表の『いま』と±2%以内・新しい値段より低い口だけ。書いた後に読み直して値段・買える数・題名・説明文・OutOfStockControl を照合。Activeでなくなれば全体停止、3回続けて失敗でも停止）。試験は通信なしで、陽性・陰性・識別力・変異試験つき。<b>セール中の口に値段が書けるかは未検証</b>（25019で弾かれたら『書き込み失敗』として記録して止まります）。</li>
+<li>Cの値段の表: <code>~/.local/share/jinji_maintenance/price_audit/price_fix_plan_C_20261103.csv</code>（160商品・上げる/据え置きの列つき・手取りの「いま」と「新」・ミラー数）。作る道具は同じ場所の <code>build_price_fix_plan_C_20261103.py</code>（読み取りのみ・<code>--selftest</code> 4件合格）。新しい表示価格 = 仕入れ円÷100×1.4 の整数部＋.99（<code>amazon_to_ebay.py</code> の <code>calc_price</code> と同じ式）。セール後の価格は表示価格×0.67。</li>
+<li>93口は「価格を直す」方針にしたので、数量0には使いません。価格の修正が間に合わないときの代案として残します。790口は1日の枠（518）に入りません。</li>
+<li>価格監視の改定CSV（<code>price_revise_*.csv</code>）が eBay に届くまでの道筋は、今日は確かめていません（未確認）。</li>
+<li>出品の標本（<code>active_listings.json</code>）は実際の約56,000口のうち25,000口です。数はすべて下限です。</li>
+<li>手取り・損益分岐の概算は、為替157.5・手数料18.5%・買い手の送料$13・送料$13.16で計算しています。</li>
+</ul>
+</details>
+
+</details>
+
+<p style="margin-top:28px"><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+</main>
+</div>
+<script>(function(){var main=document.querySelector('main');if(!main||!main.querySelectorAll){return;}var seq=0;var detail=!!main.querySelector('a.back');function lv(n){return(n&&n.nodeType===1&&/^H[23]$/.test(n.tagName))?+n.tagName.charAt(1):0;}function isBack(n){return n.nodeType===1&&n.tagName==='P'&&!!n.querySelector('a.back');}function setOpen(h,open){var b=document.getElementById(h.getAttribute('aria-controls'));if(!b){return;}if(open){b.removeAttribute('hidden');}else{b.setAttribute('hidden','');}h.setAttribute('aria-expanded',open?'true':'false');}function make(h,L){var n=h.nextSibling,has=false;while(n){var l=lv(n);if((l&&l<=L)||isBack(n)){break;}if(n.nodeType===1){has=true;}n=n.nextSibling;}if(!has){return;}var body=document.createElement('div');body.className='sec-body';body.id='sec-'+(++seq);n=h.nextSibling;while(n){var l2=lv(n);if((l2&&l2<=L)||isBack(n)){break;}var nx=n.nextSibling;body.appendChild(n);n=nx;}h.parentNode.insertBefore(body,h.nextSibling);h.className+=(h.className?' ':'')+'sec-h';h.setAttribute('tabindex','0');h.setAttribute('aria-controls',body.id);h.setAttribute('aria-expanded','true');h.setAttribute('title','クリックで表示／非表示');function tog(){setOpen(h,h.getAttribute('aria-expanded')!=='true');}h.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('a')){return;}tog();});h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();tog();}});if(detail&&!h.querySelector('.qstat')&&h.textContent.indexOf('決めてほしいこと')!==0){setOpen(h,false);}}[2,3].forEach(function(L){[].slice.call(main.querySelectorAll('h'+L)).forEach(function(h){make(h,L);});});function reveal(el){var p=el;while(p&&p!==main){if(p.classList&&p.classList.contains('sec-body')&&p.hasAttribute('hidden')){var h=document.querySelector('[aria-controls="'+p.id+'"]');if(h){setOpen(h,true);}}p=p.parentNode;}}function fromHash(){var id=location.hash.slice(1);if(!id){return;}var el=null;try{el=document.getElementById(decodeURIComponent(id));}catch(e){}if(el){reveal(el);if(el.scrollIntoView){el.scrollIntoView();}}}window.addEventListener('hashchange',fromHash);fromHash();})();</script>
+</body>
+</html>

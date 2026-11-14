@@ -18,7 +18,7 @@
   body { margin:0; background:var(--bg); color:var(--fg);
     font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
     font-size:19px; line-height:1.8; }
-  main { flex:1 1 0; min-width:0; max-width:860px; margin:0 auto; padding:28px 16px 56px; }
+  main { flex:1 1 0; min-width:0; max-width:1240px; margin:0; padding:28px 20px 56px; }  /* 2026-11-04 本人「左右の余白を減らせる？」: 860px中央寄せ→1240pxで目次の隣に寄せる */
   h1 { font-size:26px; margin:0 0 2px; }
   h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
   .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
@@ -43,6 +43,15 @@
   .note { color:var(--muted); font-size:16px; }
   details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
   details code { font-size:14px; word-break:break-all; }
+  /* 長い根拠を畳む部品（2026-11-04 本人「このページ情報多すぎて文章が読みづらいので、もっと読みやすくして」）。
+     技術メモ用の details は小さく薄いので、根拠用は本文と同じ大きさ・色にして、見出し(summary)だけ太くする */
+  details.ev { margin-top:10px; border-top:1px solid var(--line); padding-top:4px; color:var(--fg); font-size:inherit; }
+  details.ev > summary { cursor:pointer; font-weight:700; font-size:19px; padding:10px 0; }
+  details.ev > summary:hover { color:var(--accent); }
+  details.ev[open] > summary { margin-bottom:6px; }
+  details.ev code { font-size:15px; }
+  ul.lead { margin:8px 0 16px; }
+  ul.lead li { margin:8px 0; font-size:20px; line-height:1.7; }
   blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
   blockquote p { margin:2px 0; }
   .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
@@ -59,7 +68,7 @@
   /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
   html { scroll-behavior:auto; }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
-  .wrap { max-width:1240px; margin:0 auto; display:flex; align-items:flex-start; }
+  .wrap { max-width:1760px; margin:0 auto; display:flex; align-items:flex-start; }
   .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
     border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
   .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
@@ -84,12 +93,40 @@
     main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
     a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
   }
+
+  /* 目次の表示切替（⌘B） */
+  html.toc-hidden .toc { display:none; }
+  html.toc-hidden main { margin:0 auto; padding-top:56px; }
+  .tocbtn { display:none; position:fixed; top:10px; left:10px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  html.toc-hidden .tocbtn { display:block; }
+  .tocbtn:hover { background:var(--hover); }
+  .tocbtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .toc .th .hint { font-weight:400; letter-spacing:0; }
+  @media print { .tocbtn { display:none !important; } }
+
+  /* 表示の切替（ライト／ダーク） */
+  .themebtn { position:fixed; top:10px; right:14px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  .themebtn:hover { background:var(--hover); }
+  .themebtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  @media print { .themebtn { display:none !important; } }
+
+  /* 見出しの開閉 */
+  .sec-h { cursor:pointer; }
+  .sec-h::before { content:"\25BE"; display:inline-block; width:1.1em; color:var(--accent); font-size:.85em; }
+  .sec-h[aria-expanded="false"]::before { content:"\25B8"; }
+  .sec-h:hover { color:var(--accent); }
+  .sec-h:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .sec-body[hidden] { display:none; }
+  @media print { .sec-body[hidden] { display:block !important; } .sec-h::before { content:none !important; } }
 </style>
+<script>try{var v=localStorage.getItem('dd:theme');if(v==='light'||v==='dark'){document.documentElement.setAttribute('data-theme',v);}}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
 <nav class="toc" aria-label="目次">
-<p class="th">目次</p>
+<p class="th">目次 <span class="hint">（⌘B で隠す）</span></p>
 <ol>
 <li><a href="index.html"><span class="tn">≡</span><span class="tt">一覧（トップ）</span></a></li>
 <li><a href="d1.html" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
@@ -101,37 +138,106 @@
 <li><a href="d7.html" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
 <li><a href="d8.html" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
 <li><a href="d9.html" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
-<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">⏳ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">✅ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
 <li><a href="d11.html" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
 <li><a href="d12.html" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
 <li><a href="d13.html" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
 <li><a href="d14.html" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
-<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">❓ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">⏳ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
 <li><a href="d16.html" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
 <li><a href="d17.html" title="Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）"><span class="tn">17</span><span class="tt">⏳ Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）</span></a></li>
+<li><a href="d18.html" title="価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）"><span class="tn">18</span><span class="tt">⏳ 価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）</span></a></li>
+<li><a href="d19.html" title="価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）"><span class="tn">19</span><span class="tt">⏳ 価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）</span></a></li>
 <li><a href="index.html#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
 </ol>
 </nav>
 <script>(function(){var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}})();</script>
+<button type="button" id="tocbtn" class="tocbtn" aria-label="目次を表示（⌘B）">☰ 目次（⌘B）</button>
+<script>(function(){var KEY='dd:toc-hidden',h=document.documentElement;function get(){try{return localStorage.getItem(KEY)==='1';}catch(e){return false;}}function put(v){try{localStorage.setItem(KEY,v?'1':'0');}catch(e){}}function apply(v){if(v){h.classList.add('toc-hidden');}else{h.classList.remove('toc-hidden');var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}}var b=document.getElementById('tocbtn');if(b){b.setAttribute('aria-expanded',v?'false':'true');}}function toggle(){var v=!h.classList.contains('toc-hidden');apply(v);put(v);}apply(get());document.addEventListener('keydown',function(e){if(e.metaKey&&!e.ctrlKey&&!e.altKey&&!e.shiftKey&&(e.key==='b'||e.key==='B'||e.code==='KeyB')){e.preventDefault();toggle();}});var b=document.getElementById('tocbtn');if(b){b.addEventListener('click',toggle);}})();</script>
+<button type="button" id="themebtn" class="themebtn" aria-label="表示をライトとダークで切り替える"></button>
+<script>(function(){var KEY='dd:theme',h=document.documentElement;function sys(){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}}function cur(){return h.getAttribute('data-theme')||sys();}function label(){var b=document.getElementById('themebtn');if(b){b.textContent=(cur()==='dark')?'\u2600 ライト表示にする':'\u263E ダーク表示にする';}}label();var b=document.getElementById('themebtn');if(b){b.addEventListener('click',function(){var n=(cur()==='dark')?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem(KEY,n);}catch(e){}label();});}try{var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener){mq.addEventListener('change',label);}}catch(e){}})();</script>
 <main>
 <p><a class="back" href="index.html">‹ 一覧にもどる</a></p>
 <div class="head">
   <p><span class="k">決めたこと:</span> <b>全部終わったら自動出品を再開</b></p>
-  <p><span class="k">判定:</span> <span class="j">✅ 適用済み(15:13)</span></p>
-  <p><span class="k">実際:</span> 明日10:30は見送ります。説明文とカテゴリ分けが終わったら、自動で再開します。</p>
+  <p><span class="k">判定:</span> <span class="j">✅ 価格監視を01:00に前倒し（11/4 14:18 適用済み）</span></p>
+  <p><span class="k">実際:</span> 本人に任されたので、待ちの案ではなく『価格監視の起動を05:00→01:00に前倒し』にしました。9時の締切はそのままなので、1回に使える時間が4時間→8時間になります。今夜01:00が最初の走行です。</p>
 </div>
 
 <h2>本人の方針（今後こうしたい）</h2>
 <blockquote><p>「全部終わったら自動出品を再開する様にして　ホビーサーチに載っていない物は途中で落とすって言った記憶がない」</p><p class="note">本人の発言・2026-11-02 15:05</p></blockquote>
-<p><span class="k">（解釈）</span> 「全部」は、説明文の差し替えとカテゴリ分けのこと（14:51の発言より。確信度 高）。</p>
+<blockquote><p>「1出品よりも価格監視優先で」</p><p class="note">本人の発言・2026-11-04 午後（13:48より前・Claudeの5つの質問への返信。ターミナルに直接入力） 質問1『今日の自動出品はこのまま続けますか？ A続ける／B今日は止める』への答え</p></blockquote>
+<blockquote><p>「Q3-1 価格監視が動いている間は、自動出品を始めない待ちを入れる → （選択なし）」</p><p class="note">本人の発言・2026-11-04 14時すぎ（14:12より前・資料の『回答のコピー』を貼り付け） 項目3の質問Q3-1。ラジオは選ばれていません</p></blockquote>
+<blockquote><p>「例えば05:00の本走行・09:30の再試行　じゃなくて、01:00、05:00とかにずらせない？」</p><p class="note">本人の発言・2026-11-04 14時すぎ（14:12より前・資料の『回答のコピー』を貼り付け） Q3-1のコメント欄</p></blockquote>
+<blockquote><p>「Q3-2 夜の収集の最後の区切り（05:00〜07:30）を止めるか → B 今のまま（4区切り）。取り合いの害を測ってから決める」</p><p class="note">本人の発言・2026-11-04 14時すぎ（14:12より前・資料の『回答のコピー』を貼り付け） 項目3の質問Q3-2</p></blockquote>
+<blockquote><p>「1君に判断任せたい。どっちの方が良いの？」</p><p class="note">本人の発言・2026-11-04 14時台（14:20より前・Claudeの5つの質問への返信。ターミナルに直接入力） 質問1『価格監視が動いている間は自動出品を始めない待ちを入れる？ はい／いいえ』への答え</p></blockquote>
+<blockquote><p>「2多くできる方がいい」</p><p class="note">本人の発言・2026-11-04 14時台（14:20より前・Claudeの5つの質問への返信。ターミナルに直接入力） 質問2『夜の収集の最後の区切りを止める？ A止める／Bそのまま』への答え</p></blockquote>
+<p><span class="k">（解釈）</span> 「全部」は、説明文の差し替えとカテゴリ分けのこと（14:51の発言より。確信度 高）。 （解釈・11/4 午後）答えはAでもBでもなく『出品よりも価格監視優先』でした。『価格監視とAmazonの取り合いになるときは、価格監視を先にする。出品は後回し』という意味と読みました（確信度 中）。『今日の出品を、いますぐ止める』とまでは言っていないと読んだので、走っている出品は止めていません（止めるのは本人の手）。11/3 06:47 の『…それも終わってから初めて自動出品を開始する順番』と同じ向きです。 （解釈・11/4 14時台）①Q3-1のコメントは、『待ちを入れる』より、価格監視の時刻を夜にずらして10:30の前に終わらせる案の提案、と読みました（確信度 中）。②『君に判断任せたい。どっちの方が良いの？』は、待ちの案と前倒しの案のどちらにするかの判断をClaudeに任せる、の意味と読みました（確信度 高）。Claudeの判断は『前倒し』で、本番に適用済みです（先頭に理由を書きました）。③『多くできる方がいい』は、質問2の『止める(A)／そのまま(B)』のうち、収集が減らない方＝B、と読みました。資料で選んだ Q3-2 の B と同じ向きなので、確信度は高いです。</p>
 
 <h2>再開するとき（次にやること）</h2>
 <ol>
-<li>終わったら、次の10:30に自動で再開します。待たずに再開したいとき（Macのターミナル）: <code>~/.venvs/ebay/bin/python3 -P ~/.local/share/jinji_maintenance/carryover/resume_gate/apply_resume_gate.py --unhold</code>。保留の札は、ごみ箱フォルダに移るだけで、消えません。</li>
-<li>状態を見る: 同じコマンドの最後を <code>--check</code> にします。</li>
-<li>門ごと外したいとき: <code>--revert</code>。保留が4日を超えると、門は自動で開きます。</li>
-<li>再開した日は、10:30の出品が出ているか、8:30の健診が「保留」を未完了と誤認していないかを見ます。</li>
+<li>再開済みです（11/4 10:30:00・ログ <code>~/Library/CloudStorage/OneDrive-個人用/ドキュメント/父eBay/ebay_auto_log.txt</code> の『【再開】』の行）。状態の確認（Macのターミナル）: <code>~/.venvs/ebay/bin/python3 -P ~/.local/share/jinji_maintenance/carryover/resume_gate/apply_resume_gate.py --check</code>（『完了印あり・いま走らせたら動く(PROCEED)』と出ます）。</li>
+<li>明日以降の10:30も、完了印があるので、毎日自動で走ります。価格監視が終わってから再開したい場合は、門の保留の札を戻す必要があります。やり方は、質問への答えを受けてからお出しします（Claudeは止めません）。</li>
+<li>収集が『Amazonのボット検知』で中断した日は、そのあと英訳→出品に進みます（11/4 13:08 は119件）。ログの『[ABORT]』『[INCOMPLETE]』の行で見分けます。</li>
+<li>門ごと外したいとき: <code>apply_resume_gate.py --revert</code>。保留が4日を超えると、門は自動で開きます。</li>
+<li>価格監視優先の待ち（本番ファイルを書き換えるので、本人のMacのターミナルで・自動出品が走っていない時に）。状態 <code>~/.venvs/ebay/bin/python3 -P ~/.local/share/jinji_maintenance/carryover/price_first/apply_price_first.py --check</code> ／入れる <code>… --apply</code> ／戻す <code>… --revert</code> ／試験 <code>… --selftest</code>。控えは <code>~/.local/share/jinji_maintenance/bak/</code> に自動で取ります。</li>
+<li>いま走っている出品の止め方は、まだ検証していません（<code>run_ebay_auto.sh</code> に『区切りで止まる』旗が無く、親の bash だけ止めると子の <code>amazon_to_ebay.py</code> が残る恐れがあるため）。必要になったら、止めた後の状態を確かめる手順ごと作ります。止めるのは、本人の判断・本人の手です。</li>
+<li>価格監視の起動時刻（本番に適用済み）。状態 <code>~/.venvs/ebay/bin/python3 -P ~/.local/share/jinji_maintenance/carryover/price_first/apply_monitor_shift.py --check</code> ／元の05:00に戻す <code>… --revert</code>（価格監視が動いていない時に。Macのターミナル・cwd は ~）。控えは <code>~/.local/share/jinji_maintenance/bak/com.jinji.ebay-price-monitor.plist.bak_20261104_141824</code>。</li>
+<li>明朝（11/5）の確認: 09:45の健診（<code>~/.local/share/jinji_maintenance/logs/price_monitor_health_latest.txt</code>）で、『01:00〜09:00』の点検件数・取得できた件数・SKIP率を見る。目安は点検1,200件以上・SKIP30%未満。悪ければ3朝見てから戻すかを決める。</li>
 </ol>
+
+<h2>最新（11/4 14時半ごろ）</h2>
+<ul class="lead">
+<li><b>Claudeの判断: 『待ち』より『前倒し』にしました。</b>価格監視の起動を <b>05:00 → 01:00</b> に変えました（11/4 14:18 適用。今夜 01:00 が最初の走行）。コマンド・9時の締切・09:30の再試行・09:45の健診は変えていません。待ちの案（<code>apply_price_first.py</code>）は入れません。</li>
+<li>理由①: <b>点検できる件数が増える</b>。いまは05:00〜09:00の4時間で1日1,600〜1,800件（11/1〜11/3: 1,632・1,712・1,812件）。全体は約5,754件なので、一巡に約3.4日かかります。8時間なら約3,300〜3,600件（<b>推定</b>・未測定）で、一巡が約1.7日になります。『待ち』は出品を遅らせるだけで、点検の件数は増えません。</li>
+<li>理由②: <b>電源が安定する</b>。直近30夜の心拍ログで、01:00〜05:00は<b>Macが動いていた夜はすべてAC電源（100%）</b>でした。05:00〜09:00は、10月の多くの日でAC率が40〜50%まで落ちています（電池が10%以下まで減った朝が7日: 10/9・10/13・10/17・10/20・10/22・10/26・10/31。うち10/13・10/17・10/31はMacがほぼ止まっていた日）。11/1以降は92〜100%です。</li>
+<li>理由③: <b>10:30の前に終わる</b>。9時の締切で止まり、09:30の再試行も短い（1回30件まで）ので、10:30の自動出品とは普通は重なりません。『待ち』が必要になる日は、昼の再実行を手で回した日だけです。</li>
+<li>2本（01:00と05:00）にしなかった理由: 価格監視には同時実行のロックがありません。05:00ちょうどに2つが重なると、キャッシュと台帳へ同時に書いてしまいます。8時間の連続1本なら、その競合がありません（点検の順番は『いちばん長く見ていない順』なので、1本でも毎日別の商品が回ります）。</li>
+<li>質問2は <b>B（今のまま）</b>。『多くできる方がいい』と、資料で選んだ B が一致しています。</li>
+</ul>
+<table class="plain">
+<tr><th>時間帯</th><th>直近30夜の電源（Macが動いていた夜）</th><th>電池が10%以下まで減った日</th></tr>
+<tr><td>01:00〜05:00</td><td>すべてAC（100%）。動いていなかった夜は 10/13・10/17・10/31 の3夜</td><td>1日（10/10 の5%。AC接続で充電中）</td></tr>
+<tr><td>05:00〜09:00</td><td>10/5〜10/8・10/14〜10/16・10/19〜10/20・10/22〜10/23 などは AC率 40〜53%（11/1以降は92〜100%）</td><td>7日（10/9・10/13・10/17・10/20・10/22・10/26・10/31）</td></tr>
+</table>
+<h3>気をつけること（未測定・未検証）</h3>
+<ul>
+<li><b>夜の自動出品の収集と重なる時間が増えます。</b>夜の収集は、ふつう 20:00ごろ〜05:00 に集め、05:00ごろは出品の処理（Amazonを読まない）、06:00ごろ〜07:30にもう一度集めます（10/24・10/29 の実例。日によって前後します）。いままでAmazonを読む時間が価格監視と重なっていたのは、06:00〜07:30の約1.5時間でした。01:00に前倒しすると、01:00〜05:00の4時間が加わり、<b>約5.5時間</b>（推定）が重なります。取り合いでボット検知が増えるかは、<b>まだ測れていません</b>（確信度 低）。</li>
+<li>8時間の連続走行は初めてです（確認できた範囲では、これまでの価格監視は約4時間でした）。途中保存は25件ごとなので、途中で死んでも進んだ分は残ります。</li>
+<li>判定の目安（Claudeの案）: 明朝09:45の健診で、<b>点検が1,200件未満</b>、または<b>取得失敗が30%以上</b>なら、取り合いか通信障害を疑います。3朝続けて悪ければ、元の05:00に戻します（戻すのは1行）。出品の件数が前夜比で半分以下になった場合も同じです。</li>
+</ul>
+<details class="ev"><summary>測定の出所（技術メモ）</summary>
+<ul>
+<li>電源: <code>~/.local/share/jinji_maintenance/logs/launchd_heartbeat.log</code>（1分ごと・AC/Batt・電池%）を <code>~/.local/share/jinji_maintenance/price_monitor_fix/night_power_by_window.py</code> で窓ごとに数えました。陽性対照: 既知の停止日 10/31 の05:00〜09:00で動作率が3%（低い）＝拾えている。分母は窓の分数（心拍の本数で割らない）。</li>
+<li>価格監視は eBay API を使いません（コードに呼び出しなし）。共有しているのは<b>Amazonへのアクセス（同じIP）とMacのCPU</b>だけです。</li>
+<li>夜の収集の開始時刻は <code>ebay_auto_log.txt</code> の『【区切り収集】3/4・4/4回目』の行（例: 10/24 05:57:53・10/29 06:00:10 に4/4回目が始まる）から。</li>
+</ul>
+</details>
+
+
+<h2>最新（11/4 14時ごろ）</h2>
+<ul class="lead">
+<li>本人の答え『出品よりも価格監視優先』を受けて、<b>価格監視が動いている間は自動出品を始めない待ち</b>を作りました（<code>apply_price_first.py</code>）。試験は全部合格です（往復・bash -n・動作7通り・わざと壊す4通りをすべて検出）。<b>本番にはまだ入れていません</b>（本番ファイルを書き換えるので、本人の端末で入れます）。</li>
+<li>今日の価格監視（昼の再実行）は、<b>14:00:01 の締切で終わりました</b>。点検できたのは 2,334 / 5,754件（41%）。変動あり 933／変動なし 796／エラー 605。残り 3,420件は明日です（ログの締切の行）。</li>
+<li>自動出品は止めていません。14時の時点でも収集が続いていて、13:48 にもAmazonのボット検知で0件が出ています。10:30以降のログでは、ボット検知の診断行が 28 回、収集の打ち切り（ABORT）が 2 回です。</li>
+<li>待ちの内容: 価格監視が動いていれば、起動を最長210分（14:00まで）待ち、それでも動いていたら出品を始めます。止めるとき <code>PRICE_FIRST=0</code>、今すぐ出すとき <code>EBAY_AUTO_FORCE=1</code>。</li>
+<li>限界: すでに走っている出品は止めません。夜の収集の区切り 05:00・07:30 が、05:00 の価格監視と重なる件は変えていません（質問で決めます）。</li>
+</ul>
+<p class="note">試験の途中で、最初の版の『陽性対照』が、<b>たまたま本物の価格監視が動いていたから合格していた</b>（偽の合格）ことに気づいて直しました。価格監視が止まった 14:00 以降に、陽性・陰性とも本物の <code>pgrep</code> で再実行して、全部合格です。</p>
+
+
+<h2>最新（11/4 13時ごろ）：自動出品は今日10:30に再開していました</h2>
+<ul class="lead">
+<li>10:30:00 のログに「【再開】説明文の差し替え・カテゴリ分けが終わったので自動出品を再開します」とあります。区切り収集の1/4回目で、17:00 まで続く設計です。</li>
+<li><b>順番の食い違い</b>: 本人の順番は『説明文 → 価格監視 → それから自動出品』でした（11/3 06:47・項目19の方針欄）。しかし再開の条件は『説明文の完了印』だけで、価格監視の終了は見ていませんでした。Claudeは『自動出品は保留のまま』と思い込んでいて、今日10:30に再開していたことに、いま気づきました。</li>
+<li><b>13:08 に収集が中断</b>: Amazonの検索が『ボット検知（automated access）』の応答で0件を8本連続して返したため、収集を打ち切りました（未完走）。集まった119件分（スキップ301件）だけがCSVに入り、いまは英訳→出品の段階です。JANが取れなかった33件は台帳（no_upc）に記録されました。</li>
+<li>同じ時間帯（12:40〜13:00）に、価格監視のAmazon取得失敗も、直前の約15%から約60%に増えました（項目18）。2つの仕事が同時にAmazonを読んでいる影響の可能性があります（原因は未特定・確信度 低〜中）。</li>
+<li><b>Amazonのボット検知は、今回が初めてではありません</b>（父の自動出品のログ <code>ebay_auto_log.txt</code> を日付別に数えた結果）。『ボット検知』の診断行が出た日は 10/19・10/20・10/21・10/24・10/25・10/28・11/4 の7日。収集を打ち切った日は 10/10・10/21・10/22・10/29・10/30・11/4 の6日です。ただし診断行の記録は10/19から始まったため、それ以前の回数は分かりません。</li>
+<li><b>そのつど約1日で戻っています</b>: 10/21〜22に中止 → 10/23は408件取得。10/29〜30に中止 → 10/31は88件取得。10/28は検知が20回出ても同じ日に377件取れました。永続的な遮断の形跡は、ログには見当たりません（確信度 中）。</li>
+<li>止めてはいません。止めるかどうかは、本人の判断です（下の質問）。</li>
+</ul>
+
+<details class="ev"><summary>これまでの経過（11/2〜11/3の記録・当時のまま）</summary>
 
 <h2>仕組み</h2>
 <p>自動出品の起動スクリプトの冒頭に「門」を付けました。毎朝10:30に起動したとき、次の2つを見ます。</p>
@@ -162,8 +268,11 @@
 <p>道具 <code>~/.local/share/jinji_maintenance/carryover/resume_gate/apply_resume_gate.py</code>（<code>--check</code> / <code>--apply</code> / <code>--unhold</code> / <code>--revert</code>）。札 <code>~/.local/share/jinji_maintenance/ebay_auto_hold/HOLD</code>。戻し先の控え <code>~/.local/share/jinji_maintenance/bak/run_ebay_auto.sh.bak_20261102_151308_preResumeGate</code></p>
 </details>
 
+</details>
+
 <p style="margin-top:28px"><a class="back" href="index.html">‹ 一覧にもどる</a></p>
 </main>
 </div>
+<script>(function(){var main=document.querySelector('main');if(!main||!main.querySelectorAll){return;}var seq=0;var detail=!!main.querySelector('a.back');function lv(n){return(n&&n.nodeType===1&&/^H[23]$/.test(n.tagName))?+n.tagName.charAt(1):0;}function isBack(n){return n.nodeType===1&&n.tagName==='P'&&!!n.querySelector('a.back');}function setOpen(h,open){var b=document.getElementById(h.getAttribute('aria-controls'));if(!b){return;}if(open){b.removeAttribute('hidden');}else{b.setAttribute('hidden','');}h.setAttribute('aria-expanded',open?'true':'false');}function make(h,L){var n=h.nextSibling,has=false;while(n){var l=lv(n);if((l&&l<=L)||isBack(n)){break;}if(n.nodeType===1){has=true;}n=n.nextSibling;}if(!has){return;}var body=document.createElement('div');body.className='sec-body';body.id='sec-'+(++seq);n=h.nextSibling;while(n){var l2=lv(n);if((l2&&l2<=L)||isBack(n)){break;}var nx=n.nextSibling;body.appendChild(n);n=nx;}h.parentNode.insertBefore(body,h.nextSibling);h.className+=(h.className?' ':'')+'sec-h';h.setAttribute('tabindex','0');h.setAttribute('aria-controls',body.id);h.setAttribute('aria-expanded','true');h.setAttribute('title','クリックで表示／非表示');function tog(){setOpen(h,h.getAttribute('aria-expanded')!=='true');}h.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('a')){return;}tog();});h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();tog();}});if(detail&&!h.querySelector('.qstat')&&h.textContent.indexOf('決めてほしいこと')!==0){setOpen(h,false);}}[2,3].forEach(function(L){[].slice.call(main.querySelectorAll('h'+L)).forEach(function(h){make(h,L);});});function reveal(el){var p=el;while(p&&p!==main){if(p.classList&&p.classList.contains('sec-body')&&p.hasAttribute('hidden')){var h=document.querySelector('[aria-controls="'+p.id+'"]');if(h){setOpen(h,true);}}p=p.parentNode;}}function fromHash(){var id=location.hash.slice(1);if(!id){return;}var el=null;try{el=document.getElementById(decodeURIComponent(id));}catch(e){}if(el){reveal(el);if(el.scrollIntoView){el.scrollIntoView();}}}window.addEventListener('hashchange',fromHash);fromHash();})();</script>
 </body>
 </html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eBay 決まったこと 19</title>
+<style>
+  :root { color-scheme:light; --bg:#fbfbf9; --fg:#1d2230; --muted:#5d6475; --line:#cfd2da; --accent:#1f5fbf; --hover:#f0f2f7; --card:#ffffff; --sb:#b9bfcc; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  }
+  :root[data-theme="dark"] { color-scheme:dark; --bg:#14171f; --fg:#e8eaf0; --muted:#a2a9ba; --line:#3a4050; --accent:#8db4f5; --hover:#1c212c; --card:#1a1e28; --sb:#4a5166; }
+  /* スクロールバー（目次・本文・入力欄）も配色に合わせる。2026-11-02 本人「スクロールバーだけ色が違っててダサい」 */
+  html, .toc, textarea { scrollbar-color:var(--sb) transparent; }
+  .toc { scrollbar-width:thin; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+    font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+    font-size:19px; line-height:1.8; }
+  main { flex:1 1 0; min-width:0; max-width:1240px; margin:0; padding:28px 20px 56px; }  /* 2026-11-04 本人「左右の余白を減らせる？」: 860px中央寄せ→1240pxで目次の隣に寄せる */
+  h1 { font-size:26px; margin:0 0 2px; }
+  h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
+  .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
+  p { margin:0 0 8px; }
+  .k { color:var(--muted); }
+  .j { font-weight:700; }
+  a.card { display:block; color:inherit; text-decoration:none; padding:16px 10px; border-top:1px solid var(--line); }
+  a.card:hover, a.card:focus-visible { background:var(--hover); outline:none; }
+  a.card:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .more { color:var(--accent); font-size:16px; margin:0; }
+  .qbadge { color:var(--accent); font-size:16px; font-weight:700; margin:0 0 2px; }
+  main li a, main p a:not(.back) { color:var(--accent); }
+  a.back { color:var(--accent); text-decoration:none; font-size:16px; }
+  a.back:hover { text-decoration:underline; }
+  .head { padding:14px 0 6px; border-top:1px solid var(--line); margin-top:10px; }
+  table { border-collapse:collapse; width:100%; margin:8px 0 14px; font-size:17px; line-height:1.6; }
+  th, td { border:1px solid var(--line); padding:8px 12px; text-align:left; vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  td.n { white-space:nowrap; font-variant-numeric:tabular-nums; }
+  ul, ol { margin:4px 0 12px; padding-left:1.3em; }
+  li { margin:2px 0; }
+  .note { color:var(--muted); font-size:16px; }
+  details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
+  details code { font-size:14px; word-break:break-all; }
+  /* 長い根拠を畳む部品（2026-11-04 本人「このページ情報多すぎて文章が読みづらいので、もっと読みやすくして」）。
+     技術メモ用の details は小さく薄いので、根拠用は本文と同じ大きさ・色にして、見出し(summary)だけ太くする */
+  details.ev { margin-top:10px; border-top:1px solid var(--line); padding-top:4px; color:var(--fg); font-size:inherit; }
+  details.ev > summary { cursor:pointer; font-weight:700; font-size:19px; padding:10px 0; }
+  details.ev > summary:hover { color:var(--accent); }
+  details.ev[open] > summary { margin-bottom:6px; }
+  details.ev code { font-size:15px; }
+  ul.lead { margin:8px 0 16px; }
+  ul.lead li { margin:8px 0; font-size:20px; line-height:1.7; }
+  blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
+  blockquote p { margin:2px 0; }
+  .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
+  .q label { display:block; padding:5px 0; cursor:pointer; }
+  .q input[type=radio], .q input[type=checkbox] { width:1.1em; height:1.1em; margin-right:8px; vertical-align:-0.1em; accent-color:var(--accent); }
+  .q textarea, #qout { width:100%; min-height:4.2em; margin-top:8px; padding:8px 10px; font:inherit; font-size:17px; line-height:1.6;
+    color:var(--fg); background:var(--bg); border:1px solid var(--line); }
+  .q textarea:focus-visible, #qout:focus-visible, button:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .rec { color:var(--accent); font-size:15px; }
+  button.copybtn { font:inherit; font-size:17px; padding:8px 18px; color:var(--bg); background:var(--accent); border:0; cursor:pointer; }
+  button.copybtn:hover { filter:brightness(1.1); }
+  .qstat { color:var(--muted); font-size:15px; }
+  #qout { display:none; min-height:9em; }
+  /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
+  html { scroll-behavior:auto; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
+  .wrap { max-width:1760px; margin:0 auto; display:flex; align-items:flex-start; }
+  .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
+    border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
+  .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
+  .toc ol { list-style:none; margin:0; padding:0; }
+  .toc li { margin:0; }
+  .toc a { display:flex; gap:8px; padding:6px 8px; color:var(--fg); text-decoration:none; border-left:3px solid transparent; }
+  .toc a:hover, .toc a:focus-visible { background:var(--hover); outline:none; }
+  .toc a:focus-visible { box-shadow:inset 0 0 0 2px var(--accent); }
+  .toc a[aria-current="page"] { border-left-color:var(--accent); background:var(--hover); font-weight:700; }
+  .toc .tn { flex:0 0 1.7em; color:var(--muted); font-variant-numeric:tabular-nums; text-align:right; }
+  .toc .tt { overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+  a.card:target { background:var(--hover); box-shadow:inset 4px 0 0 var(--accent); }
+  a.card, #tail { scroll-margin-top:12px; }
+  @media (max-width: 960px) {
+    .wrap { display:block; }
+    .toc { position:static; width:auto; height:auto; border-right:0; border-bottom:1px solid var(--line); padding:12px 12px; }
+  }
+  @media print {
+    @page { size:A4; margin:14mm; }
+    body { font-size:14px; line-height:1.6; background:#fff; color:#000; }
+    .toc { display:none; } .wrap { display:block; }
+    main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
+    a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
+  }
+
+  /* 目次の表示切替（⌘B） */
+  html.toc-hidden .toc { display:none; }
+  html.toc-hidden main { margin:0 auto; padding-top:56px; }
+  .tocbtn { display:none; position:fixed; top:10px; left:10px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  html.toc-hidden .tocbtn { display:block; }
+  .tocbtn:hover { background:var(--hover); }
+  .tocbtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .toc .th .hint { font-weight:400; letter-spacing:0; }
+  @media print { .tocbtn { display:none !important; } }
+
+  /* 表示の切替（ライト／ダーク） */
+  .themebtn { position:fixed; top:10px; right:14px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  .themebtn:hover { background:var(--hover); }
+  .themebtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  @media print { .themebtn { display:none !important; } }
+
+  /* 見出しの開閉 */
+  .sec-h { cursor:pointer; }
+  .sec-h::before { content:"\25BE"; display:inline-block; width:1.1em; color:var(--accent); font-size:.85em; }
+  .sec-h[aria-expanded="false"]::before { content:"\25B8"; }
+  .sec-h:hover { color:var(--accent); }
+  .sec-h:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .sec-body[hidden] { display:none; }
+  @media print { .sec-body[hidden] { display:block !important; } .sec-h::before { content:none !important; } }
+</style>
+<script>try{var v=localStorage.getItem('dd:theme');if(v==='light'||v==='dark'){document.documentElement.setAttribute('data-theme',v);}}catch(e){}</script>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" aria-label="目次">
+<p class="th">目次 <span class="hint">（⌘B で隠す）</span></p>
+<ol>
+<li><a href="index.html"><span class="tn">≡</span><span class="tt">一覧（トップ）</span></a></li>
+<li><a href="d1.html" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
+<li><a href="d2.html" title="書き込み後の読み戻しはしない。確認は、全部終わってから一括"><span class="tn">2</span><span class="tt">✅ 書き込み後の読み戻しはしない。確認は、全部終わってから一括</span></a></li>
+<li><a href="d3.html" title="全部終わったら自動出品を再開"><span class="tn">3</span><span class="tt">✅ 全部終わったら自動出品を再開</span></a></li>
+<li><a href="d4.html" title="電池が減っても自動出品を止めない"><span class="tn">4</span><span class="tt">✅ 電池が減っても自動出品を止めない</span></a></li>
+<li><a href="d5.html" title="「ホビー商品でない」では除外しない"><span class="tn">5</span><span class="tt">✅ 「ホビー商品でない」では除外しない</span></a></li>
+<li><a href="d6.html" title="ホビーサーチに載っていないだけでは落とさない"><span class="tn">6</span><span class="tt">✅ ホビーサーチに載っていないだけでは落とさない</span></a></li>
+<li><a href="d7.html" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
+<li><a href="d8.html" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
+<li><a href="d9.html" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
+<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">✅ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="d11.html" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
+<li><a href="d12.html" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
+<li><a href="d13.html" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
+<li><a href="d14.html" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
+<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">⏳ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="d16.html" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
+<li><a href="d17.html" title="Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）"><span class="tn">17</span><span class="tt">⏳ Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）</span></a></li>
+<li><a href="d18.html" title="価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）"><span class="tn">18</span><span class="tt">⏳ 価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）</span></a></li>
+<li><a href="d19.html" aria-current="page" title="価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）"><span class="tn">19</span><span class="tt">⏳ 価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）</span></a></li>
+<li><a href="index.html#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
+</ol>
+</nav>
+<script>(function(){var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}})();</script>
+<button type="button" id="tocbtn" class="tocbtn" aria-label="目次を表示（⌘B）">☰ 目次（⌘B）</button>
+<script>(function(){var KEY='dd:toc-hidden',h=document.documentElement;function get(){try{return localStorage.getItem(KEY)==='1';}catch(e){return false;}}function put(v){try{localStorage.setItem(KEY,v?'1':'0');}catch(e){}}function apply(v){if(v){h.classList.add('toc-hidden');}else{h.classList.remove('toc-hidden');var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}}var b=document.getElementById('tocbtn');if(b){b.setAttribute('aria-expanded',v?'false':'true');}}function toggle(){var v=!h.classList.contains('toc-hidden');apply(v);put(v);}apply(get());document.addEventListener('keydown',function(e){if(e.metaKey&&!e.ctrlKey&&!e.altKey&&!e.shiftKey&&(e.key==='b'||e.key==='B'||e.code==='KeyB')){e.preventDefault();toggle();}});var b=document.getElementById('tocbtn');if(b){b.addEventListener('click',toggle);}})();</script>
+<button type="button" id="themebtn" class="themebtn" aria-label="表示をライトとダークで切り替える"></button>
+<script>(function(){var KEY='dd:theme',h=document.documentElement;function sys(){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}}function cur(){return h.getAttribute('data-theme')||sys();}function label(){var b=document.getElementById('themebtn');if(b){b.textContent=(cur()==='dark')?'\u2600 ライト表示にする':'\u263E ダーク表示にする';}}label();var b=document.getElementById('themebtn');if(b){b.addEventListener('click',function(){var n=(cur()==='dark')?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem(KEY,n);}catch(e){}label();});}try{var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener){mq.addEventListener('change',label);}}catch(e){}})();</script>
+<main>
+<p><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）</b></p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 下見の途中結果（セール前の値段が分からない）</span></p>
+  <p><span class="k">実際:</span> 下見の途中結果: 出品一覧（11/2取得）では『セール前の価格』が分からず、数字は幅で出ます。USDの2,021口のうち、セールかどうかに関係なく確実に15%以上ずれているのは381口（約19%）で、うち『確実に高すぎ(下げる側)』が259口・『確実に安すぎ(上げる側)』が55口です。残り1,640口は、セールに入っているかで答えが変わります。</p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「価格の見直し自体はもちろんしてほしいんだけど、そもそもの価格監視が動いてなかった原因をちゃんと調べて。これからは毎日想定通りに動いてくれないと困るので」</p><p class="note">本人の発言・2026-11-03 07時台（会話記録では未照合＝直近の発言のため）</p></blockquote>
+<blockquote><p>「価格監視が75日も動いてないなんて、酷いよ...😭」</p><p class="note">本人の発言・2026-11-03 06:34（会話記録の『本人が入力した記録』で原文を照合済み）</p></blockquote>
+<blockquote><p>「1A 2待つ 3価格を直す 4C　けど、今日の説明文修正を優先で。で、その後に価格監視をやって、それも終わってから初めて自動出品を開始する順番でよろしく」</p><p class="note">本人の発言・2026-11-03 06:47（Claudeが出した4つの質問への返事。番号はClaudeの質問の番号）（会話記録の『本人が入力した記録』で原文を照合済み）</p></blockquote>
+<blockquote><p>「Q19-1 点検の順番の修正を入れる → はい」</p><p class="note">本人の発言・2026-11-04 12:56 （アンケート資料の『回答のコピー』を貼り付け。『→』のあとが本人が画面で選んだもの／『コメント』は本人の入力）（この順番の修正は 11/3 17:58 に適用済み）</p></blockquote>
+<blockquote><p>「Q19-2 1日に見る数をふやすか → A 今の時間のまま（約4日で一巡）。まず修正を入れて様子を見る」</p><p class="note">本人の発言・2026-11-04 12:56 （アンケート資料の『回答のコピー』を貼り付け。『→』のあとが本人が画面で選んだもの／『コメント』は本人の入力）</p></blockquote>
+<blockquote><p>「Q19-3 値上げ案を毎朝つくる → いいえ」</p><p class="note">本人の発言・2026-11-04 12:56 （アンケート資料の『回答のコピー』を貼り付け。『→』のあとが本人が画面で選んだもの／『コメント』は本人の入力）</p></blockquote>
+<blockquote><p>「というよりも、計算式の通りの値段になっていれば赤字にはならないはずなので、「赤字になる商品」というよりも、計算式から一定以上離れた価格にある商品を直す様にしてほしい。一覧は君が把握していれば本人は基本的に見なくて良いかな。」</p><p class="note">本人の発言・2026-11-04 12:56 項目19のコメント欄（Q19-3への補足）</p></blockquote>
+<blockquote><p>「5いいえ、式の価格からさらに33%offを効かせるのが正しい」</p><p class="note">本人の発言・2026-11-04 午後（13:48より前・Claudeの5つの質問への返信。ターミナルに直接入力） 質問5『セール前の価格が式から15%以上安い出品を、式の価格まで上げる形にしてよいですか？ はい／いいえ』への答え</p></blockquote>
+<blockquote><p>「4A」</p><p class="note">本人の発言・2026-11-04 14時台（14:20より前・Claudeの5つの質問への返信。ターミナルに直接入力） 質問4『セール前は式どおり、セール中はそこから33%引き、で合っている？ A合っている／B違う』への答え</p></blockquote>
+<blockquote><p>「5A」</p><p class="note">本人の発言・2026-11-04 14時台（14:20より前・Claudeの5つの質問への返信。ターミナルに直接入力） 質問5『セール前の価格が式から何%ずれたら直す？ A15%／B10%／C20%』への答え</p></blockquote>
+<p><span class="k">（解釈）</span> 『毎日想定通りに動く』を、①05:00に確実に始まる ②毎日の点検が全商品に回る ③見つけた変化が誰かの手元に届く、の3つと読みました（確信度 中）。『動いてなかった』は、実測では『走らなかった日』と『走ったが成果が届かなかった日』の両方を含むと読みました。また、全商品を毎日見ることは今の速さでは物理的にできないため、『毎日』を『毎日、決まった件数が動き、一巡の長さが分かること』と置いています（違えばご指摘ください）。 （解釈・11/4）Q19-3『いいえ』は、『値上げ案を毎朝の一覧にして承認を待つ』形を取りやめる、という意味と読みました。代わりの方針はコメントのとおり、『赤字になる商品』ではなく『計算式から一定以上離れた価格にある商品を直す』です。『一定以上』が何%かは、発言に無い＝質問Q19-1で決めます。『一覧はClaudeが把握していればよい』は、毎朝本人に見せる一覧は要らない、という意味と読みました（確信度 中）。11/3 17:5x の『3承認なしでやって』（自動で直す）とは矛盾せず、対象が『赤字になる商品』から『式から離れた商品』に変わった、と理解しています（確信度 中）。 （解釈・11/4 午後・確信度 低〜中）『いいえ』は質問5への答えです。続きの文は、『表示される価格は、式の価格を基準に、さらに33%引いた額になっているのが正しい形』という意味と読みました。ただし、『15%以上安い出品を上げる、というやり方が違う』のか、『セール前と式の比べ方（Claudeの理解）が違う』のかは、この発言だけでは決められません＝新しい質問Q19-1で聞きます。 （解釈・11/4 14時台）4A＝セール前の価格は式どおり、セール中の表示はそこから33%引き、で合っている。5A＝式からセール前の価格が15%以上ずれた出品を直す対象にする（上げる側・下げる側の両方）。ミラー(eBaymag)は触らない・1回に40口まで・最初の1口は本人の端末、は前のClaudeの提案のとおりです（確信度 中〜高）。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>毎朝の健診（Macのターミナル）: <code>~/.venvs/ebay/bin/python3 -P ~/.local/share/jinji_maintenance/price_monitor_fix/price_monitor_health.py</code>（<code>--selftest</code> で試験20件）。09:45に自動でも走ります。見るのは ①『✅正常』か『⚠取得できず多い』か ②前日との重なりが下がっているか ③累計カバーが上がっているか。</li>
+<li>順番の修正の控え（戻すとき）: <code>~/.local/share/jinji_maintenance/bak/price_monitor.py.bak_20261103_175821</code>。戻す: <code>apply_attempt_order.py --revert --apply</code>（price_monitor.py が動いていない時に・本人の端末で）。</li>
+<li>夜は電源につなぎます（人の手）。電池切れが9日の原因で、これが最も効きます。通信（テザリング）の障害も、今朝のように点検を空振りさせます。</li>
+<li>『式から離れた価格を直す』（質問Q19-1の答えを受けて）: いまの『類似を直す』流れ <code>price_audit/similar_fix_daily.py</code>（門G1〜G5・試験9/9）の対象を、『赤字になる商品』から『式から15%以上安い商品』に変えます。まず下見（数を数えるだけ）をお出しします。書き込みは、本人の端末で1口目から。</li>
+<li>改定CSVの0行は、本体を直すより、レポートから直す一覧を作る方向です（質問Q19-3は『いいえ』になり、毎朝の一覧は作りません。Claudeが把握していれば十分、という方針）。</li>
+<li>点検が極端に遅い日（10/26・10/30型）の原因は未確認です。次に同じ日が出たら、その日のうちに健診で件数と1件あたりの秒数を確かめます。</li>
+<li>質問Q19-1（セール前＝式どおり／セール中＝そこから33%引き、で合っているか）の答えを受けてから、『直す一覧』の下見（数えるだけ）を作ります。比べるのはセール前の価格です。セール中の表示価格と式を比べると、セール中の出品が全部『33%安い』に見えてしまいます。</li>
+<li>下見（読み取りだけ）: 出品一覧のセール前の価格と、仕入れ値から式で出した価格を口ごとに比べ、15%以上ずれた口を数える。ミラー(eBaymag)は除く。数字が出たら、上げる側・下げる側の内訳、最大のずれの例3つ、1回40口で何日かかるかを併記する。</li>
+<li>17:00（日本時間）ごろ以降: eBayから、US出品の『セール前の値段（元値）』を読み取りだけで取り（書き込まない）、<code>gap15_preview_20261104.py</code> の入力に差し替えて数え直す。取る手段は2つの案: ①Trading API の GetMyeBaySelling の PromotionalSaleDetails.OriginalPrice（1ページ200口・API数十回） ②Inventory API の offer の価格（1口1回で重い）。①を先に試す。どちらも未検証。</li>
+</ol>
+
+<h2>下見の途中結果（11/4 14時40分ごろ・数えるだけ）</h2>
+<ul class="lead">
+<li><b>まだ正確な数は出せません。</b>理由: 出品一覧に入っている『price』が、セール前の値段なのか、セール後（×0.67）の値段なのかが、口ごとに分からないためです。<b>式との比（price÷式）の山が2つ</b>あります: 0.62〜0.72（セール中で式どおり）が16.6%、0.95〜1.05（セールに入っていなくて式どおり）が28.8%（新しい仕入れ値のある711口）。つまり、セールに入っている口と入っていない口が混ざっています。</li>
+<li>そこで『<b>セールかどうかに関係なく、確実に15%以上ずれている口</b>』を下限として数えました（USDの出品で仕入れ値が分かる2,021口）:
+<table>
+<tr><th>区分</th><th>仕入れ値が新しい711口</th><th>全部の2,021口</th></tr>
+<tr><td>確実に高すぎ（下げる側）</td><td>100口 (14.1%)</td><td>259口 (12.8%)</td></tr>
+<tr><td>確実に安すぎ（上げる側）</td><td>42口 (5.9%)</td><td>55口 (2.7%)</td></tr>
+<tr><td>ずれは確実・向きはセールしだい</td><td>52口 (7.3%)</td><td>67口 (3.3%)</td></tr>
+<tr><td>セールに入っているかで答えが変わる</td><td>517口 (72.7%)</td><td>1,640口 (81.1%)</td></tr>
+</table></li>
+<li>例（確実に高すぎ）: HASEGAWA 1/72 F4U-1D（仕入れ¥482・式 $6.99 なのに、いまの値段から見積もったセール前は $35.81）／BANDAI HG 1/144 GQuuuuuuX（仕入れ¥1,237・式 $17.99・$89.99）。例（確実に安すぎ）: Sony PSP 中古ソフト（仕入れ¥10,980・式 $153.99 に対して、セール前の見積もりは $53.34）。</li>
+<li><b>対象の範囲</b>: 出品一覧の標本25,000口（11/2 10:44取得）のうち、ミラー（USD以外）20,763口を除き、$23.45・$20.32の帯1,153口（本人の判断で許容）と仕入れ値が分からない1,061口を除いた口です。標本は2日前の写しで、全出品ではありません。</li>
+<li><b>正確な数を出すには</b>、eBayから各出品の<b>セール前の値段（元値）を読み取りだけで取る</b>必要があります（書き込みはしません）。APIの枠がまだ復活していない可能性が高いので、<b>17:00（日本時間）ごろの枠の復活後</b>に取ります。</li>
+<li>お願いは今ありません。数え直しの結果が出てから、直す一覧（上げる側・下げる側の内訳、1回40口で何日かかるか）をお出しします。</li>
+</ul>
+<details class="ev"><summary>数え方（技術メモ）</summary>
+<ul>
+<li>道具: <code>~/.local/share/jinji_maintenance/price_audit/gap15_preview_20261104.py</code>（<code>--selftest</code> 合格・変異試験つき・読み取り専用）。式 = <code>int(仕入円/100×1.4)+0.99</code>。仕入円は、価格監視が14日以内に取れた値があればそれ、無ければ出品履歴の最後のAmazon価格。</li>
+<li>仮説 H1（全部セール中・セール前＝price÷0.67）と H2（全部セール前の値・セール前＝price）の両方で数え、どちらの仮説でも範囲外の口だけを『確実』としました。H1だけで数えると『高すぎ』が66.5%に膨らむ（セールに入っていない口を、セール中と決めつけるため）ので、この数字は使えません。</li>
+</ul></details>
+
+
+<h2>最新（11/4 14時半ごろ）</h2>
+<ul class="lead">
+<li>質問4は<b>A（合っている）</b>、質問5は<b>A（15%）</b>でした。直す対象は『<b>セール前の価格が式から15%以上ずれた出品</b>』。上げる側と下げる側の両方です。</li>
+<li>比べるのは<b>セール前の価格（Was）</b>です。セール中の表示価格と式を比べると、セール中の出品が全部『33%安い』に見えてしまいます。</li>
+<li>決まっている枠: ミラー(eBaymag)は触らない／1回に40口まで／最初の1口は本人の端末で確認／毎朝の値上げ案の一覧は作らない（Claudeが把握しておき、本人は基本的に見なくてよい）。</li>
+<li>まだ数えていません＝『何口が対象か』は<b>未測定</b>です。</li>
+</ul>
+
+
+<h2>最新（11/4 14時ごろ）</h2>
+<ul class="lead">
+<li>質問5は『いいえ』でした。理由は『式の価格からさらに33%offを効かせるのが正しい』。Claudeは『セール前の価格は式どおり、セール中の表示はそこから33%引き』と読みました（確信度 低〜中）。違っていたら、下の質問で教えてください。</li>
+<li>昼の価格監視の「価格変動」933行を数えると、<b>旧価格が$23.45（33%セール帯）のものは0件</b>でした。価格監視の「変動」は、前回の<b>式の価格</b>（キャッシュ）と今回の<b>式の価格</b>を比べていて、セール中の表示価格とは比べていません（キャッシュに無い商品だけは出品時の価格と比べます）（確信度 高）。</li>
+<li>赤字リスク（🔴）の判定は、eBayの現在価格（＝セール後に買い手が払う額）で見ています。$23.45帯は、本人の判断（8/18）で判定から除外されています。</li>
+<li>Claudeが作った値上げ案の表は、『セール前』と『セール後』を別の列で持っているので、セール前の価格が基準です。</li>
+</ul>
+
+
+<h2>最新（11/4 13時ごろ）</h2>
+<ul class="lead">
+<li><b>点検の順番の修正は、11/3 17:58 に本人の端末で適用済み</b>です。今朝(11/4 05:00)の点検順は、前日との重なりが <b>1%</b>（従来は88〜95%）で、順番は変わりました。</li>
+<li>ただし今朝は回線障害で、点検1,639件のうち価格が取れたのは214件です（項目18）。『順番が効いたか』は、取れた分の少なさのため、まだ確かめきれていません。昼の再実行（14:00締切）の結果で見ます。</li>
+<li><b>健診の欠陥を直しました（13:08）</b>: 今までは点検の件数だけを見て、価格が取れなかった分（SKIP）を数えていなかったため、今朝を『✅正常 点検1,639件』と出していました。いまは『⚠取得できず多い（価格が取れたのは214件）』と出します。累計カバーも、障害の日のSKIP分を『見た』に数えません。試験は20件（陽性・陰性・識別力の対照つき）すべて合格しました。</li>
+<li>3つの定例（毎朝04:35 売れた商品の損益チェック／09:45 健診／09:55 類似を直す流れ）は、すべて登録済みです。類似を直す流れは、11/4朝に読み取りの計画を作りました（項目18）。書き込みはしていません。</li>
+<li><b>Q19-3『値上げ案を毎朝つくる』は『いいえ』でした。</b>代わりに、コメントのとおり『計算式から一定以上離れた価格の商品を直す』方針です。『一定以上』の線引きは、下の質問で決めます。</li>
+</ul>
+
+<details class="ev"><summary>これまでの経過（11/2〜11/3の記録・当時のまま）</summary>
+
+<h2>何の話か</h2>
+<ul>
+<li>項目18で、価格監視が「75日動いていない」ように見えた件です。本人から、<b>「そもそもの価格監視が動いてなかった原因をちゃんと調べて。これからは毎日想定通りに動いてくれないと困る」</b>と言われました。</li>
+<li>結論: 原因は1つではなく、<b>4つ重なっていました</b>。下に、実測の数字と確信度を付けて並べます。</li>
+</ul>
+<h2>原因は4つ</h2>
+<table>
+<tr><th>#</th><th>原因</th><th>実測</th><th>確信度</th></tr>
+<tr><td>1</td><td><b>Macの電池切れで、05:00に起動していない／走行の途中で落ちる</b></td><td>走行が無かった日・途中で止まった日は、8/15〜11/2の80日のうち15日。うち<b>11日は、電池が1%まで落ちて電源が切れていました</b>（9日は05:00前の最後の記録が「電池1%」、2日は走行の途中で1%になり、そのあと充電器につないで復帰）。</td><td>高</td></tr>
+<tr><td>2</td><td><b>毎日、同じ約3,300商品だけを見ている</b></td><td>直近13回の走行は、前日との重なりが88〜95%。13回ぶんの累計ユニーク商品数は約3,300で頭打ちです（3,295→3,296）。</td><td>高</td></tr>
+<tr><td>3</td><td><b>見つけた変化が、改定CSVに1行も出ていない（輪が閉じていない）</b></td><td>主監視の改定CSVは、<b>8/22を最後に、118走行のうち84回失敗</b>しています。毎日36〜218件の「変動あり」を見つけながら、全件が「画像なし」で飛ばされて0行です（11/1は218件・11/2は111件・11/3は139件。飛ばした件数＝変動あり件数）。原因は8/23の高速化（価格だけ取って画像を取らない設定）で、出品用の行を作る関数が画像なしを必ず捨てること。8/26にコードのコメントで認識されましたが、直っていません。さらに、CSVは手アップロード前提で、内部の記録は新しい値段で上書きされるので、翌日は「変動なし」になり、変化が消えます。最近点検した594商品のうち、eBayの定価が監視の計算値と一致したのは<b>27商品（4.5%）</b>だけでした。</td><td>0行は高・4.5%は中</td></tr>
+<tr><td>4</td><td><b>失敗は記録するだけで、誰も動かない</b></td><td>売れたB06XSV7WB5は、9/18〜11/3に28回「在庫切れ」と記録されましたが、何も起きていません。毎日同じ失敗ASINが約231件あり、最新の走行の枠の<b>13%（229/1,712）</b>を占めています。</td><td>高</td></tr>
+</table>
+
+<h2>原因1: 走らなかった日の中身（15日）</h2>
+<table>
+<tr><th>内訳</th><th>日数</th><th>日付</th><th>根拠</th></tr>
+<tr><td>電池切れで電源が落ちていた</td><td class="n">9日</td><td>9/20・9/22・9/26・9/27・10/3・10/11・10/13・10/17・10/31</td><td>1分ごとの心拍ログ（9/8〜）で、05:00前後の心拍が0/16。直前の最後の記録がすべて「電池1%」。復帰は、その後に充電器につないだ時</td></tr>
+<tr><td>05:00に始まったが、走行の途中で電池が1%になって落ちた</td><td class="n">2日</td><td>9/24・10/20</td><td>04:55は充電器につながって100%だったが、走行中は電池で動いて減り続け、08:49（9/24）と08:45（10/20）に「電池1%」の記録のあと心拍が途切れ、09:05と09:08に充電器へつないで復帰。両日とも、06:40〜07:50ごろに<b>ネット切断の待機</b>の記録もある</td></tr>
+<tr><td>05:00に始まったが、途中で止まった（理由は未確認）</td><td class="n">1日</td><td>9/16</td><td>電池で動いていて、07:09〜08:41に心拍が91分途切れ（電池87%→52%）、09:29は25%。同じ朝07:04にネット切断の記録。<b>なぜ止まったかは未確認</b></td></tr>
+<tr><td>心拍ログが無い時期</td><td class="n">3日</td><td>8/21・8/23・8/29</td><td>心拍ログの開始（9/8）より前なので、原因は特定できません</td></tr>
+</table>
+<ul>
+<li>電池の見張りは<b>すでにあります</b>（夜は19:30〜・日中は15分ごと。設定ファイルの更新日は夜版9/5・日中版9/23）。それでも、夜に電池が5%以下まで落ちた日が9日ありました（9/10・9/12・9/17・9/22・9/26・9/27・10/17・10/19・10/27）。見張りは「通知する」だけで、充電器をつなぐのは人の手だからです。</li>
+<li>電池が1%になった最後の記録の時刻は、夜中が4回（9/22 02:33・9/26 00:07・9/27 01:48・10/17 00:42）、昼〜夜の早い時間が5回（9/19 12:48・10/2 20:14・10/10 12:00・10/12 15:52・10/30 18:56）です。走行の途中は2回（9/24 08:49・10/20 08:45）です。</li>
+</ul>
+
+<h2>走った日の中身: 毎日の点検件数は、ふだん1,200〜2,300件</h2>
+<table>
+<tr><th>日</th><th>点検件数</th><th>1件あたり</th><th>メモ</th></tr>
+<tr><td>ふだん（Macが起きていた日の中央値）</td><td class="n">約1,500件</td><td class="n">8.6秒</td><td>05:00〜09:00の4時間で約1,500件。<b>9時の締切で打ち切り</b>になり、全商品（約5,800〜6,300件）は物理的に1日では回れません（全部なら約14時間）</td></tr>
+<tr><td>10/24</td><td class="n">1,000件</td><td class="n">15.0秒</td><td>遅い日</td></tr>
+<tr><td>10/26</td><td class="n">500件</td><td class="n">28.8秒</td><td>Macは起きていた。Amazon側かネットワークが遅い日（原因は未確認）</td></tr>
+<tr><td>10/30</td><td class="n"><b>76件</b></td><td class="n"><b>189.6秒</b></td><td>Macは起きていた（この遅い3日はどれも、05〜09時の240分のうち228〜238分起きていた）。接続のタイムアウトが続き、1件に3〜4分かかりました。<b>原因は未特定</b>（確信度 低。過去の知見に「ホットスポットのIPv6不具合でアプリが固まる」があるが、今回は未検証）</td></tr>
+</table>
+<ul>
+<li>10/30のように遅い日に、途中でやめる・別の方法に切り替える仕組みは、ありません。</li>
+</ul>
+
+<h2>原因2: 点検の順番が毎日同じ</h2>
+<ul>
+<li>監視リストは、キャッシュに入った順のまま固定で並んでいます。9時の締切で切れるので、<b>毎日、先頭の約1,500件だけ</b>を見て、後ろは永久に届きません。</li>
+<li>実測: リストの順位2000番より前の商品は、91%（1,817/2,000）が直近30日に点検成功。<b>2000番より後は16%（293/1,794）</b>。</li>
+<li>売れたB06XSV7WB5は、毎日リストの372〜390番目で点検されていました。毎日見に行って、毎日「在庫切れ」でした。</li>
+<li>出品中で、点検した形跡が一度も無い商品が<b>1,682件</b>あります（うちUSDの売値がある1,126件が対象）。</li>
+<li>「順繰り」の仕組みは、リストの一部にだけ効いていて、台帳は3,287件のまま5回連続の走行で増えていません。</li>
+</ul>
+
+<h2>見張りの穴（なぜ気づけなかったか）</h2>
+<ul>
+<li>「修正用CSVの生成に失敗しました」という行がログに84回出ていても、通知は出ません（誰も見ていない）。</li>
+<li>既存の <code>job_silence_check.py</code> は、完走したときに作られるファイルの有無だけを見ます。76件で終わった日（10/30）も「正常」に見えます。通知もMacの画面だけで、Macが止まっている朝には届きません（確信度 中。コードの一部を読んだ範囲）。</li>
+<li>09:30の再試行（price_retry_loop.py）は、その日に失敗した商品のうち最大30件を再試行するだけです。全体の抜けは補えません。結果も同じ形の改定CSVで、手でアップロードする前提です。</li>
+</ul>
+
+<h2>直す案（準備済み・本番にはまだ入れていません）</h2>
+<table>
+<tr><th>案</th><th>内容</th><th>状態</th></tr>
+<tr><td>A. 点検の順番を直す</td><td>全商品に「最後に試した日時」の台帳を持たせ、<b>いちばん長く見ていない順</b>に並べます。失敗（SKIP）も刻むので、同じ失敗ASINが毎日先頭に居座りません。Amazonへのアクセス回数・9時の締切・価格の計算・CSVの出力は変えません。</td><td><b>試験25件合格</b>。シミュレーション（6,000商品・1日1,500件）: 現行は14日たっても<b>累計1,500件で頭打ち</b>、修正後は<b>4日で全商品を一巡</b>。壊した版（新しい順・台帳に何も刻まない・キャッシュ無視）はすべて検出できました</td></tr>
+<tr><td>B. 毎朝の健診</td><td>日ごとの走行の有無・点検件数・締切・完走、走らなかった日の前夜の電源、直近4走行の累計カバー率と前日との重なりを、1画面で出します。</td><td><b>試験16件合格</b>。実際のログで、手作業で作った表と10/27〜11/2が一致。10/31は「電池切れの疑い」、10/30は「76件・1件189秒」と出ます</td></tr>
+<tr><td>C. 輪を閉じる</td><td>監視が見つけた「仕入れが上がって赤字になる商品」を、毎朝、値上げ案の一覧にして承認待ちに出します（書き込みは今までどおり人の承認）。改定CSVは空なので、監視のレポート（price_report_*.txt）と赤字リスト（price_at_risk.json）から直接作ります（画像は要りません）。失敗が続く商品は、数量0の候補（すでに道具あり）に流します。</td><td>未着手（下の質問Q19-3）</td></tr>
+<tr><td>D. 電源</td><td>夜は電源につなぐ。見張りは通知までしかできません。</td><td>人の手</td></tr>
+</table>
+<p><b>正直な限界</b>: 全商品を毎日見ることは、今の速さ（1件8.6秒）では物理的にできません。Aを入れても、<b>各商品は約4日に1回</b>の点検です。「毎日」を満たすのは、走行そのもの（毎日、決まった件数が動くこと）と、毎朝の健診です。</p>
+
+<h2>まだ確かめていないこと</h2>
+<ul>
+<li>Aを本番に入れた状態での<b>通しの実行</b>は、まだ一度もしていません（試験は挿入する関数をそのまま実行した範囲）。初日（入れた翌朝05:00）の結果を健診で確認します。期待値は「前日との重なりが50%未満」「全商品の台帳が毎日約1,500件ずつ増える」「直近4走行の累計カバーが上がる」です。</li>
+<li>初日は、一度も点検していない商品（約1,100件）が先頭に来るので、Amazonで買えない商品が多めに見つかる見込みです（Claudeの見込み・確信度 中）。</li>
+<li>「4.5%」は、セール率0.67を前提にした概算です（確信度 中）。</li>
+<li>09:30の再試行（price_retry_loop.py）が作るCSV（9/18〜10/31に作られたもの。11/1〜11/3は無し）の中身と、それを実際に使ったかは未確認です。主監視の0行とは別の道です。</li>
+<li>9/16に途中で止まった理由と、遅い3日（10/24・10/26・10/30）の<b>理由</b>は未確認です（9/24と10/20は電池切れと分かりました）。</li>
+</ul>
+
+<details><summary>技術メモ・注意（クリックで開く）</summary>
+<ul>
+<li>適用する道具: <code>~/.local/share/jinji_maintenance/price_monitor_fix/apply_attempt_order.py</code>（既定は下見のみ・<code>--apply</code> で適用・<code>--revert --apply</code> で戻す）。置換は4か所（関数の追加・並べ替えの呼び出し・途中保存・最後の保存）、いずれも「元の文字列がちょうど1か所」のときだけ動きます。実行中（price_monitor.py が動いている間）は適用を断ります。適用前の本番は <code>~/.local/share/jinji_maintenance/bak/</code> に控えを取ります。</li>
+<li>試験で見つかった欠陥: 最初の版は<b>二重適用を防げていませんでした</b>（変更後の文字列が変更前の文字列を含むため）。試験T4が検出し、直しました。また、変異試験M2（台帳に何も刻まない）を最初は検出できず、判定を「上限日数内に一巡するか」に改めました。</li>
+<li>健診の道具: <code>~/.local/share/jinji_maintenance/price_monitor_fix/price_monitor_health.py</code>（<code>--selftest</code> 16件）。出力は <code>~/.local/share/jinji_maintenance/logs/price_monitor_health_latest.txt</code> と履歴 <code>price_monitor_health.tsv</code>。<b>最初の版は全部の日を「未実行」と判定しました</b>（試験は合格していたのに）。原因は、読んでいたログ <code>price_monitor_scheduled.log</code>（launchdの標準出力）に日付見出しが無いこと。日付見出しがあるのは <code>price_monitor.log</code> の方です。実ログで手作業の表と突き合わせて気づきました。次の走行の頭にある「=====」の行を前の走行に含めて、終了時刻が05:00に化ける不具合も同じ突き合わせで見つけて直しました。</li>
+<li>ログの場所: 父eBayの <code>price_monitor.log</code>（日付つき・約18MB）と <code>price_monitor_scheduled.log</code>（日付なし・約26MB）。起動の設定は <code>~/Library/LaunchAgents/com.jinji.ebay-price-monitor.plist</code>（05:00・venvのpython3）と <code>com.jinji.ebay-price-retry.plist</code>（09:30・システムのpython3）。</li>
+<li>電源: <code>pmset repeat</code> は毎日22:55の起床だけで、05:00の起床はありません。電池見張りは <code>battery_night_watch.py</code>（19:30〜）と <code>battery_day_watch.py</code>（15分ごと）。</li>
+<li>調べた範囲: 8/15〜11/2の80日の走行の有無、<code>price_monitor.log</code> に残る92回の走行（7/21〜）、心拍ログ（9/8〜）。</li>
+</ul>
+</details>
+
+</details>
+
+<p style="margin-top:28px"><a class="back" href="index.html">‹ 一覧にもどる</a></p>
+</main>
+</div>
+<script>(function(){var main=document.querySelector('main');if(!main||!main.querySelectorAll){return;}var seq=0;var detail=!!main.querySelector('a.back');function lv(n){return(n&&n.nodeType===1&&/^H[23]$/.test(n.tagName))?+n.tagName.charAt(1):0;}function isBack(n){return n.nodeType===1&&n.tagName==='P'&&!!n.querySelector('a.back');}function setOpen(h,open){var b=document.getElementById(h.getAttribute('aria-controls'));if(!b){return;}if(open){b.removeAttribute('hidden');}else{b.setAttribute('hidden','');}h.setAttribute('aria-expanded',open?'true':'false');}function make(h,L){var n=h.nextSibling,has=false;while(n){var l=lv(n);if((l&&l<=L)||isBack(n)){break;}if(n.nodeType===1){has=true;}n=n.nextSibling;}if(!has){return;}var body=document.createElement('div');body.className='sec-body';body.id='sec-'+(++seq);n=h.nextSibling;while(n){var l2=lv(n);if((l2&&l2<=L)||isBack(n)){break;}var nx=n.nextSibling;body.appendChild(n);n=nx;}h.parentNode.insertBefore(body,h.nextSibling);h.className+=(h.className?' ':'')+'sec-h';h.setAttribute('tabindex','0');h.setAttribute('aria-controls',body.id);h.setAttribute('aria-expanded','true');h.setAttribute('title','クリックで表示／非表示');function tog(){setOpen(h,h.getAttribute('aria-expanded')!=='true');}h.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('a')){return;}tog();});h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();tog();}});if(detail&&!h.querySelector('.qstat')&&h.textContent.indexOf('決めてほしいこと')!==0){setOpen(h,false);}}[2,3].forEach(function(L){[].slice.call(main.querySelectorAll('h'+L)).forEach(function(h){make(h,L);});});function reveal(el){var p=el;while(p&&p!==main){if(p.classList&&p.classList.contains('sec-body')&&p.hasAttribute('hidden')){var h=document.querySelector('[aria-controls="'+p.id+'"]');if(h){setOpen(h,true);}}p=p.parentNode;}}function fromHash(){var id=location.hash.slice(1);if(!id){return;}var el=null;try{el=document.getElementById(decodeURIComponent(id));}catch(e){}if(el){reveal(el);if(el.scrollIntoView){el.scrollIntoView();}}}window.addEventListener('hashchange',fromHash);fromHash();})();</script>
+</body>
+</html>

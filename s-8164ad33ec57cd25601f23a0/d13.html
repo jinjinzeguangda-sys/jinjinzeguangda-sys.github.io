@@ -18,7 +18,7 @@
   body { margin:0; background:var(--bg); color:var(--fg);
     font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
     font-size:19px; line-height:1.8; }
-  main { flex:1 1 0; min-width:0; max-width:860px; margin:0 auto; padding:28px 16px 56px; }
+  main { flex:1 1 0; min-width:0; max-width:1240px; margin:0; padding:28px 20px 56px; }  /* 2026-11-04 本人「左右の余白を減らせる？」: 860px中央寄せ→1240pxで目次の隣に寄せる */
   h1 { font-size:26px; margin:0 0 2px; }
   h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
   .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
@@ -43,6 +43,15 @@
   .note { color:var(--muted); font-size:16px; }
   details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
   details code { font-size:14px; word-break:break-all; }
+  /* 長い根拠を畳む部品（2026-11-04 本人「このページ情報多すぎて文章が読みづらいので、もっと読みやすくして」）。
+     技術メモ用の details は小さく薄いので、根拠用は本文と同じ大きさ・色にして、見出し(summary)だけ太くする */
+  details.ev { margin-top:10px; border-top:1px solid var(--line); padding-top:4px; color:var(--fg); font-size:inherit; }
+  details.ev > summary { cursor:pointer; font-weight:700; font-size:19px; padding:10px 0; }
+  details.ev > summary:hover { color:var(--accent); }
+  details.ev[open] > summary { margin-bottom:6px; }
+  details.ev code { font-size:15px; }
+  ul.lead { margin:8px 0 16px; }
+  ul.lead li { margin:8px 0; font-size:20px; line-height:1.7; }
   blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
   blockquote p { margin:2px 0; }
   .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
@@ -59,7 +68,7 @@
   /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
   html { scroll-behavior:auto; }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
-  .wrap { max-width:1240px; margin:0 auto; display:flex; align-items:flex-start; }
+  .wrap { max-width:1760px; margin:0 auto; display:flex; align-items:flex-start; }
   .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
     border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
   .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
@@ -84,12 +93,40 @@
     main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
     a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
   }
+
+  /* 目次の表示切替（⌘B） */
+  html.toc-hidden .toc { display:none; }
+  html.toc-hidden main { margin:0 auto; padding-top:56px; }
+  .tocbtn { display:none; position:fixed; top:10px; left:10px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  html.toc-hidden .tocbtn { display:block; }
+  .tocbtn:hover { background:var(--hover); }
+  .tocbtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .toc .th .hint { font-weight:400; letter-spacing:0; }
+  @media print { .tocbtn { display:none !important; } }
+
+  /* 表示の切替（ライト／ダーク） */
+  .themebtn { position:fixed; top:10px; right:14px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  .themebtn:hover { background:var(--hover); }
+  .themebtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  @media print { .themebtn { display:none !important; } }
+
+  /* 見出しの開閉 */
+  .sec-h { cursor:pointer; }
+  .sec-h::before { content:"\25BE"; display:inline-block; width:1.1em; color:var(--accent); font-size:.85em; }
+  .sec-h[aria-expanded="false"]::before { content:"\25B8"; }
+  .sec-h:hover { color:var(--accent); }
+  .sec-h:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .sec-body[hidden] { display:none; }
+  @media print { .sec-body[hidden] { display:block !important; } .sec-h::before { content:none !important; } }
 </style>
+<script>try{var v=localStorage.getItem('dd:theme');if(v==='light'||v==='dark'){document.documentElement.setAttribute('data-theme',v);}}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
 <nav class="toc" aria-label="目次">
-<p class="th">目次</p>
+<p class="th">目次 <span class="hint">（⌘B で隠す）</span></p>
 <ol>
 <li><a href="index.html"><span class="tn">≡</span><span class="tt">一覧（トップ）</span></a></li>
 <li><a href="d1.html" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
@@ -101,24 +138,30 @@
 <li><a href="d7.html" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
 <li><a href="d8.html" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
 <li><a href="d9.html" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
-<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">⏳ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">✅ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
 <li><a href="d11.html" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
 <li><a href="d12.html" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
 <li><a href="d13.html" aria-current="page" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
 <li><a href="d14.html" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
-<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">❓ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="d15.html" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">⏳ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
 <li><a href="d16.html" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
 <li><a href="d17.html" title="Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）"><span class="tn">17</span><span class="tt">⏳ Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）</span></a></li>
+<li><a href="d18.html" title="価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）"><span class="tn">18</span><span class="tt">⏳ 価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）</span></a></li>
+<li><a href="d19.html" title="価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）"><span class="tn">19</span><span class="tt">⏳ 価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）</span></a></li>
 <li><a href="index.html#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
 </ol>
 </nav>
 <script>(function(){var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}})();</script>
+<button type="button" id="tocbtn" class="tocbtn" aria-label="目次を表示（⌘B）">☰ 目次（⌘B）</button>
+<script>(function(){var KEY='dd:toc-hidden',h=document.documentElement;function get(){try{return localStorage.getItem(KEY)==='1';}catch(e){return false;}}function put(v){try{localStorage.setItem(KEY,v?'1':'0');}catch(e){}}function apply(v){if(v){h.classList.add('toc-hidden');}else{h.classList.remove('toc-hidden');var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}}var b=document.getElementById('tocbtn');if(b){b.setAttribute('aria-expanded',v?'false':'true');}}function toggle(){var v=!h.classList.contains('toc-hidden');apply(v);put(v);}apply(get());document.addEventListener('keydown',function(e){if(e.metaKey&&!e.ctrlKey&&!e.altKey&&!e.shiftKey&&(e.key==='b'||e.key==='B'||e.code==='KeyB')){e.preventDefault();toggle();}});var b=document.getElementById('tocbtn');if(b){b.addEventListener('click',toggle);}})();</script>
+<button type="button" id="themebtn" class="themebtn" aria-label="表示をライトとダークで切り替える"></button>
+<script>(function(){var KEY='dd:theme',h=document.documentElement;function sys(){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}}function cur(){return h.getAttribute('data-theme')||sys();}function label(){var b=document.getElementById('themebtn');if(b){b.textContent=(cur()==='dark')?'\u2600 ライト表示にする':'\u263E ダーク表示にする';}}label();var b=document.getElementById('themebtn');if(b){b.addEventListener('click',function(){var n=(cur()==='dark')?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem(KEY,n);}catch(e){}label();});}try{var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener){mq.addEventListener('change',label);}}catch(e){}})();</script>
 <main>
 <p><a class="back" href="index.html">‹ 一覧にもどる</a></p>
 <div class="head">
   <p><span class="k">決めたこと:</span> <b>本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</b></p>
   <p><span class="k">判定:</span> <span class="j">✅ 適用済み(18:16)</span></p>
-  <p><span class="k">実際:</span> 標準ルートの防止と検索語の2つを、本人の端末で本番に適用しました（18:16）。映像・ゲーム・本は標準ルートで止まります。記録物の受け渡しは、まだ渡していません。</p>
+  <p><span class="k">実際:</span> 標準ルートの防止と検索語の2つを、本人の端末で本番に適用しました（18:16）。映像・ゲーム・本は標準ルートで止まります。記録物の受け渡しは、まだ渡していません。（11/4 13時: 差し替えが終わったので、受け渡しを実行できる状態です。まだ実行していません。）</p>
 </div>
 
 <h2>本人の方針（今後こうしたい）</h2>
@@ -137,6 +180,7 @@
 <li>受け渡し: 止めた記録物は不合格台帳に残ります。説明文の差し替えが終わってから、<code>media_handoff_from_ledger.py --list</code> で件数を見て <code>--write</code> で別ルートの待ちに追記し、<code>media_collect.py --fetch</code> が商品ページを読み、media_builder が組み立てます。毎日回す本体は項目7です。</li>
 <li>未決（本人が18:17に「後回しで」）: ①Blu-rayとプラモデルのセット16件の扱い。決まるまでは標準ルートで止めたまま。再開するとき: 本人に「A映像として別ルート／Bプラモデルとして標準ルート」を聞き直す。②題名にCD系の語が無いCDは取りこぼします（実測で233件中およそ10件）。③CD以外の品でも、模型用の題名が付く恐れのあるものが他に無いかは、出品後の一覧で見ます。</li>
 </ol>
+<p class="note">11/4 13時: 記録物の受け渡し（<code>media_handoff_from_ledger.py --write</code>）の前提だった『説明文の差し替えの完了』は満たされました。まだ実行していません。</p>
 
 <h2>何が起きたか</h2>
 <p>15:05に「ホビー商品でない」の判定を外したとき、書籍・ゲーム・映像の防止（8/8の事故を受けて足した一覧）も一緒に外れていました。17:43に、本番の関数へ実際の題名を入れて測ると、次のように、模型用の題名「Plastic Model Kit」が付いてしまいました。</p>
@@ -192,5 +236,6 @@
 <p style="margin-top:28px"><a class="back" href="index.html">‹ 一覧にもどる</a></p>
 </main>
 </div>
+<script>(function(){var main=document.querySelector('main');if(!main||!main.querySelectorAll){return;}var seq=0;var detail=!!main.querySelector('a.back');function lv(n){return(n&&n.nodeType===1&&/^H[23]$/.test(n.tagName))?+n.tagName.charAt(1):0;}function isBack(n){return n.nodeType===1&&n.tagName==='P'&&!!n.querySelector('a.back');}function setOpen(h,open){var b=document.getElementById(h.getAttribute('aria-controls'));if(!b){return;}if(open){b.removeAttribute('hidden');}else{b.setAttribute('hidden','');}h.setAttribute('aria-expanded',open?'true':'false');}function make(h,L){var n=h.nextSibling,has=false;while(n){var l=lv(n);if((l&&l<=L)||isBack(n)){break;}if(n.nodeType===1){has=true;}n=n.nextSibling;}if(!has){return;}var body=document.createElement('div');body.className='sec-body';body.id='sec-'+(++seq);n=h.nextSibling;while(n){var l2=lv(n);if((l2&&l2<=L)||isBack(n)){break;}var nx=n.nextSibling;body.appendChild(n);n=nx;}h.parentNode.insertBefore(body,h.nextSibling);h.className+=(h.className?' ':'')+'sec-h';h.setAttribute('tabindex','0');h.setAttribute('aria-controls',body.id);h.setAttribute('aria-expanded','true');h.setAttribute('title','クリックで表示／非表示');function tog(){setOpen(h,h.getAttribute('aria-expanded')!=='true');}h.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('a')){return;}tog();});h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();tog();}});if(detail&&!h.querySelector('.qstat')&&h.textContent.indexOf('決めてほしいこと')!==0){setOpen(h,false);}}[2,3].forEach(function(L){[].slice.call(main.querySelectorAll('h'+L)).forEach(function(h){make(h,L);});});function reveal(el){var p=el;while(p&&p!==main){if(p.classList&&p.classList.contains('sec-body')&&p.hasAttribute('hidden')){var h=document.querySelector('[aria-controls="'+p.id+'"]');if(h){setOpen(h,true);}}p=p.parentNode;}}function fromHash(){var id=location.hash.slice(1);if(!id){return;}var el=null;try{el=document.getElementById(decodeURIComponent(id));}catch(e){}if(el){reveal(el);if(el.scrollIntoView){el.scrollIntoView();}}}window.addEventListener('hashchange',fromHash);fromHash();})();</script>
 </body>
 </html>

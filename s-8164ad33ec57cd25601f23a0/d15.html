@@ -18,7 +18,7 @@
   body { margin:0; background:var(--bg); color:var(--fg);
     font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
     font-size:19px; line-height:1.8; }
-  main { flex:1 1 0; min-width:0; max-width:860px; margin:0 auto; padding:28px 16px 56px; }
+  main { flex:1 1 0; min-width:0; max-width:1240px; margin:0; padding:28px 20px 56px; }  /* 2026-11-04 本人「左右の余白を減らせる？」: 860px中央寄せ→1240pxで目次の隣に寄せる */
   h1 { font-size:26px; margin:0 0 2px; }
   h2 { font-size:21px; margin:30px 0 6px; padding-top:16px; border-top:2px solid var(--fg); }
   .asof { color:var(--muted); font-size:15px; margin:0 0 10px; }
@@ -43,6 +43,15 @@
   .note { color:var(--muted); font-size:16px; }
   details { margin-top:18px; border-top:1px solid var(--line); padding-top:10px; color:var(--muted); font-size:15px; }
   details code { font-size:14px; word-break:break-all; }
+  /* 長い根拠を畳む部品（2026-11-04 本人「このページ情報多すぎて文章が読みづらいので、もっと読みやすくして」）。
+     技術メモ用の details は小さく薄いので、根拠用は本文と同じ大きさ・色にして、見出し(summary)だけ太くする */
+  details.ev { margin-top:10px; border-top:1px solid var(--line); padding-top:4px; color:var(--fg); font-size:inherit; }
+  details.ev > summary { cursor:pointer; font-weight:700; font-size:19px; padding:10px 0; }
+  details.ev > summary:hover { color:var(--accent); }
+  details.ev[open] > summary { margin-bottom:6px; }
+  details.ev code { font-size:15px; }
+  ul.lead { margin:8px 0 16px; }
+  ul.lead li { margin:8px 0; font-size:20px; line-height:1.7; }
   blockquote { margin:8px 0 12px; padding:6px 16px; border-left:3px solid var(--accent); background:var(--card); }
   blockquote p { margin:2px 0; }
   .q { background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); padding:12px 16px; margin:14px 0; }
@@ -59,7 +68,7 @@
   /* 左側の目次（2026-11-02 本人「項目が多いのでページ左側に目次をつけて、クリックするとその項目まで飛べるように」） */
   html { scroll-behavior:auto; }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior:smooth; } }
-  .wrap { max-width:1240px; margin:0 auto; display:flex; align-items:flex-start; }
+  .wrap { max-width:1760px; margin:0 auto; display:flex; align-items:flex-start; }
   .toc { position:sticky; top:0; flex:0 0 300px; width:300px; height:100vh; overflow-y:auto; padding:26px 14px 26px 16px;
     border-right:1px solid var(--line); font-size:15px; line-height:1.5; }
   .toc .th { margin:0 0 8px; color:var(--muted); font-size:14px; font-weight:700; letter-spacing:.06em; }
@@ -84,12 +93,40 @@
     main { max-width:none; padding:0; } h1 { font-size:20px; } h2 { font-size:16px; margin-top:14px; }
     a.card { padding:8px 0; } .more, a.back, button.copybtn, #qout, .q textarea { display:none; } table { font-size:13px; }
   }
+
+  /* 目次の表示切替（⌘B） */
+  html.toc-hidden .toc { display:none; }
+  html.toc-hidden main { margin:0 auto; padding-top:56px; }
+  .tocbtn { display:none; position:fixed; top:10px; left:10px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  html.toc-hidden .tocbtn { display:block; }
+  .tocbtn:hover { background:var(--hover); }
+  .tocbtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  .toc .th .hint { font-weight:400; letter-spacing:0; }
+  @media print { .tocbtn { display:none !important; } }
+
+  /* 表示の切替（ライト／ダーク） */
+  .themebtn { position:fixed; top:10px; right:14px; z-index:5; font:inherit; font-size:15px; padding:6px 12px;
+    color:var(--fg); background:var(--card); border:1px solid var(--line); cursor:pointer; }
+  .themebtn:hover { background:var(--hover); }
+  .themebtn:focus-visible { outline:2px solid var(--accent); outline-offset:1px; }
+  @media print { .themebtn { display:none !important; } }
+
+  /* 見出しの開閉 */
+  .sec-h { cursor:pointer; }
+  .sec-h::before { content:"\25BE"; display:inline-block; width:1.1em; color:var(--accent); font-size:.85em; }
+  .sec-h[aria-expanded="false"]::before { content:"\25B8"; }
+  .sec-h:hover { color:var(--accent); }
+  .sec-h:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .sec-body[hidden] { display:none; }
+  @media print { .sec-body[hidden] { display:block !important; } .sec-h::before { content:none !important; } }
 </style>
+<script>try{var v=localStorage.getItem('dd:theme');if(v==='light'||v==='dark'){document.documentElement.setAttribute('data-theme',v);}}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
 <nav class="toc" aria-label="目次">
-<p class="th">目次</p>
+<p class="th">目次 <span class="hint">（⌘B で隠す）</span></p>
 <ol>
 <li><a href="index.html"><span class="tn">≡</span><span class="tt">一覧（トップ）</span></a></li>
 <li><a href="d1.html" title="説明文の修正 → カテゴリ分けで33%off、を優先"><span class="tn">1</span><span class="tt">✅ 説明文の修正 → カテゴリ分けで33%off、を優先</span></a></li>
@@ -101,61 +138,103 @@
 <li><a href="d7.html" title="DVD・ゲームは、別ルートで毎日自動で集める"><span class="tn">7</span><span class="tt">⏳ DVD・ゲームは、別ルートで毎日自動で集める</span></a></li>
 <li><a href="d8.html" title="出していない過去の商品を、一段落したら出す"><span class="tn">8</span><span class="tt">⏳ 出していない過去の商品を、一段落したら出す</span></a></li>
 <li><a href="d9.html" title="在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する"><span class="tn">9</span><span class="tt">⏳ 在庫切れ・予約は、在庫が戻る／発売日の当日になったら出す。Amazonだけでなく他のサイトも確認する</span></a></li>
-<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">⏳ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
+<li><a href="d10.html" title="出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す"><span class="tn">10</span><span class="tt">✅ 出した後に在庫が無くなった物は、出品を終了せず、数量を0にして残す</span></a></li>
 <li><a href="d11.html" title="eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した"><span class="tn">11</span><span class="tt">✅ eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</span></a></li>
 <li><a href="d12.html" title="重さに応じて送料を変える仕組みは、まだ実装していない"><span class="tn">12</span><span class="tt">⏳ 重さに応じて送料を変える仕組みは、まだ実装していない</span></a></li>
 <li><a href="d13.html" title="本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）"><span class="tn">13</span><span class="tt">✅ 本・漫画・ブラインドボックスと、記録物（CD・映像・ゲーム）は、標準の自動出品では出さない（別ルートへ渡す）</span></a></li>
 <li><a href="d14.html" title="写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）"><span class="tn">14</span><span class="tt">✅ 写真は1枚あれば出す（「最低3枚」の門を1枚に下げる）</span></a></li>
-<li><a href="d15.html" aria-current="page" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">❓ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
+<li><a href="d15.html" aria-current="page" title="JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）"><span class="tn">15</span><span class="tt">⏳ JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</span></a></li>
 <li><a href="d16.html" title="自動出品の累計：検索した数・出品した数・出品しなかった理由と数"><span class="tn">16</span><span class="tt">✅ 自動出品の累計：検索した数・出品した数・出品しなかった理由と数</span></a></li>
 <li><a href="d17.html" title="Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）"><span class="tn">17</span><span class="tt">⏳ Zonos用CSVは、Macで作る今の形のまま使い、追加の開発は止める（受注を増やす方を優先）</span></a></li>
+<li><a href="d18.html" title="価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）"><span class="tn">18</span><span class="tt">⏳ 価格監視の穴をふさぐ。順番は ①説明文の差し替え → ②価格監視（値付けの修正）→ ③自動出品（①②が終わってから初めて開始）</span></a></li>
+<li><a href="d19.html" title="価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）"><span class="tn">19</span><span class="tt">⏳ 価格監視を『毎日、想定どおり動く』形に直す（原因の調査 → 修正 → 毎朝の健診）</span></a></li>
 <li><a href="index.html#tail"><span class="tn">？</span><span class="tt">決めてほしいこと</span></a></li>
 </ol>
 </nav>
 <script>(function(){var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}})();</script>
+<button type="button" id="tocbtn" class="tocbtn" aria-label="目次を表示（⌘B）">☰ 目次（⌘B）</button>
+<script>(function(){var KEY='dd:toc-hidden',h=document.documentElement;function get(){try{return localStorage.getItem(KEY)==='1';}catch(e){return false;}}function put(v){try{localStorage.setItem(KEY,v?'1':'0');}catch(e){}}function apply(v){if(v){h.classList.add('toc-hidden');}else{h.classList.remove('toc-hidden');var n=document.querySelector('.toc'),c=n&&n.querySelector('[aria-current]');if(n&&c){n.scrollTop=Math.max(0,c.offsetTop-n.clientHeight/2);}}var b=document.getElementById('tocbtn');if(b){b.setAttribute('aria-expanded',v?'false':'true');}}function toggle(){var v=!h.classList.contains('toc-hidden');apply(v);put(v);}apply(get());document.addEventListener('keydown',function(e){if(e.metaKey&&!e.ctrlKey&&!e.altKey&&!e.shiftKey&&(e.key==='b'||e.key==='B'||e.code==='KeyB')){e.preventDefault();toggle();}});var b=document.getElementById('tocbtn');if(b){b.addEventListener('click',toggle);}})();</script>
+<button type="button" id="themebtn" class="themebtn" aria-label="表示をライトとダークで切り替える"></button>
+<script>(function(){var KEY='dd:theme',h=document.documentElement;function sys(){try{return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}catch(e){return 'light';}}function cur(){return h.getAttribute('data-theme')||sys();}function label(){var b=document.getElementById('themebtn');if(b){b.textContent=(cur()==='dark')?'\u2600 ライト表示にする':'\u263E ダーク表示にする';}}label();var b=document.getElementById('themebtn');if(b){b.addEventListener('click',function(){var n=(cur()==='dark')?'light':'dark';h.setAttribute('data-theme',n);try{localStorage.setItem(KEY,n);}catch(e){}label();});}try{var mq=window.matchMedia('(prefers-color-scheme: dark)');if(mq.addEventListener){mq.addEventListener('change',label);}}catch(e){}})();</script>
 <main>
 <p><a class="back" href="index.html">‹ 一覧にもどる</a></p>
 <div class="head">
   <p><span class="k">決めたこと:</span> <b>JANなしで見送った商品を、ホビーサーチ・楽天ブックスで救えるか（確認中）</b></p>
-  <p><span class="k">判定:</span> <span class="j">❓ 確認中</span></p>
-  <p><span class="k">実際:</span> JANなしで見送った商品は、異なる数で約1,500（延べ回数では数千に見える）。ホビーサーチと楽天ブックスを試すと、JANが見つかる商品はあります。ただし、本番に近い長めの検索語では25件中24件が「該当なし」、短い語で拾った8件のうち明らかに同じ品は1件で、5件は別の品でした。「ほぼ全て出せる」はまだ確かめられていません（確信度 低〜中）。ホビーサーチの試作は、拒否(403)が続いて測定できませんでした。新しく分かったこと: 掲載中でJANがある6,230口のうち、同じJANを別の商品も使っているのが1,957口（31.4%）。題名が違う1,488口は、別の商品のJANが付いている疑いが強い（確信度 中）。楽天ブックスの品番突き合わせ（CD）は、JANなしのCD 51件のうち救えたのは1件でした。</p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 原因を調べ、直す案を作成中（B・Cとも承認済み）</span></p>
+  <p><span class="k">実際:</span> 『別商品でJANが被る』原因を調べました。8/19以降に出した口でも、すでに別の題名が使っているJANを付けたものが660口あります（『同じJANは最大2つまで』の上限は、同じ商品かを見ないため）。取得経路ごとの率はどれも似ていて、特定の1経路ではありません（確信度 中）。直す案を作成中です。</p>
 </div>
 
-<h2>本人の方針（今後こうしたい）</h2>
-<blockquote><p>「ホビーサーチにほぼある」</p><p class="note">本人の発言・2026-11-02 19:12（貼り付けた文）</p></blockquote>
-<blockquote><p>「楽天ブックスでも結構取れる」</p><p class="note">本人の発言・2026-11-02 19:12（貼り付けた文）</p></blockquote>
-<blockquote><p>「→CDなどは説明文も割と綺麗」</p><p class="note">本人の発言・2026-11-02 19:12（貼り付けた文。行頭に全角スペースあり）</p></blockquote>
-<blockquote><p>「毎日の自動出品でもJANなしが理由で数千件見送ってなかったっけ？　JANなしが理由で見送ったものはほぼ全て出品できると思う」</p><p class="note">本人の発言・2026-11-02 20:02</p></blockquote>
-<blockquote><p>「JANなしでは出さない。　後で見れるようにデータは記録する」</p><p class="note">本人の発言・2026-10-22（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
-<blockquote><p>「1. 楽天ブックスの品番突き合わせと、ホビーサーチの検索語の作り直しを、読み取りだけで試作する（本番は変えません）。はい」</p><p class="note">本人の発言・2026-11-02 20:22（『1.』から『。』まではClaudeの質問文が貼り戻されたもの。末尾の『はい』が本人の返事）</p></blockquote>
-<p><span class="k">（解釈）</span> （解釈）19:12の3行は『JANの取り先として、ホビーサーチはほぼ載っている。楽天ブックスでも結構取れて、CDなどは説明文もきれい』という意味と理解しています（確信度 中）。20:02の発言は、『JANなしで見送った商品は、別の取り先で見つかるから、ほぼ全て出品できる』という見立てと理解しています。10/22の『JANなしでは出さない』は、そのままです。『JANなしを出す』のではなく、『JANを別の取り先から取れた商品だけ出す』という整理です。取り違えの確認（同じ品か）を挟みます。</p>
+<h2>11/4 12:56 のご指示：別の商品でJANが被る原因（調査結果）</h2>
+<p>回答は『D（BとC両方）』、コメントは「別商品でJANが被るのは何かの不具合だと思うので、原因を調べて。」でした。</p>
+<ul class="lead">
+<li><b>原因は、『同じJANを別の商品に使わない』ための照合が、どの取得経路にも無いことです</b>（確信度 中）。</li>
+<li>8/19以降に出した口でも、すでに<b>題名が違う別の出品が使っているJANを付けたものが660口</b>あります。『同じJANは最大2つのASINまで』の上限があるため、2つ目までは、題名が違っても通ってしまいます。題名が違う組705のうち、<b>681組は2口の組</b>です。</li>
+<li>取得経路ごとの率は、どれも似ています（下の表）。特定の1経路だけが悪いのではありません。</li>
+<li>古い出品ほど多い: 〜8/18の出品は <b>40%</b>、8/19以降は <b>21%</b>。月別では7月47% → 10月19%と減っていますが、ゼロにはなっていません。</li>
+<li>最大の1つ（JAN 4573102661838）は <b>39口</b>が共有していて、うち34口が7〜8月の出品です。取得元の記録は、ホビーサーチの検索1件目（照合なし）でした。検索語がブランド名だけに退化した時に、固定の1商品を拾った疑いがあります（確信度 中・未検証）。</li>
+<li>『題名が似ていない』は別商品の疑いで、実際に別商品かは標本の目視が必要です（未検証）。同じ商品の別ASIN（題名の書き方が違うだけ）も混ざっています。</li>
+</ul>
+<h3>JANの取得元ごとの、題名が違う組の割合（掲載中6,230口・11/4 13時に集計）</h3>
+<table>
+<tr><th>JANの取得元（最後の出品時のログ）</th><th>掲載中の口</th><th>題名が違う組</th><th>割合</th></tr>
+<tr><td>Yahoo!・楽天（外部）</td><td class="n">2,699</td><td class="n">550</td><td class="n">20.4%</td></tr>
+<tr><td>Amazonのページ</td><td class="n">1,253</td><td class="n">229</td><td class="n">18.3%</td></tr>
+<tr><td>ホビーサーチの検索1件目（照合なし）</td><td class="n">1,053</td><td class="n">252</td><td class="n">23.9%</td></tr>
+<tr><td>ホビーサーチの逆引きで確証</td><td class="n">16</td><td class="n">4</td><td class="n">25.0%</td></tr>
+<tr><td>ログに残っていない（古い出品）</td><td class="n">705</td><td class="n">303</td><td class="n">43.0%</td></tr>
+<tr><td>不明</td><td class="n">504</td><td class="n">150</td><td class="n">29.8%</td></tr>
+<tr><td><b>合計</b></td><td class="n">6,230</td><td class="n">1,488</td><td class="n">23.9%</td></tr>
+</table>
+<h3>直す案（C）：作成中（未完成）</h3>
+<p>『同じJANを、すでに別の題名（似ていない）の出品が使っている商品は、そのJANでは出さない』という門を、出品の直前に足します。『JANなしでは出さない』（2026-10-22）と同じ扱いで、見送った商品は台帳に理由つきで記録します。同じ商品の別ASIN（題名が似ている）は、今までどおり通します。</p>
+<p>影響の見込み: 8/19以降の新規出品5,254口のうち660口（12.6%）が、この門で見送りになる上限です。実際には、同じ商品の別ASINだったものが混ざるので、これより少なくなる見込みです（確信度 低〜中）。パッチは作って渡すだけで、適用は本人の端末です。</p>
+<p>Bの一覧（題名が違う組・eBayの掲載ページへのリンク付き・見るだけ）は、すでに作ってあります: <code>~/.local/share/jinji_maintenance/jan_rescue/shared_jan_listed_20261102.html</code>（11/2 21:02 作成。取り下げはClaudeは行いません）。</p>
 
-<h2>再開するとき（次にやること）</h2>
-<ol>
-<li>見送りの一覧（読み取りのみ・Macのターミナル）: 台帳 <code>~/.local/share/jinji_maintenance/jan_missing/ledger.jsonl</code>（final=jan_missing）と、不合格台帳 <code>~/Library/CloudStorage/OneDrive-個人用/ドキュメント/父eBay/data/rejected_asins.json</code>（kind=no_upc。OneDrive配下なので読むときは時間の上限を付ける）。</li>
-<li>ホビーサーチの試作: <code>~/.local/share/jinji_maintenance/jan_rescue/hs_rescue.py</code>（自己試験は合格・検証は403で測定不能）。<b>解けるまで叩かない</b>。再開前（11/4夜〜11/5）に、<code>curl</code> を1回だけ打って確かめ、200なら少数ずつ（間隔を空けて）再開します。</li>
-<li>楽天ブックスの品番突き合わせ（CDのみ）: <code>~/.local/share/jinji_maintenance/jan_rescue/rb_partno_rescue.py</code>（<code>--selftest</code> 13件合格・<code>--control N</code> で答えが分かるCDの当たり率、<code>--rescue</code> でJANなしのCDに当てる）。Amazonの品番は保存済みのページ記録（<code>nonhobby/media_page_out.jsonl</code>）から読むので、Amazonには触れません。</li>
-<li>別の商品のJANが付いている疑いの出品の一覧: <code>~/.local/share/jinji_maintenance/jan_rescue/shared_jan_audit.py</code>（<code>--selftest</code> 合格）。実行するとHTMLとTSVを同じフォルダに作り、集計は <code>shared_jan_summary.json</code> に出ます（この資料の項目15はこのJSONを読みます）。</li>
-<li>本番に入れる前に必要なもの: 取り違え率の実測、陰性対照、本人の承諾。いまの本番のJAN取得に『同じ商品か』の照合を足す案は、下の質問に答えをいただいてから進めます（パッチは作って渡すだけで、適用は本人のターミナルです）。</li>
-</ol>
 
-<h2>新しく分かったこと: いまの取り方で出した分に、別の商品のJANが付いている疑い</h2>
+<h2>先に結論</h2>
+<ul class="lead">
+<li><b>「JANなしの見送り分は、ほぼ全て出せる」は、確認できていません。</b></li>
+<li>他サイトでJANが見つかる商品はあります。ただし半分前後で（確信度 低）、<b>別の品のJANを拾う</b>例が多いです。</li>
+<li>ホビーサーチでの試作の検証は、403（拒否）が続いて<b>まだ測れていません</b>。再開前（11/4夜〜11/5）に、1回だけ確かめます。</li>
+<li>いま出ている分にも、<b>別の商品のJANが付いている疑い</b>があります（1,957口・31.4%）。</li>
+<li>原因の見立て（確信度 中）: 本番の検索語が長すぎて、0件になりやすい。検索語の作り方を直す余地があります。</li>
+<li>「JANなしでは出さない」（10/22）は、そのままです。<b>同じ品だと確かめたJANだけ</b>使います。</li>
+</ul>
+
+<h2>数字で見る</h2>
+<table>
+<tr><th>何の数</th><th>数</th><th>ひとこと</th></tr>
+<tr><td>JANなしで見送った商品（異なる数）</td><td class="n">約1,500</td><td>「数千」に見えるのは<b>延べ回数</b>です。商品の数は約1,500</td></tr>
+<tr><td>どの経路でもJANなし</td><td class="n">731</td><td>本当にJANが取れなかった側</td></tr>
+<tr><td>JANは見つかったが、使用済みのため破棄</td><td class="n">約158</td><td>取り違えの疑いで捨てた側。目視の標本10件では、救える例は0</td></tr>
+<tr><td>掲載中でJANがある出品</td><td class="n">6,230口</td><td>うち、別の商品とJANを共有: <b>1,957口（31.4%）</b></td></tr>
+</table>
+<p class="note">「731」「約158」は、別台帳の最後の状態で数えた数字です。台帳ごとの内訳は、下の⑥にあります。</p>
+
+<h2>くわしい根拠（押すと開きます）</h2>
+
+<details class="ev"><summary>① いま出ている分に、別の商品のJANが付いている疑い</summary>
 <ul>
-<li>本番のJAN取得は、Yahoo!ショッピングと楽天市場に題名の語を入れて検索し、最初のページから13桁の数字を拾います。<b>その数字が「同じ商品のJAN」かを確かめる照合はありません</b>（<code>amazon_to_ebay.py</code> の <code>fetch_jan_from_yahoo</code>・<code>fetch_jan_from_rakuten</code>。2026-11-02に読み取りで確認）。</li>
-<li>掲載中（出品履歴で状態が出品・eBayの出品番号あり）でJANが13桁の6,230口のうち、<b>同じJANを2つ以上の商品が使っているのが1,957口</b>（JAN 938種。31.4%）。初めて出した月で見ると、8月は1677口のうち652口（39%）、10月は2961口のうち728口（25%）で、割合は下がっています（照合の無い取り方は同じなので、理由は未確認）。1つのJANを39口が共有している例もあります（題名はそれぞれ別のBANDAI SPIRITSの商品）。</li>
+<li><b>しくみ:</b> 本番のJAN取得は、Yahoo!ショッピングと楽天市場で題名の語を検索し、最初のページの13桁の数字を拾います。<b>その数字が「同じ商品のJAN」かを確かめる照合はありません</b>（11/2に読み取りで確認）。</li>
+<li><b>数:</b> 掲載中でJANが13桁の6,230口のうち、同じJANを2つ以上の商品が使っているのが<b>1,957口</b>（JAN 938種。31.4%）。</li>
+<li><b>月別:</b> 初めて出した月で見ると、8月は1677口のうち652口（39%）、10月は2961口のうち728口（25%）。割合は下がっていますが、取り方は同じなので理由は未確認です。</li>
+<li><b>最大の例:</b> 1つのJANを39口が共有しています（題名はそれぞれ別のBANDAI SPIRITSの商品）。</li>
 </ul>
 <table>
 <tr><th>組の種類</th><th>JANの種数</th><th>商品の数</th><th>読み方</th></tr>
 <tr><td>題名が違う組</td><td class="n">705</td><td class="n">1,488</td><td>別の商品のJANが付いている疑いが強い。例: JAN 4573102720306 を、題名の違う7口の「BANDAI SPIRITS HG…」が使っています</td></tr>
-<tr><td>題名がほぼ同じ組</td><td class="n">233</td><td class="n">469</td><td>Amazonに同じ商品のページが2つある、という可能性もあります。ただし、色違い（白と青／紫と白）のように、題名がほぼ同じでも別の商品が混ざっています</td></tr>
+<tr><td>題名がほぼ同じ組</td><td class="n">233</td><td class="n">469</td><td>Amazonに同じ商品のページが2つある可能性もあります。ただし、色違い（白と青／紫と白）のように、題名がほぼ同じでも別の商品が混ざっています</td></tr>
 </table>
 <ul>
-<li>なぜ起きるか: 本番には「同じJANを使える商品は2つまで」という上限があり、2つ目までは通ります（台帳の言葉では『使用済み2商品・上限2』）。3つ目以降は破棄されます（ただし、すでに3口以上が同じJANを使っているJANが27種あります。上限が入る前の出品か、別の取り方のものかは未確認）。破棄された分が見送りの『JANは見つかったが使用済みのため破棄』約158商品です。つまり<b>見送りの一部は、この照合の無さが原因の取り違えを止めた結果</b>で、「出せるのに見送った」とは言えません（さきの目視10件でも、救える例は0でした）。</li>
-<li>影響（未検証・確信度 低）: eBayの出品に別の商品のバーコードが付くと、カタログとの食い違いが起きる可能性があります。実際の影響は、eBayの画面で見ていません。</li>
-<li>下限の見積もりです。JANが1つの商品にしか付いていなくても、間違っている可能性は残ります。逆に、同じJANを共有していても、同じ商品なら間違いではありません。</li>
-<li>目視用の一覧（題名が違う組が先）: <code>~/.local/share/jinji_maintenance/jan_rescue/shared_jan_listed_20261102.html</code></li>
+<li><b>なぜ起きるか:</b> 本番には「同じJANを使える商品は2つまで」という上限があります。2つ目までは通り、3つ目以降は破棄されます（ただし、3口以上が使っているJANが27種あります。上限が入る前の出品か、別の取り方のものかは未確認）。</li>
+<li><b>見送りとの関係:</b> 破棄された分が、見送りの「使用済みのため破棄」約158商品です。つまり<b>見送りの一部は、この照合の無さが原因の取り違えを止めた結果</b>で、「出せるのに見送った」とは言えません。</li>
+<li><b>影響（未検証・確信度 低）:</b> eBayの出品に別の商品のバーコードが付くと、カタログとの食い違いが起きる可能性があります。実際の影響は、eBayの画面で見ていません。</li>
+<li><b>下限の見積もり:</b> JANが1つの商品にしか付いていなくても、間違っている可能性は残ります。逆に、共有していても同じ商品なら間違いではありません。</li>
+<li><b>目視用の一覧</b>（題名が違う組が先）: <code>~/.local/share/jinji_maintenance/jan_rescue/shared_jan_listed_20261102.html</code></li>
 </ul>
-<h2>楽天ブックスの品番突き合わせ（CDのみ・読み取りだけ）</h2>
+</details>
+
+<details class="ev"><summary>② 楽天ブックスの品番突き合わせ（CDのみ）</summary>
 <ul>
 <li>やり方: Amazonのページ記録にある「品番」（例: BRMM-11072）を楽天ブックスで検索し、<b>検索結果の品番が完全に同じで、JANが1つに決まる時だけ</b>採用します。題名だけで当てる取り方より、取り違えを避けやすい形です。</li>
 <li>答えが分かるCD 20枚で試した結果（JANがAmazonで分かっているCD）: <b>正しく当たった4／楽天に載っておらず見つからず16／別のJANを拾った0</b>。「見つからず」は楽天がその品番を持っていないだけで、取り違えではありません（n=20・確信度 低）。</li>
@@ -163,36 +242,23 @@
 <li>採用された1枚: Ave Mujica「神の名を【Blu-ray付生産限定盤】」（ASIN B0HDSVMZWH）、品番 BRMM-11072 が楽天と一致、JAN 4589773690619。出品に回すかは、この資料の「記録物」の流れで本人が決めます（Claudeは出品しません）。</li>
 <li>読み方: CDの「JANなし」を楽天ブックスで救う道は、数としては小さい（確信度 中。対象51枚は全数）。「ほぼ全て出せる」とは言えません。</li>
 </ul>
-<h2>試作の経過（20:22〜20:40）</h2>
-<ul>
-<li>20:22に「読み取りだけで試作する」へ「はい」をいただき、ホビーサーチの検索語を「品番＋特徴語」に作り直し、「同じ品だ」と確かめる照合（品番・数字・特徴語を、前向きと後ろ向きの両方で突き合わせる）を付けた試作を作りました。自己試験は全部合格です（ヒコザル／VF-25F／Bf109 F-4／30MMの取り違えは落とし、同じ品は通す）。</li>
-<li><b>検証は成立していません。</b>出品済みでJANが分かっている商品40件で、当たり率と取り違え率を測ろうとしましたが、ホビーサーチから「403 Forbidden（拒否）」が続き、取得113回のうち105回が失敗しました。最初に出た「採用0／40」は、商品が無いという結果ではなく、取得できなかった結果です。Claudeの道具が、失敗を「検索0件」と数えていた不具合で、直しました（失敗は0件に数えない・保存しない・連続3回で止める）。</li>
-<li>20:37の時点で、ホビーサーチはトップページも403を返します。この端末からの拒否が続いている疑いです（確信度 中）。Claudeの連続取得が引き金になった可能性があります（確信度 低〜中）。これ以上は叩かず、解けるのを待ちます。</li>
-<li>影響: 自動出品もホビーサーチを引きます。出品の再開は11/4の夜以降の予定なので、それまでに解ければ影響はありません。解けていなければ、再開前に1回だけ確かめます。</li>
-</ul>
-<h2>見送った数（実測）</h2>
-<table>
-<tr><th>項目</th><th>数字</th><th>メモ</th></tr>
-<tr><td>不合格台帳「UPC/JAN取得できず」</td><td class="n">1,363商品</td><td>2026-08-16〜11-02。月別は 8月255・9月352・10月750・11月6</td></tr>
-<tr><td>別台帳（JAN見送りの記録）の「JANなし」</td><td class="n">1,562商品（延べ1,737行）</td><td>2026-07-14〜11-01。うちAmazonの商品は1,496</td></tr>
-<tr><td>2つの台帳をまとめた異なる商品数</td><td class="n">約1,503</td><td>2つは大きく重なります（1,496のうち1,356が両方にある）。「数千件」は<b>延べ回数</b>の見え方で、異なる商品は約1,500です</td></tr>
-<tr><td>別台帳の最後の状態が「どの経路でもJANなし」</td><td class="n">731商品</td><td>本当にJANが取れなかった側</td></tr>
-<tr><td>JANは見つかったが、別の商品で使用済みのため破棄</td><td class="n">約158商品</td><td>誤って取った疑いで捨てた側（目視の標本10件では、救える例は0でした）</td></tr>
-</table>
-<p class="note">不合格台帳1,363商品を、題名の語だけで粗く分けると: アクセサリー系の語に当たる195／キット・フィギュア系の語に当たる1,112／どちらでもない56。分け方は粗く、確実ではありません。</p>
-<h2>測定1: ホビーサーチ（プラモ・フィギュア系の標本25件・読み取りのみ）</h2>
+</details>
+
+<details class="ev"><summary>③ ホビーサーチで試した結果（プラモ・フィギュア系25件）</summary>
 <table>
 <tr><th>やり方</th><th>結果</th></tr>
 <tr><td>本番に近い、長めの検索語（ブランド・スケール等を除いた語を6つまで）</td><td class="n">25件中24件が「該当なし」</td></tr>
-<tr><td>短い特徴語（2語→1語→品番の順に試す）で、題名の語の半分以上が合うページ</td><td class="n">8件に見つかった</td></tr>
-<tr><td>↑その8件をClaudeが目で見て判定</td><td class="n">明らかに同じ品 1件／怪しい 2件／別の品 5件</td></tr>
+<tr><td>短い特徴語（2語→1語→品番の順）で、題名の語の半分以上が合うページ</td><td class="n">8件に見つかった</td></tr>
+<tr><td>↑その8件をClaudeが目で見て判定</td><td class="n">同じ品 1件／怪しい 2件／別の品 5件</td></tr>
 </table>
 <ul>
-<li>別の品になった例: Amazonの「ポケモンプラモ ヒコザル」に対して「ニャオハ」のページ、「VF-25F トルネード メサイア」に対して「VF-25S スーパーメサイア」、「Bf109 F-4」に対して「Bf109 G-6」。<b>題名の語が似ているだけでは、同じ品とは限りません</b>。</li>
-<li>検索語を手で選んで試した8品のうち4品（ハセガワ VF-25F トルネード メサイア、ポケモンプラモのヒコザル、F-104 ピトー管、ゲパルト対空戦車）で、同じ品らしいページとJANが見つかりました。残りは、別の品だけが出たか、0件でした。ただしAmazonへの逆引きでの確認はしていません（確信度 低）。</li>
-<li>標本のうち約5件は、中国ブランドの模型や、ペン・服などで、ホビーサーチに無さそうな品でした。</li>
+<li><b>別の品になった例:</b> 「ポケモンプラモ ヒコザル」に対して「ニャオハ」、「VF-25F トルネード メサイア」に対して「VF-25S スーパーメサイア」、「Bf109 F-4」に対して「Bf109 G-6」。<b>題名の語が似ているだけでは、同じ品とは限りません。</b></li>
+<li><b>手で検索語を選んだ8品:</b> 4品（ハセガワ VF-25F、ヒコザル、F-104 ピトー管、ゲパルト対空戦車）で、同じ品らしいページとJANが見つかりました。Amazonへの逆引きでの確認はしていません（確信度 低）。</li>
+<li>標本のうち約5件は、中国ブランドの模型やペン・服など、ホビーサーチに無さそうな品でした。</li>
 </ul>
-<h2>測定2: 楽天ブックス（CDのみ・Amazonで既知のJANがある25件）</h2>
+</details>
+
+<details class="ev"><summary>④ 楽天ブックスで試した結果（CD25件・Amazonで既知のJANあり）</summary>
 <table>
 <tr><th>見方</th><th>結果</th></tr>
 <tr><td>検索結果が0件</td><td class="n">4件</td></tr>
@@ -203,22 +269,63 @@
 <ul>
 <li>「先頭を採用」だと、12件で別の盤のJANを取ります（残り4件は結果なし。例: ケロロ軍曹のCDに別のCDのJAN）。<b>そのまま自動採用は危険</b>です。</li>
 <li>標本は古いCDに偏っています。実際の見送り対象（Amazon限定盤・新譜が中心）は性質が違い、同じ当たり率とは言えません（確信度 低）。</li>
-<li>楽天ブックスの結果には「品番」（例 MHCL-3180/1）が付いています。Amazon側の品番と突き合わせれば、ほぼ確実に絞れそうですが、Amazon側の品番が取れるかは、まだ見ていません。</li>
+<li>楽天ブックスの結果には「品番」（例 MHCL-3180/1）が付いています。Amazon側の品番と突き合わせれば絞れそうです（結果は②）。</li>
 </ul>
-<h2>今の判断</h2>
+</details>
+
+<details class="ev"><summary>⑤ ホビーサーチの試作と、403（拒否）で測れなかったこと（20:22〜20:40）</summary>
 <ul>
-<li>「JANなしの見送り分は、ほぼ全て出せる」は、<b>確認できていません</b>。見つかる商品は確かにありますが、Claudeの測定では、見つかるのは半分前後で（確信度 低）、取り違え（別の品・別の盤のJAN）の危険が大きいです。</li>
-<li>原因の見立て（確信度 中）: 本番の検索は、題名の先頭4語（ブランド名・スケールを含む）で探します。長い語は「全部の語を含むページ」しか返さないので、0件になりやすいです。検索語の作り方を直す余地があります。</li>
-<li>「JANなしでは出さない」の方針（10/22）は、そのままです。JANは、<b>同じ品だと確かめられたものだけ</b>使います。</li>
+<li>20:22に「はい」をいただき、検索語を「品番＋特徴語」に作り直し、「同じ品だ」と確かめる照合を付けた試作を作りました。自己試験は全部合格です（ヒコザル／VF-25F／Bf109 F-4／30MMの取り違えは落とし、同じ品は通す）。</li>
+<li><b>検証は成立していません。</b>出品済みでJANが分かっている40件で測ろうとしましたが、ホビーサーチから「403 Forbidden（拒否）」が続き、取得113回のうち105回が失敗しました。最初の「採用0／40」は、「商品が無い」ではなく「取得できなかった」結果です。</li>
+<li>Claudeの道具が失敗を「検索0件」と数えていた不具合は直しました（失敗は0件に数えない・保存しない・連続3回で止める）。</li>
+<li>20:37の時点で、トップページも403でした。この端末からの拒否が続いている疑いです（確信度 中）。Claudeの連続取得が引き金になった可能性があります（確信度 低〜中）。これ以上は叩かず、解けるのを待ちます。</li>
+<li><b>影響:</b> 自動出品もホビーサーチを引きます。出品の再開は11/4の夜以降の予定なので、それまでに解ければ影響はありません。解けていなければ、再開前に1回だけ確かめます。</li>
 </ul>
-<details><summary>技術メモ</summary>
+</details>
+
+<details class="ev"><summary>⑥ 見送った数（台帳ごとの実測）</summary>
+<table>
+<tr><th>項目</th><th>数字</th><th>メモ</th></tr>
+<tr><td>不合格台帳「UPC/JAN取得できず」</td><td class="n">1,363商品</td><td>2026-08-16〜11-02。月別は 8月255・9月352・10月750・11月6</td></tr>
+<tr><td>別台帳（JAN見送りの記録）の「JANなし」</td><td class="n">1,562商品（延べ1,737行）</td><td>2026-07-14〜11-01。うちAmazonの商品は1,496</td></tr>
+<tr><td>2つの台帳をまとめた異なる商品数</td><td class="n">約1,503</td><td>2つは大きく重なります（1,496のうち1,356が両方にある）</td></tr>
+<tr><td>別台帳の最後の状態が「どの経路でもJANなし」</td><td class="n">731商品</td><td>本当にJANが取れなかった側</td></tr>
+<tr><td>JANは見つかったが、別の商品で使用済みのため破棄</td><td class="n">約158商品</td><td>誤って取った疑いで捨てた側</td></tr>
+</table>
+<p class="note">不合格台帳1,363商品を、題名の語だけで粗く分けると: アクセサリー系の語に当たる195／キット・フィギュア系の語に当たる1,112／どちらでもない56。分け方は粗く、確実ではありません。</p>
+</details>
+
+<details>
+<summary>技術メモ</summary>
+<p>本番のJAN取得: <code>amazon_to_ebay.py</code> の <code>fetch_jan_from_yahoo</code>・<code>fetch_jan_from_rakuten</code>（2026-11-02に読み取りで確認）。照合は付いていません。</p>
+<p>本番の既存の処理: <code>_hobbysearch_verified_jan</code>（題名の先頭4語で検索 → ページのJANを取り → そのJANをAmazonで逆引きして元のASINに戻るものだけ採用）。この逆引きの確認は安全ですが、Amazonにそのjanが無いと失敗します。</p>
 <p>測定の道具（読み取りのみ・本番非接触）: 作業用フォルダの <code>hs_probe.py</code>・<code>hs_probe2.py</code>（ホビーサーチ）、<code>rb_probe.py</code>（楽天ブックス）。標本は乱数の種を固定（11と7）。結果は <code>hs_probe2_out.json</code> など。いずれも会話ごとの作業フォルダにあるため、再開するときは作り直します。</p>
-<p>本番の既存の処理: <code>amazon_to_ebay.py</code> の <code>_hobbysearch_verified_jan</code>（題名の先頭4語で検索 → ページのJANを取り → そのJANをAmazonで逆引きして元のASINに戻るものだけ採用）。この逆引きの確認は安全ですが、Amazonにそのjanが無いと失敗します。</p>
 <p>記録物の別ルート（<code>nonhobby/media_*.py</code>）は、JANをAmazonのページの欄からだけ取ります。ホビーサーチと楽天ブックスは引きません。別ルートで見送った「JANなし」は139商品（CD51・映像5・ゲームカード22・ゲームディスク61。うち134が仕入¥11,000以上）。ただしCDの中には、検索語の「ロック」でバイクの鍵など無関係な品が混ざっていました。</p>
 </details>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「ホビーサーチにほぼある」</p><p class="note">本人の発言・2026-11-02 19:12（貼り付けた文）</p></blockquote>
+<blockquote><p>「楽天ブックスでも結構取れる」</p><p class="note">本人の発言・2026-11-02 19:12（貼り付けた文）</p></blockquote>
+<blockquote><p>「→CDなどは説明文も割と綺麗」</p><p class="note">本人の発言・2026-11-02 19:12（貼り付けた文。行頭に全角スペースあり）</p></blockquote>
+<blockquote><p>「毎日の自動出品でもJANなしが理由で数千件見送ってなかったっけ？　JANなしが理由で見送ったものはほぼ全て出品できると思う」</p><p class="note">本人の発言・2026-11-02 20:02</p></blockquote>
+<blockquote><p>「JANなしでは出さない。　後で見れるようにデータは記録する」</p><p class="note">本人の発言・2026-10-22（~/.claude/ALWAYS_RULES.md に本人の原文として記録。会話記録では未照合）</p></blockquote>
+<blockquote><p>「1. 楽天ブックスの品番突き合わせと、ホビーサーチの検索語の作り直しを、読み取りだけで試作する（本番は変えません）。はい」</p><p class="note">本人の発言・2026-11-02 20:22（『1.』から『。』まではClaudeの質問文が貼り戻されたもの。末尾の『はい』が本人の返事）</p></blockquote>
+<blockquote><p>「Q15-1 JANが別の商品と重なっている出品 → D BとCの両方」</p><p class="note">本人の発言・2026-11-04 12:56 （アンケート資料の『回答のコピー』を貼り付け。『→』のあとが本人が画面で選んだもの／『コメント』は本人の入力）</p></blockquote>
+<blockquote><p>「別商品でJANが被るのは何かの不具合だと思うので、原因を調べて。」</p><p class="note">本人の発言・2026-11-04 12:56 項目15のコメント欄</p></blockquote>
+<p><span class="k">（解釈）</span> 19:12の3行は『JANの取り先として、ホビーサーチはほぼ載っている。楽天ブックスでも結構取れて、CDなどは説明文もきれい』という意味と理解しています（確信度 中）。20:02の発言は、『JANなしで見送った商品は、別の取り先で見つかるから、ほぼ全て出品できる』という見立てと理解しています。10/22の『JANなしでは出さない』は、そのままです。『JANなしを出す』のではなく、『JANを別の取り先から取れた商品だけ出す』という整理です。取り違えの確認（同じ品か）を挟みます。 （解釈・11/4）『D BとCの両方』は、①題名が違う組の一覧（eBayの掲載ページへのリンク付き・見るだけ。取り下げは本人の手）と、②今後の出品だけ『同じJANを別の商品に使わない』ように直すパッチ（作って渡す。適用は本人の端末）の両方、という意味です（確信度 高）。コメントは『原因の調査』の指示で、結果は先頭に書きました。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>Bの一覧（読み取りのみ）: <code>~/.local/share/jinji_maintenance/jan_rescue/shared_jan_listed_20261102.html</code>（eBayのリンク付き）と同名の <code>.tsv</code>。作る道具 <code>…/jan_rescue/shared_jan_audit.py</code>（<code>--selftest</code> 合格）。取り下げは、本人の判断・本人の手です。</li>
+<li>Cのパッチ（今後の出品だけ、同じJANを別の商品に使わない）: 作成中です。出来たら、試験（陽性・陰性・識別力）と、実データでの影響の数え直しをつけて、本人の端末で適用する手順をお出しします。適用前の本番は <code>~/.local/share/jinji_maintenance/bak/</code> に控えを取ります。</li>
+<li>原因の調査の元データ: 出品履歴 <code>~/.local/share/jinji_maintenance/reports/_funnel_cache/listing_history.json</code>（JANと最初の出品日）と、父の <code>ebay_auto_log.txt</code>（取得元の記録）。</li>
+<li>ホビーサーチの試作 <code>…/jan_rescue/hs_rescue.py</code>: 403が解けるまで叩きません。再開前（11/4夜〜11/5）に <code>curl</code> を1回だけ打って確かめます。楽天ブックスの品番突き合わせ（CDのみ）: <code>…/jan_rescue/rb_partno_rescue.py</code>（<code>--selftest</code> 13件合格）。</li>
+<li>『JANなしでは出さない』は変わりません。JANを別の取り先から取れた商品だけを出す整理で、取り違えの確認（同じ品か）を挟みます。</li>
+</ol>
 
 <p style="margin-top:28px"><a class="back" href="index.html">‹ 一覧にもどる</a></p>
 </main>
 </div>
+<script>(function(){var main=document.querySelector('main');if(!main||!main.querySelectorAll){return;}var seq=0;var detail=!!main.querySelector('a.back');function lv(n){return(n&&n.nodeType===1&&/^H[23]$/.test(n.tagName))?+n.tagName.charAt(1):0;}function isBack(n){return n.nodeType===1&&n.tagName==='P'&&!!n.querySelector('a.back');}function setOpen(h,open){var b=document.getElementById(h.getAttribute('aria-controls'));if(!b){return;}if(open){b.removeAttribute('hidden');}else{b.setAttribute('hidden','');}h.setAttribute('aria-expanded',open?'true':'false');}function make(h,L){var n=h.nextSibling,has=false;while(n){var l=lv(n);if((l&&l<=L)||isBack(n)){break;}if(n.nodeType===1){has=true;}n=n.nextSibling;}if(!has){return;}var body=document.createElement('div');body.className='sec-body';body.id='sec-'+(++seq);n=h.nextSibling;while(n){var l2=lv(n);if((l2&&l2<=L)||isBack(n)){break;}var nx=n.nextSibling;body.appendChild(n);n=nx;}h.parentNode.insertBefore(body,h.nextSibling);h.className+=(h.className?' ':'')+'sec-h';h.setAttribute('tabindex','0');h.setAttribute('aria-controls',body.id);h.setAttribute('aria-expanded','true');h.setAttribute('title','クリックで表示／非表示');function tog(){setOpen(h,h.getAttribute('aria-expanded')!=='true');}h.addEventListener('click',function(e){if(e.target&&e.target.closest&&e.target.closest('a')){return;}tog();});h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '||e.key==='Spacebar'){e.preventDefault();tog();}});if(detail&&!h.querySelector('.qstat')&&h.textContent.indexOf('決めてほしいこと')!==0){setOpen(h,false);}}[2,3].forEach(function(L){[].slice.call(main.querySelectorAll('h'+L)).forEach(function(h){make(h,L);});});function reveal(el){var p=el;while(p&&p!==main){if(p.classList&&p.classList.contains('sec-body')&&p.hasAttribute('hidden')){var h=document.querySelector('[aria-controls="'+p.id+'"]');if(h){setOpen(h,true);}}p=p.parentNode;}}function fromHash(){var id=location.hash.slice(1);if(!id){return;}var el=null;try{el=document.getElementById(decodeURIComponent(id));}catch(e){}if(el){reveal(el);if(el.scrollIntoView){el.scrollIntoView();}}}window.addEventListener('hashchange',fromHash);fromHash();})();</script>
 </body>
 </html>
