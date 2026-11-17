@@ -1,0 +1,271 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>返事の案の確認</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<style>
+:root{--bg:#EEF2F0;--card:#FFFFFF;--ink:#16211D;--sub:#566660;--line:#D5DEDA;--accent:#0B6B57;--accent-ink:#FFFFFF;--accent-soft:#DCEFE9;--warn:#8A5200;--warn-soft:#FFF0D6;--ok:#17703A;--ok-soft:#DDF3E4;--err:#A32A2A;--err-soft:#FBE3E3;--font:"Noto Sans JP",system-ui,-apple-system,"Hiragino Sans","Yu Gothic",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1513;--card:#18211E;--ink:#E5EEEA;--sub:#9DB0A9;--line:#2B3A35;--accent:#4CC3A5;--accent-ink:#06231C;--accent-soft:#1B3A33;--warn:#F0B35A;--warn-soft:#3A2B10;--ok:#74D199;--ok-soft:#173826;--err:#F08585;--err-soft:#3C1B1B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1513;--card:#18211E;--ink:#E5EEEA;--sub:#9DB0A9;--line:#2B3A35;--accent:#4CC3A5;--accent-ink:#06231C;--accent-soft:#1B3A33;--warn:#F0B35A;--warn-soft:#3A2B10;--ok:#74D199;--ok-soft:#173826;--err:#F08585;--err-soft:#3C1B1B;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.6;margin:0;padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));padding-block:0 120px}
+.wrap{max-width:640px;margin:0 auto}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 0 10px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+h1{font-size:18px;line-height:1.3;margin:0;font-weight:700}
+.meta{color:var(--sub);font-size:13.5px;margin-top:2px}
+.bar{height:6px;background:var(--line);border-radius:3px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.how{background:var(--accent-soft);border-radius:10px;padding:10px 12px;margin:14px 0;font-size:14.5px}
+.how p{margin:0 0 6px}.how p:last-child{margin:0}
+.how b{font-weight:700}
+.gh{display:flex;align-items:center;gap:8px;margin:22px 0 8px;font-size:16px;font-weight:700}
+.gh i{font-style:normal;font-size:13px;min-width:24px;text-align:center;border-radius:999px;padding:0 8px;background:var(--accent-soft);color:var(--accent)}
+.rv{display:grid;grid-template-columns:64px 1fr;gap:10px;margin:10px 0;align-items:start}
+.rv-btns{display:grid;gap:6px;position:sticky;top:96px}
+.rv-b{display:flex;align-items:center;justify-content:center;gap:3px;min-height:46px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--sub);font:inherit;font-size:15px;font-weight:700;cursor:pointer;padding:0}
+.rv-b:active{background:var(--accent-soft)}
+.rv-b:focus-visible,.rv-card>summary:focus-visible,.send:focus-visible,.cp:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.rv-b.ok[aria-pressed="true"]{background:var(--ok);border-color:var(--ok);color:var(--accent-ink)}
+.rv-b.ng[aria-pressed="true"]{background:var(--err);border-color:var(--err);color:var(--accent-ink)}
+.rv.is-ok .rv-card{border-color:var(--ok)}
+.rv.is-ng .rv-card{border-color:var(--err)}
+.rv-main{min-width:0}
+details.rv-card{background:var(--card);border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
+details.rv-card>summary{display:grid;gap:4px 8px;padding:12px 14px;cursor:pointer;list-style:none;min-height:52px}
+details.rv-card>summary::-webkit-details-marker{display:none}
+details.rv-card[open]>summary{border-bottom:1px dashed var(--line)}
+.rv-t{font-size:15px;font-weight:700;line-height:1.45;overflow-wrap:anywhere}
+.rv-mode{justify-self:start;border-radius:999px;padding:1px 10px;font-size:12px;font-weight:700;background:var(--line);color:var(--sub)}
+.rv-mode.ok{background:var(--ok-soft);color:var(--ok)}.rv-mode.wait{background:var(--accent-soft);color:var(--accent)}.rv-mode.warn{background:var(--warn-soft);color:var(--warn)}
+.rv-n{font-size:12.5px;color:var(--sub)}
+.rv-body{padding:8px 14px 14px;font-size:14px;overflow-wrap:anywhere}
+.rv-ans{margin:0 0 10px;border-left:3px solid var(--accent-soft);padding:2px 0 2px 10px}
+.rv-when{margin:0 0 2px;font-size:12.5px;font-weight:700;color:var(--accent)}
+.rv-ja{margin:0 0 4px}
+.rv-en{margin:0;font-size:13px;color:var(--sub);background:var(--bg);border-radius:8px;padding:6px 8px}
+.rv-h{margin:12px 0 4px;font-size:13px;font-weight:700;color:var(--sub)}
+.rv-dont{margin:0;padding-left:20px}.rv-dont li{color:var(--err)}
+.rv-cm{display:block;margin-top:8px}
+.rv-cm[hidden]{display:none}
+.rv-cml{display:block;font-size:13px;color:var(--sub);margin-bottom:4px}
+textarea{width:100%;min-height:64px;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;background:var(--card);color:var(--ink);resize:vertical}
+textarea:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.rv-st{display:block;font-size:12px;color:var(--sub);min-height:0}
+.sendbar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--bg);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px))}
+.sendbar .in{max-width:640px;margin:0 auto;display:grid;gap:6px}
+.send{min-height:50px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+.sendnote{font-size:12.5px;color:var(--sub);text-align:center;min-height:1.2em}
+.out{margin:14px 0;background:var(--card);border:1.5px solid var(--accent);border-radius:12px;padding:12px}
+.out[hidden]{display:none}
+.out textarea{min-height:150px;font-size:14px}
+.cp{margin-top:8px;min-height:46px;padding:0 16px;border:1.5px solid var(--accent);border-radius:10px;background:transparent;color:var(--accent);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.owner{margin:14px 0;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px;font-size:14px}
+.owner[hidden]{display:none}
+.owner h2{margin:0 0 6px;font-size:15px}
+.owner ul{margin:0 0 6px;padding-left:18px}
+@media (max-width:340px){.rv{grid-template-columns:56px 1fr;gap:8px}.rv-b{font-size:14px}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head><body><div class="wrap">
+<header class="top"><h1>返事の案の確認</h1><div class="meta" id="meta">0 / 27 型に回答</div><div class="bar" aria-hidden="true"><i id="bar"></i></div></header>
+<div class="how"><p><b>お客さんからの質問に、こう返事する案です。</b>型ごとに、案を読んで、<b>この返事でよければ「OK」</b>、<b>直したいところがあれば「NG」</b>を押してください。NGのときは、ひとこと書いてもらえると助かります。</p>
+<p>題名をタップすると、返事の案（日本語と英文）が開きます。{ } の部分には、注文ごとの日付や追跡番号が自動で入ります。ここからお客さんへ送られることはありません。</p></div>
+<section class="owner" id="owner" hidden></section>
+<main>
+<h3 class="gh">注文の事実で答える<i>4型</i></h3>
+<div class="rv" id="rv-ship_when" data-id="ship_when"><div class="rv-btns" role="group" aria-label="いつ発送？・状況は？（未発送の催促） の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">いつ発送？・状況は？（未発送の催促）</span><span class="rv-mode ok">自動で返せそう</span><span class="rv-n">過去6か月で 113件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">まだ発送前（期限内）</p><p class="rv-ja">ご注文ありがとうございます。{発送期限}までに発送します。発送したら追跡番号をアップします。</p><p class="rv-en" lang="en">Thank you for your purchase and for waiting. Your order is being prepared and will be shipped by {ship_by_date}. We will upload the tracking number as soon as it is dispatched, and you will see it on your My eBay page.</p></div><div class="rv-ans"><p class="rv-when">発送済みで追跡番号がある</p><p class="rv-ja">{発送日}に日本郵便で発送済み。追跡番号は{追跡}。目安は7〜10日（相手国の郵便次第）。</p><p class="rv-en" lang="en">Your order was shipped on {ship_date} via Japan Post. The tracking number is {tracking}. International mail usually takes about 7 to 10 days to arrive, but the exact time depends on the postal service in your country.</p></div><div class="rv-ans"><p class="rv-when">発送の手続きは終わったが追跡番号が未アップ（注文データで『ラベル作成済み』が確認できる時だけ）</p><p class="rv-ja">発送手続きは完了、追跡番号はまもなくアップします。（父の実際の言い回しと同じ）</p><p class="rv-en" lang="en">We have completed the shipping procedure for this item. The tracking number will be uploaded soon. Thank you for your patience.</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>家族の事情には触れない</li><li>期限を過ぎた注文に『もうすぐ発送』とだけ書く（発送済みかどうかを注文データで確かめてから）</li><li>『あなたの国の大統領の指示で…』などの政治的な説明</li><li>注文データに無い発送日の約束</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-not_arrived" data-id="not_arrived"><div class="rv-btns" role="group" aria-label="届かない・遅れている・荷物はどこ の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">届かない・遅れている・荷物はどこ</span><span class="rv-mode wait">下書きを作って確認</span><span class="rv-n">過去6か月で 22件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">発送から14日以内で、追跡が動いている</p><p class="rv-ja">追跡は動いている＝待ってもらう。</p><p class="rv-en" lang="en">Thank you for contacting us. Your parcel was shipped on {ship_date} and the latest tracking status is: {tracking_status}. International mail may take 7 to 14 days. Please wait a little longer. We will check again if it does not arrive by {date_plus_7}.</p></div><div class="rv-ans"><p class="rv-when">追跡が止まっている・通関で止まっている</p><p class="rv-ja">止まっている＝現地の郵便局への問い合わせを案内し、日本郵便にも調査依頼。（父の実際の言い回しを整えた）</p><p class="rv-en" lang="en">We are sorry for the trouble. The tracking shows that the parcel has been held at {status} since {date}. Please contact your local post office with the tracking number {tracking}; they can often release it quickly. We will also ask Japan Post to investigate.</p></div><div class="rv-ans"><p class="rv-when">発送から30日以上・追跡が止まったまま</p><p class="rv-ja">人が決める。</p><p class="rv-en" lang="en">(人が判断) 再送か返金かを父が決める。自動回答しない。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>追跡を見ずに『届きます』と言い切る</li><li>『関税の新制度で混乱』など原因が確認できない説明</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-tracking_not_working" data-id="tracking_not_working"><div class="rv-btns" role="group" aria-label="追跡番号が使えない・更新されない・消えた の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">追跡番号が使えない・更新されない・消えた</span><span class="rv-mode wait">下書きを作って確認</span><span class="rv-n">過去6か月で 10件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">追跡が反映されていないだけ（発送から2〜3日）</p><p class="rv-ja">数日は反映が遅れることがある。日本郵便のサイトを案内。</p><p class="rv-en" lang="en">Thank you for letting us know. International tracking sometimes takes 2 to 3 days to appear on your country&#x27;s site. Please check again with the number {tracking} on the Japan Post site: &lt;URL&gt;.</p></div><div class="rv-ans"><p class="rv-when">返送されていた（父が実際にやった例）</p><p class="rv-ja">返送→再発送した時の言い回し（父の実際の返信）。</p><p class="rv-en" lang="en">We apologize. The item was returned to Japan. We have shipped it out again; the new tracking number is {new_tracking}.</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>追跡番号を貼り間違える（追跡の文字は必ず注文データから機械で入れる）</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-address_change" data-id="address_change"><div class="rv-btns" role="group" aria-label="宛先・住所の変更/確認 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">宛先・住所の変更/確認</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 2件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">住所の変更</p><p class="rv-ja">eBayの注文画面の住所と照合してから。</p><p class="rv-en" lang="en">(人が判断) 発送前なら変更可、発送後は不可。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>住所を会話で受け取る</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<h3 class="gh">購入前の質問<i>8型</i></h3>
+<div class="rv" id="rv-price_offer" data-id="price_offer"><div class="rv-btns" role="group" aria-label="値引き・価格の交渉 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">値引き・価格の交渉</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 25件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">総額の指定（送料込みで$65 など）で、赤字にならない</p><p class="rv-ja">父の実際の返信と同じ形（『$65 is fine』）。承認は父。</p><p class="rv-en" lang="en">Understood. {price} USD including shipping is fine. If you purchase through the listing at that price, we will ship it as soon as possible.</p></div><div class="rv-ans"><p class="rv-when">赤字になる・分からない</p><p class="rv-ja">断る言い回しの実績が過去データに無い（0件）。</p><p class="rv-en" lang="en">(人が判断) 『I am sorry, but that price is too low for this item.』など丁寧に断る。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>利益・仕入れ値</li><li>『他の店はもっと高い』への反論</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-shipping_cost_combine" data-id="shipping_cost_combine"><div class="rv-btns" role="group" aria-label="送料・同梱発送・発送方法の質問 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">送料・同梱発送・発送方法の質問</span><span class="rv-mode wait">下書きを作って確認</span><span class="rv-n">過去6か月で 18件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">同梱の相談（商品が決まっていない）</p><p class="rv-ja">父の実際の返信（0.3時間で返した例）をほぼそのまま。</p><p class="rv-en" lang="en">Thank you for your interest. We can combine multiple items, but there are limits to the size and weight of a box. Please tell us which items you need, and we will calculate the shipping cost and let you know how much we can reduce.</p></div><div class="rv-ans"><p class="rv-when">商品が決まっている</p><p class="rv-ja">計算は人。『差額返金』の実績あり。</p><p class="rv-en" lang="en">(人が計算) 送料の表で同梱の送料を出し、差額を返金する形（父の実績: 同梱後に差額返金）。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>表に無い送料の約束</li><li>2027年2月以降の値上げ前の料金を前提にした長期の約束</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-condition_new" data-id="condition_new"><div class="rv-btns" role="group" aria-label="新品か・未開封か・組み立て前か・状態 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">新品か・未開封か・組み立て前か・状態</span><span class="rv-mode ok">自動で返せそう</span><span class="rv-n">過去6か月で 16件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">出品が新品で、説明文に『未組立/未開封』とある</p><p class="rv-ja">父の実際の返信(『brand-new and factory-sealed』『unassembled』)と同じ内容。説明文に根拠がある時だけ。</p><p class="rv-en" lang="en">Yes, this item is brand new and unassembled (factory sealed). Everything is in the box.</p></div><div class="rv-ans"><p class="rv-when">中古・開封済み</p><p class="rv-ja">人が決める。</p><p class="rv-en" lang="en">(人が判断) 状態の説明は父が書く。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>説明文に無い状態の保証</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-availability_shipto" data-id="availability_shipto"><div class="rv-btns" role="group" aria-label="在庫・他の商品・日本以外へ送れるか・買う意思 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">在庫・他の商品・日本以外へ送れるか・買う意思</span><span class="rv-mode ok">自動で返せそう</span><span class="rv-n">過去6か月で 16件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">在庫があり、発送先の国に送れる</p><p class="rv-ja">在庫と発送先を出品データで確認して返す。</p><p class="rv-en" lang="en">Yes, this item is available. We ship worldwide from Japan. Please purchase as usual and we will ship it as soon as possible.</p></div><div class="rv-ans"><p class="rv-when">在庫なし・発送不可の国</p><p class="rv-ja">人が決める。</p><p class="rv-en" lang="en">(人が判断) 在庫なしの理由・再入荷の見込みは父が決める。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>在庫の無い商品を『ある』と言う</li><li>仕入れ元や在庫の出所</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-contents_included" data-id="contents_included"><div class="rv-btns" role="group" aria-label="付属品・中身・言語/字幕・対応・エンジン部品等の色 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">付属品・中身・言語/字幕・対応・エンジン部品等の色</span><span class="rv-mode wait">下書きを作って確認</span><span class="rv-n">過去6か月で 15件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">説明文に書いてある</p><p class="rv-ja">説明文の該当行を引く。無い時は人が確認（実物を見る）。</p><p class="rv-en" lang="en">As described in the listing: {contents}. (言語・字幕・対応機種は説明文のとおり)</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>説明文に無い『日本のゲームは英語に対応』などの保証</li><li>対応機種(リージョン)の断言</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-size_scale" data-id="size_scale"><div class="rv-btns" role="group" aria-label="サイズ・スケール・組み立て済みか・塗装が要るか の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">サイズ・スケール・組み立て済みか・塗装が要るか</span><span class="rv-mode ok">自動で返せそう</span><span class="rv-n">過去6か月で 14件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">説明文にスケール・サイズ・塗装の要否が書いてある</p><p class="rv-ja">説明文から拾う。無ければ人が確認。</p><p class="rv-en" lang="en">The scale is {scale}. The finished height is about {height}. {painting_note}</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>説明文に無いサイズの推測</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-photo_request" data-id="photo_request"><div class="rv-btns" role="group" aria-label="写真の追加・箱や顔の写真を見たい の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">写真の追加・箱や顔の写真を見たい</span><span class="rv-mode wait">下書きを作って確認</span><span class="rv-n">過去6か月で 14件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">写真の依頼</p><p class="rv-ja">実物を撮るのは人。</p><p class="rv-en" lang="en">Thank you for your interest. We will take additional photos and send them to you. (人が写真を撮って添付)</p></div></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-product_info" data-id="product_info"><div class="rv-btns" role="group" aria-label="商品そのものの質問（本物か・子供向けか・どれか・動くか） の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">商品そのものの質問（本物か・子供向けか・どれか・動くか）</span><span class="rv-mode wait">下書きを作って確認</span><span class="rv-n">過去6か月で 12件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">『子供向けか』『本物か』『どの版か』など</p><p class="rv-ja">商品ごとに違う。</p><p class="rv-en" lang="en">(説明文の該当行を引く。無ければ人が確認)</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>本物・正規品かどうかの断言（根拠なしに）</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<h3 class="gh">人が決める話<i>8型</i></h3>
+<div class="rv" id="rv-refund_return" data-id="refund_return"><div class="rv-btns" role="group" aria-label="返金・返品の依頼 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">返金・返品の依頼</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 17件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">未発送で、買い手が返金を望む</p><p class="rv-ja">父の実際の返信と同じ。承認は父。</p><p class="rv-en" lang="en">All right. We will refund.</p></div><div class="rv-ans"><p class="rv-when">発送済み</p><p class="rv-ja">人が決める。</p><p class="rv-en" lang="en">(人が判断) 受け取り後の返品か、キャンセルか。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>返金の約束（発送状況を確かめずに）</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-cancel_request" data-id="cancel_request"><div class="rv-btns" role="group" aria-label="キャンセルの依頼・確認 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">キャンセルの依頼・確認</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 15件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">未発送</p><p class="rv-ja">父の実際の返信。キャンセルの承諾は eBay の画面で父が操作。</p><p class="rv-en" lang="en">All right. We will cancel and refund.</p></div><div class="rv-ans"><p class="rv-when">発送済み／買い手が『間違えた、取り消したい』</p><p class="rv-ja"></p><p class="rv-en" lang="en">We have already shipped this item. Please cancel the cancellation request on eBay so that we can proceed.</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>キャンセルを承諾したと偽る</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-scam_threat" data-id="scam_threat"><div class="rv-btns" role="group" aria-label="詐欺・訴え・eBayへ通報・低評価の予告 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">詐欺・訴え・eBayへ通報・低評価の予告</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 9件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">詐欺・通報・低評価の予告</p><p class="rv-ja">人が決める。最優先で返す型。</p><p class="rv-en" lang="en">(人が判断) まず事実（発送日・追跡）を提示して謝罪。感情に反論しない。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>相手を責める</li><li>家族の事情には触れない</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-damaged_wrong" data-id="damaged_wrong"><div class="rv-btns" role="group" aria-label="破損・違う物が届いた・欠品・偽物の疑い の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">破損・違う物が届いた・欠品・偽物の疑い</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 6件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">破損・違う物・欠品</p><p class="rv-ja">人が決める。</p><p class="rv-en" lang="en">(人が判断) 謝罪＋写真依頼＋再送／返金は父。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>責任を先に否定する</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-complaint_neg" data-id="complaint_neg"><div class="rv-btns" role="group" aria-label="不満・悪い評価の言葉（短い） の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">不満・悪い評価の言葉（短い）</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 5件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">不満の短い言葉</p><p class="rv-ja">前後の経緯が要る。</p><p class="rv-en" lang="en">(人が判断)</p></div></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-unresolved_thread" data-id="unresolved_thread"><div class="rv-btns" role="group" aria-label="前のやり取りの続き（経緯が要る） の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">前のやり取りの続き（経緯が要る）</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 4件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">前の話の続き</p><p class="rv-ja">経緯が要る。</p><p class="rv-en" lang="en">(人が判断)</p></div></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-japanese_msg" data-id="japanese_msg"><div class="rv-btns" role="group" aria-label="日本語のメッセージ（父が直接読む） の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">日本語のメッセージ（父が直接読む）</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 3件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">日本語のメッセージ</p><p class="rv-ja">父が読む。</p><p class="rv-en" lang="en">(父が直接読んで日本語で答える)</p></div></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-payment_issue" data-id="payment_issue"><div class="rv-btns" role="group" aria-label="支払いのトラブル の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">支払いのトラブル</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 2件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">支払いのトラブル</p><p class="rv-ja">eBay側の状況を見て人が答える。</p><p class="rv-en" lang="en">(人が判断)</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>支払い情報を求める</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<h3 class="gh">方針の説明<i>1型</i></h3>
+<div class="rv" id="rv-customs_duty" data-id="customs_duty"><div class="rv-btns" role="group" aria-label="関税・輸入税・IOSS の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">関税・輸入税・IOSS</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 7件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">関税・輸入税の質問</p><p class="rv-ja">制度が変わり続けている（DDP・Zonos）。方針が固まるまで人。</p><p class="rv-en" lang="en">(人が判断) 国と時期で答えが変わる。父の実際の返信は10月の米国宛ての制度変更への説明。</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>確認していない制度の断言</li><li>政治的な説明</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<h3 class="gh">返信不要が多い<i>5型</i></h3>
+<div class="rv" id="rv-thanks_ack" data-id="thanks_ack"><div class="rv-btns" role="group" aria-label="お礼・了解・待ちます・短い感想（返信不要が多い） の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">お礼・了解・待ちます・短い感想（返信不要が多い）</span><span class="rv-mode grey">返信しない</span><span class="rv-n">過去6か月で 87件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">お礼・了解・短い感想（質問を含まない）</p><p class="rv-ja">返信不要。</p><p class="rv-en" lang="en">（返信しない。または『Thank you for your understanding.』だけ）</p></div></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-sympathy" data-id="sympathy"><div class="rv-btns" role="group" aria-label="お見舞い・同情の言葉 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">お見舞い・同情の言葉</span><span class="rv-mode grey">返信しない</span><span class="rv-n">過去6か月で 13件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">お見舞い・同情の言葉</p><p class="rv-ja">家族の事情の話への反応。</p><p class="rv-en" lang="en">（返信しない。または『Thank you for your kind words.』）</p></div><h4 class="rv-h">言わないこと</h4><ul class="rv-dont"><li>家族の事情には触れない</li></ul></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-greeting_only" data-id="greeting_only"><div class="rv-btns" role="group" aria-label="あいさつ・絵文字だけ の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">あいさつ・絵文字だけ</span><span class="rv-mode grey">返信しない</span><span class="rv-n">過去6か月で 9件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">あいさつだけ</p><p class="rv-ja"></p><p class="rv-en" lang="en">（返信しない。または『Hello. How can we help you?』）</p></div></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-waiting_ok" data-id="waiting_ok"><div class="rv-btns" role="group" aria-label="待てます・急がない（質問を含まない） の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">待てます・急がない（質問を含まない）</span><span class="rv-mode grey">返信しない</span><span class="rv-n">過去6か月で 8件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">待てます・急がない</p><p class="rv-ja"></p><p class="rv-en" lang="en">（返信しない・または『Thank you for your understanding.』）</p></div></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<div class="rv" id="rv-absence_notice" data-id="absence_notice"><div class="rv-btns" role="group" aria-label="不在・都合の連絡（『休暇から戻った』『数日不在』） の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">不在・都合の連絡（『休暇から戻った』『数日不在』）</span><span class="rv-mode grey">返信しない</span><span class="rv-n">過去6か月で 1件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">不在の連絡</p><p class="rv-ja"></p><p class="rv-en" lang="en">（返信しない・または『Thank you for letting us know.』）</p></div></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+<h3 class="gh">その他<i>1型</i></h3>
+<div class="rv" id="rv-unclassified" data-id="unclassified"><div class="rv-btns" role="group" aria-label="未分類 の判定"><button type="button" class="rv-b ok" data-v="ok" aria-pressed="false"><span aria-hidden="true">✓</span>OK</button><button type="button" class="rv-b ng" data-v="ng" aria-pressed="false"><span aria-hidden="true">✕</span>NG</button></div><div class="rv-main"><details class="rv-card"><summary><span class="rv-t">未分類</span><span class="rv-mode warn">人が決める</span><span class="rv-n">過去6か月で 9件</span></summary><div class="rv-body"><div class="rv-ans"><p class="rv-when">規則で分類できない</p><p class="rv-ja">規則を足す材料。</p><p class="rv-en" lang="en">(人が読む)</p></div></div></details><label class="rv-cm" hidden><span class="rv-cml">ひとこと（直したいところなど・任意）</span><textarea rows="2" maxlength="600"></textarea></label><span class="rv-st" aria-live="polite"></span></div></div>
+</main>
+<section class="out" id="out" hidden><b>結果の文章</b><textarea id="outta" readonly rows="8"></textarea><button type="button" class="cp" id="cp">コピー</button><div class="sendnote" id="cpnote"></div></section>
+</div>
+<div class="sendbar"><div class="in"><button type="button" class="send" id="send">結果を送る</button><div class="sendnote" id="sendnote">OK・NGはこの端末に保存されます。終わったら、このボタンで結果を送ってください。</div></div></div>
+<script type="application/json" id="rv-data">{"items": [{"id": "ship_when", "name": "いつ発送？・状況は？（未発送の催促）"}, {"id": "not_arrived", "name": "届かない・遅れている・荷物はどこ"}, {"id": "tracking_not_working", "name": "追跡番号が使えない・更新されない・消えた"}, {"id": "address_change", "name": "宛先・住所の変更/確認"}, {"id": "price_offer", "name": "値引き・価格の交渉"}, {"id": "shipping_cost_combine", "name": "送料・同梱発送・発送方法の質問"}, {"id": "condition_new", "name": "新品か・未開封か・組み立て前か・状態"}, {"id": "availability_shipto", "name": "在庫・他の商品・日本以外へ送れるか・買う意思"}, {"id": "contents_included", "name": "付属品・中身・言語/字幕・対応・エンジン部品等の色"}, {"id": "size_scale", "name": "サイズ・スケール・組み立て済みか・塗装が要るか"}, {"id": "photo_request", "name": "写真の追加・箱や顔の写真を見たい"}, {"id": "product_info", "name": "商品そのものの質問（本物か・子供向けか・どれか・動くか）"}, {"id": "refund_return", "name": "返金・返品の依頼"}, {"id": "cancel_request", "name": "キャンセルの依頼・確認"}, {"id": "scam_threat", "name": "詐欺・訴え・eBayへ通報・低評価の予告"}, {"id": "damaged_wrong", "name": "破損・違う物が届いた・欠品・偽物の疑い"}, {"id": "complaint_neg", "name": "不満・悪い評価の言葉（短い）"}, {"id": "unresolved_thread", "name": "前のやり取りの続き（経緯が要る）"}, {"id": "japanese_msg", "name": "日本語のメッセージ（父が直接読む）"}, {"id": "payment_issue", "name": "支払いのトラブル"}, {"id": "customs_duty", "name": "関税・輸入税・IOSS"}, {"id": "thanks_ack", "name": "お礼・了解・待ちます・短い感想（返信不要が多い）"}, {"id": "sympathy", "name": "お見舞い・同情の言葉"}, {"id": "greeting_only", "name": "あいさつ・絵文字だけ"}, {"id": "waiting_ok", "name": "待てます・急がない（質問を含まない）"}, {"id": "absence_notice", "name": "不在・都合の連絡（『休暇から戻った』『数日不在』）"}, {"id": "unclassified", "name": "未分類"}], "rev": "92efb821"}</script>
+<script>
+(function(){
+  'use strict';
+  var DATA = JSON.parse(document.getElementById('rv-data').textContent);
+  var IDS = DATA.items.map(function(x){ return x.id; });
+  var NAME = {}; DATA.items.forEach(function(x){ NAME[x.id] = x.name; });
+  function $(s, r){ return (r || document).querySelector(s); }
+  var KEY = 'rv_state_v1', DEV = 'rv_dev_v1';
+  var S = {};
+  try { S = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch(e){ S = {}; }
+  function persistLocal(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+  function counts(src){
+    var ok = 0, ng = 0;
+    IDS.forEach(function(id){ var r = src[id]; if (r && r.v === 'ok') ok++; else if (r && r.v === 'ng') ng++; });
+    return { ok: ok, ng: ng, un: IDS.length - ok - ng };
+  }
+  function paint(id){
+    var row = document.getElementById('rv-' + id); if (!row) return;
+    var r = S[id] || {};
+    var bok = $('.rv-b.ok', row), bng = $('.rv-b.ng', row), cm = $('.rv-cm', row), ta = $('textarea', row);
+    bok.setAttribute('aria-pressed', r.v === 'ok' ? 'true' : 'false');
+    bng.setAttribute('aria-pressed', r.v === 'ng' ? 'true' : 'false');
+    row.classList.toggle('is-ok', r.v === 'ok'); row.classList.toggle('is-ng', r.v === 'ng');
+    cm.hidden = !(r.v === 'ok' || r.v === 'ng');
+    ta.placeholder = r.v === 'ng' ? 'どこを直したいですか' : 'ひとこと（なくても大丈夫です）';
+    if (document.activeElement !== ta) ta.value = r.c || '';
+  }
+  function meta(){
+    var c = counts(S), done = c.ok + c.ng;
+    $('#meta').textContent = done + ' / ' + IDS.length + ' 型に回答（OK ' + c.ok + '・NG ' + c.ng + '）';
+    $('#bar').style.width = Math.round(100 * done / IDS.length) + '%';
+  }
+  function resultText(){
+    var c = counts(S), L = [];
+    L.push('【返事の案の確認】' + (c.ok + c.ng) + ' / ' + IDS.length + ' 型に回答（OK ' + c.ok + '・NG ' + c.ng + '・未回答 ' + c.un + '）');
+    var ng = IDS.filter(function(id){ return S[id] && S[id].v === 'ng'; });
+    if (ng.length){ L.push(''); L.push('NG（直したい）:'); ng.forEach(function(id){ L.push('・' + NAME[id] + (S[id].c ? '：' + S[id].c : '')); }); }
+    var okc = IDS.filter(function(id){ return S[id] && S[id].v === 'ok' && S[id].c; });
+    if (okc.length){ L.push(''); L.push('OK（ひとこと付き）:'); okc.forEach(function(id){ L.push('・' + NAME[id] + '：' + S[id].c); }); }
+    var ok = IDS.filter(function(id){ return S[id] && S[id].v === 'ok'; });
+    if (ok.length){ L.push(''); L.push('OK: ' + ok.map(function(id){ return NAME[id]; }).join('、')); }
+    var un = IDS.filter(function(id){ return !S[id] || !S[id].v; });
+    if (un.length){ L.push(''); L.push('未回答: ' + un.map(function(id){ return NAME[id]; }).join('、')); }
+    return L.join('\n');
+  }
+  /* ---- 共有の保存先(db)。サインインしていない・使えない時は何もしない(この端末とコピーだけで足りる) ---- */
+  var db = null, pid = null, userNS = null, timer = null, dbMsg = '';
+  function setMsg(t){ var el = $('#sendnote'); if (el) el.textContent = t; }
+  function devId(){
+    try { var d = localStorage.getItem(DEV); if (!d){ d = 'd-' + Math.random().toString(36).slice(2, 12); localStorage.setItem(DEV, d); } return d; } catch(e){ return 'd-' + Math.random().toString(36).slice(2, 12); }
+  }
+  function pushDb(){
+    if (!db || !pid) return;
+    var c = counts(S);
+    db.collection('reviews').doc(pid).set({ updatedAt: Date.now(), verdicts: S, ok: c.ok, ng: c.ng, total: IDS.length }).then(function(){
+      setMsg('OK・NGは保存されました。送るときはこのボタンを押してください。');
+    }, function(){ setMsg('共有の保存先には保存できませんでした（この端末には保存されています）。送るときはこのボタンを押してください。'); });
+  }
+  function scheduleDb(){ if (!db) return; clearTimeout(timer); timer = setTimeout(pushDb, 700); }
+  function save(){ persistLocal(); meta(); scheduleDb(); }
+  /* ---- 本人だけに見える『みんなの回答』 ---- */
+  function renderOwner(docs){
+    var box = $('#owner');
+    if (!userNS || !userNS.isOwner || !userNS.isOwner() || !docs.length){ box.hidden = true; return; }
+    var ids = docs.map(function(d){ return d.id; });
+    var done = function(ps){
+      box.textContent = ''; box.hidden = false;
+      var h = document.createElement('h2'); h.textContent = 'みんなの回答（あなたにだけ見えています）'; box.appendChild(h);
+      docs.forEach(function(d){
+        var v = d.data() || {}, vd = v.verdicts || {}, c = counts(vd);
+        var nm = (d.id === pid) ? 'あなた' : ((ps && ps[d.id] && ps[d.id].name) || 'ほかの人');
+        var p = document.createElement('p'); p.style.margin = '6px 0 2px'; p.style.fontWeight = '700';
+        p.textContent = nm + '：OK ' + c.ok + '・NG ' + c.ng + '・未回答 ' + c.un; box.appendChild(p);
+        var ng = IDS.filter(function(id){ return vd[id] && vd[id].v === 'ng'; });
+        if (ng.length){ var ul = document.createElement('ul'); ng.forEach(function(id){ var li = document.createElement('li'); li.textContent = NAME[id] + (vd[id].c ? '：' + vd[id].c : ''); ul.appendChild(li); }); box.appendChild(ul); }
+      });
+    };
+    var pr = null;
+    try { pr = userNS.profiles ? userNS.profiles(ids) : null; } catch(e){ pr = null; }
+    if (pr && pr.then) pr.then(done, function(){ done(null); }); else done(null);
+  }
+  function restoreOwn(){
+    var r = null;
+    try { r = db.collection('reviews').doc(pid).get(); } catch(e){ r = null; }
+    if (!r || !r.then) return;
+    r.then(function(d){
+      var rv = ((d && d.exists !== false && d.data) ? (d.data() || {}) : {}).verdicts || {};
+      var touched = false;
+      IDS.forEach(function(id){ if ((!S[id] || !S[id].v) && rv[id] && rv[id].v){ S[id] = rv[id]; touched = true; } });
+      if (touched){ persistLocal(); IDS.forEach(paint); meta(); }
+    }, function(){ });
+  }
+  function subscribe(){
+    if (!(userNS && userNS.isOwner && userNS.isOwner())){ restoreOwn(); return; }
+    db.collection('reviews').onSnapshot(function(snap){
+      var docs = snap.docs || [];
+      docs.forEach(function(d){
+        if (d.id !== pid) return;
+        var rv = (d.data() || {}).verdicts || {};
+        var touched = false;
+        IDS.forEach(function(id){ if ((!S[id] || !S[id].v) && rv[id] && rv[id].v){ S[id] = rv[id]; touched = true; } });
+        if (touched){ persistLocal(); IDS.forEach(paint); meta(); }
+      });
+      renderOwner(docs);
+    }, function(){ });
+  }
+  function initRuntime(){
+    if (!(window.claude && window.claude.use)) return;
+    var uP = window.claude.use('user');
+    Promise.resolve(uP).then(function(u){ userNS = u; return (u && u.id) ? u.id() : null; }, function(){ return null; })
+      .then(function(id){ pid = id || devId(); return window.claude.use('db'); })
+      .then(function(d){ db = d; if (db){ subscribe(); pushDb(); } }, function(){ });
+  }
+  /* ---- 結果を送る(共有シート → だめならコピー) ---- */
+  function copyText(t, cb){
+    function fb(){
+      var ta = $('#outta'); ta.removeAttribute('readonly'); ta.value = t; ta.focus(); ta.select();
+      var ok = false; try { ok = document.execCommand('copy'); } catch(e){}
+      ta.setAttribute('readonly', ''); cb(!!ok);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(function(){ cb(true); }, fb); return; }
+    fb();
+  }
+  function showOut(t){ $('#out').hidden = false; $('#outta').value = t; try { $('#out').scrollIntoView({ block: 'center' }); } catch(e){} }
+  $('#send').addEventListener('click', function(){
+    var t = resultText();
+    showOut(t);
+    if (navigator.share){
+      navigator.share({ text: t }).then(function(){ setMsg('共有しました。'); }, function(err){
+        if (err && err.name === 'AbortError'){ setMsg('共有をやめました。下の文章をコピーして送ることもできます。'); return; }
+        copyText(t, function(ok){ setMsg(ok ? 'コピーしました。LINEやメールに貼って送ってください。' : '下の文章を長押ししてコピーしてください。'); });
+      });
+      return;
+    }
+    copyText(t, function(ok){ setMsg(ok ? 'コピーしました。LINEやメールに貼って送ってください。' : '下の文章を長押ししてコピーしてください。'); });
+  });
+  $('#cp').addEventListener('click', function(){ copyText(resultText(), function(ok){ $('#cpnote').textContent = ok ? 'コピーしました。' : '長押ししてコピーしてください。'; }); });
+  /* ---- 各カード ---- */
+  IDS.forEach(function(id){
+    var row = document.getElementById('rv-' + id); if (!row) return;
+    ['ok', 'ng'].forEach(function(k){
+      $('.rv-b.' + k, row).addEventListener('click', function(){
+        var r = S[id] || (S[id] = { v: '', c: '' });
+        r.v = (r.v === k) ? '' : k;
+        if (!r.v && !r.c) delete S[id];
+        paint(id); save();
+        if (r.v === 'ng'){ try { $('textarea', row).focus(); } catch(e){} }
+      });
+    });
+    $('textarea', row).addEventListener('input', function(ev){
+      var r = S[id] || (S[id] = { v: '', c: '' }); r.c = ev.target.value;
+      save();
+    });
+    paint(id);
+  });
+  meta();
+  initRuntime();
+})();
+</script>
+</body></html>
