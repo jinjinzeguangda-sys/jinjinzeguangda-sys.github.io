@@ -1,0 +1,74 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="format-detection" content="telephone=no"><meta name="color-scheme" content="light dark"><title>項目5 決まったこと</title><style>
+:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+.wrap{max-width:720px;margin:0 auto;padding-top:calc(14px + env(safe-area-inset-top))}
+h1{font-size:1.45rem;line-height:1.35;margin:.3em 0 .1em;text-wrap:balance}
+h2{font-size:1.15rem;margin:1.6em 0 .4em;padding-bottom:.25em;border-bottom:1px solid var(--line);text-wrap:balance}
+h3{font-size:1rem;margin:1.2em 0 .3em}
+p{margin:.55em 0}a{color:var(--acc)}small,.meta,.note{color:var(--mut)}.meta{font-size:.86rem;margin:.1em 0}
+.lead{color:var(--mut);font-size:.92rem}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:.8em 0;font-size:.92rem}
+ul.list{list-style:none;margin:.4em 0;padding:0}ul.list>li{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 12px;margin:8px 0}
+ul.list p{margin:.25em 0}
+details{margin:.5em 0}summary{cursor:pointer;color:var(--acc);padding:6px 0;line-height:1.5}
+details p{margin:.4em 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;margin:10px 0;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.card p{margin:.3em 0}.k{color:var(--mut);font-size:.82rem}.pill{display:inline-block;font-size:.8rem;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:0 10px;margin-top:2px}
+.more{color:var(--acc);font-size:.9rem}
+.head{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:.6em 0 1em}
+.head p{margin:.35em 0}
+.tw{overflow-x:auto;margin:.7em 0;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:.88rem;min-width:100%}th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:.7em 0;padding:.2em 14px;border-left:4px solid var(--acc);background:var(--soft)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);padding:0 4px;border-radius:4px;overflow-wrap:anywhere}
+ol,ul{padding-left:1.4em}li{margin:.2em 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
+.foot{margin-top:30px;color:var(--mut);font-size:.8rem}
+</style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
+
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>「ホビー商品でない」では除外しない</b></p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 適用済みの記録・ホビー見送りが1,185件に急増</span></p>
+  <p><span class="k">実際:</span> 11/2に判定を外した記録は変わらず。ただ見送り台帳（11/18 17:40更新・14,783件）の理由『ホビー』が1,185件で、前回の542件から+643（1,185−542）と急増しました。原因は未特定です。</p>
+  <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「何か理由があって出品できないのであれば、対策することでほぼ全ての商品を出品できると思っている」</p><p class="note">本人の発言・2026-11-02 14:42</p></blockquote>
+<blockquote><p>「ホビー商品でない　←これは私が指定したルールじゃないので対象外から外して」</p><p class="note">本人の発言・2026-11-02 14:47</p></blockquote>
+<p><span class="k">（解釈）</span> 本人が決めたルール（液体・キーホルダー系など）以外の理由では、出品から外さない方針と理解しています。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>戻したいとき（Macのターミナル）: <code>~/.venvs/ebay/bin/python3 -P …/apply_remove_hobby_filter.py --revert</code>。解禁した記録を元に戻すには <code>… --release-revert …/hobby_released_20261102_150541.json</code>。</li>
+<li>漫画・書籍・ブラインドボックスと記録物の防止は、項目13の道具で戻しました（18:16に適用済み）。適用後も、最初の数日は、出品された物に「出さない物」が混ざっていないかを一覧で見ます。</li>
+<li>液体・キーホルダー系の門は、判定の上流に残してあります。外れていません。</li>
+</ol>
+<h2>いまの状態（11/18 17:55）</h2>
+<p class="note"><b>今日の測定結果を使って書き直した項目です</b>（最終測定 11/18 17:55）。測定に無い数字は、測った日時を添えるか、下に一覧を出しています。</p>
+<p><b>いまの状態:</b> 『ホビー商品でない』という理由で外す判定を外した（資料では11/2 15:05に適用済み）という記録は変わりません。ただ今日17:40の測定で、見送り台帳（11/18 17:40更新・全14,783件）の理由『ホビー』が1,185件に増えていました。前回(11/17 11:55の更新)の542件から+643（1,185−542）です。</p><ul class="lead"><li><b>異常な増え方:</b> 前回の1日の増分は+11（531件→542件）だったので、桁が違います。台帳全体は13,463→14,783件（+1,320＝14,783−13,463）で、『ホビー』がその約半分（643÷1,320）を占めます。</li><li><b>原因は未特定（解釈・確信度 低）:</b> 自動出品の本体が今朝08:41に更新されており、『ホビー』判定が戻った可能性があります。一方、液体・キーホルダー系の除外（本人のルール）や項目13の防止が同じ理由名で記録される分も混ざりえます。題名を読んでいないので、分けられません。</li><li><b>方針との関係:</b> 資料の決定は『「ホビー商品でない」では除外しない』（11/2）です。判定が戻っていれば決定に反するので、先に確かめます。</li><li><b>次:</b> （私）増えた分の題名と材料の欄を読み、判定が戻ったのか別の除外かを分けます。本体の差分も確認します。</li></ul>
+
+<p class="note">今日の測定では確かめていない数字（前回までの記録から引いたもの）: 13463、531、542</p>
+<p class="note">数字の出所（測定の名前）: reject_ledger、patch_markers</p>
+
+<details class="ev"><summary>これまでの経過（当時のまま・畳んでいます）</summary>
+
+<h2>何を変えたか</h2>
+<p>これまで、商品がホビー用品かどうかを自動で判定して、ホビーでないと見たものを出品から外していました。この判定は、あなたが決めたルールではありませんでした。そこで、<b>この理由では外さない</b>ようにしました。</p>
+<div class="tw"><table>
+<tr><th>項目</th><th>件数</th><th>メモ</th></tr>
+<tr><td>「ホビーでない」で外されていた記録</td><td class="n">3,824件</td><td>台帳の記録</td></tr>
+<tr><td>解禁した</td><td class="n">3,683件</td><td>また検索に出たら、普通に審査されます</td></tr>
+<tr><td>除外のまま</td><td class="n">141件</td><td>液体・キーホルダー系。あなたのルールです</td></tr>
+</table></div>
+<h2>気をつけること</h2>
+<p>この判定には「書籍・ゲーム・映像は出さない」という一覧も含まれていました。8/8に、漫画やゲームを誤って出品した事故の再発防止として、私が足したものです。判定を外したので、この一覧も効かなくなりました。<b>17:43に本番の関数で実測したところ、映像・ゲーム・本の題名に、模型用の「Plastic Model Kit」が付いてしまうことを確かめました</b>（確信度 高）。いまは出品が保留中なので、誤出品は起きていません。止める道具を項目13で用意し、18:16に適用しました。</p>
+<h2>戻し方</h2>
+<p>判定を戻す（<code>--revert</code>）／解禁した記録を元に戻す（<code>--release-revert</code>）。どちらも控えを取ってあります。</p>
+
+
+</details>
+
+
+<div class="nav"><a href="p4.html">‹ 前の項目</a><a href="p6.html">次の項目 ›</a></div><p class="nav"><a href="index.html">‹ 一覧にもどる</a></p></div></body></html>

@@ -1,0 +1,44 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="format-detection" content="telephone=no"><meta name="color-scheme" content="light dark"><title>項目26 決まったこと</title><style>
+:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+.wrap{max-width:720px;margin:0 auto;padding-top:calc(14px + env(safe-area-inset-top))}
+h1{font-size:1.45rem;line-height:1.35;margin:.3em 0 .1em;text-wrap:balance}
+h2{font-size:1.15rem;margin:1.6em 0 .4em;padding-bottom:.25em;border-bottom:1px solid var(--line);text-wrap:balance}
+h3{font-size:1rem;margin:1.2em 0 .3em}
+p{margin:.55em 0}a{color:var(--acc)}small,.meta,.note{color:var(--mut)}.meta{font-size:.86rem;margin:.1em 0}
+.lead{color:var(--mut);font-size:.92rem}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:.8em 0;font-size:.92rem}
+ul.list{list-style:none;margin:.4em 0;padding:0}ul.list>li{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 12px;margin:8px 0}
+ul.list p{margin:.25em 0}
+details{margin:.5em 0}summary{cursor:pointer;color:var(--acc);padding:6px 0;line-height:1.5}
+details p{margin:.4em 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;margin:10px 0;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.card p{margin:.3em 0}.k{color:var(--mut);font-size:.82rem}.pill{display:inline-block;font-size:.8rem;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:0 10px;margin-top:2px}
+.more{color:var(--acc);font-size:.9rem}
+.head{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:.6em 0 1em}
+.head p{margin:.35em 0}
+.tw{overflow-x:auto;margin:.7em 0;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:.88rem;min-width:100%}th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:.7em 0;padding:.2em 14px;border-left:4px solid var(--acc);background:var(--soft)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);padding:0 4px;border-radius:4px;overflow-wrap:anywhere}
+ol,ul{padding-left:1.4em}li{margin:.2em 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
+.foot{margin-top:30px;color:var(--mut);font-size:.8rem}
+</style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
+
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>今日のまとめ（あなたの手が要ること・進捗・見つけたこと）</b></p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 進行中（随時・毎日更新）</span></p>
+  <p><span class="k">実際:</span> 11/15(日) 11:56 に測った中核: ①価格監視は 01:00 開始→09:00:01 に終了（ログ最終行）②10:30 の出品ジョブは実行中（PID 43125・経過1時間26分）③数量0候補は 09:20 に主線533・別ファイル949 で出力済み ④patch_queue は今日 0/2・未適用約19本（平日は誰も打てない＝質問 unattendedpq に答えると朝の窓で自動適用の道が開く）⑤Mac は電池駆動 71%・残り約50分 → 電源ケーブルの挿し直しが必要（プッシュ通知済み）⑥電車で答える質問ページ（iPhone）を公開済み。明日 11/16 から平日フルタイムなので、18:00 に資料を更新します。</p>
+  <p class="actline"><span class="k">あなたがやること:</span> <b>質問 92件に答える（下の『決めてほしいこと』）</b></p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<p class="note">この欄に関する本人の発言の記録はありません。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>正本は <code>…/today_board.json</code>。足すのは <code>reports/daily_refresh/today_board.py</code> の done / hand / check / found / ask、作り直しは rebuild（どこでも実行可）。</li>
+</ol>
+<p class="box">この項目の中身（手が要ること・進捗・見つけたこと）は、今日のまとめ（詳しく）と一覧の上にあります。コマンドと質問の入力欄は、質問ページだけに出しています。</p><div class="nav"><a href="p25.html">‹ 前の項目</a><a href="p27.html">次の項目 ›</a></div><p class="nav"><a href="index.html">‹ 一覧にもどる</a></p></div></body></html>

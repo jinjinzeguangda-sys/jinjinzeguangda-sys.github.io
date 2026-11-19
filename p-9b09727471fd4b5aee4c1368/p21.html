@@ -1,0 +1,236 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="format-detection" content="telephone=no"><meta name="color-scheme" content="light dark"><title>項目21 決まったこと</title><style>
+:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+.wrap{max-width:720px;margin:0 auto;padding-top:calc(14px + env(safe-area-inset-top))}
+h1{font-size:1.45rem;line-height:1.35;margin:.3em 0 .1em;text-wrap:balance}
+h2{font-size:1.15rem;margin:1.6em 0 .4em;padding-bottom:.25em;border-bottom:1px solid var(--line);text-wrap:balance}
+h3{font-size:1rem;margin:1.2em 0 .3em}
+p{margin:.55em 0}a{color:var(--acc)}small,.meta,.note{color:var(--mut)}.meta{font-size:.86rem;margin:.1em 0}
+.lead{color:var(--mut);font-size:.92rem}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:.8em 0;font-size:.92rem}
+ul.list{list-style:none;margin:.4em 0;padding:0}ul.list>li{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 12px;margin:8px 0}
+ul.list p{margin:.25em 0}
+details{margin:.5em 0}summary{cursor:pointer;color:var(--acc);padding:6px 0;line-height:1.5}
+details p{margin:.4em 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;margin:10px 0;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.card p{margin:.3em 0}.k{color:var(--mut);font-size:.82rem}.pill{display:inline-block;font-size:.8rem;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:0 10px;margin-top:2px}
+.more{color:var(--acc);font-size:.9rem}
+.head{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:.6em 0 1em}
+.head p{margin:.35em 0}
+.tw{overflow-x:auto;margin:.7em 0;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:.88rem;min-width:100%}th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:.7em 0;padding:.2em 14px;border-left:4px solid var(--acc);background:var(--soft)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);padding:0 4px;border-radius:4px;overflow-wrap:anywhere}
+ol,ul{padding-left:1.4em}li{margin:.2em 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
+.foot{margin-top:30px;color:var(--mut);font-size:.8rem}
+</style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
+
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>毎日の時刻表: 寝る前に充電をつなげば朝までに自動で進むもの／このセッションの時刻つき確認／動かないもの</b></p>
+  <p><span class="k">判定:</span> <span class="j">✅ 測定して作成（作り直すたびに測り直す）</span></p>
+  <p><span class="k">実際:</span> 予約ジョブ 87本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る予約は 96件で、電源が要ると確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。動かないもの: launchdに載っていない 3本・最後の終了コードが0以外 3本。</p>
+  <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「こういう日々やるスケジュールも後でいいから資料に書いておいてよ」</p><p class="note">本人の発言・2026-11-06 22:4x（他セッション documents-33 経由で受け取った本人の言葉。私の会話記録の『本人が入力した記録』では未照合）</p></blockquote>
+<p><span class="k">（解釈）</span> 『こういう日々やるスケジュール』は、本人が見た返信の内容＝寝る前に充電をつなげば朝までに自動で進むもの（01:00の価格監視〜11:20の自走役）・新しいセッションの時刻つき確認・この枠の外（動かないもの）、と読みました（documents-33 からの説明による）。『後でいい』は急がない、の意味に読みました。時刻表は手で書くと古くなるので、plist と launchctl から測る形にしたのは私の判断です。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>時刻表だけ画面に出す（Macのターミナル・どこでも・読み取りのみ）: <code>~/.venvs/ebay/bin/python3 -P …/timetable_probe.py</code>（<code>--selftest</code> で対照つきの自己試験）。</li>
+<li>資料を作り直す（Macのターミナル）: <code>~/.venvs/ebay/bin/python3 -P …/build_kimetakoto_pages.py</code>。毎日10:00の更新でも自動で作り直されます（その日の分が既にあると何もしません。この項目はLLMに書かせず、作り直すたびに測り直します）。</li>
+<li>『このセッションの時刻つき確認』の欄だけは手書きの記録です（セッションの予約は外から読めないため）: <code>…/session_reservations.json</code>。予約を作った・消したときに書き換えます。</li>
+<li>説明が空のジョブや『電源が要るか』が未確認のジョブは、plist に『目的:』のコメントを書くか、<code>timetable_probe.py</code> の NOTE に根拠つきで足します。足す前に、そのジョブの実物（スクリプト・ログ）を読んでください。</li>
+</ol>
+<p>launchdの予約ジョブ 87本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る時刻は 96件、うち『電源が要る』と確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。説明を持たないジョブ 20本、launchdに載っていない 3本、最後の終了コードが0以外 3本。今夜以降の予約（このセッション）0件。測った時の電源はAC（100%）。</p>
+<p class="note">この表は<b>手で書いていません</b>。測った時刻は 11/19 10:44（ACか電池か: AC・電池 100%）。予約ジョブの時刻は plist から、載っているか・終了コードは launchctl から読み取りました。資料を作り直すたびに測り直します（毎日の更新は10:00に1回。その日の分が既にあれば何もしません。失敗した日だけ14:20に再試行）。</p>
+<h2>寝る前に充電をつなげば、朝までに自動で進むもの（22:00〜翌11:30）</h2>
+<div class="tw"><table><tr><th>時刻</th><th>ジョブ</th><th>何をするか</th><th>電源が要るか</th><th>あなたの手</th></tr>
+<tr><td class="n">22:00</td><td>ebay-line-report</td><td>（説明が未記載。スクリプト: daily_line_report.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">22:00</td><td>full-copy</td><td>（説明が未記載。スクリプト: full_copy.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">22:30</td><td>battery-night-watch</td><td>夜にバッテリー駆動のままだと Mac が落ちて夜間バッチ〜翌朝の出品が全滅するので、落ちる前に通知する</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週日曜 22:30</td><td>ebay-oos-weekly</td><td>（説明が未記載。スクリプト: oos_watch.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週金曜 23:00</td><td>ebay-price-gap-weekly</td><td>（説明が未記載。スクリプト: run_weekly.sh）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">23:00</td><td>ebay-scan-underwater</td><td>出品中ASINの「仕入れ値より安い出品」全件スキャンを、夜間に少しずつ進める</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">23:00</td><td>night-batch</td><td>（説明が未記載。スクリプト: night_batch_once.sh）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">23:00</td><td>work-review</td><td>（説明が未記載。スクリプト: nightly_worker.sh）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">23:30</td><td>battery-night-watch</td><td>夜にバッテリー駆動のままだと Mac が落ちて夜間バッチ〜翌朝の出品が全滅するので、落ちる前に通知する</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">23:30</td><td>ebay-line-report</td><td>（説明が未記載。スクリプト: daily_line_report.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">23:30</td><td>full-copy</td><td>（説明が未記載。スクリプト: full_copy.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">23:40</td><td>logo-swap-nightly</td><td>説明文のロゴ差し替え（夜の運転役。電池駆動の間は何もしない）</td><td><b>要</b></td><td>不要（自動）</td></tr>
+<tr><td class="n">00:05</td><td>ebay-bulk-source</td><td>（説明が未記載。スクリプト: run_night_image_scrape.sh）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">00:20</td><td>ebay-bandai-crawl</td><td>（説明が未記載。スクリプト: run_night_bandai.sh）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">00:30</td><td>full-copy</td><td>（説明が未記載。スクリプト: full_copy.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週日曜 00:40</td><td>description-audit-once</td><td>「4月以降に出品した商品で、説明(Description)が無いもの」を夜間に調査する</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">01:00</td><td>ebay-price-monitor</td><td>価格監視（Amazonの仕入れ値と出品の値付けを突き合わせる。Amazonにアクセスする）</td><td><b>要</b></td><td>不要（自動）</td></tr>
+<tr><td class="n">01:00</td><td>ebay-x-post</td><td>（説明が未記載。スクリプト: auto_social.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">01:40</td><td>ebay-unreleased-watch</td><td>（説明が未記載。スクリプト: unreleased_watch.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">02:00</td><td>profile-move-once</td><td>move_profiles_out_of_onedrive.sh を「無人の夜間」に安全に実行するラッパー</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">03:00</td><td>ebay-x-post</td><td>（説明が未記載。スクリプト: auto_social.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">03:30</td><td>purge-old-profiles</td><td>OneDrive内に残っている旧ブラウザprofile（約8万件）を退避して、OneDrive同期の暴走リスクを根絶する</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">03:50</td><td>ebay-state-backup</td><td>父eBayの「壊れると作り直せない状態ファイル」を OneDrive の外へ退避する</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">04:00</td><td>mt5-algo-research</td><td>アルゴリズム取引の調査日報(mt5_algo_research.py)を毎日1回作る(本人指示 2026-10-23「毎日アルゴリズム取引に…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">04:00</td><td>yt-learn</td><td>（説明が未記載。スクリプト: run_learn.sh）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">04:05</td><td>ebay-order-sync</td><td>売上台帳の同期</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">04:35</td><td>sold-margin-check</td><td>売れた商品の損益チェック</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">05:00</td><td>ebay-x-post</td><td>（説明が未記載。スクリプト: auto_social.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">05:00</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">05:10</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">05:20</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">05:30</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">05:30</td><td>store-cat-follow</td><td>ストアカテゴリ追従（33%値引き表示を出すため、付いていない出品に付ける）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">05:40</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">05:50</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">06:00</td><td>media-daily</td><td>記録物(CD・映像・ゲーム)を毎日『台帳→別ルート→出品候補CSV』まで自動で進める（本人の指示 10/31・11/1・11/2『2A』が配…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">06:00</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">06:10</td><td>listing-health-watch</td><td>eBayが規約違反で隠した出品(ListingOnHold)と、新規出品へのJS混入を毎日1回 証拠つきで台帳に残す</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">06:10</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">06:15</td><td>attempt-ledger-snapshot</td><td>E48(順序パッチ)の効果を『7日超が0付近のまま・3〜7日が増えない』で毎日見直せるようにする</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">06:20</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">06:30</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">06:40</td><td>self-apply-window</td><td>自己適用の窓（許可リストのパッチだけ・1日2件まで本番に入れる）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">07:00</td><td>ebay-desc-translate</td><td>父のSKILL.md:36「翻訳: Claude が直接英訳する（ChatGPT 不要）」を毎日 自動で満たす</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">08:30</td><td>claude-session-check</td><td>Claude Code が「30日で黙って消す」前に、セッションログを読めるMarkdownへ退避する</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">08:30</td><td>ebay-healthcheck</td><td>ローカル監視のみ（ネットワーク送信なし）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">08:30</td><td>ebay-ship-monitor</td><td>発送期限モニター(ship_deadline_monitor.py)を「その日に1回成功するまで」何度か試す入れ物</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">08:40</td><td>ebay-unshipped-unsourceable</td><td>「発送期限は来ているのに Amazon で仕入れられない」注文を、期限が来る前に名指しする</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">08:40</td><td>self-apply-window</td><td>自己適用の窓（許可リストのパッチだけ・1日2件まで本番に入れる）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:00</td><td>outside-watchdog</td><td>OneDrive障害の"外側"から、ジョブ群が生きているかを見張る</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:05</td><td>hs-recheck</td><td>（説明が未記載。スクリプト: hs_recheck.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:05</td><td>jan-missing-ledger</td><td>自動出品ログ(ebay_auto_log.txt)から「JANが取れなかった／JANを破棄した商品」を1商品1行で台帳に記録する</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週月曜 09:05</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週火曜 09:05</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週水曜 09:05</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週木曜 09:05</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週金曜 09:05</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週月曜 09:15</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週火曜 09:15</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週水曜 09:15</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週木曜 09:15</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週金曜 09:15</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:20</td><td>self-apply-window</td><td>自己適用の窓（許可リストのパッチだけ・1日2件まで本番に入れる）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:20</td><td>zero-candidates-daily</td><td>『仕入れ元が無い(予約品・高額・在庫なし)のに数量0にされず残っている出品』の候補CSVを毎日1本つくる（読み取り専用）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週月曜 09:25</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週火曜 09:25</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週水曜 09:25</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週木曜 09:25</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週金曜 09:25</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:30</td><td>ebay-labels-early</td><td>郵便局ラベル(ebay_api.py --labels)を、出品の収集(run_ebay_auto.sh)の完走を待たずに毎朝つくる</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:30</td><td>ebay-price-retry</td><td>price_monitor.py は毎朝8:05にWindowsタスクスケジューラで実行されるが、Amazon側の一時的なブロックやタイムア…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:35</td><td>ebay-job-yield</td><td>「走ったのに成果が0」の工程を毎朝検知して、承認事項に書き出す</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週月曜 09:35</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週火曜 09:35</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週水曜 09:35</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週木曜 09:35</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週金曜 09:35</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:45</td><td>ebay-dashboard</td><td>#   父eBayフォルダに散らばっている実行結果（ヘルス判定・出品CSV・実行ログ・価格レポート・X投稿）を</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:45</td><td>hs-recheck</td><td>（説明が未記載。スクリプト: hs_recheck.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週月曜 09:45</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週火曜 09:45</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週水曜 09:45</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週木曜 09:45</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週金曜 09:45</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:45</td><td>price-monitor-health</td><td>価格監視の健診(price_monitor_health.py)を毎朝自動で回し、異常なら Mac の通知を出す（ログに書くだけにしない）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週月曜 09:55</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週火曜 09:55</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週水曜 09:55</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週木曜 09:55</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週金曜 09:55</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">09:55</td><td>similar-fix-daily</td><td>『類似を直す』(similar_fix_daily.py)を毎日09:55に回す</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">10:00</td><td>ebay-ship-monitor</td><td>発送期限モニター(ship_deadline_monitor.py)を「その日に1回成功するまで」何度か試す入れ物</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">10:20</td><td>ebay-state-backup</td><td>父eBayの「壊れると作り直せない状態ファイル」を OneDrive の外へ退避する</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">10:30</td><td>ebay-auto</td><td>自動出品（収集→出品。電池だと約15分ごとの小分けで出す）</td><td><b>要</b></td><td>不要（自動）</td></tr>
+<tr><td class="n">11:00</td><td>token-daily</td><td>トークン消費の「昨日ぶん」を毎朝まとめて出す</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">11:20</td><td>autonomy-runner</td><td>「指示を待たず、出品→注文→発送の流れ全体に自分で疑問を持ち、調べ、対策まで進める」(本人 2026-11-05/06)を毎日1回の無人実行…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+</table></div>
+<p class="note">『電源が要る』は、根拠のあるもの（価格監視・自動出品・説明文のロゴ差し替え）だけ<b>要</b>と書いています。ほかは確かめていないので<b>未確認</b>です（Macが起動していないと動かない点は全ジョブ共通）。電源が切れていた間の分は、次の起動の直後にまとめて走ることがあります（ただし無条件ではありません。11/6は21:54の起動後に、止まっていた別のジョブが走り直した、という別セッションからの報告がありました＝私は未確認）。</p>
+<h2>このセッション（Claude Code）の時刻つき確認</h2>
+<p class="note">この表だけは<b>手で書く記録</b>です（セッションの予約は外から読めないため）。最終更新 11/07 09:08。セッションを閉じる・Macの電源が切れると消えます。</p>
+<div class="tw"><table><tr><th>時刻</th><th>内容</th><th>必要なもの</th></tr>
+</table></div>
+<h2>この枠の外（動かないもの・あなたの手が要るもの）</h2>
+<div class="tw"><table><tr><th>種類</th><th>もの</th><th>内容</th></tr>
+<tr><td>登録待ち</td><td>ebay-message-watch（08:45）</td><td>父eBayのメール・メッセージ見張り（登録待ち・本人の端末で登録）。plist 無し／launchdに載っていない</td></tr>
+<tr><td>launchdに載っていない</td><td>claude-task-runner</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
+<tr><td>launchdに載っていない</td><td>ebay-x-post</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
+<tr><td>launchdに載っていない</td><td>purge-old-profiles</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
+<tr><td>最後の終了コード≠0</td><td>ebay-healthcheck</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
+<tr><td>最後の終了コード≠0</td><td>full-copy</td><td>終了コード 11（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
+<tr><td>最後の終了コード≠0</td><td>job-silence-check</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
+<tr><td>いつも本人の手</td><td>出品の公開・取り下げ／本番の価格変更／送信／購入／git push／お金が動くこと</td><td>これまでの決まり（規則）。時刻表の対象外です</td></tr>
+</table></div>
+<details><summary>日中・夕方の予約ジョブ（11:30〜22:00）</summary>
+<div class="tw"><table><tr><th>時刻</th><th>ジョブ</th><th>何をするか</th></tr>
+<tr><td class="n">12:00</td><td>daytime-batch</td><td>（説明が未記載。スクリプト: run_daytime_batch.sh）</td></tr>
+<tr><td class="n">12:00</td><td>ebay-ship-monitor</td><td>発送期限モニター(ship_deadline_monitor.py)を「その日に1回成功するまで」何度か試す入れ物</td></tr>
+<tr><td class="n">12:30</td><td>store-cat-follow</td><td>ストアカテゴリ追従（33%値引き表示を出すため、付いていない出品に付ける）</td></tr>
+<tr><td class="n">13:00</td><td>ebay-x-post</td><td>（説明が未記載。スクリプト: auto_social.py）</td></tr>
+<tr><td class="n">13:00</td><td>job-completed-check</td><td>「動いたか」ではなく「最後まで走ったか」を見る</td></tr>
+<tr><td class="n">13:00</td><td>outside-watchdog</td><td>OneDrive障害の"外側"から、ジョブ群が生きているかを見張る</td></tr>
+<tr><td class="n">13:10</td><td>ebay-title-quality</td><td>出品タイトルの品質を毎日1回 測って記録する（読み取りのみ）</td></tr>
+<tr><td class="n">13:40</td><td>mt5-algo-research</td><td>アルゴリズム取引の調査日報(mt5_algo_research.py)を毎日1回作る(本人指示 2026-10-23「毎日アルゴリズム取引に…</td></tr>
+<tr><td class="n">14:10</td><td>hs-watch</td><td>ホビーサーチ(HS)由来の出品(HS+8桁・約813口)の在庫・価格を出品後に見張る(WBS T1222)</td></tr>
+<tr><td class="n">15:00</td><td>daytime-batch</td><td>（説明が未記載。スクリプト: run_daytime_batch.sh）</td></tr>
+<tr><td class="n">15:00</td><td>ebay-ship-monitor</td><td>発送期限モニター(ship_deadline_monitor.py)を「その日に1回成功するまで」何度か試す入れ物</td></tr>
+<tr><td class="n">15:10</td><td>autonomy-runner</td><td>「指示を待たず、出品→注文→発送の流れ全体に自分で疑問を持ち、調べ、対策まで進める」(本人 2026-11-05/06)を毎日1回の無人実行…</td></tr>
+<tr><td class="n">16:00</td><td>t202-guard</td><td>T202(2026-08-17適用)でAmazonへの商品詳細取得が約2.9倍に増えるため、ブロックの兆候が出ていないかを毎日チェックし、出…</td></tr>
+<tr><td class="n">17:40</td><td>kimetakoto-refresh</td><td>資料『eBay 決まったこと』を毎日、最新の内容に更新する(本人指示 2026-11-05「できれば毎日この資料全体を最新の内容に更新する様…</td></tr>
+<tr><td class="n">18:00</td><td>daytime-batch</td><td>（説明が未記載。スクリプト: run_daytime_batch.sh）</td></tr>
+<tr><td class="n">毎週日曜 18:10</td><td>ebay-shipped-post</td><td>（説明が未記載。スクリプト: auto_social.py）</td></tr>
+<tr><td class="n">18:20</td><td>glance-daily-propose</td><td>進捗ひとめの元データ(autonomy/progress_glance.json)を毎日更新するための『更新提案』を作る(GLANCE_DA…</td></tr>
+<tr><td class="n">19:00</td><td>job-completed-check</td><td>「動いたか」ではなく「最後まで走ったか」を見る</td></tr>
+<tr><td class="n">19:00</td><td>job-silence-check</td><td>（説明が未記載。スクリプト: job_silence_check_launcher.sh）</td></tr>
+<tr><td class="n">19:00</td><td>night-caffeinate</td><td>23:00の夜間バッチが動けるようにMacを眠らせない</td></tr>
+<tr><td class="n">19:10</td><td>upload-reconcile</td><td>（説明が未記載。スクリプト: upload_reconcile_daily.py）</td></tr>
+<tr><td class="n">19:30</td><td>battery-night-watch</td><td>夜にバッテリー駆動のままだと Mac が落ちて夜間バッチ〜翌朝の出品が全滅するので、落ちる前に通知する</td></tr>
+<tr><td class="n">19:30</td><td>kimetakoto-refresh</td><td>資料『eBay 決まったこと』を毎日、最新の内容に更新する(本人指示 2026-11-05「できれば毎日この資料全体を最新の内容に更新する様…</td></tr>
+<tr><td class="n">19:50</td><td>glance-daily-propose</td><td>進捗ひとめの元データ(autonomy/progress_glance.json)を毎日更新するための『更新提案』を作る(GLANCE_DA…</td></tr>
+<tr><td class="n">20:00</td><td>ebay-state-backup</td><td>父eBayの「壊れると作り直せない状態ファイル」を OneDrive の外へ退避する</td></tr>
+<tr><td class="n">20:00</td><td>ebay-x-post</td><td>（説明が未記載。スクリプト: auto_social.py）</td></tr>
+<tr><td class="n">20:00</td><td>outside-watchdog</td><td>OneDrive障害の"外側"から、ジョブ群が生きているかを見張る</td></tr>
+<tr><td class="n">20:30</td><td>battery-night-watch</td><td>夜にバッテリー駆動のままだと Mac が落ちて夜間バッチ〜翌朝の出品が全滅するので、落ちる前に通知する</td></tr>
+<tr><td class="n">21:00</td><td>ebay-line-report</td><td>（説明が未記載。スクリプト: daily_line_report.py）</td></tr>
+<tr><td class="n">21:00</td><td>nightly-forecast</td><td>（説明が未記載。スクリプト: nightly_forecast.py）</td></tr>
+<tr><td class="n">21:30</td><td>battery-night-watch</td><td>夜にバッテリー駆動のままだと Mac が落ちて夜間バッチ〜翌朝の出品が全滅するので、落ちる前に通知する</td></tr>
+</table></div></details>
+<details><summary>一定間隔・起動時・常駐のジョブ（28本）</summary><div class="tw"><table><tr><th>ジョブ</th><th>動き方</th><th>何をするか</th></tr>
+<tr><td>apply-wbs-20261008</td><td>20分ごと / 起動時</td><td>~/Documents が FileProvider で断続的に読めなくなるため、読めた瞬間に冪等に当てる</td></tr>
+<tr><td>auto-font-size</td><td>1分ごと / 起動時</td><td>外部モニターの抜き差しに合わせて cmux のフォントを自動切替（外部22 / 本体のみ18）</td></tr>
+<tr><td>battery-day-watch</td><td>15分ごと</td><td>「日中に電池で走り続けて、そのまま電池切れで落ちる」を防ぐ</td></tr>
+<tr><td>boot-recovery</td><td>毎時 :05 / 起動時</td><td>（説明が未記載。スクリプト: boot_recovery.py）</td></tr>
+<tr><td>claude-context-watch</td><td>30分ごと</td><td>「いま開いている全セッションのコンテキスト使用率」を横断で見張る</td></tr>
+<tr><td>claude-death-watch</td><td>起動時 / 常駐</td><td>claude セッションが消えた瞬間を記録する（2026-10-01 設置）</td></tr>
+<tr><td>claude-task-runner</td><td>5分ごと</td><td>LINEで送った作業依頼をMacのClaudeが実行し、結果をLINEへ返す</td></tr>
+<tr><td>cmux-remote</td><td>起動時 / 常駐</td><td>（説明が未記載。スクリプト: 不明）</td></tr>
+<tr><td>cpu-sampler</td><td>1分ごと / 起動時</td><td>「平常時に誰がCPUを食っていたか」の分母を無条件に採る</td></tr>
+<tr><td>dns-heartbeat</td><td>2分ごと / 起動時</td><td>（説明が未記載。スクリプト: dns_heartbeat.py）</td></tr>
+<tr><td>documents-access-watch</td><td>1分ごと</td><td>~/Documents の「列挙できるか」を1分ごとに見て、状態が変わった時だけ1行 書く</td></tr>
+<tr><td>ebay-resume-on-power</td><td>10分ごと / 起動時</td><td>電池切れ等で止まった「その日の自動出品」を、電源が戻ったら同じ日のうちに自動で再開させる道具</td></tr>
+<tr><td>launchd-heartbeat</td><td>1分ごと / 起動時</td><td>launchd が実際に発火しているかの ground truth を1分刻みで残す</td></tr>
+<tr><td>load-forensics</td><td>1分ごと</td><td>load が跳ねた「その瞬間」の犯人を記録する</td></tr>
+<tr><td>mt5-auto-trade</td><td>毎時 :01・:16・:31・:46</td><td>MT5自動売買ランナー(mt5_auto_trade.py)を15分足の確定直後(毎時1/16/31/46分)に1回実行する</td></tr>
+<tr><td>mt5-autostart</td><td>10分ごと / 起動時</td><td>平日の相場時間(JST 月曜06:00〜土曜07:30)に MT5 が起動していなければ起動する(Mac電源断/再起動後の長い停止対策)</td></tr>
+<tr><td>mt5-keepawake</td><td>起動時 / 常駐</td><td>平日の相場時間だけ、AC接続中のMacをスリープさせない(MT5ランナーの欠測対策)</td></tr>
+<tr><td>mt5-power-watch</td><td>1分ごと / 起動時</td><td>Macの電源状態を1分ごとに記録し、平日の相場時間に「電源が外れている／充電が進まない／残量20%以下」を通知する</td></tr>
+<tr><td>mt5-quote-recorder</td><td>毎時 :00・:15・:30・:45</td><td>MT5のUSDJPYの実際の売値・買値を15分ごとに記録する（ペーパートレード用）</td></tr>
+<tr><td>mt5-security-watch</td><td>毎時 :11・:41</td><td>MT5へのサイバー攻撃の兆候(待受の変化・見知らぬEA/プロセス・許可設定の緩み・鍵の漏えい・口座の変化)を30分ごとに点検する</td></tr>
+<tr><td>mt5-shadow-lab</td><td>毎時 :07</td><td>前向き仮想売買ラボ(mt5_shadow_lab.py)を毎時7分に1回回す</td></tr>
+<tr><td>net-probe</td><td>1分ごと / 起動時</td><td>嵐（Macが数十分止まる）の最中にネットが落ちていたかを、出品ログに依存せず後から確かめる（findings.md 第8節）</td></tr>
+<tr><td>onedrive-throttle</td><td>5分ごと / 起動時</td><td>OneDrive が CPU を張り付かせて Mac 全体を巻き込むのを防ぐ</td></tr>
+<tr><td>session-restore-on-boot</td><td>1分ごと / 起動時</td><td>再起動(電源切れ)後、cmux が戻し損ねた Claude セッションを claude を介さず自動で再開する</td></tr>
+<tr><td>sleep-guard</td><td>5分ごと / 起動時</td><td>「鞄の中でMacが焼ける」状態を、起きた瞬間に1行だけ記録する見張り</td></tr>
+<tr><td>stall-watch</td><td>10分ごと</td><td>Claude Code の各セッションが「ツール実行の承認待ち（または固まり）」で止まっていないかを、会話記録(~/.claude/proj…</td></tr>
+<tr><td>thankmsg</td><td>15分ごと</td><td>本人 2026-11-17 13:28『注文時のありがとうメッセージを早めに実装して欲しい』／</td></tr>
+<tr><td>therm-state</td><td>1分ごと / 起動時</td><td>「いま熱いか」を1行のファイルに保つ</td></tr>
+</table></div></details>
+<details><summary>測定の内訳（技術メモ）</summary><ul>
+<li>plist 87本 → 読めた 87本・読めなかった 0本。読み取りは plutil（Pythonの plistlib は XML コメント内の <code>--</code> で落ちるため使いません）。</li>
+<li>launchctl list: 取得できた。</li>
+<li>説明の出所: plist の『目的:』24本／スクリプト冒頭の『目的:』36本／手書き補足 7本／なし 20本。</li>
+<li>『電源が要る』の根拠: ebay-auto=毎日の出品数は『10:30〜17:00に電源につながっているか』で決まる（AC日213件 対 非AC日83件）／ebay-price-monitor=11/3の調査: 電池切れの日は動かない。01:00〜05:00は30夜すべてAC／logo-swap-nightly=logo_nightly.sh のACガード（11/3）</li>
+</ul></details>
+
+<div class="nav"><a href="p20.html">‹ 前の項目</a><a href="p22.html">次の項目 ›</a></div><p class="nav"><a href="index.html">‹ 一覧にもどる</a></p></div></body></html>

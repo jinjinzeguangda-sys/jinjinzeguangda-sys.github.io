@@ -1,0 +1,141 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="format-detection" content="telephone=no"><meta name="color-scheme" content="light dark"><title>項目16 決まったこと</title><style>
+:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+.wrap{max-width:720px;margin:0 auto;padding-top:calc(14px + env(safe-area-inset-top))}
+h1{font-size:1.45rem;line-height:1.35;margin:.3em 0 .1em;text-wrap:balance}
+h2{font-size:1.15rem;margin:1.6em 0 .4em;padding-bottom:.25em;border-bottom:1px solid var(--line);text-wrap:balance}
+h3{font-size:1rem;margin:1.2em 0 .3em}
+p{margin:.55em 0}a{color:var(--acc)}small,.meta,.note{color:var(--mut)}.meta{font-size:.86rem;margin:.1em 0}
+.lead{color:var(--mut);font-size:.92rem}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:.8em 0;font-size:.92rem}
+ul.list{list-style:none;margin:.4em 0;padding:0}ul.list>li{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 12px;margin:8px 0}
+ul.list p{margin:.25em 0}
+details{margin:.5em 0}summary{cursor:pointer;color:var(--acc);padding:6px 0;line-height:1.5}
+details p{margin:.4em 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;margin:10px 0;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.card p{margin:.3em 0}.k{color:var(--mut);font-size:.82rem}.pill{display:inline-block;font-size:.8rem;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:0 10px;margin-top:2px}
+.more{color:var(--acc);font-size:.9rem}
+.head{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:.6em 0 1em}
+.head p{margin:.35em 0}
+.tw{overflow-x:auto;margin:.7em 0;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:.88rem;min-width:100%}th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:.7em 0;padding:.2em 14px;border-left:4px solid var(--acc);background:var(--soft)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);padding:0 4px;border-radius:4px;overflow-wrap:anywhere}
+ol,ul{padding-left:1.4em}li{margin:.2em 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
+.foot{margin-top:30px;color:var(--mut);font-size:.8rem}
+</style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
+
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>自動出品の累計：検索した数・出品した数・出品しなかった理由と数</b></p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 11/2時点の集計に増分を足した（推定）</span></p>
+  <p><span class="k">実際:</span> 8/16〜11/2の累計の表は前回のまま（異なる商品15,596・出品できた6,100・できていない9,496）。その後の増分を足した出品できた累計の目安は8,039です（推定）。</p>
+  <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「今までの累計で、自動出品の検索した数とそのうち実際に出品した数、出品してないものはその理由と数をこの資料には書いてある？」</p><p class="note">本人の発言・2026-11-02 20:27</p></blockquote>
+<p><span class="k">（解釈）</span> これは『今後こうしたい』ではなく、資料に載っているかの質問です。答えは『前の資料には無かった』で、数えて項目16として足しました。『検索した数』は、延べ回数と異なる商品の2通りの読み方があるため、両方を載せています（確信度 中）。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>数字を作り直す（Macのターミナル・どのフォルダでも可）: <code>~/.venvs/ebay/bin/python3 -P …/funnel_cumulative.py --refresh</code> → <code>~/.venvs/ebay/bin/python3 -P …/build_kimetakoto_pages.py</code>（資料が作り直されます）。OneDrive上のファイルは、時間の上限つきで写してから読みます。</li>
+<li>出せていない商品の対策の進み具合: 在庫切れ・予約は<a href="p9.html">項目9</a>、JANなしは<a href="p15.html">項目15</a>、写真は<a href="p14.html">項目14</a>（適用済み）。梱包サイズ・重さが取れない商品は、対策の方針をまだ決めていません（本人に聞く）。</li>
+<li>見送り台帳は、写真不足を外した後の現在の台帳が8,801商品です。この項目の「出品できていない」は、外す前の控え（9,821商品）から数えています。</li>
+</ol>
+<h2>いまの状態（11/18 17:55）</h2>
+<p class="note"><b>今日の測定結果を使って書き直した項目です</b>（最終測定 11/18 17:55）。測定に無い数字は、測った日時を添えるか、下に一覧を出しています。</p>
+<p><b>いまの状態:</b> 11/2の資料の累計の表は、そのときの集計のままです。検索で見つかった異なる商品は15,596（下限）、うち出品できた6,100・できていない9,496（11/2の資料）。今回は、その後の動きだけ足しました。</p><ul class="lead"><li><b>出品できた商品（推定）:</b> 前回(11/17 11:55の更新)の目安7,877に、出品履歴の総数の増分+162（9,035−8,873）を足して8,039です（推定・未検証）。増分は、11/17の初出品が83（途中）→106（確定・+23）と、今日11/18の139（17:40時点・途中）の合計です（23+139＝162）。</li><li><b>初出品の日別（今日17:40・出品履歴の初回出品日）:</b> 11/14が257、11/15が73、11/16が238、11/17が106、11/18が139（途中）。11/11と11/12は記録なしです。</li><li><b>見送り台帳（11/18 17:40更新）:</b> 14,783件（前回13,463件）。新しい見送りと出品に戻った分が混ざり、内訳は未測定です。</li><li><b>次:</b> （私）累計を作る道具で表を作り直します。延べ回数と異なる商品の数を混ぜないこと（11/2の資料の注意）も守ります。</li></ul>
+<p class="note">⚠ 次の数字は、測定結果・前回の記録の中に同じ数字を自動では見つけられませんでした（差や合計を計算して出した数字のことがあります。式が本文に書いてあるか確認してください）: 8039</p>
+<p class="note">今日の測定では確かめていない数字（前回までの記録から引いたもの）: 13463、15596、6100、7877、8873、9496</p>
+<p class="note">数字の出所（測定の名前）: listing_daily、reject_ledger</p>
+
+<details class="ev"><summary>これまでの経過（当時のまま・畳んでいます）</summary>
+
+<h2>先に答え</h2>
+<p>前の資料（項目1〜15）には、この累計の表はありませんでした。ログと台帳から数え直したのが、この項目です。数え方が2通りあるので、両方を載せます。</p>
+<h2>数え方1: 異なる商品で数える（2026-08-16〜11-02）</h2>
+<div class="tw"><table>
+<tr><th>区分</th><th>商品数</th><th>割合</th><th>メモ</th></tr>
+<tr><td><b>検索で見つかった異なる商品（下限）</b></td><td class="n">15,596</td><td class="n">100%</td><td>出品済み＋見送り台帳の合算。8/16より前から出している商品が毎日また検索に出る分は数えていないため、「少なくとも」です</td></tr>
+<tr><td><b>出品できた</b></td><td class="n">6,100</td><td class="n">39%</td><td>出品履歴で、最初の出品日が8/16以降の商品</td></tr>
+<tr><td><b>出品できていない</b></td><td class="n">9,496</td><td class="n">61%</td><td>下の表が理由の内訳。見送り台帳に一度載ったあと、後で出せたものが325商品（見送り9,821商品の約3.3%）</td></tr>
+</table></div>
+<h3>出品できていない9,496商品の理由と数</h3>
+<div class="tw"><table>
+<tr><th>理由</th><th>商品数</th><th>割合</th><th>今の扱い</th></tr>
+<tr><td>在庫切れ（Amazonで買えない）</td><td class="n">3,273</td><td class="n">21%</td><td>在庫が戻ったら出す方針（<a href="p9.html">項目9</a>）</td></tr>
+<tr><td>JAN（バーコード番号）が取れない</td><td class="n">1,305</td><td class="n">8%</td><td>別の取り先で取れるか確認中（<a href="p15.html">項目15</a>）。取れたら出すが、取れないものは出さない方針</td></tr>
+<tr><td>予約（発売前）</td><td class="n">1,279</td><td class="n">8%</td><td>発売日の当日に出す方針（<a href="p9.html">項目9</a>）</td></tr>
+<tr><td>梱包サイズ・重さが取れない</td><td class="n">1,273</td><td class="n">8%</td><td>対策は未着手</td></tr>
+<tr><td>写真が足りない</td><td class="n">999</td><td class="n">6%</td><td>本日20:18に「1枚でOK」にして台帳から外した。次の自動出品で改めて判定される（<a href="p14.html">項目14</a>）。いまは見送りではない</td></tr>
+<tr><td>仕入れ値が高い等（価格）</td><td class="n">949</td><td class="n">6%</td><td>仕入れ値が上限を超えるなど</td></tr>
+<tr><td>ブランドが分からない</td><td class="n">236</td><td class="n">2%</td><td></td></tr>
+<tr><td>ホビー商品ではない</td><td class="n">141</td><td class="n">1%</td><td>本日15:05にこの判定を外した（<a href="p5.html">項目5</a>）</td></tr>
+<tr><td>その他</td><td class="n">41</td><td class="n">0%</td><td></td></tr>
+</table></div>
+<p class="note">このうち「写真が足りない」999商品は、本日「1枚でOK」にして台帳から外したので、次の自動出品で改めて判定されます。外した分を除くと、いまも出せていないのは8,497商品です。</p>
+<h2>数え方2: 延べ回数で数える（2026-08-18〜11-02の自動出品ログ）</h2>
+<p>自動出品は毎日、キーワードごとに検索します。同じ商品が毎日また出てくるので、延べ回数は異なる商品の数よりずっと大きくなります。</p>
+<div class="tw"><table>
+<tr><th>段</th><th>延べ件数</th><th>割合</th></tr>
+<tr><td><b>検索で出てきた商品（キーワード×走行の延べ）</b></td><td class="n">392,408</td><td class="n">100%</td></tr>
+<tr><td>　出品済みなので除外</td><td class="n">184,985</td><td class="n">47%</td></tr>
+<tr><td>　いまeBayに出ているので除外</td><td class="n">24,662</td><td class="n">6%</td></tr>
+<tr><td>　見送り済み（不合格の台帳）なので除外</td><td class="n">151,800</td><td class="n">39%</td></tr>
+<tr><td><b>残った候補</b></td><td class="n">30,961</td><td class="n">8%</td></tr>
+<tr><td>　採用（1回の本数の上限の中で選んだ）</td><td class="n">22,372</td><td class="n">6%</td></tr>
+<tr><td>　上限に届かず見送り</td><td class="n">8,589</td><td class="n">2%</td></tr>
+</table></div>
+<p class="note">段の合計は検索結果に一致しています（検算済み）。</p>
+<h3>採用のあと（8/18〜）</h3>
+<div class="tw"><table>
+<tr><th>段</th><th>件数</th></tr>
+<tr><td>出品用のCSVを作る処理に入った（ホビーサーチ直接検索の分を含む）</td><td class="n">29,394</td></tr>
+<tr><td>　成功</td><td class="n">6,421</td></tr>
+<tr><td>　スキップ（出さなかった）</td><td class="n">22,973</td></tr>
+<tr><td><b>ログ上の「新規出品」</b></td><td class="n">5,099</td></tr>
+</table></div>
+<h3>スキップ22,973件の理由（ログのスキップ行22,326行を分類）</h3>
+<div class="tw"><table>
+<tr><th>理由</th><th>延べ件数</th></tr>
+<tr><td>ホビー商品ではない(本・ゲーム等)</td><td class="n">3,804</td></tr>
+<tr><td>JANが取れない／誤取得で破棄</td><td class="n">3,641</td></tr>
+<tr><td>品切れ・在庫切れ</td><td class="n">3,618</td></tr>
+<tr><td>出品済み(自分が既に出している)</td><td class="n">3,461</td></tr>
+<tr><td>購入できないページ(カートもバイボックスも無い)</td><td class="n">3,321</td></tr>
+<tr><td>予約販売(発売前)</td><td class="n">2,574</td></tr>
+<tr><td>価格(仕入れが高すぎる等)</td><td class="n">1,268</td></tr>
+<tr><td>Amazonに商品ページが無い／タイトルが出ない(ボット判定ではない)</td><td class="n">333</td></tr>
+<tr><td>Amazonのページが読めない(ボット判定・取得失敗)</td><td class="n">189</td></tr>
+<tr><td>写真が足りない</td><td class="n">10</td></tr>
+<tr><td>分類できなかった行</td><td class="n">107</td></tr>
+<tr><td>理由の行が残っていない分（スキップ件数との差）</td><td class="n">647</td></tr>
+</table></div>
+<h3>「見送り済み」で除外した151,800件の理由</h3>
+<div class="tw"><table>
+<tr><th>理由</th><th>延べ件数</th></tr>
+<tr><td>ホビー判定で除外</td><td class="n">35,262</td></tr>
+<tr><td>在庫切れ</td><td class="n">27,759</td></tr>
+<tr><td>予約（発売前）</td><td class="n">24,751</td></tr>
+<tr><td>JANなし</td><td class="n">19,169</td></tr>
+<tr><td>価格</td><td class="n">12,314</td></tr>
+<tr><td>その他（写真不足を含む）</td><td class="n">5,794</td></tr>
+<tr><td>梱包サイズ・重さ</td><td class="n">3,960</td></tr>
+<tr><td>ブランド不明</td><td class="n">1,327</td></tr>
+<tr><td>内訳の行が残っていない分（未分類）</td><td class="n">21,464</td></tr>
+</table></div>
+<h2>読み方の注意</h2>
+<ul>
+<li><b>延べと異なる商品を混ぜないでください。</b>延べ392,408件の約92%は、すでに出した・いま出している・すでに見送った商品が、毎日また検索に出てきたものです。「392,408商品を検索した」ではありません。</li>
+<li>延べは8/18〜です。7/13〜8/17は、同じ形で絞り込みの過程が記録されていないため含みません。異なる商品の数は、見送り台帳の記録開始（8/16）からです。</li>
+<li>出品できた数は、ログ上の「新規出品」が5,099（8/18〜）、出品履歴では6,100（8/16〜）で、一致しません。差の約1,001は、期間の差（2日）、別ルート（記録物など）、ログに出ない出品を含むためと見ていますが、内訳は確かめていません（確信度 低）。</li>
+<li>「見つかった異なる商品」の15,596は下限です。見送り台帳に載った9,821商品のうち、後で出品できたのは325商品（約3.3%）だけで、台帳の見送りはほとんど戻ってきていません。</li>
+</ul>
+
+
+</details>
+
+
+<div class="nav"><a href="p15.html">‹ 前の項目</a><a href="p17.html">次の項目 ›</a></div><p class="nav"><a href="index.html">‹ 一覧にもどる</a></p></div></body></html>

@@ -1,0 +1,102 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="format-detection" content="telephone=no"><meta name="color-scheme" content="light dark"><title>項目32 決まったこと</title><style>
+:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+.wrap{max-width:720px;margin:0 auto;padding-top:calc(14px + env(safe-area-inset-top))}
+h1{font-size:1.45rem;line-height:1.35;margin:.3em 0 .1em;text-wrap:balance}
+h2{font-size:1.15rem;margin:1.6em 0 .4em;padding-bottom:.25em;border-bottom:1px solid var(--line);text-wrap:balance}
+h3{font-size:1rem;margin:1.2em 0 .3em}
+p{margin:.55em 0}a{color:var(--acc)}small,.meta,.note{color:var(--mut)}.meta{font-size:.86rem;margin:.1em 0}
+.lead{color:var(--mut);font-size:.92rem}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:.8em 0;font-size:.92rem}
+ul.list{list-style:none;margin:.4em 0;padding:0}ul.list>li{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 12px;margin:8px 0}
+ul.list p{margin:.25em 0}
+details{margin:.5em 0}summary{cursor:pointer;color:var(--acc);padding:6px 0;line-height:1.5}
+details p{margin:.4em 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;margin:10px 0;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.card p{margin:.3em 0}.k{color:var(--mut);font-size:.82rem}.pill{display:inline-block;font-size:.8rem;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:0 10px;margin-top:2px}
+.more{color:var(--acc);font-size:.9rem}
+.head{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:.6em 0 1em}
+.head p{margin:.35em 0}
+.tw{overflow-x:auto;margin:.7em 0;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:.88rem;min-width:100%}th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:.7em 0;padding:.2em 14px;border-left:4px solid var(--acc);background:var(--soft)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);padding:0 4px;border-radius:4px;overflow-wrap:anywhere}
+ol,ul{padding-left:1.4em}li{margin:.2em 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
+.foot{margin-top:30px;color:var(--mut);font-size:.8rem}
+</style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
+
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>そのうち、Shopeeの出品をやめて、eBayで高価格の商品を出すかもしれない（11/17 本人・急がない）</b></p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 急がない（可能性の話・いまは準備だけ）</span></p>
+  <p><span class="k">実際:</span> まだ何も変えていません。関税込みで測ると、仕入¥11,000以上の売れは『実際の売値÷利益0の売値』が中央0.83（77%が赤字）で、いまの値付けのままでは黒字になりません（11/17測定・30件・確信 中）。出す日が来たときのために、黒字になる値付け式を空き時間に用意します（台帳 HIGHEBAY1・急がない）。</p>
+  <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「今すぐ高価格の商品を出さなくて良いけど、そのうちshopeeの出品をやめてebayで高価格商品出す事になるかも」</p><p class="note">本人の発言・2026-11-17 08:1x（このセッションに本人が入力した原文・iPhone）</p></blockquote>
+<p><span class="k">（解釈）</span> 『今すぐ出さなくて良い』は急ぎではないという意味で、『そのうち…かも』は決定ではなく可能性の話、と読みました（確信度 高）。『高価格』は、いまeBayに出せない仕入¥11,000以上・販売$200超の商品を指すと読みました（確信度 中）。Shopeeをやめる時期・理由は聞いていません。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>場所: 台帳は <code>~/.venvs/ebay/bin/python3 -P …/idle_governor.py list</code>（<code>HIGHEBAY1</code>・急がない・目標12/15は着手の目安で締切ではありません）。急ぎの仕事が片づいた空き時間に、私が拾います（あなたの端末で打つ必要はありません）。</li>
+<li>いま分かっていること（11/17 の測定・読み取りのみ）: 仕入¥11,000以上の売れ30件は、関税等を引くと『実際の売値÷利益0の売値』の中央値が0.83（77%が赤字・足りない売値の差は中央$23）。利益0の売値の中央値は$157で、実際は$123でした。値付けを足さないと、高価格をeBayで出しても黒字にならない見込みです（件数が少なく、売れた当時の値付けの結果です）。</li>
+<li>着手するとき: 仕入帯・重さ別に『関税込みで黒字になる売値』を出し、現行の値付け式との差を表にします。Shopeeの今の実績はShopeeのセッションの記録と突き合わせます（Shopeeの画面・出品の公開や取り下げは、そのセッションと本人の手です）。</li>
+<li>eBay側の上限（仕入¥11,000・販売$200）は、本人が決めるまで変えません。送る側が関税を先に払う方式（DDP）で受取拒否の心配は減っていますが、関税は私たちの費用です（台帳 CAP1 の結果）。</li>
+</ol>
+
+<h2>きっかけ</h2>
+<p>11/17 の朝、お父さんから聞いた話として『Zonosで関税が発送者払いになり、100ドル以下ルールもなくなり、2,500ドル（日本側は20万円）まで送れる』と教えていただきました。そのあと、『今すぐ高価格の商品を出さなくて良いけど、そのうちShopeeの出品をやめてeBayで高価格商品を出すことになるかも』と言っていただきました。</p>
+<h2>裏取り（11/17・私）</h2>
+<div class="tw"><table>
+<tr><th>何を</th><th>分かったこと</th><th>確信度</th></tr>
+<tr><td>10/15 の変更</td><td>米国宛ての郵便は、『2,500ドル以下の物品を含む全て』にCBPへの事前申告が必要になりました（Zonos・SafePackage）。従来は免除だった100ドル以下の贈答品も対象です（ECのミカタの記事）</td><td>中</td></tr>
+<tr><td>2,500ドル</td><td>記事では『事前申告が必要な上限』です。2,500ドル超を郵便で送れるかは記事にありません</td><td>—（未確認）</td></tr>
+<tr><td>日本側の20万円</td><td>私の知識では『輸出申告が要らない上限』（1ドル155円なら約1,290ドル）。実効の上限は2,500ドルでなく20万円側になりそうです</td><td>中（未検証）</td></tr>
+</table></div>
+<h2>上限を上げる根拠は、いまはありません（台帳 CAP1・11/17）</h2>
+<div class="tw"><table>
+<tr><th>仕入の帯</th><th>売れ</th><th>台帳の利益（中央）</th><th>関税等を引いた後（中央）</th></tr>
+<tr><td>〜¥5,000</td><td>265件</td><td>+$3.9</td><td>−$2.0</td></tr>
+<tr><td>¥5,000〜11,000</td><td>137件</td><td>+$5.4</td><td>−$3.8</td></tr>
+<tr><td>¥11,000〜20,000</td><td>23件</td><td><b>−$6.8</b></td><td>−$21.5</td></tr>
+<tr><td>¥20,000〜</td><td>7件</td><td>+$19.6</td><td>−$2.4</td></tr>
+</table></div>
+<p>仕入¥11,000以上の売れ30件で、利益0になる売値は中央$157、実際の売値は中央$123でした（売値÷利益0の売値 = 0.83・77%が赤字）。月別の中央は 6月0.83・7月0.69・8月0.50・9月0.80・10月0.89・11月1.07（月ごとの件数は数件）。最近は改善している可能性がありますが、判断できる件数ではありません。</p>
+<h2>私の読み（意見）</h2>
+<ul>
+<li><b>方向には反対しません。</b>高価格帯は1口あたりの売れ数が多い（$120以上は1,000口日あたり2.87・$40〜70の約3倍・10月の測定）ので、出せるなら売上は伸びます（確信度 中）。</li>
+<li><b>ただし『値付けを先に直す』が条件です。</b>いまの式のままで出すと、売れるほど赤字が増えます。上限を上げるのは、黒字になる売値の式ができて、少数で試してからが安全です（確信度 中）。</li>
+<li>Shopeeをやめる時期・理由（手間・売れ行き・手数料など）は聞いていません。決める材料があれば用意します。</li>
+</ul>
+<h2>値付けの倍率で見ると（11/17・HIGHEBAY1 の下調べ・09:1x に訂正）</h2>
+<p>いまの値付けは『掲載価格 = 仕入円 ÷ 100 × 1.4』です。実際に売れた価格が『仕入円 ÷ 100』の何倍か（実効倍率）と、関税等を引いて利益0になる売値に対する実際の売値の比を、仕入の帯ごとに並べました（6/1以降の売れ432件）。<b>訂正:</b> 台帳の仕入のうち223件（52%）は『売れた日の仕入』ではなく、<b>売れた1〜69日後（中央31日）にAmazonで見た価格を、後から当てた値</b>（台帳の呼び名は『遡及』）です。08:3x にここへ載せた表は、この2つを混ぜていて、高い帯が赤字に見えすぎていました。分けて出し直しました。</p>
+<div class="tw"><table>
+<tr><th>仕入の帯</th><th>売れ（確かな仕入／遡及）</th><th>実効倍率・中央（確かな／遡及）</th><th>売値÷必要売値・中央（確かな／遡及）</th><th>赤字の割合（確かな／遡及）</th></tr>
+<tr><td>〜3千円</td><td>53 ／ 85</td><td>1.89 ／ 2.04</td><td>0.95 ／ 1.00</td><td>60% ／ 51%</td></tr>
+<tr><td>3〜5千円</td><td>70 ／ 57</td><td>1.40 ／ 1.46</td><td>0.91 ／ 0.88</td><td>64% ／ 67%</td></tr>
+<tr><td>5千〜8千円</td><td>48 ／ 45</td><td>1.17 ／ 1.24</td><td>0.93 ／ 0.94</td><td>65% ／ 60%</td></tr>
+<tr><td>8千〜1.1万円</td><td>23 ／ 21</td><td>1.14 ／ 1.09</td><td>1.00 ／ 0.95</td><td>52% ／ 62%</td></tr>
+<tr><td>1.1〜1.5万円</td><td>5 ／ 8</td><td>1.16 ／ 0.82</td><td>1.05 ／ 0.75</td><td>40% ／ 100%</td></tr>
+<tr><td>1.5〜2.5万円</td><td>6 ／ 6</td><td>0.96 ／ 0.55</td><td>0.94 ／ 0.54</td><td>83% ／ 100%</td></tr>
+<tr><td>2.5万円〜</td><td>4 ／ 1</td><td>1.03 ／ 0.21</td><td>1.07 ／ 0.22</td><td>25% ／ 100%</td></tr>
+</table></div>
+<ul>
+<li><b>『高い帯は倍率を上げないと赤字』とは、いまのデータでは言えません。</b>仕入が1.1万円以上の帯で、確かな仕入の売れは実効倍率0.96〜1.16・売値÷必要売値0.94〜1.07（利益0のすぐ近く）。遡及の売れだけが0.21〜0.82と不自然に低く、1.1万円以上の遡及23件は全部が赤字に出ます。売れた後に見たAmazon価格が、実際に仕入れた値段より高かった可能性があります（原因は未確認・確信 中）。</li>
+<li>ただし確かな側は件数が少なく（1.1万円以上で15件）、関税を売り手が持つ10/15以降に絞ると1.1〜1.5万円が4件（中央1.11）・1.5〜2.5万円が2件（中央1.04）だけです（時期の絞りは近似・未検証）。<b>『足りている』とも言えません。</b></li>
+<li>安い帯（〜8千円）は、確かな側でも売値÷必要売値が0.91〜0.95・赤字の割合が60〜65%です。1件あたりの赤字は小さく、『数百円の赤字は数を売るために許す』という11/15の方針の範囲です。</li>
+<li><b>仕入そのものより安く売れた売れの14件</b>（台帳の利益の合計 −$1,003）は、<b>12件が遡及</b>・1件が2商品合計の補正値・<b>実際の購入価格が分かるのは1件だけ</b>（8/21 PG νガンダム LEDユニット。注文メモのアニメイト¥15,400に対し売値$65.99・利益 −$59.92）です。仕入割れの割合は、確かな209件で2件（1%）・遡及223件で12件（5%）。<b>−$1,003 の大半は、観測した価格と実際の購入価格が食い違っているだけの可能性があり、実損として扱えません</b>（実損が確かなのは−$59.92の1件）。</li>
+<li>33%OFFが掛かっているか、Amazonが値上がりしたかは未確認です（確信 低）。送料は台帳の推定値（$18の固定が仕入¥11,000以上の28/30件）で、重さ別の損益分岐はいまの台帳では出せません。</li>
+<li><b>遡及の223件は、全部 8/21 より前の売れです</b>（6月85・7月83・8月55。8/21以降の売れに遡及は0件）。注文の My note は、eBay の注文画面で実測したところ、仕入より安く売れた14件のうち 8/8〜8/16 の13件には書かれておらず、8/21 の1件だけに書かれていました（11/17 08:4x・読み取りのみ・13/13）。<b>つまり、遡及の売れは My note を読んでも実額に直せません。</b>実額が分かる道は、Amazon の注文履歴（実際に払った金額）だけです（未実施・Amazon のボット判定に当たらないよう出品ジョブの動かない朝の窓だけ・本人のアカウントのログイン状態が要る）。確信 中。</li>
+<li><b>HIGHEBAY1 の見立てを下げます:</b> 倍率を上げる案は、確かな売れが増えるまで出しません。注文の My note に仕入価格が書かれた売れ（T478）が増えたところで、確かな側だけで測り直します。</li>
+</ul>
+<details class="ev"><summary>技術メモ</summary>
+<ul>
+<li>台帳: <code>CAP1</code>（済み）・<code>HIGHEBAY1</code>（M・価値4・<code>--bg</code>）。</li>
+<li>記憶: <code>~/.claude/projects/-Users-hiroshi164-Documents/memory/project-ddp-and-100usd-rule-2500usd-cap-2026-11-17.md</code>。</li>
+<li>測定の道具: 作業フォルダ（再現可）。売上台帳(6/1以降・仕入れ実測432件)の利益に関税・Zonos手数料(申告=仕入値で 13.75%＋567円)を引き直した読み取りです。送料は台帳の推定値で、売れた当時の値付けの結果です。</li>
+</ul></details>
+
+
+<div class="nav"><a href="p31.html">‹ 前の項目</a><a href="p33.html">次の項目 ›</a></div><p class="nav"><a href="index.html">‹ 一覧にもどる</a></p></div></body></html>

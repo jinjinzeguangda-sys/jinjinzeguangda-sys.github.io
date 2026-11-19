@@ -1,0 +1,85 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="format-detection" content="telephone=no"><meta name="color-scheme" content="light dark"><title>項目2 決まったこと</title><style>
+:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+.wrap{max-width:720px;margin:0 auto;padding-top:calc(14px + env(safe-area-inset-top))}
+h1{font-size:1.45rem;line-height:1.35;margin:.3em 0 .1em;text-wrap:balance}
+h2{font-size:1.15rem;margin:1.6em 0 .4em;padding-bottom:.25em;border-bottom:1px solid var(--line);text-wrap:balance}
+h3{font-size:1rem;margin:1.2em 0 .3em}
+p{margin:.55em 0}a{color:var(--acc)}small,.meta,.note{color:var(--mut)}.meta{font-size:.86rem;margin:.1em 0}
+.lead{color:var(--mut);font-size:.92rem}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:.8em 0;font-size:.92rem}
+ul.list{list-style:none;margin:.4em 0;padding:0}ul.list>li{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 12px;margin:8px 0}
+ul.list p{margin:.25em 0}
+details{margin:.5em 0}summary{cursor:pointer;color:var(--acc);padding:6px 0;line-height:1.5}
+details p{margin:.4em 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;margin:10px 0;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.card p{margin:.3em 0}.k{color:var(--mut);font-size:.82rem}.pill{display:inline-block;font-size:.8rem;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:0 10px;margin-top:2px}
+.more{color:var(--acc);font-size:.9rem}
+.head{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:.6em 0 1em}
+.head p{margin:.35em 0}
+.tw{overflow-x:auto;margin:.7em 0;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:.88rem;min-width:100%}th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:.7em 0;padding:.2em 14px;border-left:4px solid var(--acc);background:var(--soft)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);padding:0 4px;border-radius:4px;overflow-wrap:anywhere}
+ol,ul{padding-left:1.4em}li{margin:.2em 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
+.foot{margin-top:30px;color:var(--mut);font-size:.8rem}
+</style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
+
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>書き込み後の読み戻しはしない。確認は、全部終わってから一括</b></p>
+  <p><span class="k">判定:</span> <span class="j">⏳ 止まっている疑い（254.0時間更新なし）</span></p>
+  <p><span class="k">実際:</span> 読み直し確認の記録は11/8 03:40から254.0時間更新がなく、12時間の線を超えています。一致4,716・不一致0・終了済み0で、数字は前回から変化なしです。</p>
+  <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「それが全数終わったら読み取りでの確認と自動出品を再開。」</p><p class="note">本人の発言・2026-11-02 14:51（上の発言の続き）</p></blockquote>
+<p><span class="k">（解釈）</span> 読み戻しは、書き込み・カテゴリ・セールが終わってから一括で行う、と理解しています（確信度 高）。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>進み具合: <code>…/verify_browse/</code> の <code>state.json</code>（一致 ok・不一致 ng・終了済み gone）と、同じフォルダの <code>*.log</code> の末尾。11/4 13:04時点は 一致3,685・不一致0・残り1,027（今日の上限3,800で停止）。</li>
+<li>不一致が出たら、その口だけを書き直します（全部はやり直しません）。同じフォルダの <code>confirmed_ng.txt</code> に出ます（いまは0）。</li>
+<li>残り1,027口の続きを、いつ・どう走らせるかは未確認です（待機役 <code>verify_after_all_done.sh</code> は17時までの設計）。次の枠で再開するか、私が起動し直します。</li>
+<li>確認を後回しにする方針は変えません。書き込み・カテゴリ・セールが先です。</li>
+</ol>
+<h2>いまの状態（11/18 17:55）</h2>
+<p class="note"><b>今日の測定結果を使って書き直した項目です</b>（最終測定 11/18 17:55）。測定に無い数字は、測った日時を添えるか、下に一覧を出しています。</p>
+<p><b>いまの状態:</b> 『書けたかをeBayから読み直す確認』の記録は、最後の更新が11/8 03:40で、今日17:40の測定で254.0時間前です。基準の12時間を超え、止まっている疑いです。一致4,716・不一致0・終了済み0で、数字は前回(11/17 11:55の更新)と同じです。</p><ul class="lead"><li><b>変化:</b> 数字は増えず、経過が224.1時間から254.0時間（+29.9＝254.0−224.1）に延びただけです。</li><li><b>完了の可能性（確信度 低）:</b> 11/4 13:04の資料では一致3,685＋未確認1,027＝4,712。今の一致4,716は4多く（4,716−4,712）、全口を確認し終えて止まっただけかもしれません。対象の総数は未測定です。</li><li><b>食い違い:</b> 外からの点検の一覧表は『27時間止まっている』と固定の文で書きますが、直接測った254.0時間を優先します。不一致0は確認した4,716口の中だけの結果で、公開中の出品全体（標本58,125口）ではありません。</li><li><b>次:</b> （私）対象の総数と突き合わせ、止まった理由が完了か停止かを記録の最後の行で見分けます。</li></ul>
+
+<p class="note">今日の測定では確かめていない数字（前回までの記録から引いたもの）: 1027、224、3685、4712</p>
+<p class="note">数字の出所（測定の名前）: verify_state、outside_in</p>
+
+<details class="ev"><summary>これまでの経過（当時のまま・畳んでいます）</summary>
+
+<h2>最新（11/4 13時ごろ）</h2>
+<ul class="lead">
+<li>読み戻しの確認は、<b>11/4 03:04 に始まりました</b>（書き込みとカテゴリ分けの完了印が出たため）。</li>
+<li>結果（13:04時点）: 一致 <b>3,685口</b>・不一致 0・終了済み 0。未確認の残りは <b>1,027口</b>で、1日の呼び出し上限（3,800）に達して今日は止まっています。</li>
+<li>不一致が0なので、いまのところ『書いたのに入っていない』口は見つかっていません。</li>
+</ul>
+
+<details class="ev"><summary>これまでの経過（11/2〜11/3の記録・当時のまま）</summary>
+
+<h2>何をやめたか</h2>
+<p>1口ずつ「書いた直後に読み戻して、ちゃんと変わったか確かめる」ことを、やめました。</p>
+<h2>なぜか</h2>
+<p>あなたの優先順位が「書き込み → カテゴリ分け → 33%セール → 読み戻しは最後」だからです。読み戻しを挟むと、そのぶん遅くなり、11/14のセール終了に間に合いにくくなります。</p>
+<h2>代わりにどうするか</h2>
+<ul>
+<li>全部終わった後に、まとめて確認します。</li>
+<li>確認は、書き込みとは<b>別の呼び出し枠</b>を使います。だから、書き込みの上限（518）に当たっていても、確認は進められます。</li>
+<li>待機役が「完了印」を待っていて、出たら自動で確認を始めます。私が手で始める必要はありません。</li>
+</ul>
+<h2>弱点</h2>
+<p>読み戻しをしないので、書き込みが静かに失敗していても、全部終わるまで気づけません。「済み」に数えているのは、eBayが書き込み成功と返した分だけ、と読んでいます（確信度 中）。最後の一括確認で、食い違いがあれば洗い出します。</p>
+
+
+</details>
+
+</details>
+
+
+<div class="nav"><a href="p1.html">‹ 前の項目</a><a href="p3.html">次の項目 ›</a></div><p class="nav"><a href="index.html">‹ 一覧にもどる</a></p></div></body></html>

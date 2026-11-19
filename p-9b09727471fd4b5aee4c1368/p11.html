@@ -1,0 +1,73 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="format-detection" content="telephone=no"><meta name="color-scheme" content="light dark"><title>項目11 決まったこと</title><style>
+:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+.wrap{max-width:720px;margin:0 auto;padding-top:calc(14px + env(safe-area-inset-top))}
+h1{font-size:1.45rem;line-height:1.35;margin:.3em 0 .1em;text-wrap:balance}
+h2{font-size:1.15rem;margin:1.6em 0 .4em;padding-bottom:.25em;border-bottom:1px solid var(--line);text-wrap:balance}
+h3{font-size:1rem;margin:1.2em 0 .3em}
+p{margin:.55em 0}a{color:var(--acc)}small,.meta,.note{color:var(--mut)}.meta{font-size:.86rem;margin:.1em 0}
+.lead{color:var(--mut);font-size:.92rem}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:.8em 0;font-size:.92rem}
+ul.list{list-style:none;margin:.4em 0;padding:0}ul.list>li{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 12px;margin:8px 0}
+ul.list p{margin:.25em 0}
+details{margin:.5em 0}summary{cursor:pointer;color:var(--acc);padding:6px 0;line-height:1.5}
+details p{margin:.4em 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;margin:10px 0;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.card p{margin:.3em 0}.k{color:var(--mut);font-size:.82rem}.pill{display:inline-block;font-size:.8rem;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:0 10px;margin-top:2px}
+.more{color:var(--acc);font-size:.9rem}
+.head{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:.6em 0 1em}
+.head p{margin:.35em 0}
+.tw{overflow-x:auto;margin:.7em 0;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:.88rem;min-width:100%}th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:.7em 0;padding:.2em 14px;border-left:4px solid var(--acc);background:var(--soft)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);padding:0 4px;border-radius:4px;overflow-wrap:anywhere}
+ol,ul{padding-left:1.4em}li{margin:.2em 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
+.foot{margin-top:30px;color:var(--mut);font-size:.8rem}
+</style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
+
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>eBayの「在庫0でも出品を残す」設定は、有効（ON）を確認した</b></p>
+  <p><span class="k">判定:</span> <span class="j">✅ 設定は有効（11/2確認・今回は未測定）</span></p>
+  <p><span class="k">実際:</span> eBayの設定『在庫が0でも出品を残す』は、11/2 17:30と17:32の読み取りで有効（ON）でした。今回は測っていません。数量0にした出品が残るかは未検証です。</p>
+  <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<p class="note">この設定そのものについての本人の発言は、記録がありません。関係する本人の選択は項目10（取り消し方に B ＝数量を0にして残す）です。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>確認済み（11/2 17:30と17:32の2回）: 設定は有効（ON）。再確認するとき（Macのターミナル・どのフォルダでも可）: <code>~/.venvs/ebay/bin/python3 -P …/probe_oos_pref.py</code>（読み取り1回。出るのは Ack・エラーコード・設定値だけ）。</li>
+<li>「OutOfStockControlPreference=true」なら有効です。false なら、有効にする方法をあなたに出します。設定を変えるのは、あなたの手です。</li>
+<li>有効でも、実際に数量を0にした出品が残るかは未検証です。最初の本番書き込みは1〜2件で試し、eBayの画面と読み取りの両方で確かめます。</li>
+</ol>
+<h2>いまの状態（11/18 17:55）</h2>
+<p class="note"><b>今日は測り直していません（前回の内容の持ち越し）</b>（最終測定 不明(今回の更新より前)）。</p>
+<p><b>いまの状態:</b> 前回の内容のままです（今回の測定対象ではありません・持ち越し）。『在庫が0でも出品を残す』設定は、11/2 17:30と17:32の2回の読み取りで、有効（ON）でした。資料に残っている確認はこの2回だけです。</p><ul class="lead"><li><b>前回からの変化:</b> なし。</li><li><b>未検証:</b> 数量を0にした出品が、実際にeBayに残るか。項目10の最初の書き込みを1〜2口で試して確かめます。外からの点検でも『11/2に1回読んだだけ（毎日ではない）』という評価です。</li><li><b>再確認の方法（Macのターミナル・どのフォルダでも可・読み取り1回）:</b> <code>~/.venvs/ebay/bin/python3 -P …/probe_oos_pref.py</code> 。<code>OutOfStockControlPreference=true</code> なら有効です。falseなら、有効にする方法を本人に出します（設定を変えるのは本人の手）。</li><li><b>次:</b> （私）項目10の最初の書き込みの前に、もう一度だけ読み取りで再確認します。</li></ul>
+
+
+<p class="note">数字の出所（測定の名前）: なし（前回の内容の持ち越し）</p>
+
+<details class="ev"><summary>これまでの経過（当時のまま・畳んでいます）</summary>
+
+<h2>なぜ大事か</h2>
+<p>「数量を0にして残す」は、eBay側の設定「在庫が0になっても出品を残す」が<b>有効</b>なときだけ成り立ちます。無効だと、数量を0にした時点で、eBayが出品を自動で終了することがあります。それは、あなたが選んだ B ではなく、A（終了）になってしまいます。</p>
+<h2>いま分かっていること</h2>
+<ul>
+<li>本番のコード（amazon_to_ebay.py と listing_history.py）には、この設定を読む・変える処理が<b>ありません</b>（検索して0件）。</li>
+<li>出品の台帳（active_listings.json）に、数量の欄がありません（項目は 通貨・商品番号・価格・SKU・開始日・題名 のみ）。だから、数量0の出品がすでにあるかどうかは、台帳からは分かりません。</li>
+<li>17:30に読み取りで確かめた結果、この設定は<b>有効（ON）</b>でした（17:32にもう一度確かめて、同じ結果でした）。確認は書き込みではなく、読み取りです。</li>
+</ul>
+<h2>これからやること</h2>
+<ol>
+<li>数量を0にする最初の本番書き込みは、1〜2件で試します。eBayの画面と読み取りの両方で、出品が残っているかを確かめます（まだ試していません）。</li>
+<li>数量0にする処理は、説明文の差し替えが終わるまで、試運転（候補を出すだけ）のままです。</li>
+</ol>
+
+
+</details>
+
+
+<div class="nav"><a href="p10.html">‹ 前の項目</a><a href="p12.html">次の項目 ›</a></div><p class="nav"><a href="index.html">‹ 一覧にもどる</a></p></div></body></html>

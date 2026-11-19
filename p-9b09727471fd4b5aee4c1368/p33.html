@@ -1,0 +1,115 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="format-detection" content="telephone=no"><meta name="color-scheme" content="light dark"><title>項目33 決まったこと</title><style>
+:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5}
+@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+.wrap{max-width:720px;margin:0 auto;padding-top:calc(14px + env(safe-area-inset-top))}
+h1{font-size:1.45rem;line-height:1.35;margin:.3em 0 .1em;text-wrap:balance}
+h2{font-size:1.15rem;margin:1.6em 0 .4em;padding-bottom:.25em;border-bottom:1px solid var(--line);text-wrap:balance}
+h3{font-size:1rem;margin:1.2em 0 .3em}
+p{margin:.55em 0}a{color:var(--acc)}small,.meta,.note{color:var(--mut)}.meta{font-size:.86rem;margin:.1em 0}
+.lead{color:var(--mut);font-size:.92rem}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin:.8em 0;font-size:.92rem}
+ul.list{list-style:none;margin:.4em 0;padding:0}ul.list>li{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:8px 12px;margin:8px 0}
+ul.list p{margin:.25em 0}
+details{margin:.5em 0}summary{cursor:pointer;color:var(--acc);padding:6px 0;line-height:1.5}
+details p{margin:.4em 0}
+a.card{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:10px 14px;margin:10px 0;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.card p{margin:.3em 0}.k{color:var(--mut);font-size:.82rem}.pill{display:inline-block;font-size:.8rem;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:0 10px;margin-top:2px}
+.more{color:var(--acc);font-size:.9rem}
+.head{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:.6em 0 1em}
+.head p{margin:.35em 0}
+.tw{overflow-x:auto;margin:.7em 0;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;font-size:.88rem;min-width:100%}th,td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}th{background:var(--soft)}
+blockquote{margin:.7em 0;padding:.2em 14px;border-left:4px solid var(--acc);background:var(--soft)}
+code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);padding:0 4px;border-radius:4px;overflow-wrap:anywhere}
+ol,ul{padding-left:1.4em}li{margin:.2em 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
+.foot{margin-top:30px;color:var(--mut);font-size:.8rem}
+</style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
+
+<div class="head">
+  <p><span class="k">決めたこと:</span> <b>注文が入った買い手へ『ありがとうメッセージ』を自動で送る／送料の計算を実装する（11/17 本人）</b></p>
+  <p><span class="k">判定:</span> <span class="j">✅ ありがとうメッセージは本番で有効(11/17 19:50)・送信済み27通(自動5＋11/18 08時台に11/16〜17の注文22件へ追い送り)／送料は表を見つけた(対象は未決)</span></p>
+  <p><span class="k">実際:</span> ありがとうメッセージの送信道具を作り、試験（自己34・端から端13・故意の壊し18本を全部検出）を通しました。本物の注文134件（直近14日）で下見でき、直近10件は全部『送る』判定でした。11/17 19:50 に本番で有効にしました（15分ごとに確認・1回1件・有効にした後の注文だけが対象）。1回走らせて『送信0・見送り38（有効にする前の注文）』と確認済みで、最初の1通は次の新しい注文からです（21:57と11/18 09:12に私が確かめます）。送料の計算は『後で一緒に決める』ので着手していません。 【11/18 08時台】本人の依頼で、11/16〜11/17 の注文25件のうち、父が注文後に何も送っていない22件へ追い送りしました（失敗0・台帳に via=backfill_20261118）。送らなかった3件は、父が注文後に送っていた2件と、買い手から質問が来ていた1件です。25件とも未発送で、『準備中です』の文面は事実と合っています。判定に使ったメッセージの記録は 11/17 23:14 までで、それ以降に父が送った分は見ていません。</p>
+  <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
+</div>
+
+<h2>本人の方針（今後こうしたい）</h2>
+<blockquote><p>「今後送料の計算と、注文時のありがとうメッセージを早めに実装して欲しい」</p><p class="note">本人の発言・2026-11-17 13:28（このセッションに本人が入力した原文・iPhone）</p></blockquote>
+<blockquote><p>「1.表があるので後で一緒に詳しく決めよう　2.A」</p><p class="note">本人の発言・2026-11-17 13:3x（上の私の質問『1 送料の計算はどれか(A実際の送料の自動計算/B出品時の見積/C買い手への請求)・2 ありがとうメッセージはどこまで自動か(A注文ごとに英語の固定文を自動送信・初回は承認後に有効化/B下書きだけ)』への返事。2のAの選択肢の文は私が書いたもの）</p></blockquote>
+<blockquote><p>「注文が入った後の感謝メッセージはもう本番に実装して動かして欲しい。
+注文が入った時に、買い手に対してメッセージを送る機能ね」</p><p class="note">本人の発言・2026-11-17 19:4x（このセッションに本人が入力した原文・iPhone）</p></blockquote>
+<blockquote><p>「送料の件はお父さんが忙しいので、郵便局やebayが出している情報で表みたいなのがあるはずなので、それを探してほしい」</p><p class="note">本人の発言・2026-11-17 22時台（このセッションに本人が入力した原文）</p></blockquote>
+<blockquote><p>「因みに感謝メッセージは、
+昨日一昨日で売れた商品でまだ何も送ってなさそうな商品があれば送っておいて」</p><p class="note">本人の発言・2026-11-18 08時台（このセッションに本人が入力した原文・iPhone）</p></blockquote>
+<p><span class="k">（解釈）</span> 2のAは『注文ごとに英語の固定文を1通・自動で送る。二重送信は防ぐ。有効にする前に、送るはずの文を直近の注文ぶん並べて承認をもらう』と読みました（確信度 高）。19:50 に本番で有効にしました（本人の『もう本番に実装して動かして欲しい』を、文面の承認も含む『はい（A）』と読みました・確信度 中）。文面は私が書いた案のままで、本人が文面そのものを明言して承認した記録はありません。直したい時は『止める→文面を直す→start』です。1の『表があるので後で一緒に詳しく決めよう』は、送料の計算は今は着手せず、本人と表を見ながら対象を決める、と読みました（確信度 中）。『表』が何を指すかは聞いていません。（解釈・11/17 22時台）『表』は、日本郵便とeBayが公開している送料表のことと読みました（確信度 中）。父が別に持っている表があるかは未確認です。 （解釈・11/18 08時台）『昨日一昨日で売れた商品』は 11/16・11/17（日本時間）に入った注文、『まだ何も送ってなさそう』は『父が注文後に何も送っていない』と読みました（確信度 中）。有効にする前の注文は定時ジョブが送らないので、注文番号の許可リストだけに1通ずつ送りました。買い手から質問が来ている1件は、定型のお礼より父の返信が先と判断して外しました（解釈）。</p>
+
+<h2>再開するとき（次にやること）</h2>
+<ol>
+<li>場所: 道具一式は <code>…/thankmsg/</code>（OneDrive の外）。台帳は <code>THANKMSG1</code>（道具・済み）・<code>THANKMSG2</code>（有効化後の確認）・<code>SHIPCALC2</code>（送料の計算・急がない・本人と一緒に決める）。</li>
+<li>下見（送信なし）: <code>bash …/thankmsg_ctl.sh preview</code>（Macのターミナル。直近10件の注文に『送るか／送らないか』と文面を出します）。</li>
+<li>有効化は済み（11/17 19:50:46・私が thankmsg_ctl.sh start を実行）。旗 <code>…/ENABLED.json</code>（19:50:46 より後の注文だけが対象・1回1件）と launchd <code>com.jinji.thankmsg</code>（15分ごと）。止める（ジョブを外し旗を退避）: <code>bash …/thankmsg_ctl.sh stop</code>。状態: 同 <code>status</code>。</li>
+<li>有効化の後は、最初の1通が本当に届いたか（台帳 <code>…/ledger.jsonl</code> に sent が出るか）を私が確かめます。失敗が出たら自動では止めず、原因を調べて板に出します（上限は1回1件のままなので被害は小さいです）。</li>
+<li>送料の表（日本郵便の米国公式表・現行と2027-02-01改定）は <code>…/japanpost_us_ems_airpacket_20261117.csv</code> に保存済み（出典は同フォルダの README.txt）。</li>
+<li>送料の計算の実装（SHIPCALC2）は、『どの送料か』（A実際の送料／B出品時の見積／C買い手への請求）を本人と決めてから。2027-02-01の改定への備えは台帳 <code>SHIPREV2027</code>（期日1/20・M・価値5）。</li>
+<li>追い送り（11/18 08時台・済み）: 道具 <code>…/backfill_send.py</code>（注文番号の許可リスト22件・<code>--send</code> が無ければ下見だけ・同じ台帳に <code>via=backfill_20261118</code> で記録）。同じ注文には二度と送りません（台帳が sent の注文は定時ジョブも見送り）。</li>
+</ol>
+
+<h2>きっかけ</h2>
+<p>11/17 13:28 に『今後送料の計算と、注文時のありがとうメッセージを早めに実装して欲しい』と言っていただき、私の質問に『1.表があるので後で一緒に詳しく決めよう　2.A』と返事をいただきました。</p>
+<h2>ありがとうメッセージ: できたこと</h2>
+<div class="tw"><table>
+<tr><th>何を</th><th>分かったこと／やったこと</th><th>確信度</th></tr>
+<tr><td>eBay の標準機能</td><td>文面を自由に変えて自動で送る機能は無いようです（コミュニティの回答。公式の確認はできていません）。そのため自作です。</td><td>中（未検証）</td></tr>
+<tr><td>父eBayに前からあった送信機能</td><td>『ありがとうメッセージ』の送信コードが ebay_api.py にありましたが、すでに廃止された呼び出し（AddMemberMessageAAQToBidder）を使っていて、送信済みの記録 messaged_orders.json も空（<code>[]</code>）＝一度も動いていません。文面も『ePacket Light・10〜21営業日』と今の発送方法と違っていたので使いません。</td><td>高</td></tr>
+<tr><td>使う呼び出し</td><td>購入済みの買い手に送る専用の AddMemberMessageAAQToPartner。注文から90日以内・本文2000字まで・HTML不可・リンクや宣伝は入れない（eBay の仕様）。</td><td>高（仕様ページを確認）</td></tr>
+<tr><td>いまの認証で呼べるか</td><td>存在しない宛先で試したところ『宛先が不正』（コード17447）で弾かれ、認証・権限のエラーではありませんでした。何も送られていません。本物の1通目で最終確認になります。</td><td>中</td></tr>
+<tr><td>下見</td><td>直近14日の注文134件を eBay から読み、直近10件に『送る／送らない』を付けました（全部『送る』）。</td><td>高</td></tr>
+</table></div>
+<h2>送る文面（案・まだ承認されていません）</h2>
+<p class="note">（コマンドの例は省きました。PC版にあります）</p>
+<ul>
+<li>『発送までの日数』は数字を書かず『出品に書いてある日数以内』にしました（ハンドリングタイムを10→5日に縮めるときに文面を直さずに済みます）。</li>
+<li><b>関税・税の文は入れていません。</b>米国宛ては発送者払い（DDP）になったので『買い手の国が決める』と書くと事実と食い違うためです。</li>
+<li>買い手の名前は使わず『Hello,』にしました（配送先の氏名は全角・略称・大文字など形が揃っておらず、失敗すると不自然なため）。</li>
+</ul>
+<h2>事故を防ぐ仕組み（全部、試験で確かめました）</h2>
+<div class="tw"><table>
+<tr><th>起こりうる事故</th><th>防ぎ方</th></tr>
+<tr><td>有効にした瞬間、過去30日の注文に一斉送信</td><td>旗に『有効化した時刻』を書き、それより前の注文には送らない。さらに注文から72時間より古いものも送らない。</td></tr>
+<tr><td>同じ人に2通送る</td><td>送る前に台帳へ『試みた』を書く。応答が不明なまま止まった注文は『不明』として二度と送らない（欠落を選ぶ）。成功済みも送らない。</td></tr>
+<tr><td>キャンセル中・返金済み・未払いの買い手に送る</td><td>発送対象から外す判定（取り消し要求・返金あり・支払い未完了）を送る前に必ず通す。</td></tr>
+<tr><td>暴走して大量に送る</td><td>1回の上限（最初は1件）・1日100件の上限・1件ごとに1.5秒あける。eBay の上限（1分に75回）の手前。</td></tr>
+<tr><td>旗が壊れている・無い</td><td>送らない（安全側）。旗を消す／stop で即停止。</td></tr>
+<tr><td>一時的な失敗（通信・eBay側の5xx）</td><td>最大3回まで次回に再送。恒久的な失敗（宛先不正など）は再送しない。</td></tr>
+<tr><td>文面に危ない内容が混ざる</td><td>自己試験で『リンク・メール・関税・未置換の{}が無い』『2000字以内』を毎回確かめる。</td></tr>
+</table></div>
+<h2>送料の計算（表を見つけた・どの送料にするかは未決）</h2>
+<p>11/17 22時台に『送料の件はお父さんが忙しいので、郵便局やebayが出している情報で表みたいなのがあるはずなので、それを探してほしい』と言っていただき、公式の表を探しました。</p>
+<div class="tw"><table>
+<tr><th>米国宛（第4地帯）の日本郵便・公式料金</th><th>いま</th><th>2027年2月1日から</th><th>上がる幅</th></tr>
+<tr><td>EMS 1kgまで</td><td class="n">5,300円</td><td class="n">7,400円</td><td class="n">+39.6%</td></tr>
+<tr><td>EMS 2kgまで</td><td class="n">7,900円</td><td class="n">10,300円</td><td class="n">+30.4%</td></tr>
+<tr><td>EMS 5kgまで</td><td class="n">15,100円</td><td class="n">18,400円</td><td class="n">+21.9%</td></tr>
+<tr><td>国際エアパケット 100gまで</td><td class="n">1,200円</td><td class="n">1,680円</td><td class="n">+40.0%</td></tr>
+<tr><td>国際エアパケット 500gまで</td><td class="n">2,040円</td><td class="n">2,720円</td><td class="n">+33.3%</td></tr>
+<tr><td>国際エアパケット 1kgまで</td><td class="n">3,090円</td><td class="n">4,020円</td><td class="n">+30.1%</td></tr>
+<tr><td>国際エアパケット 2kgまで</td><td class="n">5,190円</td><td class="n">6,620円</td><td class="n">+27.6%</td></tr>
+</table></div>
+<ul>
+<li><b>現行の表は、父のコード（heavy_item_guard.py）の表と一致</b>しています（EMS 6kgまで全18段・エアパケットは『1,200円＋100gごと210円』）。確信度 高。</li>
+<li><b>2027年2月1日から米国宛が約22〜40%上がります</b>（日本郵便の公式PDFの数字・確信度 高）。EMSは6kg以下も1kg刻みになります。このままだと送料を使う計算（出品時の見積・赤字判定・価格監視）が2/1から実際より安く出ます。備えは台帳 SHIPREV2027（期日1/20）。</li>
+<li>eBay側（SpeedPAK・SpeedPAK Economy）の料金表は<b>公開されていません</b>。CPaSS にログイン →『設定』→『配送業者設定』→ Orange Connex (Japan) →『SpeedPAKセラーポータル』→『料金表』→右上『料金表をダウンロードする』で入手できます（eBayの案内ページ。実際の画面は未確認）。あなたか父のアカウントで取るのが近道です。</li>
+<li>国際小包（航空・SAL・船便）の現行表は読み取っただけで、父のコードとの照合は未了です（確信度 中）。</li>
+</ul>
+<p>次に決めること: 送料の計算を『A 注文ごとの実際の送料の自動計算／B 出品時の見積の精度／C 買い手に請求する送料の見直し』のどれから始めるか（台帳 SHIPCALC2・本人と一緒に決める）。</p>
+<details class="ev"><summary>技術メモ</summary>
+<ul>
+<li>道具: <code>…/thank_you_sender.py</code>（<code>--selftest</code>・<code>--preview N</code>・<code>--probe-auth</code>・<code>--send</code>）／<code>thankmsg_ctl.sh</code>（preview・start・stop・status）／<code>com.jinji.thankmsg.plist</code>（15分ごと・未登録）／<code>test_e2e.py</code>（eBay につながない端から端の試験13項目）。</li>
+<li>状態は <code>…/thankmsg/</code>（OneDriveの外）: ENABLED.json（旗）・ledger.jsonl（台帳）・run.log。</li>
+<li>試験: 自己試験34項目／端から端13項目／故意の壊し 11（自己試験）＋7（端から端）＝18本すべて検出。</li>
+<li>注意: 本番の ebay_api.py（認証と再試行の部品）を読み込むだけで、書き換えていません。eBay の設定ファイルは、トークン更新のとき本番と同じく更新されます。</li>
+</ul></details>
+
+
+<div class="nav"><a href="p32.html">‹ 前の項目</a><a href="p34.html">次の項目 ›</a></div><p class="nav"><a href="index.html">‹ 一覧にもどる</a></p></div></body></html>
