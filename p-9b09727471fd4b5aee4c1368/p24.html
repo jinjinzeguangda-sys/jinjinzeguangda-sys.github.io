@@ -25,12 +25,23 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--s
 ol,ul{padding-left:1.4em}li{margin:.2em 0}
 .nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
 .foot{margin-top:30px;color:var(--mut);font-size:.8rem}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:.8em 0 1.2em}
+a.tile{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;min-height:76px;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.tile b{display:block;font-size:1.7rem;line-height:1.2;color:var(--acc)}a.tile span{display:block;font-size:.84rem;color:var(--mut);line-height:1.4}
+details.row{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:2px 12px;margin:8px 0}
+details.row>summary{display:block;color:var(--fg);padding:8px 0;min-height:44px;line-height:1.5}
+details.row .sub{display:block;font-size:.82rem;color:var(--mut);margin-top:2px}
+details.row[open]>summary{border-bottom:1px solid var(--line);margin-bottom:4px}
+ul.plain{margin:.3em 0 .6em;padding-left:1.2em}ul.plain li{margin:.35em 0;font-size:.92rem}
+a.card .no{font-size:.78rem;color:var(--mut);margin:0}a.card .ttl{font-weight:700;margin:.15em 0}a.card .vd{font-size:.9rem;margin:.25em 0}
+a.card .ac{font-size:.88rem;color:var(--mut);margin:.25em 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+h2{scroll-margin-top:12px}
 </style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
 
 <div class="head">
   <p><span class="k">決めたこと:</span> <b>進捗管理: 毎日・毎週の計画表（WBS）と、毎日の『動いたか』確認</b></p>
   <p><span class="k">判定:</span> <span class="j">⏳ 作成済み・今日は動いていない疑いが 1 行</span></p>
-  <p><span class="k">実際:</span> 計画 29 行（機械 23・私/自走役 4・本人/父 2）。11/20 08:50 の時点の結果: ❌1 ❔2 🟡1 ✅10 ⏳15。 7日枠は 5% 使用（7日の経過 70%）。</p>
+  <p><span class="k">実際:</span> 計画 29 行（機械 23・私/自走役 4・本人/父 2）。11/20 08:54 の時点の結果: ❌1 ❔2 🟡1 ✅10 ⏳15。 7日枠は 5% 使用（7日の経過 70%）。</p>
   <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
 </div>
 
@@ -54,7 +65,7 @@ ol,ul{padding-left:1.4em}li{margin:.2em 0}
 <li>配線済み・まだ一度も無人で動かしていません: 自走役が毎日11:20に <code>plan_check.py --write</code> を回し（<code>runner.py</code> 267行目）、結果 <code>plan_check_latest.json</code> を最初に読む（<code>runner_prompt.md</code> の 0d）。初めて無人で動くのは 11/8 11:20 で、効いたかは効果台帳 E29 で確かめます。</li>
 <li>11/7 22:45 に済んだ作業: 出力が確かめられず🟡だった6行（B2・B4・B5・C1・D1・E1）に、今日書かれる出力ファイルを証拠として指定しました。0バイトの <code>.out</code> は古くて証拠にならないので使っていません。結果は ❔3 💤1 ✅21 ⏳4（🟡と❌は0）。✅は『出力が予定時刻より後に更新された』であって、中身の正しさまでは見ていません。</li>
 </ol>
-<p>計画 29 行（機械 23・私/自走役 4・本人/父 2）。11/20 08:50 の時点の結果: ❌1 ❔2 🟡1 ✅10 ⏳15。 7日枠は 5% 使用（7日の経過 70%）。</p>
+<p>計画 29 行（機械 23・私/自走役 4・本人/父 2）。11/20 08:54 の時点の結果: ❌1 ❔2 🟡1 ✅10 ⏳15。 7日枠は 5% 使用（7日の経過 70%）。</p>
 <p class="note"><b>7日枠の実測</b>（rate_limits_personal.json の記録・0.0時間前）: 5% 使用／7日の経過 70%。ペースより余裕があります。あなたの「止まってる暇があるならどんどん進めて」は、この余りを使う、と読みました。</p>
 <p class="note"><b>この表は手で判定していません。</b>各行の「今日の結果」は、launchd の実行回数・最終終了コード・出力ファイルの更新時刻・心拍ログ（Macが起きていたか）・台帳から、資料を作り直すたびに測り直します（毎日10:00・14:20）。<b>限界:</b> 🟡の行は「launchdが実行した」までしか確かめられていません（出力ファイルが無いジョブ）。✅も「出力が更新された」であって「成果が出た」ではありません。成果（出品数・値引き表示・注文数）は、各項目の「外から見た点検」で別に測ります。</p>
 <h3>記号の意味</h3><div class="tw"><table><tr><th>記号</th><th>意味</th></tr><tr><td>✅</td><td>動いた証拠あり（出力が予定時刻より後に更新された）</td></tr><tr><td>🟡</td><td>launchd上は実行済み。ただし出力で確かめられない＝中身は未確認</td></tr><tr><td>▶</td><td>実行中</td></tr><tr><td>⏳</td><td>予定時刻がまだ／今日は予定日ではない</td></tr><tr><td>💤</td><td>予定時刻にMacが止まっていた（心拍ログが無い）</td></tr><tr><td>❔</td><td>判定できない（予定より後に登録された・本人/父の手の行）</td></tr><tr><td>❌</td><td>動いていない疑い（起きていたのに未実行・終了コードが0以外）</td></tr></table></div>
