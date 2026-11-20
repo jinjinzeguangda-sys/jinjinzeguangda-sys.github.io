@@ -41,7 +41,7 @@ h2{scroll-margin-top:12px}
 <div class="head">
   <p><span class="k">決めたこと:</span> <b>毎日の時刻表: 寝る前に充電をつなげば朝までに自動で進むもの／このセッションの時刻つき確認／動かないもの</b></p>
   <p><span class="k">判定:</span> <span class="j">✅ 測定して作成（作り直すたびに測り直す）</span></p>
-  <p><span class="k">実際:</span> 予約ジョブ 88本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る予約は 96件で、電源が要ると確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。動かないもの: launchdに載っていない 3本・最後の終了コードが0以外 2本。</p>
+  <p><span class="k">実際:</span> 予約ジョブ 91本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る予約は 99件で、電源が要ると確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。動かないもの: launchdに載っていない 3本・最後の終了コードが0以外 4本。</p>
   <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
 </div>
 
@@ -56,8 +56,8 @@ h2{scroll-margin-top:12px}
 <li>『このセッションの時刻つき確認』の欄だけは手書きの記録です（セッションの予約は外から読めないため）: <code>…/session_reservations.json</code>。予約を作った・消したときに書き換えます。</li>
 <li>説明が空のジョブや『電源が要るか』が未確認のジョブは、plist に『目的:』のコメントを書くか、<code>timetable_probe.py</code> の NOTE に根拠つきで足します。足す前に、そのジョブの実物（スクリプト・ログ）を読んでください。</li>
 </ol>
-<p>launchdの予約ジョブ 88本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る時刻は 96件、うち『電源が要る』と確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。説明を持たないジョブ 21本、launchdに載っていない 3本、最後の終了コードが0以外 2本。今夜以降の予約（このセッション）0件。測った時の電源はAC（100%）。</p>
-<p class="note">この表は<b>手で書いていません</b>。測った時刻は 11/20 08:54（ACか電池か: AC・電池 100%）。予約ジョブの時刻は plist から、載っているか・終了コードは launchctl から読み取りました。資料を作り直すたびに測り直します（毎日の更新は10:00に1回。その日の分が既にあれば何もしません。失敗した日だけ14:20に再試行）。</p>
+<p>launchdの予約ジョブ 91本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る時刻は 99件、うち『電源が要る』と確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。説明を持たないジョブ 24本、launchdに載っていない 3本、最後の終了コードが0以外 4本。今夜以降の予約（このセッション）0件。測った時の電源はAC（100%）。</p>
+<p class="note">この表は<b>手で書いていません</b>。測った時刻は 11/20 19:40（ACか電池か: AC・電池 100%）。予約ジョブの時刻は plist から、載っているか・終了コードは launchctl から読み取りました。資料を作り直すたびに測り直します（毎日の更新は10:00に1回。その日の分が既にあれば何もしません。失敗した日だけ14:20に再試行）。</p>
 <h2>寝る前に充電をつなげば、朝までに自動で進むもの（22:00〜翌11:30）</h2>
 <div class="tw"><table><tr><th>時刻</th><th>ジョブ</th><th>何をするか</th><th>電源が要るか</th><th>あなたの手</th></tr>
 <tr><td class="n">22:00</td><td>ebay-line-report</td><td>（説明が未記載。スクリプト: daily_line_report.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
@@ -94,6 +94,7 @@ h2{scroll-margin-top:12px}
 <tr><td class="n">05:30</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">05:30</td><td>store-cat-follow</td><td>ストアカテゴリ追従（33%値引き表示を出すため、付いていない出品に付ける）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">05:40</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">05:40</td><td>tmp-sweep-daily</td><td>（説明が未記載。スクリプト: tmp_sweep_daily.sh）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">05:50</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">06:00</td><td>media-daily</td><td>記録物(CD・映像・ゲーム)を毎日『台帳→別ルート→出品候補CSV』まで自動で進める（本人の指示 10/31・11/1・11/2『2A』が配…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">06:00</td><td>rc-at-5</td><td>毎朝5時台に eBay(父)セッションを /remote-control(スマホ操作)につなぐ</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
@@ -109,6 +110,7 @@ h2{scroll-margin-top:12px}
 <tr><td class="n">08:30</td><td>ebay-ship-monitor</td><td>発送期限モニター(ship_deadline_monitor.py)を「その日に1回成功するまで」何度か試す入れ物</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">08:40</td><td>ebay-unshipped-unsourceable</td><td>「発送期限は来ているのに Amazon で仕入れられない」注文を、期限が来る前に名指しする</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">08:40</td><td>self-apply-window</td><td>自己適用の窓（許可リストのパッチだけ・1日2件まで本番に入れる）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">08:50</td><td>father-doc-daily</td><td>（説明が未記載。スクリプト: daily_father_doc.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">09:00</td><td>outside-watchdog</td><td>OneDrive障害の"外側"から、ジョブ群が生きているかを見張る</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">09:05</td><td>hs-recheck</td><td>（説明が未記載。スクリプト: hs_recheck.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">09:05</td><td>jan-missing-ledger</td><td>自動出品ログ(ebay_auto_log.txt)から「JANが取れなかった／JANを破棄した商品」を1商品1行で台帳に記録する</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
@@ -137,6 +139,7 @@ h2{scroll-margin-top:12px}
 <tr><td class="n">毎週水曜 09:35</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">毎週木曜 09:35</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">毎週金曜 09:35</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
+<tr><td class="n">毎週日曜 09:40</td><td>monthly-pnl-weekly</td><td>（説明が未記載。スクリプト: monthly_pnl.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">09:45</td><td>ebay-dashboard</td><td>#   父eBayフォルダに散らばっている実行結果（ヘルス判定・出品CSV・実行ログ・価格レポート・X投稿）を</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">09:45</td><td>hs-recheck</td><td>（説明が未記載。スクリプト: hs_recheck.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
 <tr><td class="n">毎週月曜 09:45</td><td>photo-swap-unattended</td><td>別商品の写真が混ざった216口の写真差し替え(wrongimg_swap_v2.py night)を、平日の朝の窓に本人なしで1日1段進める…</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
@@ -168,8 +171,10 @@ h2{scroll-margin-top:12px}
 <tr><td>launchdに載っていない</td><td>claude-task-runner</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
 <tr><td>launchdに載っていない</td><td>ebay-x-post</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
 <tr><td>launchdに載っていない</td><td>purge-old-profiles</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
+<tr><td>最後の終了コード≠0</td><td>claude-context-watch</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>ebay-healthcheck</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>full-copy</td><td>終了コード 11（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
+<tr><td>最後の終了コード≠0</td><td>store-cat-follow</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>いつも本人の手</td><td>出品の公開・取り下げ／本番の価格変更／送信／購入／git push／お金が動くこと</td><td>これまでの決まり（規則）。時刻表の対象外です</td></tr>
 </table></div>
 <details><summary>日中・夕方の予約ジョブ（11:30〜22:00）</summary>
@@ -188,6 +193,7 @@ h2{scroll-margin-top:12px}
 <tr><td class="n">15:10</td><td>autonomy-runner</td><td>「指示を待たず、出品→注文→発送の流れ全体に自分で疑問を持ち、調べ、対策まで進める」(本人 2026-11-05/06)を毎日1回の無人実行…</td></tr>
 <tr><td class="n">16:00</td><td>t202-guard</td><td>T202(2026-08-17適用)でAmazonへの商品詳細取得が約2.9倍に増えるため、ブロックの兆候が出ていないかを毎日チェックし、出…</td></tr>
 <tr><td class="n">17:40</td><td>kimetakoto-refresh</td><td>資料『eBay 決まったこと』を毎日、最新の内容に更新する(本人指示 2026-11-05「できれば毎日この資料全体を最新の内容に更新する様…</td></tr>
+<tr><td class="n">17:42</td><td>father-doc-daily</td><td>（説明が未記載。スクリプト: daily_father_doc.py）</td></tr>
 <tr><td class="n">18:00</td><td>daytime-batch</td><td>（説明が未記載。スクリプト: run_daytime_batch.sh）</td></tr>
 <tr><td class="n">毎週日曜 18:10</td><td>ebay-shipped-post</td><td>（説明が未記載。スクリプト: auto_social.py）</td></tr>
 <tr><td class="n">18:20</td><td>glance-daily-propose</td><td>進捗ひとめの元データ(autonomy/progress_glance.json)を毎日更新するための『更新提案』を作る(GLANCE_DA…</td></tr>
@@ -238,9 +244,9 @@ h2{scroll-margin-top:12px}
 <tr><td>therm-state</td><td>1分ごと / 起動時</td><td>「いま熱いか」を1行のファイルに保つ</td></tr>
 </table></div></details>
 <details><summary>測定の内訳（技術メモ）</summary><ul>
-<li>plist 88本 → 読めた 88本・読めなかった 0本。読み取りは plutil（Pythonの plistlib は XML コメント内の <code>--</code> で落ちるため使いません）。</li>
+<li>plist 91本 → 読めた 91本・読めなかった 0本。読み取りは plutil（Pythonの plistlib は XML コメント内の <code>--</code> で落ちるため使いません）。</li>
 <li>launchctl list: 取得できた。</li>
-<li>説明の出所: plist の『目的:』24本／スクリプト冒頭の『目的:』36本／手書き補足 7本／なし 21本。</li>
+<li>説明の出所: plist の『目的:』24本／スクリプト冒頭の『目的:』36本／手書き補足 7本／なし 24本。</li>
 <li>『電源が要る』の根拠: ebay-auto=毎日の出品数は『10:30〜17:00に電源につながっているか』で決まる（AC日213件 対 非AC日83件）／ebay-price-monitor=11/3の調査: 電池切れの日は動かない。01:00〜05:00は30夜すべてAC／logo-swap-nightly=logo_nightly.sh のACガード（11/3）</li>
 </ul></details>
 
