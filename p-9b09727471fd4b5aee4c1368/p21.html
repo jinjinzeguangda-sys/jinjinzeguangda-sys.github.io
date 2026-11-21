@@ -1,8 +1,9 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="format-detection" content="telephone=no"><meta name="color-scheme" content="light dark"><title>項目21 決まったこと</title><style>
-:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5}
-@media (prefers-color-scheme:dark){:root{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429}}
+:root{--bg:#fafaf7;--fg:#1c1d1f;--mut:#5d6168;--line:#dcdcd4;--card:#fff;--acc:#245b8f;--soft:#eef2f5;--need:#c2600a;--ok:#2f7d4f;--bot:#6b5fb5;--wait:#5d6b7a;--skip:#9a9da1;--red:#b3261e;--tap:rgba(36,91,143,.15)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429;--need:#f0a04b;--ok:#6cc08b;--bot:#a79df0;--wait:#93a3b5;--skip:#7d8187;--red:#ff8a7a;--tap:rgba(127,178,224,.18)}}
+:root[data-theme="dark"]{--bg:#15171a;--fg:#e8e9ea;--mut:#a3a8ae;--line:#34383d;--card:#1d2024;--acc:#7fb2e0;--soft:#1f2429;--need:#f0a04b;--ok:#6cc08b;--bot:#a79df0;--wait:#93a3b5;--skip:#7d8187;--red:#ff8a7a;--tap:rgba(127,178,224,.18)}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.7 -apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;padding:0 16px calc(32px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
 .wrap{max-width:720px;margin:0 auto;padding-top:calc(14px + env(safe-area-inset-top))}
 h1{font-size:1.45rem;line-height:1.35;margin:.3em 0 .1em;text-wrap:balance}
 h2{font-size:1.15rem;margin:1.6em 0 .4em;padding-bottom:.25em;border-bottom:1px solid var(--line);text-wrap:balance}
@@ -23,25 +24,48 @@ a.card p{margin:.3em 0}.k{color:var(--mut);font-size:.82rem}.pill{display:inline
 blockquote{margin:.7em 0;padding:.2em 14px;border-left:4px solid var(--acc);background:var(--soft)}
 code{font-family:ui-monospace,Menlo,monospace;font-size:.85em;background:var(--soft);padding:0 4px;border-radius:4px;overflow-wrap:anywhere}
 ol,ul{padding-left:1.4em}li{margin:.2em 0}
-.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{padding:8px 0}
+.nav{display:flex;justify-content:space-between;gap:10px;margin:18px 0;font-size:.95rem}.nav a{display:inline-block;padding:10px 0;min-height:44px}
 .foot{margin-top:30px;color:var(--mut);font-size:.8rem}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:.8em 0 1.2em}
-a.tile{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;min-height:76px;-webkit-tap-highlight-color:rgba(36,91,143,.15)}
+a.tile{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:10px 12px;min-height:76px;-webkit-tap-highlight-color:var(--tap)}
 a.tile b{display:block;font-size:1.7rem;line-height:1.2;color:var(--acc)}a.tile span{display:block;font-size:.84rem;color:var(--mut);line-height:1.4}
-details.row{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:2px 12px;margin:8px 0}
-details.row>summary{display:block;color:var(--fg);padding:8px 0;min-height:44px;line-height:1.5}
+details.row{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:0 12px;margin:8px 0}
+details.row>summary{display:block;list-style:none;color:var(--fg);padding:10px 0;min-height:44px;line-height:1.5;-webkit-tap-highlight-color:var(--tap)}
+details.row>summary::-webkit-details-marker,details.grp>summary::-webkit-details-marker{display:none}
 details.row .sub{display:block;font-size:.82rem;color:var(--mut);margin-top:2px}
 details.row[open]>summary{border-bottom:1px solid var(--line);margin-bottom:4px}
 ul.plain{margin:.3em 0 .6em;padding-left:1.2em}ul.plain li{margin:.35em 0;font-size:.92rem}
 a.card .no{font-size:.78rem;color:var(--mut);margin:0}a.card .ttl{font-weight:700;margin:.15em 0}a.card .vd{font-size:.9rem;margin:.25em 0}
 a.card .ac{font-size:.88rem;color:var(--mut);margin:.25em 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-h2{scroll-margin-top:12px}
+.toc{position:-webkit-sticky;position:sticky;top:0;z-index:5;margin:0 -16px;padding:env(safe-area-inset-top) 8px 0;background:var(--bg);border-bottom:1px solid var(--line)}
+.tocin{display:flex;max-width:720px;margin:0 auto}
+.toc a{flex:1 1 auto;display:block;text-align:center;line-height:44px;min-height:44px;padding:0 4px;font-size:.8rem;font-weight:600;color:var(--acc);text-decoration:none;white-space:nowrap;-webkit-tap-highlight-color:var(--tap)}
+.toc+.wrap{padding-top:10px}
+h2,details.grp,details.row{scroll-margin-top:calc(54px + env(safe-area-inset-top))}
+.hand .ttl{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:700;line-height:1.45}
+.hand .wl{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:.82rem;color:var(--mut)}
+.hand .when{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hand .hid{flex:none;font-size:.7rem}
+.hand .now{flex:none;font-size:.72rem;font-weight:700;color:var(--red);border:1px solid var(--red);border-radius:99px;padding:0 7px}
+.hand .dsc{display:block;margin-top:2px;font-size:.86rem;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hand[open] .ttl{display:block}.hand[open] .when{white-space:normal}.hand[open] .dsc{display:none}
+details.grp{--gc:var(--line);border:1px solid var(--line);border-left:5px solid var(--gc);background:var(--soft);border-radius:12px;margin:10px 0;padding:0 10px}
+details.g-need{--gc:var(--need)}details.g-none{--gc:var(--ok)}details.g-claude{--gc:var(--bot)}details.g-wait{--gc:var(--wait)}details.g-skip{--gc:var(--skip)}
+details.grp>summary{display:block;list-style:none;color:var(--fg);padding:9px 2px;-webkit-tap-highlight-color:var(--tap)}
+.gh{display:grid;grid-template-columns:1fr auto 18px;column-gap:8px;align-items:center;min-height:44px}
+.gl{grid-column:1;grid-row:1;font-weight:700;line-height:1.4}.gn{grid-column:2;grid-row:1;font-weight:700;white-space:nowrap}
+.gh::after{content:"›";grid-column:3;grid-row:1;text-align:center;color:var(--mut);font-size:1.3rem;line-height:1;transition:transform .15s}
+details.grp[open]>summary .gh::after{transform:rotate(90deg)}
+.gs{grid-column:1/-1;grid-row:2;font-size:.8rem;color:var(--mut);line-height:1.5}
+details.grp[open]{padding-bottom:6px}details.grp[open]>summary{border-bottom:1px solid var(--line);margin-bottom:6px}
+.gsub{font-size:.8rem;font-weight:600;color:var(--mut);margin:12px 2px 2px}
+details.more{margin:8px 0}details.more>summary{padding:10px 4px;min-height:44px;font-size:.9rem;font-weight:600;color:var(--acc);-webkit-tap-highlight-color:var(--tap)}
 </style></head><body><div class="wrap"><p class="nav"><a href="index.html">‹ 一覧</a></p>
 
 <div class="head">
   <p><span class="k">決めたこと:</span> <b>毎日の時刻表: 寝る前に充電をつなげば朝までに自動で進むもの／このセッションの時刻つき確認／動かないもの</b></p>
   <p><span class="k">判定:</span> <span class="j">✅ 測定して作成（作り直すたびに測り直す）</span></p>
-  <p><span class="k">実際:</span> 予約ジョブ 100本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る予約は 104件で、電源が要ると確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。動かないもの: launchdに載っていない 3本・最後の終了コードが0以外 7本。</p>
+  <p><span class="k">実際:</span> 予約ジョブ 101本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る予約は 104件で、電源が要ると確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。動かないもの: launchdに載っていない 3本・最後の終了コードが0以外 6本。</p>
   <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
 </div>
 
@@ -56,8 +80,8 @@ h2{scroll-margin-top:12px}
 <li>『このセッションの時刻つき確認』の欄だけは手書きの記録です（セッションの予約は外から読めないため）: <code>…/session_reservations.json</code>。予約を作った・消したときに書き換えます。</li>
 <li>説明が空のジョブや『電源が要るか』が未確認のジョブは、plist に『目的:』のコメントを書くか、<code>timetable_probe.py</code> の NOTE に根拠つきで足します。足す前に、そのジョブの実物（スクリプト・ログ）を読んでください。</li>
 </ol>
-<p>launchdの予約ジョブ 100本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る時刻は 104件、うち『電源が要る』と確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。説明を持たないジョブ 30本、launchdに載っていない 3本、最後の終了コードが0以外 7本。今夜以降の予約（このセッション）0件。測った時の電源はAC（100%）。</p>
-<p class="note">この表は<b>手で書いていません</b>。測った時刻は 11/21 19:39（ACか電池か: AC・電池 100%）。予約ジョブの時刻は plist から、載っているか・終了コードは launchctl から読み取りました。資料を作り直すたびに測り直します（毎日の更新は10:00に1回。その日の分が既にあれば何もしません。失敗した日だけ14:20に再試行）。</p>
+<p>launchdの予約ジョブ 101本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る時刻は 104件、うち『電源が要る』と確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。説明を持たないジョブ 31本、launchdに載っていない 3本、最後の終了コードが0以外 6本。今夜以降の予約（このセッション）0件。測った時の電源はAC（100%）。</p>
+<p class="note">この表は<b>手で書いていません</b>。測った時刻は 11/22 08:41（ACか電池か: AC・電池 100%）。予約ジョブの時刻は plist から、載っているか・終了コードは launchctl から読み取りました。資料を作り直すたびに測り直します（毎日の更新は10:00に1回。その日の分が既にあれば何もしません。失敗した日だけ14:20に再試行）。</p>
 <h2>寝る前に充電をつなげば、朝までに自動で進むもの（22:00〜翌11:30）</h2>
 <div class="tw"><table><tr><th>時刻</th><th>ジョブ</th><th>何をするか</th><th>電源が要るか</th><th>あなたの手</th></tr>
 <tr><td class="n">22:00</td><td>ebay-line-report</td><td>（説明が未記載。スクリプト: daily_line_report.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
@@ -176,13 +200,12 @@ h2{scroll-margin-top:12px}
 <tr><td>launchdに載っていない</td><td>claude-task-runner</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
 <tr><td>launchdに載っていない</td><td>ebay-x-post</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
 <tr><td>launchdに載っていない</td><td>purge-old-profiles</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
-<tr><td>最後の終了コード≠0</td><td>claude-context-watch</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
-<tr><td>最後の終了コード≠0</td><td>ebay-healthcheck</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
-<tr><td>最後の終了コード≠0</td><td>ebay-line-report</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>full-copy</td><td>終了コード 11（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>job-silence-check</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
+<tr><td>最後の終了コード≠0</td><td>msg-unanswered-watch</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>pq-preview-watch</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>rc-at-5</td><td>終了コード 2（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
+<tr><td>最後の終了コード≠0</td><td>thankmsg</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>いつも本人の手</td><td>出品の公開・取り下げ／本番の価格変更／送信／購入／git push／お金が動くこと</td><td>これまでの決まり（規則）。時刻表の対象外です</td></tr>
 </table></div>
 <details><summary>日中・夕方の予約ジョブ（11:30〜22:00）</summary>
@@ -226,7 +249,7 @@ h2{scroll-margin-top:12px}
 <tr><td class="n">21:00</td><td>nightly-forecast</td><td>（説明が未記載。スクリプト: nightly_forecast.py）</td></tr>
 <tr><td class="n">21:30</td><td>battery-night-watch</td><td>夜にバッテリー駆動のままだと Mac が落ちて夜間バッチ〜翌朝の出品が全滅するので、落ちる前に通知する</td></tr>
 </table></div></details>
-<details><summary>一定間隔・起動時・常駐のジョブ（31本）</summary><div class="tw"><table><tr><th>ジョブ</th><th>動き方</th><th>何をするか</th></tr>
+<details><summary>一定間隔・起動時・常駐のジョブ（32本）</summary><div class="tw"><table><tr><th>ジョブ</th><th>動き方</th><th>何をするか</th></tr>
 <tr><td>apply-wbs-20261008</td><td>20分ごと / 起動時</td><td>~/Documents が FileProvider で断続的に読めなくなるため、読めた瞬間に冪等に当てる</td></tr>
 <tr><td>auto-font-size</td><td>1分ごと / 起動時</td><td>外部モニターの抜き差しに合わせて cmux のフォントを自動切替（外部22 / 本体のみ18）</td></tr>
 <tr><td>battery-day-watch</td><td>15分ごと</td><td>「日中に電池で走り続けて、そのまま電池切れで落ちる」を防ぐ</td></tr>
@@ -258,11 +281,12 @@ h2{scroll-margin-top:12px}
 <tr><td>stall-watch</td><td>10分ごと</td><td>Claude Code の各セッションが「ツール実行の承認待ち（または固まり）」で止まっていないかを、会話記録(~/.claude/proj…</td></tr>
 <tr><td>thankmsg</td><td>15分ごと</td><td>本人 2026-11-17 13:28『注文時のありがとうメッセージを早めに実装して欲しい』／</td></tr>
 <tr><td>therm-state</td><td>1分ごと / 起動時</td><td>「いま熱いか」を1行のファイルに保つ</td></tr>
+<tr><td>trading-quota-watch</td><td>20分ごと / 起動時</td><td>（説明が未記載。スクリプト: trading_quota_watch.py）</td></tr>
 </table></div></details>
 <details><summary>測定の内訳（技術メモ）</summary><ul>
-<li>plist 100本 → 読めた 100本・読めなかった 0本。読み取りは plutil（Pythonの plistlib は XML コメント内の <code>--</code> で落ちるため使いません）。</li>
+<li>plist 101本 → 読めた 101本・読めなかった 0本。読み取りは plutil（Pythonの plistlib は XML コメント内の <code>--</code> で落ちるため使いません）。</li>
 <li>launchctl list: 取得できた。</li>
-<li>説明の出所: plist の『目的:』27本／スクリプト冒頭の『目的:』36本／手書き補足 7本／なし 30本。</li>
+<li>説明の出所: plist の『目的:』27本／スクリプト冒頭の『目的:』36本／手書き補足 7本／なし 31本。</li>
 <li>『電源が要る』の根拠: ebay-auto=毎日の出品数は『10:30〜17:00に電源につながっているか』で決まる（AC日213件 対 非AC日83件）／ebay-price-monitor=11/3の調査: 電池切れの日は動かない。01:00〜05:00は30夜すべてAC／logo-swap-nightly=logo_nightly.sh のACガード（11/3）</li>
 </ul></details>
 
