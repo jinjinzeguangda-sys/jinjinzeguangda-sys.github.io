@@ -41,7 +41,7 @@ h2{scroll-margin-top:12px}
 <div class="head">
   <p><span class="k">決めたこと:</span> <b>進捗管理: 毎日・毎週の計画表（WBS）と、毎日の『動いたか』確認</b></p>
   <p><span class="k">判定:</span> <span class="j">⏳ 作成済み・今日は動いていない疑いが 1 行</span></p>
-  <p><span class="k">実際:</span> 計画 29 行（機械 23・私/自走役 4・本人/父 2）。11/20 21:53 の時点の結果: ❌1 ❔2 🟡1 ✅21 ⏳4。 7日枠は 23% 使用（7日の経過 78%）。</p>
+  <p><span class="k">実際:</span> 計画 29 行（機械 23・私/自走役 4・本人/父 2）。11/21 18:06 の時点の結果: ❌1 ❔2 🟡1 ✅21 ⏳4。 7日枠は 43% 使用（7日の経過 90%）。</p>
   <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
 </div>
 
@@ -65,31 +65,31 @@ h2{scroll-margin-top:12px}
 <li>配線済み・まだ一度も無人で動かしていません: 自走役が毎日11:20に <code>plan_check.py --write</code> を回し（<code>runner.py</code> 267行目）、結果 <code>plan_check_latest.json</code> を最初に読む（<code>runner_prompt.md</code> の 0d）。初めて無人で動くのは 11/8 11:20 で、効いたかは効果台帳 E29 で確かめます。</li>
 <li>11/7 22:45 に済んだ作業: 出力が確かめられず🟡だった6行（B2・B4・B5・C1・D1・E1）に、今日書かれる出力ファイルを証拠として指定しました。0バイトの <code>.out</code> は古くて証拠にならないので使っていません。結果は ❔3 💤1 ✅21 ⏳4（🟡と❌は0）。✅は『出力が予定時刻より後に更新された』であって、中身の正しさまでは見ていません。</li>
 </ol>
-<p>計画 29 行（機械 23・私/自走役 4・本人/父 2）。11/20 21:53 の時点の結果: ❌1 ❔2 🟡1 ✅21 ⏳4。 7日枠は 23% 使用（7日の経過 78%）。</p>
-<p class="note"><b>7日枠の実測</b>（rate_limits_personal.json の記録・0.0時間前）: 23% 使用／7日の経過 78%。ペースより余裕があります。あなたの「止まってる暇があるならどんどん進めて」は、この余りを使う、と読みました。</p>
+<p>計画 29 行（機械 23・私/自走役 4・本人/父 2）。11/21 18:06 の時点の結果: ❌1 ❔2 🟡1 ✅21 ⏳4。 7日枠は 43% 使用（7日の経過 90%）。</p>
+<p class="note"><b>7日枠の実測</b>（rate_limits_personal.json の記録・0.0時間前）: 43% 使用／7日の経過 90%。ペースより余裕があります。あなたの「止まってる暇があるならどんどん進めて」は、この余りを使う、と読みました。</p>
 <p class="note"><b>この表は手で判定していません。</b>各行の「今日の結果」は、launchd の実行回数・最終終了コード・出力ファイルの更新時刻・心拍ログ（Macが起きていたか）・台帳から、資料を作り直すたびに測り直します（毎日10:00・14:20）。<b>限界:</b> 🟡の行は「launchdが実行した」までしか確かめられていません（出力ファイルが無いジョブ）。✅も「出力が更新された」であって「成果が出た」ではありません。成果（出品数・値引き表示・注文数）は、各項目の「外から見た点検」で別に測ります。</p>
 <h3>記号の意味</h3><div class="tw"><table><tr><th>記号</th><th>意味</th></tr><tr><td>✅</td><td>動いた証拠あり（出力が予定時刻より後に更新された）</td></tr><tr><td>🟡</td><td>launchd上は実行済み。ただし出力で確かめられない＝中身は未確認</td></tr><tr><td>▶</td><td>実行中</td></tr><tr><td>⏳</td><td>予定時刻がまだ／今日は予定日ではない</td></tr><tr><td>💤</td><td>予定時刻にMacが止まっていた（心拍ログが無い）</td></tr><tr><td>❔</td><td>判定できない（予定より後に登録された・本人/父の手の行）</td></tr><tr><td>❌</td><td>動いていない疑い（起きていたのに未実行・終了コードが0以外）</td></tr></table></div>
 <h2>探す・仕入れ値</h2>
 <div class="tw"><table><tr><th>ID</th><th>いつ</th><th>やること</th><th>なぜ（売上にどう効くか）</th><th>誰が</th><th>あなたの手</th><th>今日の結果</th></tr>
-<tr><td>A1</td><td>毎日 00:05・00:20</td><td>候補の一括収集（ebay-bulk-source・ebay-bandai-crawl）</td><td>（plistに説明なし。名前から『仕入れ元をまとめて探す』と読んだ・未確認）</td><td>機械(launchd)</td><td>なし</td><td>🟡 ebay-bulk-source: launchd上は実行済み（実行 5 回・終了コード0）。出力で確かめられない＝中身は未確認 ／ ebay-bandai-crawl: launchd上は実行済み（実行 5 回・終了コード0）。出力で確かめられない＝中身は未確認</td></tr>
+<tr><td>A1</td><td>毎日 00:05・00:20</td><td>候補の一括収集（ebay-bulk-source・ebay-bandai-crawl）</td><td>（plistに説明なし。名前から『仕入れ元をまとめて探す』と読んだ・未確認）</td><td>機械(launchd)</td><td>なし</td><td>🟡 ebay-bulk-source: launchd上は実行済み（実行 6 回・終了コード0）。出力で確かめられない＝中身は未確認 ／ ebay-bandai-crawl: launchd上は実行済み（実行 6 回・終了コード0）。出力で確かめられない＝中身は未確認</td></tr>
 <tr><td>A2</td><td>毎日 01:00</td><td>価格監視（Amazonの仕入れ値と出品の値付けを突き合わせる）</td><td>仕入れ値が上がった・消えた商品で赤字・売り越しを出さない。電源が要る</td><td>機械(launchd)</td><td>なし（直す一覧は本人の端末で適用）</td><td>✅ ebay-price-monitor: 09:00 に出力が更新された（動いた証拠）</td></tr>
 <tr><td>A3</td><td>毎日 09:05・09:45</td><td>ホビーサーチ品番813品番の価格・在庫を出品後に再確認（検出専用）</td><td>HS品番で出した商品の仕入れ元が消えていないかを見つける。初回は11/8 09:05</td><td>機械(launchd)</td><td>なし（数量0にする下流は未実装）</td><td>✅ hs-recheck: 09:45 に出力が更新された（動いた証拠）</td></tr>
-<tr><td>A4</td><td>毎日 09:20・09:30</td><td>仕入れ元が無いのに残っている出品の候補CSV／価格監視の取り直し</td><td>買えない商品を買い手に見せ続けない</td><td>機械(launchd)</td><td>数量0にするCSVの実行は本人の端末</td><td>✅ zero-candidates-daily: 09:20 に出力が更新された（動いた証拠） ／ ebay-price-retry: 09:53 に出力が更新された（動いた証拠）</td></tr>
+<tr><td>A4</td><td>毎日 09:20・09:30</td><td>仕入れ元が無いのに残っている出品の候補CSV／価格監視の取り直し</td><td>買えない商品を買い手に見せ続けない</td><td>機械(launchd)</td><td>数量0にするCSVの実行は本人の端末</td><td>✅ zero-candidates-daily: 09:20 に出力が更新された（動いた証拠） ／ ebay-price-retry: 10:03 に出力が更新された（動いた証拠）</td></tr>
 </table></div>
 <h2>出品</h2>
 <div class="tw"><table><tr><th>ID</th><th>いつ</th><th>やること</th><th>なぜ（売上にどう効くか）</th><th>誰が</th><th>あなたの手</th><th>今日の結果</th></tr>
-<tr><td>B0</td><td>毎日 11:20（自走役の前処理）</td><td>昨日までの毎日の新規出品数を数え、基準の半分未満の日・0件の日を警報にする（listing_count_watch）</td><td>出品数＝露出の入口。0件の日や激減に、指示される前に気づく（11/7に本人へ『まだ信頼できない』と答えた原因の穴）</td><td>機械(自走役の前処理)</td><td>なし</td><td>✅ autonomy-runner: 15:10 に出力が更新された（動いた証拠） ／ listing_count_latest.json が 11:21 に更新</td></tr>
-<tr><td>B1</td><td>毎日 10:30（電池だと約15分ごとの小分け）</td><td>自動出品（収集→出品）</td><td>出品数＝露出の入口。毎日の出品数は『10:30〜17:00に電源につながっているか』で決まる</td><td>機械(launchd)</td><td>充電をつなぐ</td><td>✅ ebay-auto: 17:43 に出力が更新された（動いた証拠）</td></tr>
+<tr><td>B0</td><td>毎日 11:20（自走役の前処理）</td><td>昨日までの毎日の新規出品数を数え、基準の半分未満の日・0件の日を警報にする（listing_count_watch）</td><td>出品数＝露出の入口。0件の日や激減に、指示される前に気づく（11/7に本人へ『まだ信頼できない』と答えた原因の穴）</td><td>機械(自走役の前処理)</td><td>なし</td><td>✅ autonomy-runner: 15:10 に出力が更新された（動いた証拠） ／ listing_count_latest.json が 11:20 に更新</td></tr>
+<tr><td>B1</td><td>毎日 10:30（電池だと約15分ごとの小分け）</td><td>自動出品（収集→出品）</td><td>出品数＝露出の入口。毎日の出品数は『10:30〜17:00に電源につながっているか』で決まる</td><td>機械(launchd)</td><td>充電をつなぐ</td><td>✅ ebay-auto: 18:04 に出力が更新された（動いた証拠）</td></tr>
 <tr><td>B2</td><td>毎日 07:00</td><td>説明文の英訳（SKILL.md:36『Claudeが直接英訳』の仕様どおり）</td><td>説明文が日本語のままの出品を残さない</td><td>機械(launchd)</td><td>なし</td><td>✅ ebay-desc-translate: 07:00 に出力が更新された（動いた証拠）</td></tr>
 <tr><td>B3</td><td>毎日 23:40</td><td>説明文のロゴ差し替え（夜の運転役）</td><td>33%セール前に旧ロゴの説明文を差し替える。電池駆動の間は何もしない</td><td>機械(launchd)</td><td>なし</td><td>⏳ logo-swap-nightly 今日の予定 23:40 はこれから</td></tr>
 <tr><td>B4</td><td>毎日 09:55</td><td>『類似を直す』（門G1〜G5を通った分だけ）</td><td>同じ商品の別出品との食い違いを直す</td><td>機械(launchd)</td><td>最初の1口は本人の端末</td><td>✅ similar-fix-daily: 09:55 に出力が更新された（動いた証拠）</td></tr>
-<tr><td>B5</td><td>毎日 13:10</td><td>題名の品質点検</td><td>（plistに説明なし・未確認）</td><td>機械(launchd)</td><td>なし</td><td>✅ ebay-title-quality: 13:10 に出力が更新された（動いた証拠）</td></tr>
-<tr><td>B6</td><td>毎日 06:40・08:40</td><td>自己適用の窓（許可リストのパッチだけ・1日2件まで本番に入れる）</td><td>適用待ちの直しを、本人の端末を待たずに安全な窓で入れる</td><td>機械(launchd)</td><td>なし（許可リスト外は本人の端末）</td><td>✅ self-apply-window: 09:22 に出力が更新された（動いた証拠）</td></tr>
+<tr><td>B5</td><td>毎日 13:10</td><td>題名の品質点検</td><td>（plistに説明なし・未確認）</td><td>機械(launchd)</td><td>なし</td><td>✅ ebay-title-quality: 13:11 に出力が更新された（動いた証拠）</td></tr>
+<tr><td>B6</td><td>毎日 06:40・08:40</td><td>自己適用の窓（許可リストのパッチだけ・1日2件まで本番に入れる）</td><td>適用待ちの直しを、本人の端末を待たずに安全な窓で入れる</td><td>機械(launchd)</td><td>なし（許可リスト外は本人の端末）</td><td>✅ self-apply-window: 09:24 に出力が更新された（動いた証拠）</td></tr>
 </table></div>
 <h2>露出・値札</h2>
 <div class="tw"><table><tr><th>ID</th><th>いつ</th><th>やること</th><th>なぜ（売上にどう効くか）</th><th>誰が</th><th>あなたの手</th><th>今日の結果</th></tr>
-<tr><td>C1</td><td>毎日 05:30・12:30</td><td>ストアカテゴリ追従（33%値引き表示を出すため、付いていない出品に付ける）</td><td>値引き表示が出る口は96%、出ない口は16%だった。表示を出す</td><td>機械(launchd)</td><td>なし</td><td>✅ store-cat-follow: 12:30 に出力が更新された（動いた証拠）</td></tr>
-<tr><td>C2</td><td>毎週 金曜 23:00</td><td>価格のずれ（式との差）の週次点検</td><td>（plistに説明なし・未確認）</td><td>機械(launchd)</td><td>なし</td><td>⏳ ebay-price-gap-weekly 今日の予定 23:00 はこれから</td></tr>
+<tr><td>C1</td><td>毎日 05:30・12:30</td><td>ストアカテゴリ追従（33%値引き表示を出すため、付いていない出品に付ける）</td><td>値引き表示が出る口は96%、出ない口は16%だった。表示を出す</td><td>機械(launchd)</td><td>なし</td><td>✅ store-cat-follow: 12:50 に出力が更新された（動いた証拠）</td></tr>
+<tr><td>C2</td><td>毎週 金曜 23:00</td><td>価格のずれ（式との差）の週次点検</td><td>（plistに説明なし・未確認）</td><td>機械(launchd)</td><td>なし</td><td>⏳ ebay-price-gap-weekly: 今日の予定はこれから／今日は予定日ではない（毎週金 23:00）</td></tr>
 <tr><td>C3</td><td>毎週 日曜 22:30</td><td>在庫0の出品を残す設定（Out of stock）の週次点検</td><td>（plistに説明なし。名前から読んだ・未確認）</td><td>機械(launchd)</td><td>なし</td><td>⏳ ebay-oos-weekly: 今日の予定はこれから／今日は予定日ではない（毎週日 22:30）</td></tr>
 </table></div>
 <h2>注文→発送</h2>
@@ -101,18 +101,18 @@ h2{scroll-margin-top:12px}
 </table></div>
 <h2>健診・警報</h2>
 <div class="tw"><table><tr><th>ID</th><th>いつ</th><th>やること</th><th>なぜ（売上にどう効くか）</th><th>誰が</th><th>あなたの手</th><th>今日の結果</th></tr>
-<tr><td>E1</td><td>毎日 06:10・08:30・09:45</td><td>出品の健康（ListingOnHold・JS混入）／ローカル健診／価格監視の健診</td><td>壊れていることを、本人より先に機械が見つける</td><td>機械(launchd)</td><td>なし</td><td>✅ listing-health-watch: 06:11 に出力が更新された（動いた証拠） ／ ebay-healthcheck: 08:30 に出力が更新された（動いた証拠） ／ price-monitor-health: 09:45 に出力が更新された（動いた証拠）</td></tr>
-<tr><td>E2</td><td>毎日 13:00・19:00</td><td>ジョブが完了したかの確認／沈黙しているジョブの検出</td><td>『走ったのに成果が0』『黙って止まった』を見つける</td><td>機械(launchd)</td><td>なし</td><td>✅ job-completed-check: 19:00 に出力が更新された（動いた証拠） ／ job-silence-check: 19:00 に出力が更新された（動いた証拠）</td></tr>
-<tr><td>E3</td><td>毎日 09:00・13:00・20:00</td><td>OneDrive障害の外側から、ジョブ群が生きているかを見張る</td><td>OneDriveが詰まると27/32ジョブが止まる。その外から見る</td><td>機械(launchd)</td><td>なし</td><td>✅ outside-watchdog: 20:00 に出力が更新された（動いた証拠）</td></tr>
-<tr><td>E4</td><td>10分ごと</td><td>確認待ちで止まったセッションの検出（stall-watch）</td><td>私のセッションが承認待ちで何時間も止まる事故を検出する</td><td>機械(launchd)</td><td>なし</td><td>✅ stall-watch 直近 21:52 に出力が更新（600秒ごと）</td></tr>
+<tr><td>E1</td><td>毎日 06:10・08:30・09:45</td><td>出品の健康（ListingOnHold・JS混入）／ローカル健診／価格監視の健診</td><td>壊れていることを、本人より先に機械が見つける</td><td>機械(launchd)</td><td>なし</td><td>✅ listing-health-watch: 06:10 に出力が更新された（動いた証拠） ／ ebay-healthcheck: 08:30 に出力が更新された（動いた証拠） ／ price-monitor-health: 09:45 に出力が更新された（動いた証拠）</td></tr>
+<tr><td>E2</td><td>毎日 13:00・19:00</td><td>ジョブが完了したかの確認／沈黙しているジョブの検出</td><td>『走ったのに成果が0』『黙って止まった』を見つける</td><td>機械(launchd)</td><td>なし</td><td>✅ job-silence-check 今日の予定 19:00 はこれから</td></tr>
+<tr><td>E3</td><td>毎日 09:00・13:00・20:00</td><td>OneDrive障害の外側から、ジョブ群が生きているかを見張る</td><td>OneDriveが詰まると27/32ジョブが止まる。その外から見る</td><td>機械(launchd)</td><td>なし</td><td>✅ outside-watchdog: 13:00 に出力が更新された（動いた証拠）</td></tr>
+<tr><td>E4</td><td>10分ごと</td><td>確認待ちで止まったセッションの検出（stall-watch）</td><td>私のセッションが承認待ちで何時間も止まる事故を検出する</td><td>機械(launchd)</td><td>なし</td><td>✅ stall-watch 直近 18:05 に出力が更新（600秒ごと）</td></tr>
 </table></div>
 <h2>私の仕事</h2>
 <div class="tw"><table><tr><th>ID</th><th>いつ</th><th>やること</th><th>なぜ（売上にどう効くか）</th><th>誰が</th><th>あなたの手</th><th>今日の結果</th></tr>
-<tr><td>F1</td><td>毎日 11:20・15:10</td><td>自走役が曜日の観点で1件調べる（月=発送／火=写真／水=出し直し／木=値札／金=消えた仕入れ元／土=検索／日=振り返り）</td><td>指示がなくても、出品→注文→発送の流れに疑問を立てて調べる</td><td>自走役(claude -p)</td><td>なし（本人に出すのは数字つき1問だけ）</td><td>✅ autonomy-runner: 15:10 に出力が更新された（動いた証拠） ／ report.md が 11:31 に更新</td></tr>
-<tr><td>F2</td><td>毎日（夜まで）</td><td>自分で立てた疑問を1件以上、台帳に残して次の手まで進める</td><td>『指示がなくても疑問を持つ』の実績。信頼の物差しb</td><td>私(セッション)・自走役</td><td>なし</td><td>✅ 今日（2026-11-20）の分が 7 件</td></tr>
-<tr><td>F3</td><td>毎日（期日が来たら）</td><td>持ち越し台帳で期日が来たまま未着手の項目をゼロにする</td><td>『約束』を私の記憶でなく機械が数える。信頼の物差しc</td><td>私(セッション)・自走役</td><td>なし</td><td>❌ 期日が来て未着手: GCB3,O5J1,EXOFF,SALE1,PTQ1,PRE430R3,PRE430R4,DELIV2</td></tr>
-<tr><td>F4</td><td>毎日 17:40（本人の希望は18時までに最新・失敗時は19:30に再試行）</td><td>資料『eBay 決まったこと』を最新に更新（この表もここで作り直す）</td><td>本人が毎日開く資料を古いままにしない</td><td>機械(launchd)＋claude -p</td><td>資料のアンケートに答える</td><td>✅ kimetakoto-refresh: 19:30 に出力が更新された（動いた証拠） ／ refresh.log が 17:57 に更新</td></tr>
-<tr><td>F5</td><td>毎日 11:00</td><td>トークン消費の昨日ぶんを出す（5時間枠で止まった時間を見る）</td><td>7日枠を使い切らず、止まりもしない運用の確認</td><td>機械(launchd)</td><td>なし</td><td>✅ token-daily: 11:02 に出力が更新された（動いた証拠）</td></tr>
+<tr><td>F1</td><td>毎日 11:20・15:10</td><td>自走役が曜日の観点で1件調べる（月=発送／火=写真／水=出し直し／木=値札／金=消えた仕入れ元／土=検索／日=振り返り）</td><td>指示がなくても、出品→注文→発送の流れに疑問を立てて調べる</td><td>自走役(claude -p)</td><td>なし（本人に出すのは数字つき1問だけ）</td><td>✅ autonomy-runner: 15:10 に出力が更新された（動いた証拠） ／ report.md が 11:24 に更新</td></tr>
+<tr><td>F2</td><td>毎日（夜まで）</td><td>自分で立てた疑問を1件以上、台帳に残して次の手まで進める</td><td>『指示がなくても疑問を持つ』の実績。信頼の物差しb</td><td>私(セッション)・自走役</td><td>なし</td><td>✅ 今日（2026-11-21）の分が 4 件</td></tr>
+<tr><td>F3</td><td>毎日（期日が来たら）</td><td>持ち越し台帳で期日が来たまま未着手の項目をゼロにする</td><td>『約束』を私の記憶でなく機械が数える。信頼の物差しc</td><td>私(セッション)・自走役</td><td>なし</td><td>❌ 期日が来て未着手: GCB3,OOSPH2,OOSPH2D,O5J1,SALE1,PTQ1,PRE430R3,DELIV2,B160D,B161b,AMZ1121,RESTOCK4</td></tr>
+<tr><td>F4</td><td>毎日 17:40（本人の希望は18時までに最新・失敗時は19:30に再試行）</td><td>資料『eBay 決まったこと』を最新に更新（この表もここで作り直す）</td><td>本人が毎日開く資料を古いままにしない</td><td>機械(launchd)＋claude -p</td><td>資料のアンケートに答える</td><td>✅ kimetakoto-refresh: 17:57 に出力が更新された（動いた証拠） ／ refresh.log が 17:57 に更新</td></tr>
+<tr><td>F5</td><td>毎日 11:00</td><td>トークン消費の昨日ぶんを出す（5時間枠で止まった時間を見る）</td><td>7日枠を使い切らず、止まりもしない運用の確認</td><td>機械(launchd)</td><td>なし</td><td>✅ token-daily: 11:01 に出力が更新された（動いた証拠）</td></tr>
 </table></div>
 <h2>本人の手</h2>
 <div class="tw"><table><tr><th>ID</th><th>いつ</th><th>やること</th><th>なぜ（売上にどう効くか）</th><th>誰が</th><th>あなたの手</th><th>今日の結果</th></tr>
