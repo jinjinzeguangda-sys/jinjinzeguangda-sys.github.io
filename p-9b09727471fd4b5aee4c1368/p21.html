@@ -41,7 +41,7 @@ h2{scroll-margin-top:12px}
 <div class="head">
   <p><span class="k">決めたこと:</span> <b>毎日の時刻表: 寝る前に充電をつなげば朝までに自動で進むもの／このセッションの時刻つき確認／動かないもの</b></p>
   <p><span class="k">判定:</span> <span class="j">✅ 測定して作成（作り直すたびに測り直す）</span></p>
-  <p><span class="k">実際:</span> 予約ジョブ 100本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る予約は 104件で、電源が要ると確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。動かないもの: launchdに載っていない 3本・最後の終了コードが0以外 6本。</p>
+  <p><span class="k">実際:</span> 予約ジョブ 100本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る予約は 104件で、電源が要ると確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。動かないもの: launchdに載っていない 3本・最後の終了コードが0以外 7本。</p>
   <p class="actline"><span class="k">あなたがやること:</span> <b>なし（読み物です。読まなくても大丈夫）</b></p>
 </div>
 
@@ -56,8 +56,8 @@ h2{scroll-margin-top:12px}
 <li>『このセッションの時刻つき確認』の欄だけは手書きの記録です（セッションの予約は外から読めないため）: <code>…/session_reservations.json</code>。予約を作った・消したときに書き換えます。</li>
 <li>説明が空のジョブや『電源が要るか』が未確認のジョブは、plist に『目的:』のコメントを書くか、<code>timetable_probe.py</code> の NOTE に根拠つきで足します。足す前に、そのジョブの実物（スクリプト・ログ）を読んでください。</li>
 </ol>
-<p>launchdの予約ジョブ 100本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る時刻は 104件、うち『電源が要る』と確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。説明を持たないジョブ 30本、launchdに載っていない 3本、最後の終了コードが0以外 6本。今夜以降の予約（このセッション）0件。測った時の電源はAC（100%）。</p>
-<p class="note">この表は<b>手で書いていません</b>。測った時刻は 11/21 18:06（ACか電池か: AC・電池 100%）。予約ジョブの時刻は plist から、載っているか・終了コードは launchctl から読み取りました。資料を作り直すたびに測り直します（毎日の更新は10:00に1回。その日の分が既にあれば何もしません。失敗した日だけ14:20に再試行）。</p>
+<p>launchdの予約ジョブ 100本を実物から読み取り（読めなかった 0本）。夜〜朝（22:00〜翌11:30）に走る時刻は 104件、うち『電源が要る』と確認済みは ebay-auto・ebay-price-monitor・logo-swap-nightly。説明を持たないジョブ 30本、launchdに載っていない 3本、最後の終了コードが0以外 7本。今夜以降の予約（このセッション）0件。測った時の電源はAC（100%）。</p>
+<p class="note">この表は<b>手で書いていません</b>。測った時刻は 11/21 19:39（ACか電池か: AC・電池 100%）。予約ジョブの時刻は plist から、載っているか・終了コードは launchctl から読み取りました。資料を作り直すたびに測り直します（毎日の更新は10:00に1回。その日の分が既にあれば何もしません。失敗した日だけ14:20に再試行）。</p>
 <h2>寝る前に充電をつなげば、朝までに自動で進むもの（22:00〜翌11:30）</h2>
 <div class="tw"><table><tr><th>時刻</th><th>ジョブ</th><th>何をするか</th><th>電源が要るか</th><th>あなたの手</th></tr>
 <tr><td class="n">22:00</td><td>ebay-line-report</td><td>（説明が未記載。スクリプト: daily_line_report.py）</td><td><span class="note">未確認</span></td><td>不要（自動）</td></tr>
@@ -176,10 +176,11 @@ h2{scroll-margin-top:12px}
 <tr><td>launchdに載っていない</td><td>claude-task-runner</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
 <tr><td>launchdに載っていない</td><td>ebay-x-post</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
 <tr><td>launchdに載っていない</td><td>purge-old-profiles</td><td>plist はあるが読み込まれていない（時刻が来ても動かない）</td></tr>
+<tr><td>最後の終了コード≠0</td><td>claude-context-watch</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>ebay-healthcheck</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>ebay-line-report</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>full-copy</td><td>終了コード 11（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
-<tr><td>最後の終了コード≠0</td><td>glance-daily-propose</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
+<tr><td>最後の終了コード≠0</td><td>job-silence-check</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>pq-preview-watch</td><td>終了コード 1（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>最後の終了コード≠0</td><td>rc-at-5</td><td>終了コード 2（原因は未調査。0以外でも『異常』とは限らない）</td></tr>
 <tr><td>いつも本人の手</td><td>出品の公開・取り下げ／本番の価格変更／送信／購入／git push／お金が動くこと</td><td>これまでの決まり（規則）。時刻表の対象外です</td></tr>
