@@ -1,0 +1,38 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>(d) 失敗の見方・続ける/やめる</title><style>:root{--bg:#f6f5f1;--card:#fff;--ink:#1d1d1b;--sub:#5f5e5a;--line:#dcdad2;--ok:#1a7f4b;--wait:#9a6700;--ng:#b3261e;--accent:#1f5fbf;--soft:#eef3fb}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--card:#1f2127;--ink:#ecebe6;--sub:#a5a39b;--line:#34363d;--ok:#5fcf8f;--wait:#e0b44c;--ng:#ff8a80;--accent:#8ab4f8;--soft:#232a38}}
+:root[data-theme="dark"]{--bg:#15161a;--card:#1f2127;--ink:#ecebe6;--sub:#a5a39b;--line:#34363d;--ok:#5fcf8f;--wait:#e0b44c;--ng:#ff8a80;--accent:#8ab4f8;--soft:#232a38}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto;padding:16px 16px 56px}h1{font-size:21px;line-height:1.4;margin:6px 0 4px}h2{font-size:17px;margin:26px 0 8px}h3{font-size:15.5px;margin:0 0 4px}
+p{margin:8px 0}.meta{color:var(--sub);font-size:13px}a{color:var(--accent)}.back{display:inline-block;margin:4px 0 2px;font-size:14px;text-decoration:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}a.card{display:block;color:inherit;text-decoration:none}a.card:active{background:var(--soft)}
+.card .l{display:flex;gap:8px;margin:2px 0;font-size:15px}.card .l b{flex:0 0 5.2em;color:var(--sub);font-weight:600}.more{color:var(--accent);font-size:14px;margin-top:6px}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:12px 0}.box ol,.box ul{margin:6px 0 6px 1.2em;padding:0}
+.tag{display:inline-block;font-size:12.5px;font-weight:700;border-radius:999px;padding:1px 9px;border:1.5px solid currentColor;margin-right:6px;vertical-align:1px}
+.ok{color:var(--ok)}.wait{color:var(--wait)}.ng{color:var(--ng)}.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}th{color:var(--sub);font-weight:600;white-space:nowrap}
+.n{font-variant-numeric:tabular-nums}.small{font-size:13px;color:var(--sub)}code{font:13px/1.5 ui-monospace,Menlo,monospace;background:var(--soft);padding:1px 5px;border-radius:5px;word-break:break-all}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}.nav a{flex:1 1 40%;text-align:center;border:1px solid var(--line);border-radius:10px;padding:9px 6px;text-decoration:none;background:var(--card);font-size:14px}</style></head><body><div class="wrap">
+<a class="back" href="index.html">‹ 一覧へ</a><h1>(d) 失敗した時の見方・続ける/やめる</h1><p class="meta">作成 2026-11-24 21:09 ・ ec(9cの依頼)・読み取りだけで作りました。eBay・Amazonへは何も書いていません。</p>
+<h2>出なかった理由を見えるようにする</h2>
+<p>試験は<b>専用のログで単独実行</b>するので、見送りの理由が語ごとに正しく数えられます(本番のログは複数の語が1つの流れで混ざり、理由が次の語に付く弱点がありました)。出す表:</p>
+<div class="box"><ul><li>語ごとに: 候補→出品済み→予約→メーカー不明(brand_unknown)→JANなし→梱包サイズ不明→値段上限→キーホルダー類→CSVに載った数→出品できた数→公開中の数</li>
+<li>各口の『同じJAN(GTIN)の米国出品』の最安と自社の値段の比(Browse・読み取り)</li>
+<li>語ごとの台帳の出所(source_keyword)で、あとから数え直せる</li></ul></div>
+<h2>続ける/やめる: 2段の判定</h2>
+<div class="card"><h3><span class="tag ok">1段目</span>出品から3日(仕組みの検査)</h3><ol>
+<li>3語の合計でCSVに載った口が<b>8以上</b>(未満＝『検索語が当たらない』。語を替えるか見送り)</li>
+<li><b>門の漏れが0</b>(キーホルダー類・予約・JANなし・$200超・米国以外・¥11,000超)。1件でも出たら試験を止めて原因調査</li>
+<li>自社の値段が『同じJANの米国出品の最安』の<b>1.25倍以内の口が過半</b></li>
+<li>出品番号が発行され、公開中で数量が1以上</li></ol></div>
+<div class="card"><h3><span class="tag wait">2段目</span>90日(売れ行きの判定)</h3><ul>
+<li>注文が<b>2件以上</b> → 続ける(40口に広げる案を改めて質問します)</li>
+<li>注文が1件 → さらに90日(計180日)見る</li>
+<li>注文が0件 → 90日では<b>判定不能</b>(下の表のとおり、悪くなくても約37% で0)。180日まで延ばし、0ならやめる</li>
+<li>いつでも: 赤字の注文が出たら値段の式を見直す／VeRO(権利者)の警告が来たら即取り下げ(従来の方針)</li></ul></div>
+<h2>なぜ『30日で0ならやめる』が使えないか</h2>
+<p>20口を出して<b>注文が0件になる確率</b>(1口あたり年の売れ行き別・ポアソンの計算・季節変動なし):</p>
+<div class="tw"><table><tr><th>年/口</th><th>30日</th><th>90日</th><th>180日</th><th>1年</th></tr><tr><td class="n">0.05</td><td class="n">92%</td><td class="n">78%</td><td class="n">61%</td><td class="n">37%</td></tr><tr><td class="n">0.13</td><td class="n">81%</td><td class="n">53%</td><td class="n">28%</td><td class="n">7.4%</td></tr><tr><td class="n">0.20</td><td class="n">72%</td><td class="n">37%</td><td class="n">14%</td><td class="n">1.8%</td></tr><tr><td class="n">0.27</td><td class="n">64%</td><td class="n">26%</td><td class="n">7.0%</td><td class="n">0.5%</td></tr></table></div>
+<p class="small">0.05=悪い／0.13=『フィギュア』の日本発／0.20=『ぬいぐるみ』／0.27=『フィギュアビルダー』(上限の目安)。自社の平均は0.15。</p>
+<p>売れ行きが0.20なら、30日で注文0は72%、90日でも37%。<b>90日で2件以上</b>になる確率は、0.20なら26%、0.05なら2.6%(約10倍)＝2件以上なら『売れ行きは悪くない』と言いやすい、という意味です。</p>
+<div class="box"><b>期待される規模(確信 低)</b>: 20口×年0.15〜0.27個＝年3〜5.4件。自社の平均利益(直近90日・台帳)は1注文あたり約$3.0ですが、この商品は値段が高い(約$40〜136)ので違うかもしれません。<b>利益が目的の試験ではありません</b>。</div>
+<div class="nav"><a href="c.html">‹ (c)</a><a href="e.html">次: 限界・付録 ›</a></div></div></body></html>

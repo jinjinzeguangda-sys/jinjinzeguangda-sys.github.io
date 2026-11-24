@@ -1,0 +1,36 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><title>(b) 最大20口で止める仕組み</title><style>:root{--bg:#f6f5f1;--card:#fff;--ink:#1d1d1b;--sub:#5f5e5a;--line:#dcdad2;--ok:#1a7f4b;--wait:#9a6700;--ng:#b3261e;--accent:#1f5fbf;--soft:#eef3fb}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15161a;--card:#1f2127;--ink:#ecebe6;--sub:#a5a39b;--line:#34363d;--ok:#5fcf8f;--wait:#e0b44c;--ng:#ff8a80;--accent:#8ab4f8;--soft:#232a38}}
+:root[data-theme="dark"]{--bg:#15161a;--card:#1f2127;--ink:#ecebe6;--sub:#a5a39b;--line:#34363d;--ok:#5fcf8f;--wait:#e0b44c;--ng:#ff8a80;--accent:#8ab4f8;--soft:#232a38}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto;padding:16px 16px 56px}h1{font-size:21px;line-height:1.4;margin:6px 0 4px}h2{font-size:17px;margin:26px 0 8px}h3{font-size:15.5px;margin:0 0 4px}
+p{margin:8px 0}.meta{color:var(--sub);font-size:13px}a{color:var(--accent)}.back{display:inline-block;margin:4px 0 2px;font-size:14px;text-decoration:none}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}a.card{display:block;color:inherit;text-decoration:none}a.card:active{background:var(--soft)}
+.card .l{display:flex;gap:8px;margin:2px 0;font-size:15px}.card .l b{flex:0 0 5.2em;color:var(--sub);font-weight:600}.more{color:var(--accent);font-size:14px;margin-top:6px}
+.box{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:12px 0}.box ol,.box ul{margin:6px 0 6px 1.2em;padding:0}
+.tag{display:inline-block;font-size:12.5px;font-weight:700;border-radius:999px;padding:1px 9px;border:1.5px solid currentColor;margin-right:6px;vertical-align:1px}
+.ok{color:var(--ok)}.wait{color:var(--wait)}.ng{color:var(--ng)}.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}th{color:var(--sub);font-weight:600;white-space:nowrap}
+.n{font-variant-numeric:tabular-nums}.small{font-size:13px;color:var(--sub)}code{font:13px/1.5 ui-monospace,Menlo,monospace;background:var(--soft);padding:1px 5px;border-radius:5px;word-break:break-all}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}.nav a{flex:1 1 40%;text-align:center;border:1px solid var(--line);border-radius:10px;padding:9px 6px;text-decoration:none;background:var(--card);font-size:14px}</style></head><body><div class="wrap">
+<a class="back" href="index.html">‹ 一覧へ</a><h1>(b) 『最大20口』で止める仕組み</h1><p class="meta">作成 2026-11-24 21:09 ・ ec(9cの依頼)・読み取りだけで作りました。eBay・Amazonへは何も書いていません。</p>
+<div class="box"><b>案1(おすすめ・確信 中): 別の小さい流れで1回だけ出す。</b>本番の出品ジョブ(run_ebay_auto.sh・amazon_to_ebay.py)は書き換えません。書き換えるのは、9cが下書き済みのメーカー判定1行(apply_capcom_brand.py)だけです。</div>
+<h2>流れ(停止窓の中で・1回だけ)</h2>
+<ol>
+<li><b>前提</b>: メーカー判定1行が適用済み・出品ジョブと価格監視が止まっている窓(power_ok・load12未満)。</li>
+<li>本番の <code>ebay_jp_format.csv</code> を退避する(cp -p)。</li>
+<li><code>amazon_to_ebay.py --keyword "カプコン フィギュアビルダー" "モンスターハンター ぬいぐるみ" "モンスターハンター フィギュア" --max 6 --no-hobbysearch</code> を単独で実行(ログは試験専用のファイル)。</li>
+<li>できた CSV を <code>ebay_capcom_trial_&lt;日時&gt;.csv</code> に改名し、退避した本番CSVを元に戻す。</li>
+<li>行数を数える(上限20)。題名・値段・在庫(残りN点)を人が見る。</li>
+<li><code>ebay_upload.py ebay_capcom_trial_&lt;日時&gt;.csv --limit 20 --dry-run</code> で確認 → 同じ形で <code>--dry-run</code> を外して出品(この1回だけ)。</li>
+<li>出品番号を試験の表に記録する。以後の見張りは既存の価格監視に任せる。</li></ol>
+<h2>コードを読んで見つけた罠(確信 高・読んだ行は下記)</h2>
+<div class="card"><h3><span class="tag ng">罠1</span>本番のCSVを上書きする</h3><p>amazon_to_ebay.py は実行すると必ず <code>父eBay/ebay_jp_format.csv</code> に書く(7806〜7820行。--dry-run だけ別名)。出品ジョブの最中や直後に走らせると、その日の本番CSVが試験の中身に置き換わる。→ 停止窓で、退避と復元をセットにする。</p></div>
+<div class="card"><h3><span class="tag ng">罠2</span>CSVに書いた時点で『出品済み』の印が付く</h3><p>履歴への印は、CSVを書いた後にまとめて記録される(_flush_pending_marks・43〜54行)。CSVに載った行を出品しないと、その商品は『出品済み』扱いで二度と候補に上がらない。→ 上限は<b>出品の段でなくCSVの段</b>で守る。<code>--max</code>は『出品済みを除いた後の候補数/語』(7573行)なので、3語×6=最大18。<code>--no-hobbysearch</code>でホビーサーチ経由の追加を止める。</p></div>
+<div class="card"><h3><span class="tag ok">安全</span>本番の --latest に拾われない</h3><p>ebay_upload.py --latest は <code>ebay_jp_format.csv</code>(当日更新)か <code>ebay_upload_&lt;日付&gt;*.csv</code>/<code>ebay_jp_format_&lt;日付&gt;*.csv</code> だけを拾う(1316〜1337行)。試験のCSVは別の名前にするので拾われない。</p></div>
+<h2>他の案との比較</h2>
+<div class="tw"><table><tr><th>案</th><th>中身</th><th>難点</th></tr>
+<tr><td>案1 ★</td><td>別の流れで1回だけ</td><td>停止窓が要る。流れの下書きと下見の試験は私が作る(未着手)</td></tr>
+<tr><td>案2</td><td>本番の検索語(ALL_KW)に足し、上限のパッチを入れる</td><td>run_ebay_auto.sh と amazon_to_ebay.py を編集。UPLOAD_LIMITは0(無制限)のままで、やめる時の戻しも要る＝試験には重い</td></tr>
+<tr><td>案3</td><td>ASINを手で選び --asin-file で出す</td><td>20口以内は確実だが、『検索語が当たるか』を確かめられない</td></tr></table></div>
+<p class="small">未確認: ホビーサーチ経由を止めた時の候補数への影響・実行ログでの『最大N件』の表示(コードでは確認、実行では未確認)。</p>
+<div class="nav"><a href="a.html">‹ (a)</a><a href="c.html">次: (c) 守る門 ›</a></div></div></body></html>
