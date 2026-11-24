@@ -12,25 +12,27 @@ p{margin:8px 0}.meta{color:var(--sub);font-size:13px}a{color:var(--accent)}.back
 table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}th{color:var(--sub);font-weight:600;white-space:nowrap}
 .n{font-variant-numeric:tabular-nums}.small{font-size:13px;color:var(--sub)}code{font:13px/1.5 ui-monospace,Menlo,monospace;background:var(--soft);padding:1px 5px;border-radius:5px;word-break:break-all}
 .nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}.nav a{flex:1 1 40%;text-align:center;border:1px solid var(--line);border-radius:10px;padding:9px 6px;text-decoration:none;background:var(--card);font-size:14px}</style></head><body><div class="wrap">
-<a class="back" href="index.html">‹ 一覧へ</a><h1>(b) 『最大20口』で止める仕組み</h1><p class="meta">作成 2026-11-24 21:09 ・ ec(9cの依頼)・読み取りだけで作りました。eBay・Amazonへは何も書いていません。</p>
-<div class="box"><b>案1(おすすめ・確信 中): 別の小さい流れで1回だけ出す。</b>本番の出品ジョブ(run_ebay_auto.sh・amazon_to_ebay.py)は書き換えません。書き換えるのは、9cが下書き済みのメーカー判定1行(apply_capcom_brand.py)だけです。</div>
+<a class="back" href="index.html">‹ 一覧へ</a><h1>(b) 『最大20口』で止める仕組み</h1><p class="meta">作成 2026-11-25 08:15 ・ ec(9cの依頼)・読み取りだけで作りました。eBay・Amazonへは何も書いていません。</p>
+<div class="box"><b>案1(おすすめ・確信 中): 本番と同じ工程を、停止窓の中で1回だけ流す。</b>本番の出品ジョブ(run_ebay_auto.sh・amazon_to_ebay.py)は書き換えません。書き換えるのは、9cが下書き済みのメーカー判定1行(apply_capcom_brand.py)だけです。流れは <code>mhtrial_flow.py</code> に作成済み(自己試験29項目・変異試験17/17・実行は9cか本人の窓)。</div>
 <h2>流れ(停止窓の中で・1回だけ)</h2>
 <ol>
-<li><b>前提</b>: メーカー判定1行が適用済み・出品ジョブと価格監視が止まっている窓(power_ok・load12未満)。</li>
-<li>本番の <code>ebay_jp_format.csv</code> を退避する(cp -p)。</li>
+<li><b>前提(自動で確認。揃わなければ何も触らない)</b>: 電源(AC か電池30以上)・出品ジョブと価格監視が止まっている・load12未満・メーカー判定1行が適用済み。</li>
+<li>本番の <code>ebay_jp_format.csv</code> を退避する(sha256で照合)。</li>
 <li><code>amazon_to_ebay.py --keyword "カプコン フィギュアビルダー" "モンスターハンター ぬいぐるみ" "モンスターハンター フィギュア" --max 6 --no-hobbysearch</code> を単独で実行(ログは試験専用のファイル)。</li>
-<li>できた CSV を <code>ebay_capcom_trial_&lt;日時&gt;.csv</code> に改名し、退避した本番CSVを元に戻す。</li>
-<li>行数を数える(上限20)。題名・値段・在庫(残りN点)を人が見る。</li>
-<li><code>ebay_upload.py ebay_capcom_trial_&lt;日時&gt;.csv --limit 20 --dry-run</code> で確認 → 同じ形で <code>--dry-run</code> を外して出品(この1回だけ)。</li>
-<li>出品番号を試験の表に記録する。以後の見張りは既存の価格監視に任せる。</li></ol>
+<li>上限20を超えたら20口に切る。超過分は捨てず別ファイルへ(履歴に『出品済み』の印が付いているので、9cが印を外す)。</li>
+<li><b>本番と同じ補正3段</b>(説明文の英訳 → 題名のローマ字を英語に → 説明文の型)を通す。</li>
+<li>見直し表(SKU・ブランド・EAN・値段・数量・題名・門の漏れ)を人が見る。在庫2点以上(H89)は、商品ページの『残りN点』を人が見る。<b>門の漏れが1口でもあれば出品しない。</b></li>
+<li><code>ebay_upload.py --latest --limit 20 --dry-run</code> で確認 → <code>--dry-run</code> を外して出品(この1回だけ)。</li>
+<li>本番の CSV を元に戻し(sha一致を確認)、試験の最終 CSV は記録に残す。出品番号を試験の表に記録する。以後の見張りは既存の価格監視に任せる。</li></ol>
 <h2>コードを読んで見つけた罠(確信 高・読んだ行は下記)</h2>
 <div class="card"><h3><span class="tag ng">罠1</span>本番のCSVを上書きする</h3><p>amazon_to_ebay.py は実行すると必ず <code>父eBay/ebay_jp_format.csv</code> に書く(7806〜7820行。--dry-run だけ別名)。出品ジョブの最中や直後に走らせると、その日の本番CSVが試験の中身に置き換わる。→ 停止窓で、退避と復元をセットにする。</p></div>
 <div class="card"><h3><span class="tag ng">罠2</span>CSVに書いた時点で『出品済み』の印が付く</h3><p>履歴への印は、CSVを書いた後にまとめて記録される(_flush_pending_marks・43〜54行)。CSVに載った行を出品しないと、その商品は『出品済み』扱いで二度と候補に上がらない。→ 上限は<b>出品の段でなくCSVの段</b>で守る。<code>--max</code>は『出品済みを除いた後の候補数/語』(7573行)なので、3語×6=最大18。<code>--no-hobbysearch</code>でホビーサーチ経由の追加を止める。</p></div>
-<div class="card"><h3><span class="tag ok">安全</span>本番の --latest に拾われない</h3><p>ebay_upload.py --latest は <code>ebay_jp_format.csv</code>(当日更新)か <code>ebay_upload_&lt;日付&gt;*.csv</code>/<code>ebay_jp_format_&lt;日付&gt;*.csv</code> だけを拾う(1316〜1337行)。試験のCSVは別の名前にするので拾われない。</p></div>
+<div class="card"><h3><span class="tag ng">罠3</span>補正3段は『正規名のCSV』しか直さない</h3><p>本番は、CSV生成と出品の間に、説明文の英訳・題名のローマ字→英語・説明文の型変換を、すべて <code>--latest --apply</code> で通す(run_ebay_auto.sh 338〜374行)。CSVを別名にして ebay_upload.py へ直接渡すと、この3段が素通りして、日本語の説明・ローマ字の題名・定型のままで出てしまう。<b>私の最初の案(別名にして直接出品)はこの点が誤りでした</b>。本番を読んで直し、試験でもCSVを正規名のまま3段に通す形にしました。</p></div>
+<div class="card"><h3><span class="tag wait">注意</span>窓の外で動かすと本番と衝突する</h3><p>試験のCSVは正規名のままなので、出品ジョブが走っていると本番のCSVとぶつかる。だから前提(出品ジョブ・価格監視の停止・電源・load)を自動で確認し、揃わなければ何も触りません。</p></div>
 <h2>他の案との比較</h2>
 <div class="tw"><table><tr><th>案</th><th>中身</th><th>難点</th></tr>
-<tr><td>案1 ★</td><td>別の流れで1回だけ</td><td>停止窓が要る。流れの下書きと下見の試験は私が作る(未着手)</td></tr>
+<tr><td>案1 ★</td><td>本番と同じ工程を窓の中で1回だけ</td><td>停止窓が要る。流れは作成済み(模擬の収集・出品で自己試験29項目・変異17/17)。本物の収集・出品は未実行</td></tr>
 <tr><td>案2</td><td>本番の検索語(ALL_KW)に足し、上限のパッチを入れる</td><td>run_ebay_auto.sh と amazon_to_ebay.py を編集。UPLOAD_LIMITは0(無制限)のままで、やめる時の戻しも要る＝試験には重い</td></tr>
 <tr><td>案3</td><td>ASINを手で選び --asin-file で出す</td><td>20口以内は確実だが、『検索語が当たるか』を確かめられない</td></tr></table></div>
-<p class="small">未確認: ホビーサーチ経由を止めた時の候補数への影響・実行ログでの『最大N件』の表示(コードでは確認、実行では未確認)。</p>
+<p class="small">未確認: ホビーサーチ経由を止めた時の候補数・JAN取得率への影響(今は403が続くため止める案)／実行ログでの『最大N件』の表示(コードでは確認、実行では未確認)／補正3段(claude -p)に窓の中で数分かかる点。</p>
 <div class="nav"><a href="a.html">‹ (a)</a><a href="c.html">次: (c) 守る門 ›</a></div></div></body></html>

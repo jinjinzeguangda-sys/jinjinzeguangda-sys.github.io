@@ -12,7 +12,7 @@ p{margin:8px 0}.meta{color:var(--sub);font-size:13px}a{color:var(--accent)}.back
 table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:6px 6px;text-align:left;vertical-align:top}th{color:var(--sub);font-weight:600;white-space:nowrap}
 .n{font-variant-numeric:tabular-nums}.small{font-size:13px;color:var(--sub)}code{font:13px/1.5 ui-monospace,Menlo,monospace;background:var(--soft);padding:1px 5px;border-radius:5px;word-break:break-all}
 .nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}.nav a{flex:1 1 40%;text-align:center;border:1px solid var(--line);border-radius:10px;padding:9px 6px;text-decoration:none;background:var(--card);font-size:14px}</style></head><body><div class="wrap">
-<h1>モンハン(カプコン)を小さく試す案</h1><p class="meta">作成 2026-11-24 21:09 ・ ec(9cの依頼)・読み取りだけで作りました。eBay・Amazonへは何も書いていません。</p>
+<h1>モンハン(カプコン)を小さく試す案</h1><p class="meta">作成 2026-11-25 08:15 ・ ec(9cの依頼)・読み取りだけで作りました。eBay・Amazonへは何も書いていません。</p>
 <div class="box"><b>結論(確信 中)</b>
 <ol>
 <li><b>試せます。</b>お金はかからず、危険も小さい案です(出品は自動の流れ・取り下げもできます)。</li>
@@ -28,9 +28,9 @@ table{border-collapse:collapse;width:100%;font-size:14px}th,td{border-bottom:1px
 <div class="more">詳しく見る ›</div></a>
 
 <a class="card" href="b.html"><h3>(b) 『最大20口』で止める仕組み</h3>
-<div class="l"><b>決めたこと</b><span>本番の出品ジョブは書き換えず、別の小さい流れで1回だけ出す</span></div>
-<div class="l"><b>判定</b><span class="wait">⏳ 案のみ(未実装)。罠を2つ見つけた</span></div>
-<div class="l"><b>実際</b><span>amazon_to_ebay.py は実行すると本番の ebay_jp_format.csv を上書きする。CSVを書いた時点で履歴に『出品済み』の印が付く。</span></div>
+<div class="l"><b>決めたこと</b><span>本番の出品ジョブは書き換えず、本番と同じ工程を停止窓の中で1回だけ流す</span></div>
+<div class="l"><b>判定</b><span class="ok">✅ 流れを作成済み(模擬の収集・出品で自己試験29項目・変異17/17)。本物の実行はこれから</span></div>
+<div class="l"><b>実際</b><span>罠を3つ見つけた: 本番のCSVを上書きする／CSVを書いた時点で履歴に『出品済み』の印が付く／補正3段(英訳・題名・説明)は正規名のCSVしか直さない。</span></div>
 <div class="more">詳しく見る ›</div></a>
 
 <a class="card" href="c.html"><h3>(c) 守る門</h3>
