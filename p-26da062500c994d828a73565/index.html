@@ -144,6 +144,26 @@ html.gaming,html.gaming body{overflow:hidden}
 .cell.on{background:var(--hl)}
 .cell.on .kana,.cell.on .hand{color:var(--ink);opacity:1}
 .masked .cell .kana,.masked .cell .hand{visibility:hidden}
+.filebtn{display:block;text-align:center;cursor:pointer;position:relative}
+.filebtn input{position:absolute;inset:0;width:100%;opacity:0;cursor:pointer}
+.strip{position:relative;height:42px;border:1px solid var(--line);border-radius:8px;background:var(--panel);min-width:0}
+.strip .cell{position:absolute;top:0;bottom:0;width:18px;transform:translateX(-50%);border-radius:4px}
+.strip .cell .kana{font-family:var(--font-body);font-size:15px}
+.strip .cell.ko .kana{font-size:10px;line-height:1.9}
+.gline .strip .cell .kana{font-size:17px}
+.gline .strip .cell.ko .kana{font-size:11px}
+.gline .next .strip{height:30px}
+.rline{border-top:1px solid var(--line);padding:8px 0}
+.rhead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--sub);margin-bottom:6px}
+.rhead span{flex:1 1 7em}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-width:44px;min-height:48px;border:1px solid var(--line);border-radius:8px;background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;padding:2px 4px}
+.chip b{font-size:17px}
+.chip small{font-size:10px;color:var(--sub);font-variant-numeric:tabular-nums}
+.chip.weak{border-style:dashed;border-width:2px}
+.chip.set{background:var(--ai-soft);border-color:var(--ai)}
+.chip.del{background:var(--shu-soft);border-color:var(--shu)}
+.chip.on{background:var(--hl);outline:3px solid var(--shu)}
 
 .score{font-variant-numeric:tabular-nums}
 .big{font-family:var(--font-sho);font-size:30px;line-height:1.2}
@@ -184,6 +204,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;margin:0}
 <section id="tab-practice" class="practice">
   <div class="stack">
     <label class="field">曲<select id="songSel"></select></label>
+    <label class="btn filebtn">録音の曲を読み込む（ファイルを選ぶ）<input type="file" id="recFile" accept=".json,application/json"></label>
     <div class="badge" id="sampleBadge" hidden>仮の例（お祭りの曲ではありません）</div>
     <p class="hint" id="srcNote" hidden><span></span> <a target="_blank" rel="noopener">解説ページを開く</a></p>
     <div>
@@ -205,6 +226,14 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;margin:0}
       <label class="field">ここまで<select id="rangeTo"></select></label>
       <label class="check"><input type="checkbox" id="loop">くり返す</label>
       <label class="check"><input type="checkbox" id="beat">拍の音</label>
+    </div>
+    <div id="recOpts" hidden>
+      <label class="field">鳴らす音<select id="recSound">
+        <option value="auto">おまかせ（1・2段階は笛と大太鼓、3・4段階は笛だけ）</option>
+        <option value="mix">笛と大太鼓</option>
+        <option value="orig">録音そのまま</option>
+        <option value="flute">笛だけ</option>
+      </select></label>
     </div>
     <button type="button" class="btn primary go" id="go">はじめる</button>
     <p class="hint">横向きの画面になります。左右の下の太鼓を親指で打ちます。内側が「面（ドン）」、外側が「ふち（カッ）」です。</p>
@@ -229,14 +258,34 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;margin:0}
     </div>
     <div class="badge" id="sampleBadge2" hidden>仮の例（お祭りの曲ではありません）</div>
     <label class="field">曲の名前<input type="text" id="songName" maxlength="60"></label>
-    <div class="row">
+    <div class="row" id="tempoRow">
       <label class="field">速さ（1分の拍数）<input type="number" id="bpm" min="30" max="300" inputmode="numeric" style="width:8em"></label>
       <button type="button" class="btn" id="tapTempo">拍に合わせて押す</button>
       <label class="field">1拍のマス数<select id="div"><option value="2">2（ドコ）</option><option value="3">3（3つ刻み）</option><option value="4">4（細かい）</option></select></label>
       <label class="field">跳ね<select id="swing"><option value="0">なし</option><option value="0.17">軽く</option><option value="0.333">強く</option></select></label>
     </div>
   </div>
-  <div class="card stack">
+  <div class="card stack" id="recCard" hidden>
+    <h2>左右を決める</h2>
+    <p class="hint"><b>打って決める</b>: 録音を流すので、実際に叩くとおりに左右の太鼓を打ってください。打った近くの音に、その手が付きます。下の四角を押すと1つずつ変えられます（なし → 右 → 左 → 両）。</p>
+    <div class="row">
+      <label class="field">ここから<select id="hFrom"></select></label>
+      <label class="field">ここまで<select id="hTo"></select></label>
+      <label class="field">流す速さ<select id="hSpeed"><option value="1">100%</option><option value="0.85">85%</option><option value="0.7" selected>70%</option><option value="0.55">55%</option></select></label>
+    </div>
+    <div class="row">
+      <button type="button" class="btn primary" id="hGo">打って決める</button>
+      <label class="check"><input type="checkbox" id="hAdd">音がない所を打ったら、音を足す</label>
+    </div>
+    <div class="hint" id="hState"></div>
+    <div class="row">
+      <button type="button" class="btn small" id="hDelMode" aria-pressed="false">音を消すモード</button>
+      <button type="button" class="btn small danger" id="hClear">左右を全部消す</button>
+    </div>
+    <p class="hint" id="hCount"></p>
+    <div id="hList"></div>
+  </div>
+  <div class="card stack" id="scoreCard">
     <h2>口唱歌を入れる</h2>
     <p class="hint">1文字が1マスです。<b>ドン</b>は2マス（打つ＋休み）、<b>ドコ</b>は2回打ちます。改行が段の区切り。空白は読みやすさのためで、音には関係しません。掛け声は（ ）で囲むと打ちません。</p>
     <div class="row" id="inserts"></div>
@@ -247,7 +296,7 @@ pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;margin:0}
     <p class="hint">下のマスを押すと手が変わります（自動 → 右 → 左 → 両）。下線の付いた手は自分で決めた手です。</p>
     <div class="row"><button type="button" class="btn" id="listen">通して聞く</button></div>
   </div>
-  <div class="card stack">
+  <div class="card stack" id="tapCard">
     <h2>打って書き取る</h2>
     <p class="hint">お手本を思い浮かべるか、別の機器で録音を流しながら打つと、口唱歌の下書きになります。上の「速さ」と「1拍のマス数」に合わせて区切ります。</p>
     <div class="row">
@@ -562,6 +611,87 @@ function calibrate(clicks, taps) {
   const m = Math.floor(ds.length / 2);
   return ds.length % 2 ? ds[m] : (ds[m - 1] + ds[m]) / 2;
 }
+/* ---------- 録音の曲（大太鼓を打つ時刻を秒で持つ） ---------- */
+// 段（秒の区切り）ごとに音をまとめる
+// 段の表示で字が重ならないように、近すぎる位置（%）を min まで離す。順番は変えず、lo〜hi に収める
+function spreadMarks(pos, min, lo, hi) {
+  const p = pos.slice(), gap = p.length > 1 ? Math.min(min, (hi - lo) / (p.length - 1)) : 0;
+  for (let i = 0; i < p.length; i++) p[i] = Math.max(p[i], i ? p[i - 1] + gap : lo);
+  for (let i = p.length - 1; i >= 0; i--) p[i] = Math.min(p[i], i < p.length - 1 ? p[i + 1] - gap : hi);
+  return p;
+}
+function recLines(song) {
+  const out = song.lines.map((start, i) => ({ rec: true, start, end: i + 1 < song.lines.length ? song.lines[i + 1] : song.dur, cells: [] }));
+  let li = 0;
+  song.notes.forEach((n, idx) => {
+    while (li + 1 < out.length && n.t >= out[li + 1].start) li++;
+    out[li].cells.push({ text: 'ドン', role: n.s ? 'don' : 'ko', hand: n.h || null, auto: null, at: n.t, idx });
+  });
+  return out;
+}
+// 段の範囲を、秒の付いた音の並びにする（形は buildTimeline と同じ。speed<1 でゆっくり）
+function buildRecTimeline(lines, from, to, opt) {
+  const start = lines[from].start, end = lines[to].end, sp = opt.speed;
+  const cells = [];
+  for (let li = from; li <= to; li++) {
+    lines[li].cells.forEach((c, ci) => cells.push({ li, ci, t: (c.at - start) / sp, at: c.at, idx: c.idx, role: c.role, text: '', hand: c.hand, onBeat: ci === 0, lineStart: ci === 0 }));
+  }
+  const dur = (end - start) / sp;
+  cells.forEach((c, k) => {
+    const prev = k ? c.t - cells[k - 1].t : c.t + dur - cells[cells.length - 1].t;
+    const next = k < cells.length - 1 ? cells[k + 1].t - c.t : cells[0].t + dur - c.t;
+    c.win = windowFor(Math.min(prev, next));
+  });
+  return { cells, dur, cd: 0.24 / sp, beat: opt.beat / sp, start, end, speed: sp };
+}
+// 打った左右を、近くの音に付ける。taps は {t: 曲の中の秒, hand}。付け先の無い打ちは rest に返す
+function assignHands(notes, taps, tol) {
+  const got = new Map(), rest = [];
+  for (const tap of taps.slice().sort((a, b) => a.t - b.t)) {
+    let best = -1, cost = tol;
+    notes.forEach((n, i) => {
+      const d = Math.abs(n.t - tap.t);
+      if (d > tol) return;
+      const prev = got.get(i);
+      // もう手が付いた音は、ほぼ同時の別の手（両手打ち）のときだけ受ける
+      if (prev && !(prev.hand !== tap.hand && Math.abs(prev.t - tap.t) < 0.05)) return;
+      if (d <= cost) { cost = d; best = i; }
+    });
+    if (best < 0) { rest.push(tap); continue; }
+    const prev = got.get(best);
+    got.set(best, prev ? { t: prev.t, hand: 'B' } : { t: tap.t, hand: tap.hand });
+  }
+  for (const [i, v] of got) notes[i].h = v.hand;
+  return { assigned: got.size, rest };
+}
+// 高さを変えずに速さだけ変える（波形を少しずつ重ね直す方法）。speed<1 でゆっくり長くなる
+function stretchAudio(x, sr, speed) {
+  if (Math.abs(speed - 1) < 0.001) return x;
+  const N = 2 * Math.round(sr * 0.023), H = N / 2, R = Math.round(sr * 0.01);
+  const outLen = Math.round(x.length / speed);
+  const y = new Float32Array(outLen + N), w = new Float32Array(outLen + N), win = new Float32Array(N);
+  for (let i = 0; i < N; i++) win[i] = 0.5 - 0.5 * Math.cos(2 * Math.PI * (i + 0.5) / N);
+  const at = i => (i >= 0 && i < x.length) ? x[i] : 0;
+  let prev = 0;
+  for (let k = 0; k * H < outLen; k++) {
+    const ideal = Math.round(k * H * speed);
+    let pos = ideal;
+    if (k) {   // 直前の続きに一番よく似た位置を、近くから選ぶ
+      const want = prev + H;
+      const score = q => { let a = 0, e = 1e-9; for (let i = 0; i < H; i += 4) { const v = at(q + i); a += v * at(want + i); e += v * v; } return a / Math.sqrt(e); };
+      let best = -Infinity;
+      for (let d = -R; d <= R; d += 4) { const v = score(ideal + d); if (v > best) { best = v; pos = ideal + d; } }
+      const c = pos;
+      for (let d = -3; d <= 3; d++) { const v = score(c + d); if (v > best) { best = v; pos = c + d; } }
+    }
+    for (let i = 0, j = k * H; i < N; i++, j++) { y[j] += at(pos + i) * win[i]; w[j] += win[i]; }
+    prev = pos;
+  }
+  const out = new Float32Array(outLen);
+  for (let i = 0; i < outLen; i++) out[i] = w[i] > 0.001 ? y[i] / w[i] : 0;
+  return out;
+}
+const mmss = sec => Math.floor(sec / 60) + ':' + String(Math.floor(sec % 60)).padStart(2, '0');
 /* CORE-END ここまで */
 
 /* ---------- 保存 ---------- */
@@ -586,12 +716,30 @@ const clone = o => JSON.parse(JSON.stringify(o));
 function defaults() {
   return {
     v: 1, songs: [clone(SAMPLE)], cur: 'sample',
-    set: { step: 2, speed: 100, loop: true, beat: true, count: 4, tapSound: true, showHands: true, judgeHands: false, offsetMs: 0, vol: 80, eventDate: '', dict: {} },
+    set: { step: 2, speed: 100, loop: true, beat: true, count: 4, tapSound: true, showHands: true, judgeHands: false, offsetMs: 0, vol: 80, eventDate: '', dict: {}, recSound: 'auto' },
     log: []
   };
 }
 const num = (v, lo, hi, d) => (typeof v === 'number' && isFinite(v)) ? Math.min(hi, Math.max(lo, v)) : d;
+function cleanRec(s) {
+  if (!s || typeof s.id !== 'string' || !Array.isArray(s.notes) || !Array.isArray(s.lines)) return null;
+  const dur = num(s.dur, 1, 3600, 0);
+  if (!dur) return null;
+  const notes = s.notes.map(n => Array.isArray(n) ? { t: n[0], s: n[1], h: null } : n)
+    .filter(n => n && typeof n.t === 'number' && n.t >= 0 && n.t <= dur)
+    .map(n => ({ t: n.t, s: n.s ? 1 : 0, h: ['R', 'L', 'B'].includes(n.h) ? n.h : null }))
+    .sort((a, b) => a.t - b.t).slice(0, 5000);
+  const lines = s.lines.filter(v => typeof v === 'number' && v >= 0 && v < dur).sort((a, b) => a - b).slice(0, 999);
+  if (lines[0] !== 0) lines.unshift(0);
+  const beat = num(s.beat, 0.2, 2, 0.5);
+  return {
+    kind: 'rec', id: s.id.slice(0, 40), name: String(s.name || '録音の曲').slice(0, 60), sample: false,
+    dur, beat, lead: num(s.lead, 0, 5, 0), click: num(s.click, 0, 5, 0), audioId: String(s.audioId || s.id).slice(0, 60), notes, lines,
+    text: '', bpm: Math.round(num(60 / beat, 30, 300, 100)), div: 2, swing: 0, note: '', url: ''
+  };
+}
 function cleanSong(s) {
+  if (s && s.kind === 'rec') return cleanRec(s);
   if (!s || typeof s.id !== 'string' || typeof s.text !== 'string') return null;
   return {
     id: s.id.slice(0, 40), name: String(s.name || '名前のない曲').slice(0, 60), sample: !!s.sample,
@@ -632,6 +780,7 @@ function load() {
     d.set.vol = num(d.set.vol, 0, 100, 80);
     d.set.count = [0, 4, 8].includes(d.set.count) ? d.set.count : 4;
     d.set.dict = cleanDict(d.set.dict);
+    d.set.recSound = ['auto', 'orig', 'mix', 'flute'].includes(d.set.recSound) ? d.set.recSound : 'auto';
     d.log = cleanLog(j.log);
   } catch (e) { storageOk = false; }
   return d;
@@ -682,7 +831,8 @@ function twoStep(btn, askLabel, run) {
 }
 const song = () => S.songs.find(s => s.id === S.cur) || S.songs[0];
 const dict = () => Object.assign({}, DEFAULT_DICT, S.set.dict);
-const parsed = (s = song()) => parseScore(s.text, dict(), s.div);
+const isRec = (s = song()) => !!s && s.kind === 'rec';
+const parsed = (s = song()) => isRec(s) ? { lines: recLines(s), unknown: [] } : parseScore(s.text, dict(), s.div);
 
 /* ---------- 音（合成） ---------- */
 let ac = null, master = null, noiseBuf = null;
@@ -792,6 +942,7 @@ async function startRun(cfg) {
 function pump() {
   const r = run;
   if (!r) return;
+  if (r.onPump) r.onPump(r, ac.currentTime + 0.5);
   while (r.k < r.endK && r.timeOf(r.k) < ac.currentTime + 0.2) { r.playAt(r.k, r.timeOf(r.k)); r.k++; }
 }
 function stopRun(reason) {
@@ -874,6 +1025,7 @@ function hitDrum(surface, hand, stamp) {
   if (r.kind === 'practice') practiceHit(surface, hand, stamp);
   else if (r.kind === 'record') recordHit(surface, hand, stamp);
   else if (r.kind === 'calib') calibHit(stamp);
+  else if (r.kind === 'assign') assignHit(surface, hand, stamp);
 }
 function layoutGame() {
   const box = $('gameBox'), stage = $('stage');
@@ -898,7 +1050,7 @@ function layoutGame() {
   sizeLane();
 }
 function openGame(mode) {
-  const s = song(), practice = mode === 'practice';
+  const s = song(), practice = mode === 'practice' || mode === 'assign';
   G.mode = mode;
   $('game').hidden = false;
   document.documentElement.classList.add('gaming');
@@ -907,9 +1059,10 @@ function openGame(mode) {
   $('laneBox').hidden = !practice; $('nowbox').hidden = !practice;
   $('stage').classList.toggle('plain', !practice);
   $('gBadge').hidden = !(practice && s.sample);
-  $('peek').hidden = !(practice && !STEPS[S.set.step].show);
-  $('gClose').textContent = mode === 'record' ? '✓ 書き取りを終わる' : '✕ やめる';
-  $('gTitle').textContent = practice ? (S.set.step + '段階・' + S.set.speed + '%　' + s.name) : mode === 'record' ? '打って書き取る' : 'ずれの調整';
+  $('peek').hidden = !(mode === 'practice' && !STEPS[S.set.step].show);
+  $('gClose').textContent = mode === 'record' ? '✓ 書き取りを終わる' : mode === 'assign' ? '✓ 左右を決め終わる' : '✕ やめる';
+  if (mode === 'assign') $('nowbox').classList.remove('masked');
+  $('gTitle').textContent = mode === 'assign' ? '打って左右を決める　' + s.name : practice ? (S.set.step + '段階・' + S.set.speed + '%　' + s.name) : mode === 'record' ? '打って書き取る' : 'ずれの調整';
   readColors();
   layoutGame();
 }
@@ -929,7 +1082,137 @@ $('stage').addEventListener('pointerdown', e => {
 });
 $('stage').addEventListener('touchstart', e => { if (!e.target.closest('button, .goverlay')) e.preventDefault(); }, { passive: false });
 $('game').addEventListener('contextmenu', e => e.preventDefault());
-function tapSound(surface) { if (S.set.tapSound && ensureAudio()) synth(ac, master, noiseBuf, surface === 'rim' ? 'ka' : 'don', ac.currentTime); }
+function tapSound(surface) {
+  if (!S.set.tapSound || !ensureAudio()) return;
+  const s = song();   // 録音の曲では、録音から切り出した大太鼓の音で鳴らす
+  if (surface !== 'rim' && isRec(s) && decoded && decoded.id === s.audioId) playBuffer(decoded.drum, master, ac.currentTime, 0.9);
+  else synth(ac, master, noiseBuf, surface === 'rim' ? 'ka' : 'don', ac.currentTime);
+}
+
+/* ---------- 録音の曲: 音の保存と準備（音は端末の中だけに置く） ---------- */
+const audioMem = new Map();      // 保存できない端末でも、開いている間は使えるようにする
+let decoded = null;              // いま使っている曲の音（大きいので1曲ぶんだけ持つ）
+const segCache = new Map();
+function audioStore(mode, work) {
+  return new Promise((ok, ng) => {
+    const open = indexedDB.open('taikoKeikocho.audio', 1);
+    open.onupgradeneeded = () => open.result.createObjectStore('a');
+    open.onerror = () => ng(open.error);
+    open.onsuccess = () => {
+      const db = open.result, tx = db.transaction('a', mode), req = work(tx.objectStore('a'));
+      tx.oncomplete = () => { db.close(); ok(req.result); };
+      tx.onerror = tx.onabort = () => { db.close(); ng(tx.error); };
+    };
+  });
+}
+async function putAudio(id, data) {
+  audioMem.set(id, data);
+  try { await audioStore('readwrite', st => st.put(data, id)); return true; } catch (e) { return false; }
+}
+async function getAudio(id) {
+  if (audioMem.has(id)) return audioMem.get(id);
+  try { return (await audioStore('readonly', st => st.get(id))) || null; } catch (e) { return null; }
+}
+// 頭に入れた合図の位置を探して、曲の0秒が音のどこかを決める（端末の読み取り方の違いを吸収する）
+function audioOffset(buf, s) {
+  const d = buf.getChannelData(0), lim = Math.min(d.length, Math.round(buf.sampleRate * (s.click + 0.2)));
+  for (let i = 0; i < lim; i++) {
+    if (Math.abs(d[i]) <= 0.3) continue;
+    const at = i / buf.sampleRate;
+    if (Math.abs(at - s.click) > 0.15) break;
+    return at + (s.lead - s.click);
+  }
+  throw new Error('音の位置合わせの合図が見つかりません。曲のファイルを作り直してください');
+}
+async function loadRec(s) {
+  if (decoded && decoded.id === s.audioId) return decoded;
+  const raw = await getAudio(s.audioId);
+  if (!raw) return null;
+  const dec = b => new Promise((ok, ng) => ac.decodeAudioData(b.slice(0), ok, ng));
+  const [orig, flute, drum] = await Promise.all([dec(raw.orig), dec(raw.flute), dec(raw.drum)]);
+  segCache.clear();
+  decoded = { id: s.audioId, orig, flute, drum, off: { orig: audioOffset(orig, s), flute: audioOffset(flute, s) } };
+  return decoded;
+}
+// 曲の start〜end 秒を、速さ speed にした音にする
+function segment(a, track, start, end, speed) {
+  const key = [a.id, track, start, end, speed].join('|');
+  if (segCache.has(key)) return segCache.get(key);
+  const buf = a[track], sr = buf.sampleRate;
+  const i = Math.max(0, Math.round((a.off[track] + start) * sr)), j = Math.min(buf.length, Math.round((a.off[track] + end) * sr));
+  const data = Float32Array.from(stretchAudio(buf.getChannelData(0).subarray(i, Math.max(i + 1, j)), sr, speed));
+  const fade = Math.min(Math.round(sr * 0.008), data.length >> 1);
+  for (let k = 0; k < fade; k++) { data[k] *= k / fade; data[data.length - 1 - k] *= k / fade; }
+  const out = ac.createBuffer(1, data.length, sr);
+  out.getChannelData(0).set(data);
+  if (segCache.size >= 4) segCache.delete(segCache.keys().next().value);
+  segCache.set(key, out);
+  return out;
+}
+function playBuffer(buf, out, t, gain) {
+  const src = ac.createBufferSource(), g = ac.createGain();
+  src.buffer = buf; g.gain.value = gain;
+  src.connect(g); g.connect(out); src.start(t);
+}
+// 区間の音を、周回ごとに予約する
+function loopSegment(seg, dur) {
+  return (r, horizon) => {
+    while ((r.loop || r.segPass < 1) && r.t0 + r.segPass * dur < horizon) {
+      const src = ac.createBufferSource();
+      src.buffer = seg; src.connect(r.bus);
+      src.start(Math.max(ac.currentTime, r.t0 + r.segPass * dur), 0, dur);
+      r.segPass++;
+    }
+  };
+}
+const recSound = step => S.set.recSound !== 'auto' ? S.set.recSound : step.guide ? 'mix' : 'flute';
+let preparing = false;
+// 再生の前に、音を読み込んで区間を作る。作れないときは理由を出して null
+async function prepareRec(s, track, tl) {
+  if (preparing) return null;
+  preparing = true;
+  try {
+    if (!ensureAudio()) return null;
+    toast('音を準備しています…');
+    await new Promise(ok => setTimeout(ok, 30));
+    const a = await loadRec(s);
+    if (!a) { showError('この曲の音がありません。「録音の曲を読み込む」で、曲のファイルをもう一度選んでください。'); return null; }
+    const seg = segment(a, track, tl.start, tl.end, tl.speed);
+    $('toast').hidden = true;
+    return { a, seg };
+  } catch (e) {
+    showError('音を読み込めませんでした: ' + (e && e.message || e)); return null;
+  } finally { preparing = false; }
+}
+function b64ToBuffer(text) {
+  const bin = atob(text), out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out.buffer;
+}
+async function importRecPack(j) {
+  stopRun('user');
+  const ids = [];
+  let kept = 0, unsaved = 0;
+  for (const p of (Array.isArray(j.songs) ? j.songs : [])) {
+    const s = cleanRec(p);
+    if (!s || !p.audio || !['orig', 'flute', 'drum'].every(k => p.audio[k] && typeof p.audio[k].b64 === 'string')) continue;
+    const audio = {};
+    for (const k of ['orig', 'flute', 'drum']) audio[k] = b64ToBuffer(p.audio[k].b64);
+    if (!await putAudio(s.audioId, audio)) unsaved++;
+    const i = S.songs.findIndex(x => x.id === s.id);
+    if (i < 0) S.songs.push(s);
+    else if (isRec(S.songs[i])) kept++;           // 直した内容（左右など）は残して、音だけ入れ直す
+    else S.songs[i] = s;
+    ids.push(s.id);
+  }
+  decoded = null; segCache.clear();
+  if (!ids.length) { toast('曲が見つかりません。曲のファイルを選んでください'); return false; }
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+  changeSong(ids[0]); saveNow();
+  if (unsaved) showError('音を端末に保存できませんでした。この画面を閉じると、もう一度読み込みが必要です。');
+  toast('録音の曲を' + ids.length + '件読み込みました' + (kept ? '（直した内容は残しています）' : ''));
+  return true;
+}
 
 /* ---------- 稽古 ---------- */
 let view = { lines: [], tl: null };
@@ -944,19 +1227,24 @@ function refreshPractice() {
   const n = view.lines.length;
   const { from, to } = rangeOf(n);
   view.from = from; view.to = (view.to === null || view.to === undefined || view.to >= n - 1) ? null : to;
-  view.tl = n ? buildTimeline(view.lines, from, to, { bpm: s.bpm, speed: S.set.speed / 100, div: s.div, swing: s.swing }) : null;
+  const rec = isRec(s);
+  view.tl = !n ? null : rec ? buildRecTimeline(view.lines, from, to, { speed: S.set.speed / 100, beat: s.beat })
+    : buildTimeline(view.lines, from, to, { bpm: s.bpm, speed: S.set.speed / 100, div: s.div, swing: s.swing });
+  $('recOpts').hidden = !rec;
+  $('recSound').value = S.set.recSound;
+  $('beat').parentElement.hidden = rec;
   for (const [sel, val] of [[$('rangeFrom'), from], [$('rangeTo'), to]]) {
-    sel.replaceChildren(...view.lines.map((_, i) => el('option', { value: i, text: (i + 1) + '段目' })));
+    sel.replaceChildren(...view.lines.map((ln, i) => el('option', { value: i, text: (i + 1) + '段目' + (ln.rec ? '（' + mmss(ln.start) + '）' : '') })));
     sel.value = String(val);
   }
   $('sampleBadge').hidden = !s.sample;
   const note = $('srcNote');
-  note.hidden = !s.note;
-  note.firstElementChild.textContent = s.note || '';
+  note.hidden = !(s.note || rec);
+  note.firstElementChild.textContent = rec ? '録音から作った曲です。大太鼓を打つ時刻は自動で拾ったもので、小さい丸は自信が低い音です。違っていたら「曲を作る」で直せます。' : (s.note || '');
   note.lastElementChild.hidden = !s.url;
   if (s.url) note.lastElementChild.href = s.url;
   $('speed').value = S.set.speed;
-  $('speedOut').textContent = S.set.speed + '%（♩=' + Math.round(s.bpm * S.set.speed / 100) + '）';
+  $('speedOut').textContent = S.set.speed + '%' + (rec ? '' : '（♩=' + Math.round(s.bpm * S.set.speed / 100) + '）');
   $('loop').checked = S.set.loop; $('beat').checked = S.set.beat;
   for (const b of $('stepSeg').children) b.setAttribute('aria-pressed', String(Number(b.dataset.step) === S.set.step));
   $('stepHelp').textContent = STEPS[S.set.step].help;
@@ -972,7 +1260,23 @@ function refreshPractice() {
 function renderLines(host, lines, div, opt = {}) {
   host.replaceChildren(...lines.map((ln, li) => lineEl(ln, li, div, opt)));
 }
+function recLineEl(ln, li, opt) {
+  const strip = el('div', { class: 'strip' }), len = Math.max(0.1, ln.end - ln.start);
+  const left = spreadMarks(ln.cells.map(c => 3 + 94 * (c.at - ln.start) / len), 5.8, 2.5, 97.5);
+  ln.cells.forEach((c, ci) => {
+    const dot = el('div', { class: 'cell ' + c.role + (c.hand ? ' fixed' : ''), 'data-li': li, 'data-ci': ci },
+      el('span', { class: 'kana', text: '●' }),
+      el('span', { class: 'hand', text: (S.set.showHands && c.hand) ? HAND_JA[c.hand] : '' }));
+    dot.style.left = left[ci] + '%';
+    strip.append(dot);
+  });
+  const out = opt.range && (li < opt.range.from || li > opt.range.to);
+  const no = el(opt.onNo ? 'button' : 'span', { class: 'no', text: (li + 1) + '段' });
+  if (opt.onNo) { no.type = 'button'; no.addEventListener('click', () => opt.onNo(li)); }
+  return el('div', { class: 'line' + (out ? ' out' : '') }, no, strip);
+}
 function lineEl(ln, li, div, opt) {
+  if (ln.rec) return recLineEl(ln, li, opt);
   const beats = el('div', { class: 'beats' + (div === 4 ? ' d4' : '') });
   for (let b = 0; b < ln.cells.length; b += div) {
     const beat = el('div', { class: 'beat' });
@@ -1000,7 +1304,7 @@ function showNow(li, ci) {
   if (view.nowLi !== li) {
     view.nowLi = li;
     const { from, to } = rangeOf(view.lines.length);
-    const next = li < to ? li + 1 : (S.set.loop ? from : null);
+    const next = run && run.kind === 'assign' ? (li < run.to ? li + 1 : null) : li < to ? li + 1 : (S.set.loop ? from : null);
     $('nowLine').replaceChildren(lineEl(view.lines[li], li, s.div, {}));
     $('nextLine').replaceChildren(...(next !== null && next !== li ? [lineEl(view.lines[next], next, s.div, {})] : []));
     view.onCell = null;
@@ -1013,7 +1317,7 @@ function showNow(li, ci) {
   }
 }
 
-function startPractice() {
+async function startPractice() {
   stopRun('switch');
   refreshPractice();
   const s = song();
@@ -1022,15 +1326,22 @@ function startPractice() {
   const hitsPerPass = tl.cells.filter(c => isHit(c.role)).length;
   if (!hitsPerPass) { toast('打つ音がありません。譜面か「口唱歌の読み方」を確かめてください'); return; }
   const loop = S.set.loop, beatOn = S.set.beat;
+  let rec = null, sound = null;
+  if (isRec(s)) {
+    sound = recSound(step);
+    rec = await prepareRec(s, sound === 'orig' ? 'orig' : 'flute', tl);
+    if (!rec || song() !== s || view.tl !== tl) return;   // 準備の間に曲や範囲が変わったらやめる
+  }
   openGame('practice');
   startRun({
-    kind: 'practice', beat: tl.beat, countBeats: S.set.count, tl, loop, step: S.set.step, judge: step.judge,
+    kind: 'practice', segPass: 0, sound, onPump: rec ? loopSegment(rec.seg, tl.dur) : null, beat: tl.beat, countBeats: S.set.count, tl, loop, step: S.set.step, judge: step.judge,
     show: step.show, songId: s.id, songName: s.name, speed: S.set.speed, from: view.from, to: rangeOf(view.lines.length).to,
     win: MAX_WIN, hitsPerPass, notes: [], passes: 0, missAt: 0, extra: 0, tapCount: 0, shownPass: 0, passText: [], combo: 0, maxCombo: 0,
     endK: loop ? Infinity : N,
     timeOf(k) { return this.t0 + Math.floor(k / N) * tl.dur + tl.cells[k % N].t; },
     playAt(k, t) {
       const c = tl.cells[k % N];
+      if (rec) { if (sound === 'mix') playBuffer(rec.a.drum, this.bus, t, c.role === 'don' ? 0.9 : 0.55); return; }
       if (step.guide && isHit(c.role)) synth(ac, this.bus, noiseBuf, c.role, t);
       if (beatOn && c.onBeat) synth(ac, this.bus, noiseBuf, c.lineStart ? 'tickTop' : 'tick', t);
     },
@@ -1191,7 +1502,7 @@ function drawLane(r, now) {
       if (cell.onBeat) {
         g2.fillStyle = cell.lineStart ? c.sub : c.line;
         g2.fillRect(x - (cell.lineStart ? 1 : 0.5), 8, cell.lineStart ? 2 : 1, laneH - 16);
-        if (cell.lineStart) { g2.fillStyle = c.sub; g2.font = '10px sans-serif'; g2.textAlign = 'left'; g2.fillText((cell.li + 1) + '段', x + 3, 9); g2.textAlign = 'center'; }
+        if (cell.lineStart) { g2.fillStyle = c.sub; g2.font = '10px sans-serif'; g2.textAlign = 'right'; g2.fillText((cell.li + 1) + '段', x - 11, 9); g2.textAlign = 'center'; }
       }
       const n = judged.get(p + ':' + cell.li + ':' + cell.ci);
       const state = !n ? null : n.res ? (!n.res.surfaceOk ? 'ng' : n.res.timing === 'perfect' ? 'ok' : 'warn') : n.missed && r.tapCount ? 'ng' : null;
@@ -1231,8 +1542,141 @@ function refreshEditor() {
   $('swing').disabled = s.div === 3;
   if ($('text').value !== s.text) $('text').value = s.text;
   $('delSong').disabled = S.songs.length < 2;
-  refreshPreview();
+  const rec = isRec(s);
+  for (const id of ['scoreCard', 'tapCard', 'tempoRow']) $(id).hidden = rec;
+  $('recCard').hidden = !rec;
+  if (rec) refreshRecEditor(); else refreshPreview();
 }
+/* ---------- 録音の曲: 左右を決める・打点を直す ---------- */
+let delMode = false;
+function refreshRecEditor() {
+  const s = song(), lines = recLines(s), n = lines.length;
+  for (const [sel, def] of [[$('hFrom'), 0], [$('hTo'), Math.min(3, n - 1)]]) {
+    const cur = sel.dataset.song === s.id ? Math.min(Number(sel.value), n - 1) : def;
+    sel.replaceChildren(...lines.map((ln, i) => el('option', { value: i, text: (i + 1) + '段目（' + mmss(ln.start) + '）' })));
+    sel.value = String(cur); sel.dataset.song = s.id;
+  }
+  const done = s.notes.filter(x => x.h).length, weak = s.notes.filter(x => !x.s).length;
+  $('hCount').textContent = '大太鼓の音 ' + s.notes.length + '個（左右を決めた音 ' + done + '個・点線は自信が低い音 ' + weak + '個）';
+  $('hDelMode').setAttribute('aria-pressed', String(delMode));
+  $('hList').replaceChildren(...lines.map((ln, li) => {
+    const chips = ln.cells.map(c => el('button', {
+      type: 'button', class: 'chip' + (s.notes[c.idx].s ? '' : ' weak') + (c.hand ? ' set' : '') + (delMode ? ' del' : ''), 'data-idx': c.idx,
+      onclick: () => tapChip(c.idx)
+    }, el('b', { text: delMode ? '✕' : c.hand ? HAND_JA[c.hand] : '－' }), el('small', { text: (c.at - ln.start).toFixed(1) })));
+    return el('div', { class: 'rline' },
+      el('div', { class: 'rhead' }, el('span', { text: (li + 1) + '段目　' + mmss(ln.start) }),
+        el('button', { type: 'button', class: 'btn small', text: '▶ 聞く', onclick: () => playLine(li) }),
+        el('button', { type: 'button', class: 'btn small', text: '右から交互', onclick: () => alternate(li) })),
+      el('div', { class: 'chips' }, ...chips));
+  }));
+}
+// 直した内容を保存して、元に戻せるようにする
+function editNotes(message, change) {
+  const s = song(), before = clone(s.notes);
+  stopRun('user');
+  change(s.notes);
+  save(); refreshRecEditor(); refreshPractice();
+  if (message) toast(message, () => { s.notes = before; save(); refreshRecEditor(); refreshPractice(); });
+}
+function tapChip(idx) {
+  if (delMode) { editNotes('音を1つ消しました', notes => { notes.splice(idx, 1); }); return; }
+  editNotes('', notes => { const h = notes[idx].h; notes[idx].h = h === null ? 'R' : h === 'R' ? 'L' : h === 'L' ? 'B' : null; });
+}
+function alternate(li) {
+  const ids = recLines(song())[li].cells.map(c => c.idx);
+  editNotes((li + 1) + '段目を右から交互にしました', notes => ids.forEach((i, k) => { notes[i].h = k % 2 ? 'L' : 'R'; }));
+}
+// 1段だけを、拾った打点に合図の音を重ねて聞く
+async function playLine(li) {
+  stopRun('user');
+  const s = song(), tl = buildRecTimeline(recLines(s), li, li, { speed: Number($('hSpeed').value), beat: s.beat });
+  const rec = await prepareRec(s, 'orig', tl);
+  if (!rec || song() !== s) return;
+  const chips = () => $('hList').querySelectorAll('.chip');
+  startRun({
+    kind: 'listen', beat: tl.beat, countBeats: 0, loop: false, segPass: 0, onPump: loopSegment(rec.seg, tl.dur), endK: tl.cells.length,
+    timeOf(k) { return k < tl.cells.length ? this.t0 + tl.cells[k].t : Infinity; },
+    playAt(k, t) { synth(ac, this.bus, noiseBuf, 'tickTop', t); },
+    onFrame(r, heard) {
+      const pos = heard - r.t0;
+      let on = null;
+      for (const c of tl.cells) if (c.t <= pos && pos < c.t + 0.18) on = String(c.idx);
+      chips().forEach(e => e.classList.toggle('on', e.dataset.idx === on));
+      if (pos > tl.dur + 0.2) stopRun('end');
+    },
+    onStop() { chips().forEach(e => e.classList.remove('on')); }
+  });
+}
+async function startAssign() {
+  stopRun('switch');
+  const s = song(), lines = recLines(s);
+  const from = Number($('hFrom').value), to = Math.max(from, Number($('hTo').value));
+  const tl = buildRecTimeline(lines, from, to, { speed: Number($('hSpeed').value), beat: s.beat });
+  const rec = await prepareRec(s, 'orig', tl);
+  if (!rec || song() !== s) return;
+  $('hState').textContent = '';
+  view.lines = lines; view.tl = tl; view.nowLi = null; view.onCell = null;
+  openGame('assign');
+  startRun({
+    kind: 'assign', beat: tl.beat, countBeats: 4, tl, loop: false, to, show: true, judge: false, segPass: 0, onPump: loopSegment(rec.seg, tl.dur),
+    notes: [], missAt: 0, tapCount: 0, endK: 0, timeOf() { return Infinity; }, playAt() {},
+    onFrame(r, heard) {
+      const rel = heard - r.t0, ci = $('countin');
+      ci.hidden = rel >= 0;
+      if (rel < 0) { ci.textContent = String(Math.min(4, Math.ceil(-rel / r.beat))); showNow(tl.cells.length ? tl.cells[0].li : from, null); }
+      else if (tl.cells.length) {
+        let i = 0;
+        while (i + 1 < tl.cells.length && tl.cells[i + 1].t <= rel) i++;
+        showNow(tl.cells[i].li, tl.cells[i].ci);
+      }
+      $('gsub').textContent = '録音に合わせて、実際に叩く手で打ってください（' + r.taps.length + '打）';
+      if (rel > tl.dur + 0.4) { stopRun('end'); return; }
+      drawLane(r, heard);
+    },
+    onStop(r, reason) {
+      closeGame(); view.nowLi = null; view.onCell = null;
+      if (!r.taps.length) { $('hState').textContent = '打った音がありませんでした。'; refreshPractice(); return; }
+      let res, added = 0;
+      editNotes('左右を反映しました', notes => {
+        // 打った時刻を、録音の中の秒に直す
+        const taps = r.taps.map(x => ({ t: tl.start + x.t * tl.speed, hand: x.hand }));
+        res = assignHands(notes, taps, 0.2 * tl.speed);
+        if ($('hAdd').checked) {
+          for (const x of res.rest) {
+            if (x.t < 0 || x.t > s.dur || notes.some(n => Math.abs(n.t - x.t) < 0.07)) continue;
+            notes.push({ t: Math.round(x.t * 1000) / 1000, s: 1, h: x.hand }); added++;
+          }
+          notes.sort((a, b) => a.t - b.t);
+        }
+      });
+      $('hState').textContent = r.taps.length + '打のうち、' + res.assigned + '個の音に左右を付けました。'
+        + (added ? '音を' + added + '個足しました。' : res.rest.length ? res.rest.length + '打は近くに音がありませんでした。' : '');
+    }
+  }).then(r => { if (!r) closeGame(); });
+}
+function assignHit(surface, hand, stamp) {
+  const r = run, t = perfToAudio(stamp) - S.set.offsetMs / 1000 - r.t0;
+  if (t < -0.2) return;
+  r.taps.push({ t, hand });
+  // 打った手を、流れている譜面にもすぐ出す
+  let best = null;
+  for (const c of r.tl.cells) { const d = Math.abs(c.t - t); if (d < 0.2 && (!best || d < Math.abs(best.t - t))) best = c; }
+  if (best) { best.hand = hand; view.lines[best.li].cells[best.ci].hand = hand; view.nowLi = null; view.onCell = null; setFeedback(HAND_JA[hand], 'perfect'); }
+  else setFeedback('近くに音がありません', 'near');
+}
+$('hGo').addEventListener('click', startAssign);
+$('hDelMode').addEventListener('click', () => { delMode = !delMode; refreshRecEditor(); });
+twoStep($('hClear'), 'もう一度押すと全部消します', () => editNotes('左右を全部消しました', notes => notes.forEach(n => { n.h = null; })));
+$('recSound').addEventListener('change', () => { stopRun('user'); S.set.recSound = $('recSound').value; save(); });
+$('recFile').addEventListener('change', () => {
+  const f = $('recFile').files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  toast('読み込んでいます…');
+  rd.onload = () => { importText(String(rd.result)); $('recFile').value = ''; };
+  rd.readAsText(f);
+});
 function refreshPreview() {
   const s = song(), p = parsed(s);
   renderLines($('preview'), p.lines, s.div, { onCell: (li, ci) => {
@@ -1477,6 +1921,7 @@ function exportText() { return JSON.stringify({ app: 'taiko-keikocho', v: 1, son
 function importText(text) {
   let j;
   try { j = JSON.parse(String(text).trim()); } catch (e) { toast('読み込めません。書き出した文字を、最初から最後まで貼ってください'); return false; }
+  if (j && j.app === 'taiko-keikocho-rec') { importRecPack(j).catch(e => showError('読み込めませんでした: ' + (e && e.message || e))); return true; }
   if (!j || j.app !== 'taiko-keikocho') { toast('このアプリの書き出しではないようです'); return false; }
   const before = clone(S);
   const songs = (Array.isArray(j.songs) ? j.songs : []).map(cleanSong).filter(Boolean);
@@ -1505,7 +1950,7 @@ $('imp').addEventListener('click', () => { stopRun('user'); importText($('io').v
 $('impFile').addEventListener('change', () => {
   const f = $('impFile').files[0]; if (!f) return;
   const rd = new FileReader();
-  rd.onload = () => { $('io').value = String(rd.result); importText($('io').value); $('impFile').value = ''; };
+  rd.onload = () => { const text = String(rd.result); if (text.length < 200000) $('io').value = text; importText(text); $('impFile').value = ''; };
   rd.readAsText(f);
 });
 $('soundTest').addEventListener('click', () => {
