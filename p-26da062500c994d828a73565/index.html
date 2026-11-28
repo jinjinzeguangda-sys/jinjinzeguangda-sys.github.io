@@ -1,0 +1,1568 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="太鼓の稽古帳"><style>:root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>太鼓の稽古帳</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!--
+  太鼓の稽古帳（地元のお祭りの太鼓を覚えるための練習アプリ）
+  ・口唱歌の文字から譜面と合成音を作り、画面の太鼓を打つと早い・遅いが分かる。
+  ・曲と記録はこの端末の中（ブラウザの保存領域）だけに置く。通信で外へは送らない。
+  ・地元の叩き方は推測しない。入っている例は「仮の例」。
+  ・このファイルが本体。手元で開くときは tools/build.py で app/index.html を作る。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Dela+Gothic+One&display=swap">
+<style>
+/* 配置: 上に切り替えタブ。練習は1列（広い画面は左=設定と譜面、右=流れる譜面と太鼓） */
+:root{
+  --bg:#eef1f7; --panel:#ffffff; --ink:#15213b; --sub:#55627d; --line:#d2d9e8;
+  --ai:#21528f; --ai-soft:#e0e9f7; --shu:#cf3b27; --shu-soft:#fbe4e0; --on-shu:#ffffff;
+  --hl:#ffdf7e; --ok:#14764a; --warn:#8f5a00; --ng:#b42318;
+  --wood:#8b4a29; --wood-edge:#5a2d17; --skin:#efe1c3; --skin-ink:#5b432a; --tack:#33251c;
+  --font-body:"BIZ UDPGothic","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  --font-sho:"Dela Gothic One","Hiragino Kaku Gothic StdN","Hiragino Kaku Gothic ProN",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d1424; --panel:#162137; --ink:#ecf0f8; --sub:#9ba8c2; --line:#2b3a59;
+    --ai:#7db0ff; --ai-soft:#1e3258; --shu:#ff6f52; --shu-soft:#46231f; --on-shu:#1a0b08;
+    --hl:#6b5616; --ok:#5ed39a; --warn:#f2bd55; --ng:#ff8a80;
+    --wood:#8f4f2e; --wood-edge:#4d2714; --skin:#e3d3b2; --skin-ink:#4b3722; --tack:#241a13;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0d1424; --panel:#162137; --ink:#ecf0f8; --sub:#9ba8c2; --line:#2b3a59;
+  --ai:#7db0ff; --ai-soft:#1e3258; --shu:#ff6f52; --shu-soft:#46231f; --on-shu:#1a0b08;
+  --hl:#6b5616; --ok:#5ed39a; --warn:#f2bd55; --ng:#ff8a80;
+  --wood:#8f4f2e; --wood-edge:#4d2714; --skin:#e3d3b2; --skin-ink:#4b3722; --tack:#241a13;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 32px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1040px;margin:0 auto}
+a{color:var(--ai)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--ai);outline-offset:2px}
+h2{font-family:var(--font-sho);font-weight:400;font-size:17px;margin:0 0 8px;letter-spacing:.02em}
+h3{font-size:15px;margin:0 0 6px}
+p{margin:0 0 8px}
+.hint{color:var(--sub);font-size:13px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;background:var(--bg);padding-top:8px;padding-bottom:8px}
+.brand{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.brand h1{font-family:var(--font-sho);font-weight:400;font-size:20px;margin:0}
+.brand span{color:var(--sub);font-size:12px}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tabs button{border:0;background:none;border-radius:8px;padding:7px 2px;font-size:14px;color:var(--sub);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);font-weight:700}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:8px 14px;min-height:42px}
+.btn.primary{background:var(--shu);border-color:var(--shu);color:var(--on-shu);font-weight:700}
+.btn.small{min-height:34px;padding:4px 10px;font-size:13px}
+.btn.danger{color:var(--ng)}
+.btn[aria-pressed="true"]{background:var(--ai-soft);border-color:var(--ai);font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.stack{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}
+input[type="text"],input[type="number"],input[type="date"],select,textarea{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:16px;max-width:100%}
+textarea{width:100%;min-height:150px;font-size:18px;line-height:1.7;resize:vertical}
+input[type="range"]{flex:1 1 140px;min-width:0;accent-color:var(--shu)}
+label.field{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--sub);min-width:0}
+label.field>*{color:var(--ink)}
+label.check{display:inline-flex;gap:6px;align-items:center;min-height:36px}
+label.check input{width:20px;height:20px;accent-color:var(--ai)}
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.seg button{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:6px 2px;line-height:1.35;font-size:13px}
+.seg button b{display:block;font-size:11px;color:var(--sub);font-weight:400}
+.seg button[aria-pressed="true"]{background:var(--ai-soft);border-color:var(--ai);font-weight:700}
+.badge{background:var(--shu-soft);border:1px dashed var(--shu);border-radius:10px;padding:4px 10px;font-size:13px;font-weight:700;text-align:center}
+
+/* 稽古の準備画面 */
+.practice{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:860px){.practice{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start}}
+.speed{display:flex;align-items:center;gap:8px}
+.speed output{font-variant-numeric:tabular-nums;min-width:7.5em;text-align:right;font-size:13px}
+.go{width:100%;font-size:19px;min-height:54px}
+.fb{min-height:26px;text-align:center;font-weight:700;font-size:17px;font-variant-numeric:tabular-nums}
+.fb.perfect{color:var(--ok)}.fb.near{color:var(--warn)}.fb.bad{color:var(--ng)}
+
+/* 演奏の画面（横向き）。大きさと向きは layoutGame() が決める */
+html.gaming,html.gaming body{overflow:hidden}
+.game{position:fixed;inset:0;z-index:30;background:var(--bg);padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+.gamebox{position:relative;width:100%;height:100%;overflow:hidden}
+.stage{position:absolute;left:0;top:0;transform-origin:0 0;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+.gbar{display:flex;align-items:center;gap:8px;height:38px;padding:0 8px;white-space:nowrap}
+.gbar .btn{min-height:30px;padding:2px 10px}
+.gbar .title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:12px;color:var(--sub);text-align:right}
+.gbar .badge{font-size:11px;padding:0 8px}
+.lanebox{margin:0 8px;border:1px solid var(--line);border-radius:10px;background:var(--panel);overflow:hidden}
+.lanebox canvas{display:block;width:100%}
+.gline{margin:4px auto 0}
+.gline .line{grid-template-columns:2.4em minmax(0,1fr);padding:0}
+.gline .beats.d4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.gline .cell .kana{font-size:19px}
+.gline .cell.ko .kana,.gline .cell.rest .kana{font-size:15px}
+.gline .next{display:none;opacity:.5}
+.stage.roomy .gline .next{display:block}
+.gline .next .cell .kana{font-size:13px}
+.gline .next .cell .hand{display:none}
+.ginfo{position:absolute;left:calc(var(--R) * .96);right:calc(var(--R) * .96);bottom:6px;text-align:center;pointer-events:none}
+.ginfo .fb{font-family:var(--font-sho);font-weight:400;font-size:22px;min-height:34px}
+.countin{font-family:var(--font-sho);font-size:48px;line-height:1.15;color:var(--ink)}
+.ginfo .countin:not([hidden])~.fb{display:none}   /* 合図の数字が出ている間は、判定の行を詰める */
+.combo{font-family:var(--font-sho);font-size:18px;min-height:28px;font-variant-numeric:tabular-nums}
+.gsub{font-size:12px;color:var(--sub);min-height:20px;font-variant-numeric:tabular-nums}
+.stage.plain .gsub{font-size:18px;color:var(--ink)}
+.drum{position:absolute;bottom:0;width:var(--R);height:var(--R)}
+.drum.l{left:0}.drum.r{right:0}
+.drum svg{display:block;width:100%;height:100%}
+.drum text{font-family:var(--font-sho);pointer-events:none}
+.drum .flash{opacity:0;fill:var(--hl)}
+.drum .flash.hit{animation:flash .22s ease-out}
+@keyframes flash{0%{opacity:.9}100%{opacity:0}}
+.goverlay{position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--bg) 82%,transparent);padding:8px}
+.goverlay .card{width:min(540px,100%);max-height:100%;overflow:auto;touch-action:pan-y}
+.goverlay .card h2{margin:0}
+
+/* 譜面（口唱歌のマス） */
+.line{display:grid;grid-template-columns:2.2em minmax(0,1fr);gap:6px;align-items:start;padding:4px 0}
+.line .no{border:0;background:none;color:var(--sub);font-size:12px;padding:6px 0;text-align:left;font-variant-numeric:tabular-nums}
+.line.out{opacity:.42}
+.beats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.beats.d4{grid-template-columns:repeat(2,minmax(0,1fr))}
+.beat{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.cell{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px 0;border:0;background:none;line-height:1.25}
+.cell .kana{font-family:var(--font-sho);font-size:19px;white-space:nowrap}
+.cell .hand{font-size:11px;color:var(--sub);min-height:14px}
+.cell.don .kana{color:var(--shu)}
+.cell.ko .kana{color:var(--shu);font-size:16px}
+.cell.ka .kana{color:var(--ai)}
+.cell.rest .kana{color:var(--sub);opacity:.6;font-size:15px}
+.cell.shout .kana{color:var(--sub);font-size:14px;font-family:var(--font-body)}
+.cell.unknown .kana{color:var(--warn);text-decoration:underline wavy}
+.cell.fixed .hand{color:var(--ink);font-weight:700;text-decoration:underline}
+.cell.on{background:var(--hl)}
+.cell.on .kana,.cell.on .hand{color:var(--ink);opacity:1}
+.masked .cell .kana,.masked .cell .hand{visibility:hidden}
+
+.score{font-variant-numeric:tabular-nums}
+.big{font-family:var(--font-sho);font-size:30px;line-height:1.2}
+.tally{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.bar{height:8px;background:var(--ai-soft);border-radius:4px;overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;background:var(--ai)}
+.bar.weak i{background:var(--shu)}
+.warns{margin:0;padding-left:1.2em;color:var(--warn);font-size:13px}
+.toast{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;pointer-events:none;padding:0 max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 12px) max(16px,env(safe-area-inset-left,0px))}
+.toast div{pointer-events:auto;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 14px;display:flex;gap:12px;align-items:center;max-width:520px}
+.toast button{border:1px solid var(--bg);background:none;color:var(--bg);border-radius:8px;padding:2px 10px;white-space:nowrap}
+.dict{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.dict label{display:flex;gap:6px;align-items:center}
+.dict b{font-family:var(--font-sho);font-weight:400;font-size:18px;width:1.4em;text-align:center}
+.dict select{flex:1;min-width:0}
+details summary{cursor:pointer;font-weight:700}
+.errbar{background:var(--shu-soft);border:1px solid var(--ng);border-radius:10px;padding:8px 10px;font-size:13px;margin-bottom:8px;overflow-wrap:anywhere}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;margin:0}
+@media (prefers-reduced-motion:reduce){.drum .flash.hit{animation-duration:.12s}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="brand"><h1>太鼓の稽古帳</h1><span id="countdown"></span></div>
+  <nav class="tabs" role="tablist">
+    <button type="button" role="tab" data-tab="practice" aria-selected="true">稽古</button>
+    <button type="button" role="tab" data-tab="edit" aria-selected="false">曲を作る</button>
+    <button type="button" role="tab" data-tab="log" aria-selected="false">記録</button>
+    <button type="button" role="tab" data-tab="set" aria-selected="false">設定</button>
+  </nav>
+</header>
+<div id="err" class="errbar" hidden></div>
+
+<!-- 稽古 -->
+<section id="tab-practice" class="practice">
+  <div class="stack">
+    <label class="field">曲<select id="songSel"></select></label>
+    <div class="badge" id="sampleBadge" hidden>仮の例（お祭りの曲ではありません）</div>
+    <p class="hint" id="srcNote" hidden><span></span> <a target="_blank" rel="noopener">解説ページを開く</a></p>
+    <div>
+      <div class="seg" id="stepSeg">
+        <button type="button" data-step="1"><b>1段階</b>聞く</button>
+        <button type="button" data-step="2"><b>2段階</b>一緒に</button>
+        <button type="button" data-step="3"><b>3段階</b>自分で</button>
+        <button type="button" data-step="4"><b>4段階</b>暗譜</button>
+      </div>
+      <p class="hint" id="stepHelp"></p>
+    </div>
+    <div class="speed">
+      <label for="speed">速さ</label>
+      <input type="range" id="speed" min="40" max="130" step="5">
+      <output id="speedOut"></output>
+    </div>
+    <div class="row">
+      <label class="field">ここから<select id="rangeFrom"></select></label>
+      <label class="field">ここまで<select id="rangeTo"></select></label>
+      <label class="check"><input type="checkbox" id="loop">くり返す</label>
+      <label class="check"><input type="checkbox" id="beat">拍の音</label>
+    </div>
+    <button type="button" class="btn primary go" id="go">はじめる</button>
+    <p class="hint">横向きの画面になります。左右の下の太鼓を親指で打ちます。内側が「面（ドン）」、外側が「ふち（カッ）」です。</p>
+    <div class="card score" id="result" hidden></div>
+  </div>
+  <div class="card">
+    <h2>譜面</h2>
+    <p class="hint">段の番号を押すと、その段だけを稽古します。</p>
+    <div id="sheet"></div>
+    <button type="button" class="btn small" id="rangeAll">全部の段にする</button>
+  </div>
+</section>
+
+<!-- 曲を作る -->
+<section id="tab-edit" class="stack" hidden>
+  <div class="card stack">
+    <label class="field">直す曲<select id="songSel2"></select></label>
+    <div class="row">
+      <button type="button" class="btn primary" id="newSong">新しい曲</button>
+      <button type="button" class="btn" id="dupSong">複製</button>
+      <button type="button" class="btn danger" id="delSong">この曲を消す</button>
+    </div>
+    <div class="badge" id="sampleBadge2" hidden>仮の例（お祭りの曲ではありません）</div>
+    <label class="field">曲の名前<input type="text" id="songName" maxlength="60"></label>
+    <div class="row">
+      <label class="field">速さ（1分の拍数）<input type="number" id="bpm" min="30" max="300" inputmode="numeric" style="width:8em"></label>
+      <button type="button" class="btn" id="tapTempo">拍に合わせて押す</button>
+      <label class="field">1拍のマス数<select id="div"><option value="2">2（ドコ）</option><option value="3">3（3つ刻み）</option><option value="4">4（細かい）</option></select></label>
+      <label class="field">跳ね<select id="swing"><option value="0">なし</option><option value="0.17">軽く</option><option value="0.333">強く</option></select></label>
+    </div>
+  </div>
+  <div class="card stack">
+    <h2>口唱歌を入れる</h2>
+    <p class="hint">1文字が1マスです。<b>ドン</b>は2マス（打つ＋休み）、<b>ドコ</b>は2回打ちます。改行が段の区切り。空白は読みやすさのためで、音には関係しません。掛け声は（ ）で囲むと打ちません。</p>
+    <div class="row" id="inserts"></div>
+    <textarea id="text" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="例）ドン ドン ドコ ドン"></textarea>
+    <ul class="warns" id="warns"></ul>
+    <div class="row" id="unknownBtns"></div>
+    <div id="preview"></div>
+    <p class="hint">下のマスを押すと手が変わります（自動 → 右 → 左 → 両）。下線の付いた手は自分で決めた手です。</p>
+    <div class="row"><button type="button" class="btn" id="listen">通して聞く</button></div>
+  </div>
+  <div class="card stack">
+    <h2>打って書き取る</h2>
+    <p class="hint">お手本を思い浮かべるか、別の機器で録音を流しながら打つと、口唱歌の下書きになります。上の「速さ」と「1拍のマス数」に合わせて区切ります。</p>
+    <div class="row">
+      <label class="check"><input type="checkbox" id="recBeat" checked>拍の音</label>
+      <label class="check"><input type="checkbox" id="recHands" checked>左右も書き取る</label>
+      <button type="button" class="btn primary" id="recGo">書き取りを始める</button>
+    </div>
+    <div class="fb" id="recState"></div>
+    <div id="recDone" class="stack" hidden>
+      <label class="field">書き取った下書き（ここで直せます）<textarea id="recText"></textarea></label>
+      <div class="row">
+        <button type="button" class="btn primary" id="recAppend">曲の後ろに足す</button>
+        <button type="button" class="btn" id="recReplace">曲を置きかえる</button>
+        <button type="button" class="btn danger" id="recDrop">捨てる</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 記録 -->
+<section id="tab-log" class="stack" hidden>
+  <div class="card"><h2>本番まで</h2><div class="big" id="logCountdown"></div><p class="hint" id="logWeek"></p></div>
+  <div class="card"><h2>段ごとの出来</h2><p class="hint" id="lineStatCap"></p><div class="tablewrap" id="lineStat"></div></div>
+  <div class="card"><h2>稽古の記録</h2><div class="tablewrap" id="logList"></div><button type="button" class="btn small danger" id="logClear">記録を全部消す</button></div>
+</section>
+
+<!-- 設定 -->
+<section id="tab-set" class="stack" hidden>
+  <div class="card stack">
+    <label class="field">本番の日<input type="date" id="eventDate" style="width:12em"></label>
+    <div class="row">
+      <label class="field">始まる前の合図<select id="count"><option value="0">なし</option><option value="4">4拍</option><option value="8">8拍</option></select></label>
+      <label class="field">音の大きさ<input type="range" id="vol" min="0" max="100" step="5"></label>
+    </div>
+    <div class="row">
+      <label class="check"><input type="checkbox" id="tapSound">打ったときに音を出す</label>
+      <label class="check"><input type="checkbox" id="showHands">右・左を表示する</label>
+      <label class="check"><input type="checkbox" id="judgeHands">右・左の間違いも数える</label>
+    </div>
+  </div>
+  <div class="card stack">
+    <h2>ずれの調整</h2>
+    <p class="hint">端末は音が出るのも、打ったのが届くのも少し遅れます。最初に1回、鳴る音に合わせて太鼓を打ってください。4回聞いてから、続く12回を打ちます。イヤホンを変えたらやり直します。</p>
+    <div class="row">
+      <span>いまの調整値 <b id="offsetOut" class="score"></b></span>
+      <button type="button" class="btn small" id="offMinus">−10</button>
+      <button type="button" class="btn small" id="offPlus">＋10</button>
+      <button type="button" class="btn small" id="offZero">0に戻す</button>
+    </div>
+    <button type="button" class="btn primary" id="calGo">調整を始める</button>
+    <div class="fb" id="calState"></div>
+  </div>
+  <div class="card stack">
+    <h2>口唱歌の読み方</h2>
+    <p class="hint">最初に入っているのは一般的な読み方です。地元の言い方に合わせて直してください。</p>
+    <div class="dict" id="dict"></div>
+    <div class="row">
+      <input type="text" id="dictChar" maxlength="2" placeholder="1文字" style="width:6em" aria-label="足す文字">
+      <select id="dictRole" aria-label="足す文字の打ち方"></select>
+      <button type="button" class="btn" id="dictAdd">読み方を足す</button>
+    </div>
+  </div>
+  <div class="card stack">
+    <h2>書き出しと読み込み</h2>
+    <p class="hint">曲と記録はこの端末のこのページの中にだけ保存します。端末やブラウザの都合で消えることがあるので、曲を直した日は書き出した文字をメモ帳に残してください。別の端末へは、その文字を読み込みます。</p>
+    <div class="row"><button type="button" class="btn" id="exp">書き出す</button><button type="button" class="btn" id="copy">コピー</button></div>
+    <textarea id="io" placeholder="ここに書き出した文字が出ます。読み込むときは貼り付けます。" spellcheck="false" style="font-size:16px;min-height:110px"></textarea>
+    <div class="row"><button type="button" class="btn primary" id="imp">読み込む</button><label class="field">ファイルから<input type="file" id="impFile" accept=".json,.txt,application/json,text/plain"></label></div>
+  </div>
+  <div class="card stack">
+    <h2>音が出ないとき</h2>
+    <p class="hint">本体の音量を上げ、iPhone の消音（マナーモード）を切ってから、もう一度「はじめる」を押してください。消音のままで鳴るかどうかは、機種と iOS の版で違うことがあります。</p>
+    <div class="row"><button type="button" class="btn" id="soundTest">音を試す</button></div>
+    <details><summary>調子が悪いときの情報</summary><pre id="diag"></pre></details>
+  </div>
+</section>
+</div>
+<!-- 演奏の画面 -->
+<div class="game" id="game" hidden>
+  <div class="gamebox" id="gameBox">
+    <div class="stage" id="stage">
+      <div class="gbar">
+        <button type="button" class="btn small" id="gClose">✕ やめる</button>
+        <span class="badge" id="gBadge" hidden>仮の例（お祭りの曲ではありません）</span>
+        <span class="title" id="gTitle"></span>
+        <button type="button" class="btn small" id="peek" hidden>押す間だけ譜面</button>
+        <button type="button" class="btn small" id="gFlip" hidden>上下を逆に</button>
+      </div>
+      <div class="lanebox" id="laneBox"><canvas id="lane" aria-label="流れる譜面"></canvas></div>
+      <div class="gline" id="nowbox"><div id="nowLine"></div><div class="next" id="nextLine"></div></div>
+      <div class="ginfo">
+        <div class="countin" id="countin" hidden></div>
+        <div class="fb" id="fb" aria-live="polite"></div>
+        <div class="combo" id="combo"></div>
+        <div class="gsub" id="gsub"></div>
+      </div>
+      <div class="drum l" id="drumL"></div>
+      <div class="drum r" id="drumR"></div>
+      <div class="goverlay" id="gOver" hidden>
+        <div class="card score stack">
+          <div id="gOverBody"></div>
+          <div class="row"><button type="button" class="btn primary" id="gAgain">もう一度</button><button type="button" class="btn" id="gBack">戻る</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden><div><span id="toastMsg"></span><button type="button" id="toastBtn" hidden>元に戻す</button></div></div>
+
+<script>
+'use strict';
+/* CORE-BEGIN ここから: 画面に依存しない計算（試験でこの範囲を取り出して使う） */
+const ROLE_LABEL = { don: '面（強く）', ko: '面（軽く）', ka: 'ふち', rest: '休み' };
+const DEFAULT_DICT = {
+  'ド': 'don', 'ガ': 'don', 'ト': 'don', 'コ': 'ko', 'ロ': 'ko', 'ツ': 'ko', 'ク': 'ko', 'テ': 'ko', 'ケ': 'ko', 'レ': 'ko', 'タ': 'ko',
+  'カ': 'ka', 'ラ': 'ka',
+  'ン': 'rest', 'ッ': 'rest', 'ー': 'rest', 'ス': 'rest', 'ウ': 'rest', '・': 'rest'
+};
+const SMALL_KANA = 'ァィゥェォャュョヮ';
+const SEPARATOR = /[\s|,.\/、。:]/;
+const HAND_CHARS = { '右': 'R', 'R': 'R', 'r': 'R', '左': 'L', 'L': 'L', 'l': 'L', '両': 'B', 'B': 'B', 'b': 'B', '・': null, '-': null, 'ー': null };
+const HAND_JA = { R: '右', L: '左', B: '両' };
+const PERFECT_SEC = 0.05;
+
+// 全角英数・半角カナをそろえ、ひらがなはカタカナにする
+function normalizeText(s) {
+  return String(s).normalize('NFKC').replace(/[ぁ-ゖ]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
+}
+function isHit(role) { return role === 'don' || role === 'ko' || role === 'ka'; }
+
+// 口唱歌の文字を「段 → マス」に分ける
+function parseScore(text, dict, div) {
+  const lines = [];
+  const unknown = [];
+  String(text).split(/\r?\n/).forEach((raw, srcIdx) => {
+    const s = normalizeText(raw).trim();
+    if (!s || s[0] === '#') return;
+    if (s[0] === '手') {
+      // 直前の段の手の指定
+      const last = lines[lines.length - 1];
+      if (!last) return;
+      last.handSrc = srcIdx;
+      let i = 0;
+      for (const ch of Array.from(s.slice(1))) {
+        if (!Object.prototype.hasOwnProperty.call(HAND_CHARS, ch)) continue;
+        if (i < last.rawCount) last.cells[i].hand = HAND_CHARS[ch];
+        i++;
+      }
+      return;
+    }
+    const cells = [];
+    let shout = false;
+    for (let ch of Array.from(s)) {
+      if (ch === '(') { shout = true; continue; }
+      if (ch === ')') { shout = false; continue; }
+      if (SEPARATOR.test(ch)) continue;
+      if (ch === '-') ch = 'ー';
+      if (SMALL_KANA.includes(ch) && cells.length) { cells[cells.length - 1].text += ch; continue; }
+      if (shout) { cells.push({ text: ch, role: 'shout', hand: null }); continue; }
+      let role = Object.prototype.hasOwnProperty.call(dict, ch) ? dict[ch] : null;
+      if (!role) { role = 'unknown'; if (!unknown.includes(ch)) unknown.push(ch); }
+      cells.push({ text: ch, role, hand: null });
+    }
+    if (!cells.length) return;
+    const rawCount = cells.length;
+    const padded = (div - (rawCount % div)) % div;   // 拍の途中で終わる段は休みで埋める
+    for (let i = 0; i < padded; i++) cells.push({ text: '', role: 'rest', hand: null, pad: true });
+    lines.push({ cells, rawCount, padded, srcIdx, handSrc: null });
+  });
+  // 手の指定がないマスは「拍の表=右、次=左」を自動で当てる
+  for (const ln of lines) {
+    ln.cells.forEach((c, i) => {
+      if (isHit(c.role)) c.auto = ((i % div) % 2 === 0) ? 'R' : 'L';
+      else { c.auto = null; c.hand = null; }
+    });
+  }
+  return { lines, unknown };
+}
+
+// 段の範囲を、秒の付いたマスの並びにする
+function buildTimeline(lines, from, to, opt) {
+  const beat = 60 / (opt.bpm * opt.speed);
+  const cd = beat / opt.div;
+  const cells = [];
+  let g = 0;
+  for (let li = from; li <= to && li < lines.length; li++) {
+    lines[li].cells.forEach((c, ci) => {
+      const sw = (opt.div % 2 === 0 && ci % 2 === 1) ? (opt.swing || 0) * cd : 0;
+      cells.push({ li, ci, t: g * cd + sw, role: c.role, text: c.text, hand: c.hand || c.auto || null, onBeat: ci % opt.div === 0, lineStart: ci === 0 });
+      g++;
+    });
+  }
+  const dur = g * cd;
+  // 当たりの幅は、前後の打つ音との間隔に合わせる（くり返しのつなぎ目も含む）
+  const hits = cells.filter(c => isHit(c.role));
+  hits.forEach((c, k) => {
+    const prev = k ? c.t - hits[k - 1].t : c.t + dur - hits[hits.length - 1].t;
+    const next = k < hits.length - 1 ? hits[k + 1].t - c.t : hits[0].t + dur - c.t;
+    c.win = windowFor(Math.min(prev, next));
+  });
+  return { cells, dur, cd, beat };
+}
+
+// 当たりとみなす時間の幅（音が詰まっている所は狭くする）
+const MAX_WIN = 0.15;
+function windowFor(gap) { return Math.min(MAX_WIN, Math.max(0.07, gap * 0.5)); }
+
+// 打った1回を、近くのまだ打っていない音に結び付ける
+function matchTap(notes, tap) {
+  let best = null, cost = Infinity, dup = false;
+  for (const n of notes) {
+    const d = tap.t - n.t;
+    if (Math.abs(d) > (n.win || MAX_WIN)) continue;
+    if (n.res) { if (n.hand === 'B') dup = true; continue; }
+    if (n.missed) continue;
+    const c = Math.abs(d) + (n.surface !== tap.surface ? 0.04 : 0);
+    if (c < cost) { cost = c; best = n; }
+  }
+  if (!best) return dup ? { dup: true } : null;
+  const d = tap.t - best.t;
+  best.res = {
+    d,
+    timing: Math.abs(d) <= PERFECT_SEC ? 'perfect' : (d < 0 ? 'early' : 'late'),
+    surfaceOk: best.surface === tap.surface,
+    handOk: best.hand === 'B' || !tap.hand || !best.hand || best.hand === tap.hand
+  };
+  return { note: best };
+}
+
+// 判定の集計（まだ結果が出ていない音は数えない）
+function summarize(notes, extra, judgeHands) {
+  const s = { total: 0, correct: 0, perfect: 0, early: 0, late: 0, miss: 0, surface: 0, hand: 0, extra: extra || 0, matched: 0, meanMs: 0, perLine: {} };
+  let sum = 0;
+  for (const n of notes) {
+    if (!n.res && !n.missed) continue;
+    s.total++;
+    const pl = s.perLine[n.li] || (s.perLine[n.li] = [0, 0]);
+    pl[1]++;
+    if (!n.res) { s.miss++; continue; }
+    s.matched++; sum += n.res.d;
+    if (!n.res.surfaceOk) { s.surface++; continue; }
+    s.correct++; pl[0]++;
+    s[n.res.timing]++;
+    if (judgeHands && !n.res.handOk) s.hand++;
+  }
+  s.meanMs = s.matched ? Math.round(sum / s.matched * 1000) : 0;
+  return s;
+}
+
+// 打った時刻の列を、口唱歌の下書きにする
+function quantizeTaps(taps, opt) {
+  const map = new Map();
+  let merged = 0;
+  for (const tap of taps.slice().sort((a, b) => a.t - b.t)) {
+    const i = Math.round(tap.t / opt.cd) + 0;
+    if (i < 0) continue;
+    const e = map.get(i);
+    if (!e) map.set(i, { surface: tap.surface, hand: tap.hand });
+    else if (e.surface === tap.surface && e.hand !== tap.hand && e.hand !== 'B') e.hand = 'B';
+    else merged++;
+  }
+  if (!map.size) return { text: '', merged, count: 0 };
+  const len = opt.div * (opt.beatsPerLine || 4);
+  const keys = Array.from(map.keys());
+  const first = Math.floor(Math.min(...keys) / len);
+  const last = Math.floor(Math.max(...keys) / len);
+  const out = [];
+  for (let L = first; L <= last; L++) {
+    let sho = '', hands = '';
+    for (let k = 0; k < len; k++) {
+      const i = L * len + k;
+      const e = map.get(i);
+      if (k && k % opt.div === 0) { sho += ' '; hands += ' '; }
+      if (e) sho += e.surface === 'rim' ? 'カ' : (i % opt.div === 0 ? 'ド' : 'コ');
+      else {
+        const prev = (i % opt.div !== 0) ? map.get(i - 1) : null;
+        sho += prev ? (prev.surface === 'rim' ? 'ッ' : 'ン') : (i % opt.div === 0 ? 'ス' : 'ッ');
+      }
+      hands += e && e.hand ? HAND_JA[e.hand] : '・';
+    }
+    out.push(sho);
+    if (opt.hands && /[右左両]/.test(hands)) out.push('手 ' + hands);
+  }
+  return { text: out.join('\n'), merged, count: map.size };
+}
+
+// 手の指定を1マス変えて、文字の側を書き直す
+function writeHand(text, line, cellIdx, value, div) {
+  const arr = String(text).split(/\r?\n/);
+  let s = '';
+  for (let i = 0; i < line.rawCount; i++) {
+    const h = i === cellIdx ? value : line.cells[i].hand;
+    if (i && i % div === 0) s += ' ';
+    s += h ? HAND_JA[h] : '・';
+  }
+  const has = /[右左両]/.test(s);
+  if (line.handSrc !== null) { if (has) arr[line.handSrc] = '手 ' + s; else arr.splice(line.handSrc, 1); }
+  else if (has) arr.splice(line.srcIdx + 1, 0, '手 ' + s);
+  return arr.join('\n');
+}
+
+// 合図の音と打った時刻の差の真ん中の値（秒）。打った回数が足りなければ null
+function calibrate(clicks, taps) {
+  const ds = [];
+  for (const c of clicks) {
+    let best = null;
+    for (const t of taps) { const d = t - c; if (Math.abs(d) < 0.33 && (best === null || Math.abs(d) < Math.abs(best))) best = d; }
+    if (best !== null) ds.push(best);
+  }
+  if (ds.length < 6) return null;
+  ds.sort((a, b) => a - b);
+  const m = Math.floor(ds.length / 2);
+  return ds.length % 2 ? ds[m] : (ds[m - 1] + ds[m]) / 2;
+}
+/* CORE-END ここまで */
+
+/* ---------- 保存 ---------- */
+const KEY = 'taikoKeikocho.v1';
+// 仮の例: 公開されている盆太鼓の解説の3つの型。口唱歌と左右の手はページの記載。
+// 音の長さと速さは本文に無いため、区切り1つ=1拍・1文字=4分の1拍として当てはめている。
+const SAMPLE = {
+  id: 'sample', name: '仮の例: 盆太鼓の基本の型', sample: true, bpm: 80, div: 4, swing: 0,
+  note: '打ち方の出典は「盆太鼓マスター」の解説ページです（1段目ドドンガ・2段目スットンスットン・3段目ドドツクドンドン）。音の長さと速さは本文に無いので、このアプリで当てはめました。',
+  url: 'https://bondaikomaster.com/2025/07/06/%E7%9B%86%E5%A4%AA%E9%BC%93%E3%81%AE%E5%9F%BA%E6%9C%AC%E6%8A%80/',
+  text: 'ド・ド・ ン・ガ・ ドンカラ カッカ・\n手 右・右・ ・・左・ 右・右左 右・左・\n'
+    + 'スットン スットン トンカラ カッカ・\n手 ・・右・ ・・左・ 右・右左 右・左・\n'
+    + 'ドドツク ドンドン ドンカラ カッカ・\n手 右左右左 右・左・ 右・右左 右・左・'
+};
+const STEPS = {
+  1: { guide: true, show: true, judge: false, help: 'お手本の音と譜面で流れをつかみます。打っても点は付きません。' },
+  2: { guide: true, show: true, judge: true, help: 'お手本の音と一緒に打ちます。' },
+  3: { guide: false, show: true, judge: true, help: 'お手本の音はなし。譜面を見て打ちます。' },
+  4: { guide: false, show: false, judge: true, help: '譜面を隠して打ちます。本番と同じ形です。' }
+};
+const clone = o => JSON.parse(JSON.stringify(o));
+function defaults() {
+  return {
+    v: 1, songs: [clone(SAMPLE)], cur: 'sample',
+    set: { step: 2, speed: 100, loop: true, beat: true, count: 4, tapSound: true, showHands: true, judgeHands: false, offsetMs: 0, vol: 80, eventDate: '', dict: {} },
+    log: []
+  };
+}
+const num = (v, lo, hi, d) => (typeof v === 'number' && isFinite(v)) ? Math.min(hi, Math.max(lo, v)) : d;
+function cleanSong(s) {
+  if (!s || typeof s.id !== 'string' || typeof s.text !== 'string') return null;
+  return {
+    id: s.id.slice(0, 40), name: String(s.name || '名前のない曲').slice(0, 60), sample: !!s.sample,
+    bpm: Math.round(num(s.bpm, 30, 300, 100)), div: [2, 3, 4].includes(s.div) ? s.div : 2,
+    swing: [0, 0.17, 0.333].includes(s.swing) ? s.swing : 0, text: s.text.slice(0, 20000),
+    note: typeof s.note === 'string' ? s.note.slice(0, 300) : '',
+    url: (typeof s.url === 'string' && s.url.startsWith('https://')) ? s.url.slice(0, 500) : ''
+  };
+}
+function cleanDict(d) {
+  const out = {};
+  if (d && typeof d === 'object') for (const k of Object.keys(d)) if (Array.from(k).length === 1 && Object.prototype.hasOwnProperty.call(ROLE_LABEL, d[k])) out[k] = d[k];
+  return out;
+}
+function cleanLog(l) {
+  if (!Array.isArray(l)) return [];
+  return l.filter(e => e && typeof e.at === 'number' && typeof e.songId === 'string').map(e => ({
+    at: e.at, songId: e.songId, songName: String(e.songName || ''), step: num(e.step, 1, 4, 1), speed: num(e.speed, 40, 130, 100),
+    from: num(e.from, 0, 999, 0), to: num(e.to, 0, 999, 0), sec: num(e.sec, 0, 86400, 0),
+    total: num(e.total, 0, 1e6, 0), correct: num(e.correct, 0, 1e6, 0), perfect: num(e.perfect, 0, 1e6, 0), meanMs: num(e.meanMs, -999, 999, 0),
+    perLine: (e.perLine && typeof e.perLine === 'object') ? e.perLine : {}
+  })).slice(-500);
+}
+let storageOk = true;
+function load() {
+  const d = defaults();
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return d;
+    const j = JSON.parse(raw);
+    const songs = (j.songs || []).map(cleanSong).filter(Boolean);
+    if (songs.length) d.songs = songs;
+    d.cur = d.songs.some(s => s.id === j.cur) ? j.cur : d.songs[0].id;
+    Object.assign(d.set, j.set || {});
+    d.set.step = [1, 2, 3, 4].includes(d.set.step) ? d.set.step : 2;
+    d.set.speed = num(d.set.speed, 40, 130, 100);
+    d.set.offsetMs = num(d.set.offsetMs, -400, 400, 0);
+    d.set.vol = num(d.set.vol, 0, 100, 80);
+    d.set.count = [0, 4, 8].includes(d.set.count) ? d.set.count : 4;
+    d.set.dict = cleanDict(d.set.dict);
+    d.log = cleanLog(j.log);
+  } catch (e) { storageOk = false; }
+  return d;
+}
+let S = load();
+let saveTimer = 0;
+function saveNow() {
+  clearTimeout(saveTimer);
+  try { localStorage.setItem(KEY, JSON.stringify(S)); storageOk = true; }
+  catch (e) { storageOk = false; showError('この画面では保存できません。「設定」の書き出しで文字を残してください。'); }
+}
+function save() { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 300); }
+
+/* ---------- 小道具 ---------- */
+const $ = id => document.getElementById(id);
+function el(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v);
+  }
+  for (const c of kids) if (c !== null && c !== undefined) e.append(c);
+  return e;
+}
+let lastError = '';
+function showError(msg) { lastError = msg; $('err').textContent = msg; $('err').hidden = false; }
+window.addEventListener('error', e => showError('エラー: ' + e.message + '（' + (e.lineno || '?') + '行目）'));
+window.addEventListener('unhandledrejection', e => showError('エラー: ' + String(e.reason && e.reason.message || e.reason)));
+let toastTimer = 0;
+function toast(msg, undo) {
+  $('toastMsg').textContent = msg;
+  const b = $('toastBtn');
+  b.hidden = !undo;
+  b.onclick = () => { $('toast').hidden = true; if (undo) undo(); };
+  $('toast').hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { $('toast').hidden = true; }, undo ? 8000 : 3500);
+}
+// 2回押しで実行する（画面の確認ダイアログは使えないため）
+function twoStep(btn, askLabel, run) {
+  const label = btn.textContent;
+  let armed = 0;
+  btn.addEventListener('click', () => {
+    if (armed) { clearTimeout(armed); armed = 0; btn.textContent = label; run(); return; }
+    btn.textContent = askLabel;
+    armed = setTimeout(() => { armed = 0; btn.textContent = label; }, 3500);
+  });
+}
+const song = () => S.songs.find(s => s.id === S.cur) || S.songs[0];
+const dict = () => Object.assign({}, DEFAULT_DICT, S.set.dict);
+const parsed = (s = song()) => parseScore(s.text, dict(), s.div);
+
+/* ---------- 音（合成） ---------- */
+let ac = null, master = null, noiseBuf = null;
+function makeNoise(ctx) {
+  const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.3), ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  let seed = 1;
+  for (let i = 0; i < d.length; i++) { seed = (seed * 16807) % 2147483647; d[i] = seed / 1073741823.5 - 1; }
+  return buf;
+}
+function env(ctx, out, t, peak, decay) {
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0, t);
+  g.gain.linearRampToValueAtTime(peak, t + 0.002);
+  g.gain.exponentialRampToValueAtTime(0.0008, t + decay);
+  g.connect(out);
+  return g;
+}
+function tone(ctx, out, t, type, f0, f1, peak, decay) {
+  const o = ctx.createOscillator();
+  o.type = type;
+  o.frequency.setValueAtTime(f0, t);
+  if (f1 !== f0) o.frequency.exponentialRampToValueAtTime(f1, t + decay * 0.35);
+  o.connect(env(ctx, out, t, peak, decay));
+  o.start(t); o.stop(t + decay + 0.02);
+}
+function noise(ctx, out, t, buf, type, freq, q, peak, decay) {
+  const src = ctx.createBufferSource(); src.buffer = buf;
+  const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; f.Q.value = q;
+  src.connect(f); f.connect(env(ctx, out, t, peak, decay));
+  src.start(t); src.stop(t + decay + 0.02);
+}
+// kind: don / ko / ka / tick / tickTop / count
+function synth(ctx, out, buf, kind, t) {
+  if (kind === 'don' || kind === 'ko') {
+    const v = kind === 'don' ? 1 : 0.55, len = kind === 'don' ? 0.45 : 0.24, up = kind === 'don' ? 1 : 1.2;
+    tone(ctx, out, t, 'sine', 210 * up, 95 * up, 0.9 * v, len);
+    tone(ctx, out, t, 'triangle', 380 * up, 190 * up, 0.35 * v, len * 0.45);   // 小さいスピーカーでも聞こえる高さ
+    noise(ctx, out, t, buf, 'lowpass', 1100, 0.7, 0.55 * v, 0.06);
+  } else if (kind === 'ka') {
+    noise(ctx, out, t, buf, 'bandpass', 2600, 1.6, 0.9, 0.06);
+    tone(ctx, out, t, 'triangle', 1250, 800, 0.35, 0.05);
+  } else if (kind === 'count') {
+    tone(ctx, out, t, 'square', 1046, 1046, 0.18, 0.07);
+  } else {
+    tone(ctx, out, t, 'sine', kind === 'tickTop' ? 2350 : 1750, kind === 'tickTop' ? 2350 : 1750, kind === 'tickTop' ? 0.28 : 0.17, 0.035);
+  }
+}
+function ensureAudio() {
+  if (!ac) {
+    // iPhone の消音スイッチ中でも鳴るようにする指定（対応していない版では何も起きない）
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* 非対応 */ }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) { showError('このブラウザは音を出せません。'); return false; }
+    ac = new C({ latencyHint: 'interactive' });
+    const comp = ac.createDynamicsCompressor();
+    comp.connect(ac.destination);
+    master = ac.createGain();
+    master.connect(comp);
+    noiseBuf = makeNoise(ac);
+  }
+  master.gain.value = S.set.vol / 100;
+  if (ac.state !== 'running') ac.resume().catch(() => {});
+  return true;
+}
+// 画面の時刻(ms)を、耳に届いている音の時刻(秒)に直す
+function perfToAudio(tp) {
+  const approx = ac.currentTime - (performance.now() - tp) / 1000;
+  if (ac.getOutputTimestamp) {
+    const ts = ac.getOutputTimestamp();
+    if (ts && ts.contextTime > 0 && ts.performanceTime > 0) {
+      const v = ts.contextTime + (tp - ts.performanceTime) / 1000;
+      if (Math.abs(v - approx) < 0.5) return v;
+    }
+  }
+  return approx - (ac.outputLatency || 0);
+}
+
+/* ---------- 再生のしくみ（先読みして音を予約する） ---------- */
+let run = null;
+let wakeLock = null;
+async function keepAwake() { try { wakeLock = await navigator.wakeLock.request('screen'); } catch (e) { wakeLock = null; } }
+function releaseAwake() { try { if (wakeLock) wakeLock.release(); } catch (e) { /* 何もしない */ } wakeLock = null; }
+
+let starting = false;
+async function startRun(cfg) {
+  if (starting) return null;
+  stopRun('switch');
+  if (!ensureAudio()) return null;
+  starting = true;
+  try {
+    if (ac.state !== 'running') await Promise.race([ac.resume().catch(() => {}), new Promise(r => setTimeout(r, 800))]);
+  } finally { starting = false; }
+  if (ac.state !== 'running') { showError('音を始められませんでした。もう一度押してください。'); return null; }
+  const bus = ac.createGain(); bus.connect(master);
+  const countBeats = cfg.countBeats || 0;
+  const t0 = ac.currentTime + 0.25 + countBeats * cfg.beat;
+  const r = Object.assign({ bus, t0, k: 0, endK: Infinity, taps: [], countBeats }, cfg);
+  for (let i = 0; i < countBeats; i++) synth(ac, bus, noiseBuf, 'count', t0 - (countBeats - i) * cfg.beat);
+  run = r;
+  r.timer = setInterval(pump, 25);
+  pump();
+  keepAwake();
+  r.raf = requestAnimationFrame(frame);
+  return r;
+}
+function pump() {
+  const r = run;
+  if (!r) return;
+  while (r.k < r.endK && r.timeOf(r.k) < ac.currentTime + 0.2) { r.playAt(r.k, r.timeOf(r.k)); r.k++; }
+}
+function stopRun(reason) {
+  const r = run;
+  if (!r) return;
+  run = null;
+  clearInterval(r.timer);
+  cancelAnimationFrame(r.raf);
+  r.bus.disconnect();
+  releaseAwake();
+  $('countin').hidden = true;
+  if (r.onStop) r.onStop(r, reason);
+}
+function frame() {
+  const r = run;
+  if (!r) return;
+  r.raf = requestAnimationFrame(frame);
+  if (r.onFrame) r.onFrame(r, perfToAudio(performance.now()));
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && run) { stopRun('hidden'); toast('画面を離れたので止めました'); }
+  if (document.hidden) saveNow();
+});
+window.addEventListener('pagehide', saveNow);
+
+/* ---------- 演奏の画面（横向き・左右の下の太鼓） ---------- */
+const SVGNS = 'http://www.w3.org/2000/svg';
+function sv(tag, attrs) { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+const HEAD_RATIO = 0.69;   // 太鼓の大きさに対する面の半径
+const REACH_RATIO = 1.15;  // ふちとして受け付ける外側の限り
+const G = { mode: null, W: 0, H: 0, R: 0, rot: 0 };
+const flashes = {};
+function buildDrum(host, hand) {
+  const left = hand === 'L';
+  const svg = sv('svg', { viewBox: '0 0 200 200', role: 'img', 'aria-label': (left ? '左' : '右') + 'の太鼓。内側が面、外側がふち' });
+  const X = x => left ? x : 200 - x;   // 右の太鼓は左右を反転した形
+  const disc = r => `M${X(0)} ${200 - r}A${r} ${r} 0 0 ${left ? 1 : 0} ${X(r)} 200L${X(0)} 200Z`;
+  const ring = (r1, r2) => `M${X(0)} ${200 - r2}A${r2} ${r2} 0 0 ${left ? 1 : 0} ${X(r2)} 200L${X(r1)} 200A${r1} ${r1} 0 0 ${left ? 0 : 1} ${X(0)} ${200 - r1}Z`;
+  const head = 200 * HEAD_RATIO;
+  svg.append(sv('path', { d: disc(200), style: 'fill:var(--wood-edge)' }));
+  svg.append(sv('path', { d: disc(193), style: 'fill:var(--wood)' }));
+  svg.append(sv('path', { d: disc(head + 20), style: 'fill:var(--skin);opacity:.78' }));
+  svg.append(sv('path', { d: disc(head), style: 'fill:var(--skin);stroke:var(--skin-ink);stroke-width:2.5' }));
+  for (let i = 0; i < 9; i++) {   // 鋲
+    const a = (i + 0.5) / 9 * Math.PI / 2;
+    svg.append(sv('circle', { cx: X(Math.cos(a) * (head + 10)).toFixed(1), cy: (200 - Math.sin(a) * (head + 10)).toFixed(1), r: 4.6, style: 'fill:var(--tack)' }));
+  }
+  flashes['head' + hand] = sv('path', { d: disc(head), class: 'flash' });
+  flashes['rim' + hand] = sv('path', { d: ring(head, 200), class: 'flash' });
+  svg.append(flashes['head' + hand], flashes['rim' + hand]);
+  const label = (x, y, size, text, fill) => { const t = sv('text', { x: X(x), y, 'text-anchor': 'middle', 'font-size': size, style: `fill:${fill}` }); t.textContent = text; svg.append(t); };
+  label(58, 148, 34, 'ドン', 'var(--skin-ink)');
+  label(58, 179, 19, left ? '左手' : '右手', 'var(--skin-ink)');
+  label(128, 80, 22, 'カッ', 'var(--skin)');
+  host.append(svg);
+}
+function flash(surface, hand) {
+  const f = flashes[(surface === 'rim' ? 'rim' : 'head') + hand];
+  f.classList.remove('hit'); void f.getBoundingClientRect(); f.classList.add('hit');
+}
+// 画面の位置を、回した後の演奏画面の中の位置に直す
+function toStage(cx, cy) {
+  const b = $('stage').getBoundingClientRect();
+  if (G.rot === 90) return { x: cy - b.top, y: b.right - cx };
+  if (G.rot === -90) return { x: b.bottom - cy, y: cx - b.left };
+  return { x: cx - b.left, y: cy - b.top };
+}
+function zoneAt(p) {
+  const dl = Math.hypot(p.x, G.H - p.y), dr = Math.hypot(G.W - p.x, G.H - p.y);
+  const hand = dl <= dr ? 'L' : 'R', d = Math.min(dl, dr);
+  if (d <= G.R * HEAD_RATIO) return { surface: 'head', hand };
+  if (d <= G.R * REACH_RATIO) return { surface: 'rim', hand };
+  return null;
+}
+function hitDrum(surface, hand, stamp) {
+  flash(surface, hand);
+  const r = run;
+  if (!r) return;
+  if (r.kind !== 'calib') tapSound(surface);
+  if (r.kind === 'practice') practiceHit(surface, hand, stamp);
+  else if (r.kind === 'record') recordHit(surface, hand, stamp);
+  else if (r.kind === 'calib') calibHit(stamp);
+}
+function layoutGame() {
+  const box = $('gameBox'), stage = $('stage');
+  const bw = box.clientWidth, bh = box.clientHeight;
+  // 縦持ちの電話では画面を90度回して、横向きにする
+  const handheld = navigator.maxTouchPoints > 0 || bw < 600;
+  G.rot = (bh > bw && handheld) ? (S.set.flip ? -90 : 90) : 0;
+  G.W = G.rot ? bh : bw; G.H = G.rot ? bw : bh;
+  stage.style.width = G.W + 'px'; stage.style.height = G.H + 'px';
+  stage.style.transform = G.rot === 90 ? `translate(${bw}px,0) rotate(90deg)` : G.rot === -90 ? `translate(0,${bh}px) rotate(-90deg)` : 'none';
+  const lh = Math.round(Math.max(88, Math.min(160, G.H * 0.29)));
+  canvas.style.height = lh + 'px';
+  G.R = Math.round(Math.max(110, Math.min(G.H - 38 - lh - 8, G.W * 0.28, 320)));
+  stage.style.setProperty('--R', G.R + 'px');
+  const roomy = G.H >= 460;   // 高さに余裕がある画面だけ、次の段も出す
+  stage.classList.toggle('roomy', roomy);
+  // 段の表示は左右の太鼓にかからない幅にする（段の下端の高さで太鼓が張り出す分を、左右から引く）
+  const dy = G.H - (38 + lh + 2 + 4 + (roomy ? 88 : 48));
+  const reach = dy >= G.R ? 0 : Math.sqrt(G.R * G.R - Math.max(0, dy) ** 2);
+  $('nowbox').style.width = Math.round(Math.min(620, G.W - 2 * Math.max(48, reach + 6))) + 'px';
+  $('gFlip').hidden = !G.rot;
+  sizeLane();
+}
+function openGame(mode) {
+  const s = song(), practice = mode === 'practice';
+  G.mode = mode;
+  $('game').hidden = false;
+  document.documentElement.classList.add('gaming');
+  $('gOver').hidden = true; $('countin').hidden = true;
+  $('fb').textContent = ''; $('combo').textContent = ''; $('gsub').textContent = '';
+  $('laneBox').hidden = !practice; $('nowbox').hidden = !practice;
+  $('stage').classList.toggle('plain', !practice);
+  $('gBadge').hidden = !(practice && s.sample);
+  $('peek').hidden = !(practice && !STEPS[S.set.step].show);
+  $('gClose').textContent = mode === 'record' ? '✓ 書き取りを終わる' : '✕ やめる';
+  $('gTitle').textContent = practice ? (S.set.step + '段階・' + S.set.speed + '%　' + s.name) : mode === 'record' ? '打って書き取る' : 'ずれの調整';
+  readColors();
+  layoutGame();
+}
+function closeGame() {
+  G.mode = null;
+  $('game').hidden = true;
+  document.documentElement.classList.remove('gaming');
+}
+for (const [id, hand] of [['drumL', 'L'], ['drumR', 'R']]) buildDrum($(id), hand);
+$('stage').addEventListener('pointerdown', e => {
+  if (e.target.closest('button, .goverlay')) return;
+  e.preventDefault();
+  const z = zoneAt(toStage(e.clientX, e.clientY));
+  if (!z) return;
+  const now = performance.now();
+  hitDrum(z.surface, z.hand, (e.timeStamp > 0 && Math.abs(now - e.timeStamp) < 1000) ? e.timeStamp : now);
+});
+$('stage').addEventListener('touchstart', e => { if (!e.target.closest('button, .goverlay')) e.preventDefault(); }, { passive: false });
+$('game').addEventListener('contextmenu', e => e.preventDefault());
+function tapSound(surface) { if (S.set.tapSound && ensureAudio()) synth(ac, master, noiseBuf, surface === 'rim' ? 'ka' : 'don', ac.currentTime); }
+
+/* ---------- 稽古 ---------- */
+let view = { lines: [], tl: null };
+function rangeOf(n) {
+  let from = view.from || 0, to = (view.to === undefined || view.to === null) ? n - 1 : view.to;
+  from = Math.max(0, Math.min(from, n - 1)); to = Math.max(from, Math.min(to, n - 1));
+  return { from, to };
+}
+function refreshPractice() {
+  const s = song();
+  view.lines = parsed(s).lines;
+  const n = view.lines.length;
+  const { from, to } = rangeOf(n);
+  view.from = from; view.to = (view.to === null || view.to === undefined || view.to >= n - 1) ? null : to;
+  view.tl = n ? buildTimeline(view.lines, from, to, { bpm: s.bpm, speed: S.set.speed / 100, div: s.div, swing: s.swing }) : null;
+  for (const [sel, val] of [[$('rangeFrom'), from], [$('rangeTo'), to]]) {
+    sel.replaceChildren(...view.lines.map((_, i) => el('option', { value: i, text: (i + 1) + '段目' })));
+    sel.value = String(val);
+  }
+  $('sampleBadge').hidden = !s.sample;
+  const note = $('srcNote');
+  note.hidden = !s.note;
+  note.firstElementChild.textContent = s.note || '';
+  note.lastElementChild.hidden = !s.url;
+  if (s.url) note.lastElementChild.href = s.url;
+  $('speed').value = S.set.speed;
+  $('speedOut').textContent = S.set.speed + '%（♩=' + Math.round(s.bpm * S.set.speed / 100) + '）';
+  $('loop').checked = S.set.loop; $('beat').checked = S.set.beat;
+  for (const b of $('stepSeg').children) b.setAttribute('aria-pressed', String(Number(b.dataset.step) === S.set.step));
+  $('stepHelp').textContent = STEPS[S.set.step].help;
+  $('sheet').classList.toggle('masked', !STEPS[S.set.step].show);
+  $('nowbox').classList.toggle('masked', !STEPS[S.set.step].show);
+  $('go').disabled = !n;
+  $('go').textContent = n ? 'はじめる' : '曲がまだ空です';
+  renderLines($('sheet'), view.lines, s.div, { range: { from, to }, onNo: i => { stopRun('user'); view.from = i; view.to = i; refreshPractice(); toast((i + 1) + '段目だけにしました'); } });
+  if (!n) $('sheet').append(el('p', { class: 'hint', text: '「曲を作る」で口唱歌を入れてください。' }));
+  view.nowLi = null; view.onCell = null;
+}
+// 段とマスを並べる（稽古の譜面・曲作りの下書き・いまの段で共通）
+function renderLines(host, lines, div, opt = {}) {
+  host.replaceChildren(...lines.map((ln, li) => lineEl(ln, li, div, opt)));
+}
+function lineEl(ln, li, div, opt) {
+  const beats = el('div', { class: 'beats' + (div === 4 ? ' d4' : '') });
+  for (let b = 0; b < ln.cells.length; b += div) {
+    const beat = el('div', { class: 'beat' });
+    ln.cells.slice(b, b + div).forEach((c, k) => {
+      const ci = b + k;
+      const hand = c.hand || c.auto;
+      const cell = el(opt.onCell && isHit(c.role) ? 'button' : 'div',
+        { class: 'cell ' + c.role + (c.hand ? ' fixed' : ''), 'data-li': li, 'data-ci': ci },
+        el('span', { class: 'kana', text: c.text || '・' }),
+        el('span', { class: 'hand', text: (S.set.showHands && hand) ? HAND_JA[hand] : '' }));
+      if (cell.tagName === 'BUTTON') { cell.type = 'button'; cell.addEventListener('click', () => opt.onCell(li, ci)); }
+      beat.append(cell);
+    });
+    beats.append(beat);
+  }
+  const out = opt.range && (li < opt.range.from || li > opt.range.to);
+  const no = el(opt.onNo ? 'button' : 'span', { class: 'no', text: (li + 1) + '段' });
+  if (opt.onNo) { no.type = 'button'; no.addEventListener('click', () => opt.onNo(li)); }
+  return el('div', { class: 'line' + (out ? ' out' : '') }, no, beats);
+}
+// いま打っている段と次の段を大きく出す
+function showNow(li, ci) {
+  const s = song();
+  if (li === null) { $('nowLine').replaceChildren(); $('nextLine').replaceChildren(); view.nowLi = null; return; }
+  if (view.nowLi !== li) {
+    view.nowLi = li;
+    const { from, to } = rangeOf(view.lines.length);
+    const next = li < to ? li + 1 : (S.set.loop ? from : null);
+    $('nowLine').replaceChildren(lineEl(view.lines[li], li, s.div, {}));
+    $('nextLine').replaceChildren(...(next !== null && next !== li ? [lineEl(view.lines[next], next, s.div, {})] : []));
+    view.onCell = null;
+  }
+  const key = ci === null ? null : li + ':' + ci;
+  if (view.onCell !== key) {
+    view.onCell = key;
+    document.querySelectorAll('#sheet .cell.on, #nowLine .cell.on').forEach(e => e.classList.remove('on'));
+    if (key !== null) document.querySelectorAll(`#sheet .cell[data-li="${li}"][data-ci="${ci}"], #nowLine .cell[data-li="${li}"][data-ci="${ci}"]`).forEach(e => e.classList.add('on'));
+  }
+}
+
+function startPractice() {
+  stopRun('switch');
+  refreshPractice();
+  const s = song();
+  if (!view.lines.length) return;
+  const tl = view.tl, step = STEPS[S.set.step], N = tl.cells.length;
+  const hitsPerPass = tl.cells.filter(c => isHit(c.role)).length;
+  if (!hitsPerPass) { toast('打つ音がありません。譜面か「口唱歌の読み方」を確かめてください'); return; }
+  const loop = S.set.loop, beatOn = S.set.beat;
+  openGame('practice');
+  startRun({
+    kind: 'practice', beat: tl.beat, countBeats: S.set.count, tl, loop, step: S.set.step, judge: step.judge,
+    show: step.show, songId: s.id, songName: s.name, speed: S.set.speed, from: view.from, to: rangeOf(view.lines.length).to,
+    win: MAX_WIN, hitsPerPass, notes: [], passes: 0, missAt: 0, extra: 0, tapCount: 0, shownPass: 0, passText: [], combo: 0, maxCombo: 0,
+    endK: loop ? Infinity : N,
+    timeOf(k) { return this.t0 + Math.floor(k / N) * tl.dur + tl.cells[k % N].t; },
+    playAt(k, t) {
+      const c = tl.cells[k % N];
+      if (step.guide && isHit(c.role)) synth(ac, this.bus, noiseBuf, c.role, t);
+      if (beatOn && c.onBeat) synth(ac, this.bus, noiseBuf, c.lineStart ? 'tickTop' : 'tick', t);
+    },
+    onFrame: practiceFrame,
+    onStop: practiceStopped
+  }).then(r => { if (!r) closeGame(); });
+}
+// この先の周回ぶんの「打つべき音」を用意する
+function ensureNotes(r, until) {
+  while ((r.loop || r.passes < 1) && r.t0 + r.passes * r.tl.dur <= until) {
+    for (const c of r.tl.cells) {
+      if (!isHit(c.role)) continue;
+      r.notes.push({ t: r.t0 + r.passes * r.tl.dur + c.t, win: c.win, li: c.li, ci: c.ci, pass: r.passes, surface: c.role === 'ka' ? 'rim' : 'head', hand: c.hand, res: null, missed: false });
+    }
+    r.passes++;
+  }
+}
+function showCombo(r) { $('combo').textContent = r.combo >= 2 ? r.combo + ' コンボ' : ''; }
+function markMisses(r, adj) {
+  while (r.missAt < r.notes.length && adj > r.notes[r.missAt].t + r.notes[r.missAt].win + 0.02) {
+    const n = r.notes[r.missAt++];
+    if (!n.res) { n.missed = true; if (r.tapCount) { r.combo = 0; showCombo(r); setFeedback('不可　抜け', 'bad'); } }
+  }
+}
+function practiceFrame(r, heard) {
+  ensureNotes(r, heard + r.tl.beat * 8);
+  if (r.judge) markMisses(r, heard - S.set.offsetMs / 1000);
+  const rel = heard - r.t0;
+  const ci = $('countin');
+  if (rel < 0) {
+    const left = Math.ceil(-rel / r.beat);
+    ci.hidden = !(r.countBeats && left <= r.countBeats);
+    ci.textContent = String(left);
+    showNow(r.tl.cells[0].li, null);
+  } else {
+    ci.hidden = true;
+    const pass = Math.floor(rel / r.tl.dur);
+    if (r.loop || pass < 1) {
+      const pos = rel - pass * r.tl.dur;
+      let i = 0;
+      while (i + 1 < r.tl.cells.length && r.tl.cells[i + 1].t <= pos) i++;
+      showNow(r.tl.cells[i].li, r.tl.cells[i].ci);
+    }
+    if (r.judge) {   // 周回が終わるたびに出来を出す
+      const M = r.hitsPerPass, done = r.shownPass;
+      const passNotes = r.notes.slice(done * M, (done + 1) * M);
+      if (passNotes.length === M && passNotes.every(n => n.res || n.missed)) {
+        r.shownPass++;
+        const s = summarize(passNotes, 0, S.set.judgeHands);
+        r.passText.push((done + 1) + '周目 ' + s.correct + '/' + s.total);
+        if (r.tapCount) $('gsub').textContent = r.passText.slice(-3).join('　');
+      }
+    } else $('gsub').textContent = 'お手本を聞く段階です（点は付きません）';
+    if (!r.loop && rel > r.tl.dur + r.win + 0.25) { stopRun('end'); return; }
+  }
+  drawLane(r, heard);
+}
+function setFeedback(text, cls) {
+  const f = $('fb'); f.textContent = text; f.className = 'fb ' + cls;
+  clearTimeout(setFeedback.timer);
+  setFeedback.timer = setTimeout(() => { f.textContent = ''; }, 900);
+}
+function practiceHit(surface, hand, stamp) {
+  const r = run;
+  if (!r.judge) return;
+  const t = perfToAudio(stamp) - S.set.offsetMs / 1000;
+  if (t < r.t0 - r.win) return;   // 合図の間は数えない
+  if (!r.loop && t > r.t0 + r.tl.dur + r.win) return;
+  r.tapCount++;
+  ensureNotes(r, t + r.tl.beat * 2);
+  const m = matchTap(r.notes, { t, surface, hand });
+  if (!m) { r.extra++; r.combo = 0; showCombo(r); setFeedback('よけいな1打', 'bad'); return; }
+  if (m.dup) return;
+  const res = m.note.res, ms = Math.round(res.d * 1000), sign = ms > 0 ? '+' : '';
+  r.combo = res.surfaceOk ? r.combo + 1 : 0;
+  r.maxCombo = Math.max(r.maxCombo, r.combo);
+  showCombo(r);
+  if (!res.surfaceOk) setFeedback('不可　そこは「' + (m.note.surface === 'rim' ? 'ふち' : '面') + '」', 'bad');
+  else if (S.set.judgeHands && !res.handOk) setFeedback('そこは「' + HAND_JA[m.note.hand] + '手」', 'near');
+  else if (res.timing === 'perfect') setFeedback('良　' + sign + ms + 'ms', 'perfect');
+  else setFeedback('可　' + (res.timing === 'early' ? 'はやい ' : 'おそい ') + sign + ms + 'ms', 'near');
+}
+function showResult(r) {
+  const s = summarize(r.notes, r.extra, S.set.judgeHands);
+  const box = $('result');
+  if (!s.total) { box.hidden = true; return s; }
+  const pct = Math.round(s.correct / s.total * 100);
+  const tally = ['良 ' + s.perfect, '可 ' + (s.early + s.late) + '（はやい' + s.early + '・おそい' + s.late + '）', '不可 ' + (s.miss + s.surface) + '（抜け' + s.miss + '・面とふち' + s.surface + '）', 'よけいな打ち ' + s.extra, '最大 ' + r.maxCombo + ' コンボ'];
+  if (S.set.judgeHands) tally.push('左右の間違い ' + s.hand);
+  const lean = s.matched < 3 ? '' : Math.abs(s.meanMs) <= 25 ? '全体の間合いは合っています。' : '全体に ' + Math.abs(s.meanMs) + 'ms ' + (s.meanMs > 0 ? '遅め' : '早め') + 'です。';
+  box.replaceChildren(
+    el('h2', { text: '今回の結果' }),
+    el('div', { class: 'big', text: s.correct + ' / ' + s.total + ' 打（' + pct + '%）' }),
+    el('div', { class: 'tally' }, ...tally.map(t => el('span', { text: t }))),
+    el('p', { text: lean }),
+    el('p', { class: 'hint', text: r.passText.slice(-6).join('　') })
+  );
+  if (s.matched >= 8 && Math.abs(s.meanMs) > 60 && !S.set.offsetMs) box.append(el('p', { class: 'hint', text: 'ずれがそろって出ています。「設定」の「ずれの調整」を一度やると、点が実際に近くなります。' }));
+  box.hidden = false;
+  return s;
+}
+function practiceStopped(r, reason) {
+  const sec = Math.max(0, ac.currentTime - r.t0);
+  let s = null;
+  if (r.judge && r.tapCount) s = showResult(r);
+  else $('result').hidden = true;
+  const listened = !r.judge && sec >= r.tl.dur * 0.9;
+  if ((s && s.total) || listened) {
+    S.log.push({ at: Date.now(), songId: r.songId, songName: r.songName, step: r.step, speed: r.speed, from: r.from, to: r.to, sec: Math.round(sec),
+      total: s ? s.total : 0, correct: s ? s.correct : 0, perfect: s ? s.perfect : 0, meanMs: s ? s.meanMs : 0, perLine: s ? s.perLine : {} });
+    if (S.log.length > 500) S.log.splice(0, S.log.length - 500);
+    save();
+  }
+  view.nowLi = null; view.onCell = null;
+  document.querySelectorAll('.cell.on').forEach(e => e.classList.remove('on'));
+  // 結果を演奏画面の上に出す。点が無いまま自分で止めたときは、そのまま戻る
+  const hasScore = !!(s && s.total);
+  if (reason === 'switch' || reason === 'hidden' || (reason === 'user' && !hasScore)) { closeGame(); return; }
+  $('gOverBody').replaceChildren(...(hasScore ? Array.from($('result').children, n => n.cloneNode(true))
+    : [el('h2', { text: r.judge ? '打った音がありませんでした' : '聞き終わりました' }), el('p', { class: 'hint', text: r.judge ? '左右の下の太鼓を打ってください。' : '次は2段階で、一緒に打ってみてください。' })]));
+  $('gOver').hidden = false;
+}
+
+/* ---------- 流れる譜面 ---------- */
+const canvas = $('lane');
+const g2 = canvas.getContext('2d');
+let laneW = 0, laneH = 112, colors = {};
+function readColors() {
+  const cs = getComputedStyle(document.documentElement);
+  for (const k of ['ink', 'sub', 'line', 'shu', 'ai', 'ok', 'warn', 'ng', 'panel', 'hl']) colors[k] = cs.getPropertyValue('--' + k).trim();
+}
+function sizeLane() {
+  const w = canvas.clientWidth, h = canvas.clientHeight; if (!w || !h) return;
+  const dpr = Math.min(3, window.devicePixelRatio || 1);
+  laneW = w; laneH = h; canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+  g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function drawLane(r, now) {
+  if (!laneW) return;
+  const c = colors, tl = r.tl, mid = Math.round(laneH * 0.48);
+  const hitX = Math.round(Math.max(50, laneW * 0.14));
+  // 細かい譜面でも音が重ならない速さで流す
+  const pps = Math.max((laneW - hitX) / (tl.beat * (laneW > 600 ? 6 : 4)), 36 / tl.cd);
+  const size = Math.min(laneH / 106, pps * tl.cd / 36);
+  g2.clearRect(0, 0, laneW, laneH);
+  g2.fillStyle = c.hl; g2.globalAlpha = 0.45; g2.fillRect(hitX - 22, 0, 44, laneH); g2.globalAlpha = 1;
+  g2.textAlign = 'center'; g2.textBaseline = 'middle';
+  const judged = new Map();
+  for (const n of r.notes.slice(Math.max(0, r.missAt - 40))) judged.set(n.pass + ':' + n.li + ':' + n.ci, n);
+  const tMin = now - (hitX + 30) / pps, tMax = now + (laneW - hitX + 30) / pps;
+  let p = Math.max(0, Math.floor((tMin - r.t0) / tl.dur));
+  const pEnd = r.loop ? Math.floor((tMax - r.t0) / tl.dur) : 0;
+  for (; p <= pEnd; p++) {
+    for (const cell of tl.cells) {
+      const t = r.t0 + p * tl.dur + cell.t;
+      if (t < tMin || t > tMax) continue;
+      const x = hitX + (t - now) * pps;
+      if (cell.onBeat) {
+        g2.fillStyle = cell.lineStart ? c.sub : c.line;
+        g2.fillRect(x - (cell.lineStart ? 1 : 0.5), 8, cell.lineStart ? 2 : 1, laneH - 16);
+        if (cell.lineStart) { g2.fillStyle = c.sub; g2.font = '10px sans-serif'; g2.textAlign = 'left'; g2.fillText((cell.li + 1) + '段', x + 3, 9); g2.textAlign = 'center'; }
+      }
+      const n = judged.get(p + ':' + cell.li + ':' + cell.ci);
+      const state = !n ? null : n.res ? (!n.res.surfaceOk ? 'ng' : n.res.timing === 'perfect' ? 'ok' : 'warn') : n.missed && r.tapCount ? 'ng' : null;
+      if (!r.show) {   // 暗譜: 打った結果の印だけを出す
+        if (state) { g2.fillStyle = c[state]; g2.beginPath(); g2.arc(x, mid, 8, 0, Math.PI * 2); g2.fill(); }
+        continue;
+      }
+      if (isHit(cell.role)) {
+        const rad = (cell.role === 'don' ? 19 : cell.role === 'ko' ? 14 : 15) * size;
+        g2.beginPath(); g2.arc(x, mid, rad, 0, Math.PI * 2);
+        if (cell.role === 'ka') { g2.fillStyle = c.panel; g2.fill(); g2.lineWidth = 5; g2.strokeStyle = c.ai; g2.stroke(); }
+        else { g2.fillStyle = c.shu; g2.fill(); }
+        if (state) { g2.beginPath(); g2.arc(x, mid, rad + 4, 0, Math.PI * 2); g2.lineWidth = 3.5; g2.strokeStyle = c[state]; g2.stroke(); }
+        g2.fillStyle = c.ink; g2.font = '15px "Dela Gothic One", sans-serif'; g2.fillText(cell.text, x, laneH - 15);
+        if (S.set.showHands && cell.hand) { g2.fillStyle = c.sub; g2.font = '11px sans-serif'; g2.fillText(HAND_JA[cell.hand], x, 13); }
+      } else if (cell.role === 'shout' || cell.role === 'unknown') {
+        g2.fillStyle = cell.role === 'unknown' ? c.warn : c.sub; g2.font = '13px sans-serif'; g2.fillText(cell.text, x, laneH - 15);
+      }
+    }
+  }
+  g2.fillStyle = c.ink; g2.fillRect(hitX - 1.5, 18, 3, laneH - 44);
+}
+
+/* ---------- 曲を作る ---------- */
+function refreshSongSelects() {
+  for (const id of ['songSel', 'songSel2']) {
+    const sel = $(id);
+    sel.replaceChildren(...S.songs.map(s => el('option', { value: s.id, text: s.name })));
+    sel.value = S.cur;
+  }
+}
+function refreshEditor() {
+  const s = song();
+  $('sampleBadge2').hidden = !s.sample;
+  $('songName').value = s.name; $('songName').disabled = s.sample;
+  $('bpm').value = s.bpm; $('div').value = String(s.div); $('swing').value = String(s.swing);
+  $('swing').disabled = s.div === 3;
+  if ($('text').value !== s.text) $('text').value = s.text;
+  $('delSong').disabled = S.songs.length < 2;
+  refreshPreview();
+}
+function refreshPreview() {
+  const s = song(), p = parsed(s);
+  renderLines($('preview'), p.lines, s.div, { onCell: (li, ci) => {
+    const cur = p.lines[li].cells[ci].hand;
+    const next = cur === null ? 'R' : cur === 'R' ? 'L' : cur === 'L' ? 'B' : null;
+    s.text = writeHand(s.text, p.lines[li], ci, next, s.div);
+    $('text').value = s.text; save(); refreshPreview();
+  } });
+  const warns = [];
+  p.lines.forEach((ln, i) => { if (ln.padded) warns.push((i + 1) + '段目は拍の途中で終わっています（' + ln.rawCount + 'マス）。残りは休みにしました。'); });
+  if (p.unknown.length) warns.push('読み方が決まっていない文字: ' + p.unknown.join('・') + '（今は音が出ません）');
+  $('warns').replaceChildren(...warns.map(w => el('li', { text: w })));
+  const btns = [];
+  for (const ch of p.unknown.slice(0, 6)) for (const role of ['don', 'ka', 'rest']) {
+    btns.push(el('button', { type: 'button', class: 'btn small', text: '「' + ch + '」を' + ROLE_LABEL[role] + 'にする', onclick: () => { S.set.dict[ch] = role; save(); refreshPreview(); } }));
+  }
+  $('unknownBtns').replaceChildren(...btns);
+}
+function changeSong(id) {
+  stopRun('user');
+  S.cur = id; view.from = 0; view.to = null;
+  $('result').hidden = true; $('recDone').hidden = true;
+  save(); refreshSongSelects(); refreshPractice(); refreshEditor();
+}
+const newId = () => 's' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+function insertText(str) {
+  const t = $('text');
+  const a = t.selectionStart, b = t.selectionEnd;
+  t.setRangeText(str, a, b, 'end');
+  t.dispatchEvent(new Event('input'));
+}
+for (const [label, str] of [['ドン', 'ドン '], ['ドコ', 'ドコ '], ['カッ', 'カッ '], ['カカ', 'カカ '], ['休み', 'スッ '], ['ー', 'ー'], ['（掛け声）', '（ハッ）'], ['改行', '\n']]) {
+  $('inserts').append(el('button', { type: 'button', class: 'btn small', text: label, onclick: () => insertText(str) }));
+}
+$('inserts').append(el('button', { type: 'button', class: 'btn small', text: '⌫ 1字消す', onclick: () => {
+  const t = $('text'); let a = t.selectionStart; const b = t.selectionEnd;
+  if (a === b) { if (!a) return; a--; }
+  t.setRangeText('', a, b, 'end'); t.dispatchEvent(new Event('input'));
+} }));
+
+$('text').addEventListener('input', () => { song().text = $('text').value; save(); clearTimeout(refreshPreview.timer); refreshPreview.timer = setTimeout(refreshPreview, 120); });
+$('songName').addEventListener('input', () => { song().name = $('songName').value || '名前のない曲'; save(); refreshSongSelects(); });
+$('bpm').addEventListener('change', () => { const s = song(); s.bpm = Math.round(num(Number($('bpm').value) || s.bpm, 30, 300, s.bpm)); $('bpm').value = s.bpm; save(); });
+$('div').addEventListener('change', () => { const s = song(); s.div = Number($('div').value); if (s.div === 3) s.swing = 0; save(); refreshEditor(); });
+$('swing').addEventListener('change', () => { song().swing = Number($('swing').value); save(); });
+let tempoTaps = [];
+$('tapTempo').addEventListener('pointerdown', () => {
+  const now = performance.now();
+  if (tempoTaps.length && now - tempoTaps[tempoTaps.length - 1] > 2200) tempoTaps = [];
+  tempoTaps.push(now); tempoTaps = tempoTaps.slice(-7);
+  if (tempoTaps.length < 3) { toast('そのまま拍に合わせて押し続けてください'); return; }
+  const s = song();
+  s.bpm = Math.round(num(60000 / ((now - tempoTaps[0]) / (tempoTaps.length - 1)), 30, 300, s.bpm));
+  $('bpm').value = s.bpm; save();
+  toast('1分に ' + s.bpm + ' 拍にしました');
+});
+$('newSong').addEventListener('click', () => {
+  const s = { id: newId(), name: '新しい曲', sample: false, bpm: 100, div: 2, swing: 0, text: '', note: '', url: '' };
+  S.songs.push(s); changeSong(s.id); $('songName').focus(); $('songName').select();
+});
+$('dupSong').addEventListener('click', () => {
+  const s = clone(song()); s.id = newId(); s.name = (s.sample ? '仮の例の写し' : s.name + ' の写し').slice(0, 60);
+  S.songs.push(s); changeSong(s.id); toast('複製しました');
+});
+twoStep($('delSong'), 'もう一度押すと消します', () => {
+  if (S.songs.length < 2) return;
+  const i = S.songs.findIndex(s => s.id === S.cur), gone = S.songs.splice(i, 1)[0];
+  changeSong(S.songs[Math.max(0, i - 1)].id);
+  toast('「' + gone.name + '」を消しました', () => { S.songs.splice(i, 0, gone); changeSong(gone.id); });
+});
+$('listen').addEventListener('click', () => {
+  if (run && run.kind === 'listen') { stopRun('user'); return; }
+  const s = song(), p = parsed(s);
+  if (!p.lines.length) { toast('まだ何も入っていません'); return; }
+  const tl = buildTimeline(p.lines, 0, p.lines.length - 1, { bpm: s.bpm, speed: 1, div: s.div, swing: s.swing });
+  const N = tl.cells.length;
+  startRun({
+    kind: 'listen', beat: tl.beat, countBeats: 0, endK: N,
+    timeOf(k) { return this.t0 + tl.cells[k].t; },
+    playAt(k, t) { const c = tl.cells[k]; if (isHit(c.role)) synth(ac, this.bus, noiseBuf, c.role, t); if (c.onBeat) synth(ac, this.bus, noiseBuf, c.lineStart ? 'tickTop' : 'tick', t); },
+    onFrame(r, heard) {
+      const pos = heard - r.t0;
+      if (pos > tl.dur + 0.4) { stopRun('end'); return; }
+      let i = -1; while (i + 1 < N && tl.cells[i + 1].t <= pos) i++;
+      document.querySelectorAll('#preview .cell.on').forEach(e => e.classList.remove('on'));
+      if (i >= 0) { const e = document.querySelector(`#preview .cell[data-li="${tl.cells[i].li}"][data-ci="${tl.cells[i].ci}"]`); if (e) e.classList.add('on'); }
+    },
+    onStop() { $('listen').textContent = '通して聞く'; document.querySelectorAll('#preview .cell.on').forEach(e => e.classList.remove('on')); }
+  }).then(r => { if (r) $('listen').textContent = '聞くのをやめる'; });
+});
+
+/* ---------- 打って書き取る ---------- */
+$('recGo').addEventListener('click', () => {
+  const s = song();
+  const beat = 60 / s.bpm, beatOn = $('recBeat').checked;
+  $('recDone').hidden = true; $('recState').textContent = '';
+  openGame('record');
+  startRun({
+    kind: 'record', beat, countBeats: 4, div: s.div, hands: $('recHands').checked,
+    timeOf(k) { return this.t0 + k * beat; },
+    playAt(k, t) { if (beatOn) synth(ac, this.bus, noiseBuf, k % 4 === 0 ? 'tickTop' : 'tick', t); },
+    onFrame(r, heard) {
+      const rel = heard - r.t0;
+      $('countin').hidden = rel >= 0;
+      if (rel < 0) $('countin').textContent = String(Math.min(4, Math.ceil(-rel / beat)));
+      $('gsub').textContent = rel < 0 ? '合図のあとに打ちます' : (Math.floor(rel / beat / 4) + 1) + '段目 ' + (Math.floor(rel / beat) % 4 + 1) + '拍目・' + r.taps.length + '打';
+      if (rel > 600) stopRun('end');
+    },
+    onStop(r) {
+      closeGame();
+      const q = quantizeTaps(r.taps, { cd: beat / r.div, div: r.div, beatsPerLine: 4, hands: r.hands });
+      if (!q.count) { $('recState').textContent = '打った音がありませんでした。'; return; }
+      $('recState').textContent = q.count + '打を書き取りました。' + (q.merged ? q.merged + '打は同じマスに重なりました。1拍のマス数を増やすと分けられます。' : '');
+      $('recText').value = q.text; $('recDone').hidden = false;
+      $('recDone').scrollIntoView({ block: 'nearest' });
+    }
+  }).then(r => { if (!r) closeGame(); });
+});
+function recordHit(surface, hand, stamp) {
+  run.taps.push({ t: perfToAudio(stamp) - S.set.offsetMs / 1000 - run.t0, surface, hand });
+}
+function useDraft(replace) {
+  const s = song(), before = s.text, draft = $('recText').value.trim();
+  if (!draft) return;
+  s.text = replace || !before.trim() ? draft : before.replace(/\s+$/, '') + '\n' + draft;
+  $('recDone').hidden = true; $('recState').textContent = '';
+  save(); refreshEditor(); refreshPractice();
+  toast(replace ? '曲を置きかえました' : '曲の後ろに足しました', () => { s.text = before; save(); refreshEditor(); refreshPractice(); });
+}
+$('recAppend').addEventListener('click', () => useDraft(false));
+$('recReplace').addEventListener('click', () => useDraft(true));
+twoStep($('recDrop'), 'もう一度押すと捨てます', () => { $('recDone').hidden = true; $('recState').textContent = ''; });
+
+/* ---------- 記録 ---------- */
+function daysLeft() {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(S.set.eventDate)) return null;
+  const [y, m, d] = S.set.eventDate.split('-').map(Number), now = new Date();
+  return Math.round((new Date(y, m - 1, d) - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+}
+function countdownText() {
+  const n = daysLeft();
+  return n === null ? '' : n > 0 ? '本番まで あと' + n + '日' : n === 0 ? '今日が本番' : '本番の日は過ぎました';
+}
+function refreshLog() {
+  $('logCountdown').textContent = countdownText() || '日付が未設定';
+  const week = S.log.filter(e => e.at > Date.now() - 7 * 86400000);
+  const days = new Set(week.map(e => new Date(e.at).toDateString())).size;
+  $('logWeek').textContent = (countdownText() ? '' : '「設定」で本番の日を入れると、残りの日数が出ます。 ') + 'この7日間の稽古: ' + days + '日・' + week.length + '回';
+  const s = song(), lines = parsed(s).lines;
+  const recent = S.log.filter(e => e.songId === s.id && e.total).slice(-10);
+  const agg = {};
+  for (const e of recent) for (const [li, v] of Object.entries(e.perLine)) { const a = agg[li] || (agg[li] = [0, 0]); a[0] += Number(v[0]) || 0; a[1] += Number(v[1]) || 0; }
+  $('lineStatCap').textContent = recent.length ? '「' + s.name + '」の直近' + recent.length + '回ぶん。赤い段がいちばん苦手です。' : '「' + s.name + '」は、まだ点の付いた稽古がありません。';
+  const rows = lines.map((_, i) => { const a = agg[i]; return { i, pct: a && a[1] ? Math.round(a[0] / a[1] * 100) : null, a }; });
+  const scored = rows.filter(r => r.pct !== null);
+  const worst = scored.length ? Math.min(...scored.map(r => r.pct)) : null;
+  $('lineStat').replaceChildren(recent.length ? el('table', {}, el('tbody', {}, ...rows.map(r => {
+    const fill = el('i'); fill.style.width = (r.pct || 0) + '%';
+    return el('tr', {}, el('td', { text: (r.i + 1) + '段目' }), el('td', {}, el('div', { class: 'bar' + (r.pct === worst && worst < 100 ? ' weak' : '') }, fill)),
+      el('td', { text: r.pct === null ? '未' : r.pct + '%（' + r.a[0] + '/' + r.a[1] + '）' }));
+  }))) : '');
+  const list = S.log.slice(-40).reverse();
+  const stepName = ['', '聞く', '一緒に', '自分で', '暗譜'];
+  $('logList').replaceChildren(list.length ? el('table', {},
+    el('thead', {}, el('tr', {}, ...['日時', '段階', '速さ', '段', '当たり', '曲'].map(h => el('th', { text: h })))),
+    el('tbody', {}, ...list.map(e => {
+      const d = new Date(e.at);
+      return el('tr', {}, ...[`${d.getMonth() + 1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`, stepName[e.step], e.speed + '%',
+        e.from === e.to ? String(e.from + 1) : (e.from + 1) + '〜' + (e.to + 1), e.total ? e.correct + '/' + e.total : '—', e.songName].map(v => el('td', { text: v })));
+    }))) : el('p', { class: 'hint', text: '稽古すると、ここに残ります。' }));
+  $('logClear').hidden = !S.log.length;
+}
+twoStep($('logClear'), 'もう一度押すと全部消します', () => {
+  const before = S.log; S.log = []; save(); refreshLog();
+  toast('記録を消しました', () => { S.log = before; save(); refreshLog(); });
+});
+
+/* ---------- 設定 ---------- */
+function refreshSettings() {
+  $('eventDate').value = S.set.eventDate; $('count').value = String(S.set.count); $('vol').value = S.set.vol;
+  $('tapSound').checked = S.set.tapSound; $('showHands').checked = S.set.showHands; $('judgeHands').checked = S.set.judgeHands;
+  $('offsetOut').textContent = (S.set.offsetMs > 0 ? '+' : '') + S.set.offsetMs + 'ms';
+  const d = dict();
+  $('dict').replaceChildren(...Object.keys(d).map(ch => {
+    const sel = el('select', { 'aria-label': ch + 'の打ち方' }, ...Object.entries(ROLE_LABEL).map(([v, t]) => el('option', { value: v, text: t })));
+    sel.value = d[ch];
+    sel.addEventListener('change', () => { S.set.dict[ch] = sel.value; save(); });
+    return el('label', {}, el('b', { text: ch }), sel);
+  }));
+  $('diag').textContent = [
+    '保存: ' + (storageOk ? 'できる' : 'できない'),
+    '消音中の再生指定: ' + (navigator.audioSession ? '対応（' + navigator.audioSession.type + '）' : '非対応'),
+    '音: ' + (ac ? ac.state + ' / ' + ac.sampleRate + 'Hz / 基本の遅れ ' + Math.round((ac.baseLatency || 0) * 1000) + 'ms / 出力の遅れ ' + Math.round((ac.outputLatency || 0) * 1000) + 'ms' : 'まだ始めていない'),
+    '画面: ' + window.innerWidth + '×' + window.innerHeight,
+    '端末: ' + navigator.userAgent,
+    '直近のエラー: ' + (lastError || 'なし')
+  ].join('\n');
+}
+$('dictRole').replaceChildren(...Object.entries(ROLE_LABEL).map(([v, t]) => el('option', { value: v, text: t })));
+$('dictAdd').addEventListener('click', () => {
+  const ch = Array.from(normalizeText($('dictChar').value).trim())[0];
+  if (!ch) { toast('足す文字を1つ入れてください'); return; }
+  S.set.dict[ch] = $('dictRole').value; $('dictChar').value = ''; save(); refreshSettings(); toast('「' + ch + '」を足しました');
+});
+$('eventDate').addEventListener('change', () => { S.set.eventDate = $('eventDate').value; save(); $('countdown').textContent = countdownText(); });
+$('count').addEventListener('change', () => { S.set.count = Number($('count').value); save(); });
+$('vol').addEventListener('input', () => { S.set.vol = Number($('vol').value); if (master) master.gain.value = S.set.vol / 100; save(); });
+for (const k of ['tapSound', 'showHands', 'judgeHands']) $(k).addEventListener('change', () => { S.set[k] = $(k).checked; save(); });
+function setOffset(v) { S.set.offsetMs = Math.round(Math.max(-400, Math.min(400, v))); save(); refreshSettings(); }
+$('offMinus').addEventListener('click', () => setOffset(S.set.offsetMs - 10));
+$('offPlus').addEventListener('click', () => setOffset(S.set.offsetMs + 10));
+$('offZero').addEventListener('click', () => setOffset(0));
+$('calGo').addEventListener('click', () => {
+  const beat = 60 / 90, LEAD = 4, N = 12;
+  $('calState').textContent = '';
+  openGame('calib');
+  startRun({
+    kind: 'calib', beat, countBeats: 0, endK: LEAD + N,
+    timeOf(k) { return this.t0 + k * beat; },
+    playAt(k, t) { synth(ac, this.bus, noiseBuf, k < LEAD ? 'count' : 'ka', t); },
+    onFrame(r, heard) {
+      const k = Math.floor((heard - r.t0) / beat + 0.5);
+      $('gsub').textContent = k < LEAD ? 'まず聞く ' + Math.max(1, k + 1) + ' / ' + LEAD : '音に合わせて打つ ' + Math.min(N, k - LEAD + 1) + ' / ' + N;
+      if (heard > r.t0 + (LEAD + N - 1) * beat + 0.5) stopRun('end');
+    },
+    onStop(r, reason) {
+      closeGame();
+      if (reason !== 'end') { $('calState').textContent = '調整をやめました。'; return; }
+      const clicks = Array.from({ length: N }, (_, i) => r.t0 + (LEAD + i) * beat);
+      const m = calibrate(clicks, r.taps);
+      if (m === null) { $('calState').textContent = '合った打ちが足りませんでした。もう一度やってください。'; return; }
+      const before = S.set.offsetMs;
+      setOffset(m * 1000);
+      $('calState').textContent = '調整値を ' + (S.set.offsetMs > 0 ? '+' : '') + S.set.offsetMs + 'ms にしました。';
+      toast('調整値を入れました', () => setOffset(before));
+    }
+  }).then(r => { if (!r) closeGame(); });
+});
+function calibHit(stamp) { run.taps.push(perfToAudio(stamp)); }
+
+function exportText() { return JSON.stringify({ app: 'taiko-keikocho', v: 1, songs: S.songs, dict: S.set.dict, eventDate: S.set.eventDate, log: S.log }); }
+function importText(text) {
+  let j;
+  try { j = JSON.parse(String(text).trim()); } catch (e) { toast('読み込めません。書き出した文字を、最初から最後まで貼ってください'); return false; }
+  if (!j || j.app !== 'taiko-keikocho') { toast('このアプリの書き出しではないようです'); return false; }
+  const before = clone(S);
+  const songs = (Array.isArray(j.songs) ? j.songs : []).map(cleanSong).filter(Boolean);
+  for (const s of songs) {   // 同じ曲は読み込んだ内容にする
+    const i = S.songs.findIndex(x => x.id === s.id);
+    if (i >= 0) S.songs[i] = s; else S.songs.push(s);
+  }
+  Object.assign(S.set.dict, cleanDict(j.dict));
+  if (typeof j.eventDate === 'string' && j.eventDate) S.set.eventDate = j.eventDate;
+  const seen = new Set(S.log.map(e => e.at + ':' + e.songId));
+  const added = cleanLog(j.log).filter(e => !seen.has(e.at + ':' + e.songId));
+  S.log = S.log.concat(added).sort((a, b) => a.at - b.at).slice(-500);
+  if (songs.length) S.cur = songs[songs.length - 1].id;
+  changeSong(S.cur); refreshSettings(); $('countdown').textContent = countdownText();
+  toast('曲' + songs.length + '件・記録' + added.length + '件を読み込みました', () => { S = before; changeSong(S.cur); refreshSettings(); });
+  return true;
+}
+$('exp').addEventListener('click', () => { $('io').value = exportText(); $('io').focus(); $('io').select(); toast('書き出しました。コピーしてメモ帳に残してください'); });
+$('copy').addEventListener('click', () => {
+  if (!$('io').value) $('io').value = exportText();
+  const fallback = () => { $('io').focus(); $('io').select(); toast('選んだ状態にしました。長押しでコピーしてください'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText($('io').value).then(() => toast('コピーしました'), fallback);
+  else fallback();
+});
+$('imp').addEventListener('click', () => { stopRun('user'); importText($('io').value); });
+$('impFile').addEventListener('change', () => {
+  const f = $('impFile').files[0]; if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => { $('io').value = String(rd.result); importText($('io').value); $('impFile').value = ''; };
+  rd.readAsText(f);
+});
+$('soundTest').addEventListener('click', () => {
+  if (!ensureAudio()) return;
+  setTimeout(() => { ['don', 'ko', 'ka'].forEach((k, i) => synth(ac, master, noiseBuf, k, ac.currentTime + 0.05 + i * 0.35)); refreshSettings(); }, 60);
+});
+
+/* ---------- 画面の切り替えと入力 ---------- */
+function showTab(name) {
+  stopRun('user');
+  for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', String(b.dataset.tab === name));
+  for (const t of ['practice', 'edit', 'log', 'set']) $('tab-' + t).hidden = t !== name;
+  if (name === 'practice') refreshPractice();
+  if (name === 'edit') refreshEditor();
+  if (name === 'log') refreshLog();
+  if (name === 'set') refreshSettings();
+  window.scrollTo(0, 0);
+}
+for (const b of document.querySelectorAll('.tabs button')) b.addEventListener('click', () => showTab(b.dataset.tab));
+$('songSel').addEventListener('change', () => changeSong($('songSel').value));
+$('songSel2').addEventListener('change', () => changeSong($('songSel2').value));
+for (const b of $('stepSeg').children) b.addEventListener('click', () => { stopRun('user'); S.set.step = Number(b.dataset.step); save(); refreshPractice(); });
+$('speed').addEventListener('input', () => { stopRun('user'); S.set.speed = Number($('speed').value); save(); refreshPractice(); });
+$('rangeFrom').addEventListener('change', () => { stopRun('user'); view.from = Number($('rangeFrom').value); if (view.to !== null && view.to < view.from) view.to = view.from; refreshPractice(); });
+$('rangeTo').addEventListener('change', () => { stopRun('user'); view.to = Number($('rangeTo').value); if (view.to < view.from) view.from = view.to; refreshPractice(); });
+$('rangeAll').addEventListener('click', () => { stopRun('user'); view.from = 0; view.to = null; refreshPractice(); });
+$('loop').addEventListener('change', () => { stopRun('user'); S.set.loop = $('loop').checked; save(); refreshPractice(); });
+$('beat').addEventListener('change', () => { stopRun('user'); S.set.beat = $('beat').checked; save(); });
+$('go').addEventListener('click', startPractice);
+$('gClose').addEventListener('click', () => { if (run) stopRun('user'); else closeGame(); });
+$('gAgain').addEventListener('click', startPractice);
+$('gBack').addEventListener('click', closeGame);
+$('gFlip').addEventListener('click', () => { S.set.flip = !S.set.flip; save(); layoutGame(); });
+const peekOn = on => { const masked = !on && !STEPS[S.set.step].show; $('sheet').classList.toggle('masked', masked); $('nowbox').classList.toggle('masked', masked); };
+$('peek').addEventListener('pointerdown', e => { e.preventDefault(); peekOn(true); });
+for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) $('peek').addEventListener(ev, () => peekOn(false));
+
+// パソコンで確かめるときのキー（F/J=面の左/右、D/K=ふちの左/右、Esc=やめる）
+const KEYS = { f: ['head', 'L'], j: ['head', 'R'], d: ['rim', 'L'], k: ['rim', 'R'] };
+document.addEventListener('keydown', e => {
+  if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || $('game').hidden) return;
+  if (e.key === 'Escape') { $('gClose').click(); return; }
+  const k = KEYS[e.key.toLowerCase()];
+  if (k) { e.preventDefault(); hitDrum(k[0], k[1], e.timeStamp || performance.now()); }
+});
+const relayout = () => { if (G.mode) layoutGame(); };
+window.addEventListener('resize', relayout);
+window.addEventListener('orientationchange', () => setTimeout(relayout, 250));
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors);
+new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+$('countdown').textContent = countdownText();
+readColors();
+refreshSongSelects();
+refreshPractice();
+refreshEditor();
+if (!storageOk) showError('この画面では保存できないかもしれません。「設定」の書き出しで文字を残してください。');
+</script>
+
+</body></html>
